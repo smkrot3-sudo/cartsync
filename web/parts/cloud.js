@@ -99,13 +99,19 @@ function renderAccount(){
 }
 function openAccountSheet(){
   const t=CS.t;
+  const curTheme=CS.theme();
   openSheet(sheetHead(t('settings'))+`
     <div class="card">
       <div style="font-size:.9rem;color:var(--muted)" dir="ltr">${esc(user.email)}</div>
+      <p style="margin:2px 0 -4px">${esc(t('themeLabel'))}</p>
+      <div class="role-pick" id="theme-pick">
+        ${['light','dark','system'].map(v=>`<button data-theme-opt="${v}" class="${v===curTheme?'active':''}">${esc(t('theme'+v[0].toUpperCase()+v.slice(1)))}</button>`).join('')}
+      </div>
       <button class="btn ghost" id="acct-sync">🔄 ${esc(t('syncNow'))}</button>
       <button class="btn ghost" id="acct-switch">🏠 ${esc(t('switchHousehold'))}</button>
       <button class="btn ghost" id="acct-signout">👋 ${esc(t('signOut'))}</button>
     </div>`);
+  $('theme-pick').querySelectorAll('[data-theme-opt]').forEach(b=>b.onclick=()=>{ CS.setTheme(b.dataset.themeOpt); openAccountSheet(); });
   $('acct-sync').onclick=async()=>{ await flushQueue(); await refreshHousehold(); toast('🔄'); };
   $('acct-switch').onclick=()=>{ closeSheet(); openHouseholdSwitcher(); };
   $('acct-signout').onclick=async()=>{ await sb.auth.signOut(); closeSheet(); };

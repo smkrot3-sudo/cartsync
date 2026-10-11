@@ -298,6 +298,7 @@ he: {
   needHhName:'צריך לתת שם למשק הבית', needCode:'צריך להזין קוד',
   versionLabel:'גרסה: {v}', updateAvailable:'יש עדכון', updateNow:'🔄 לעדכן',
   updateDownloading:'מוריד...', updateFailed:'העדכון נכשל, אפשר לנסות שוב', updateDone:'✅ מותקן',
+  themeLabel:'מצב תצוגה', themeLight:'☀️ בהיר', themeDark:'🌙 כהה', themeSystem:'⚙️ אוטומטי',
 },
 en: {
   appName:'CartSync', tagline:'One shopping list, for the whole family',
@@ -324,6 +325,7 @@ en: {
   needHhName:'Give the household a name', needCode:'Enter a code',
   versionLabel:'Version: {v}', updateAvailable:'Update available', updateNow:'🔄 Update',
   updateDownloading:'Downloading...', updateFailed:'Update failed, try again', updateDone:'✅ Installed',
+  themeLabel:'Appearance', themeLight:'☀️ Light', themeDark:'🌙 Dark', themeSystem:'⚙️ Auto',
 },
 };
 
@@ -374,9 +376,20 @@ const CAT_ORDER = ['produce','dairy','bakery','meat','frozen','pantry','beverage
   }catch(e){}
   if(lang!=='he'&&lang!=='en') lang='he';
 
+  let theme = 'system';
+  try{ theme = localStorage.getItem('cs-theme') || 'system'; }catch(e){}
+  if(theme!=='light'&&theme!=='dark'&&theme!=='system') theme='system';
+
   function apply(){
     document.documentElement.lang = lang;
     document.documentElement.dir = lang==='he' ? 'rtl' : 'ltr';
+    if(theme==='system') document.documentElement.removeAttribute('data-theme');
+    else document.documentElement.setAttribute('data-theme', theme);
+  }
+  function setTheme(t){
+    theme = (t==='light'||t==='dark') ? t : 'system';
+    try{ localStorage.setItem('cs-theme', theme); }catch(e){}
+    apply();
   }
   function t(key){ return (STRINGS[lang]&&STRINGS[lang][key]) || STRINGS.he[key] || key; }
   function authErr(e){
@@ -387,7 +400,7 @@ const CAT_ORDER = ['produce','dairy','bakery','meat','frozen','pantry','beverage
   }
   function setLang(l){ lang = l==='en'?'en':'he'; try{localStorage.setItem('cs-lang',lang)}catch(e){} apply(); if(window.CS.render) window.CS.render(); }
   apply();
-  Object.assign(window.CS,{t,lang:()=>lang,setLang,authErr,CATS,CAT_ORDER});
+  Object.assign(window.CS,{t,lang:()=>lang,setLang,theme:()=>theme,setTheme,authErr,CATS,CAT_ORDER});
 })();
 </script>
 <script>

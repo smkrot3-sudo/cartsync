@@ -291,7 +291,7 @@ button:disabled{opacity:.6;cursor:default}
   </footer>
 
 </div>
-<script>window.CS_SITE="https://smkrot3-sudo.github.io/cartsync/";window.CS_BUILD=1791756134673;</script>
+<script>window.CS_SITE="https://smkrot3-sudo.github.io/cartsync/";window.CS_BUILD=1791756796198;</script>
 <script>
 /* Bilingual strings + RTL/LTR switching. Pure UI text lives here; app.js reads it via CS.t(key). */
 const STRINGS = {
@@ -320,6 +320,7 @@ he: {
   needHhName:'צריך לתת שם למשק הבית', needCode:'צריך להזין קוד',
   versionLabel:'גרסה: {v}', updateAvailable:'יש עדכון', updateNow:'🔄 לעדכן',
   updateDownloading:'מוריד...', updateFailed:'העדכון נכשל, אפשר לנסות שוב', updateDone:'✅ מותקן',
+  themeLabel:'מצב תצוגה', themeLight:'☀️ בהיר', themeDark:'🌙 כהה', themeSystem:'⚙️ אוטומטי',
 },
 en: {
   appName:'CartSync', tagline:'One shopping list, for the whole family',
@@ -346,6 +347,7 @@ en: {
   needHhName:'Give the household a name', needCode:'Enter a code',
   versionLabel:'Version: {v}', updateAvailable:'Update available', updateNow:'🔄 Update',
   updateDownloading:'Downloading...', updateFailed:'Update failed, try again', updateDone:'✅ Installed',
+  themeLabel:'Appearance', themeLight:'☀️ Light', themeDark:'🌙 Dark', themeSystem:'⚙️ Auto',
 },
 };
 
@@ -396,9 +398,20 @@ const CAT_ORDER = ['produce','dairy','bakery','meat','frozen','pantry','beverage
   }catch(e){}
   if(lang!=='he'&&lang!=='en') lang='he';
 
+  let theme = 'system';
+  try{ theme = localStorage.getItem('cs-theme') || 'system'; }catch(e){}
+  if(theme!=='light'&&theme!=='dark'&&theme!=='system') theme='system';
+
   function apply(){
     document.documentElement.lang = lang;
     document.documentElement.dir = lang==='he' ? 'rtl' : 'ltr';
+    if(theme==='system') document.documentElement.removeAttribute('data-theme');
+    else document.documentElement.setAttribute('data-theme', theme);
+  }
+  function setTheme(t){
+    theme = (t==='light'||t==='dark') ? t : 'system';
+    try{ localStorage.setItem('cs-theme', theme); }catch(e){}
+    apply();
   }
   function t(key){ return (STRINGS[lang]&&STRINGS[lang][key]) || STRINGS.he[key] || key; }
   function authErr(e){
@@ -409,7 +422,7 @@ const CAT_ORDER = ['produce','dairy','bakery','meat','frozen','pantry','beverage
   }
   function setLang(l){ lang = l==='en'?'en':'he'; try{localStorage.setItem('cs-lang',lang)}catch(e){} apply(); if(window.CS.render) window.CS.render(); }
   apply();
-  Object.assign(window.CS,{t,lang:()=>lang,setLang,authErr,CATS,CAT_ORDER});
+  Object.assign(window.CS,{t,lang:()=>lang,setLang,theme:()=>theme,setTheme,authErr,CATS,CAT_ORDER});
 })();
 </script>
 <script>
@@ -757,13 +770,19 @@ function renderAccount(){
 }
 function openAccountSheet(){
   const t=CS.t;
+  const curTheme=CS.theme();
   openSheet(sheetHead(t('settings'))+`
     <div class="card">
       <div style="font-size:.9rem;color:var(--muted)" dir="ltr">${esc(user.email)}</div>
+      <p style="margin:2px 0 -4px">${esc(t('themeLabel'))}</p>
+      <div class="role-pick" id="theme-pick">
+        ${['light','dark','system'].map(v=>`<button data-theme-opt="${v}" class="${v===curTheme?'active':''}">${esc(t('theme'+v[0].toUpperCase()+v.slice(1)))}</button>`).join('')}
+      </div>
       <button class="btn ghost" id="acct-sync">🔄 ${esc(t('syncNow'))}</button>
       <button class="btn ghost" id="acct-switch">🏠 ${esc(t('switchHousehold'))}</button>
       <button class="btn ghost" id="acct-signout">👋 ${esc(t('signOut'))}</button>
     </div>`);
+  $('theme-pick').querySelectorAll('[data-theme-opt]').forEach(b=>b.onclick=()=>{ CS.setTheme(b.dataset.themeOpt); openAccountSheet(); });
   $('acct-sync').onclick=async()=>{ await flushQueue(); await refreshHousehold(); toast('🔄'); };
   $('acct-switch').onclick=()=>{ closeSheet(); openHouseholdSwitcher(); };
   $('acct-signout').onclick=async()=>{ await sb.auth.signOut(); closeSheet(); };
