@@ -1,0 +1,90 @@
+<div class="wrap" id="app">
+
+  <header class="top">
+    <div class="brand"><span class="e" id="brand-emoji">🛒</span><b id="brand-name">קניות ביחד</b></div>
+    <div class="top-actions">
+      <button class="iconbtn" id="lang-btn" aria-label="Language">🌐</button>
+      <span id="acct-top"></span>
+    </div>
+  </header>
+
+  <!-- ---------- auth screen ---------- -->
+  <section class="view" id="view-auth">
+    <div class="hero">
+      <div class="hero-emoji e">🛒🥦🧺</div>
+      <h1 id="auth-title">רשימת קניות אחת, לכל המשפחה</h1>
+      <p class="sub" id="auth-sub">מוסיפים, מסמנים, ורואים את זה חי אצל כולם — גם כשכל אחד בחלק אחר של הסופר.</p>
+    </div>
+    <div class="card auth">
+      <div class="tabs">
+        <button class="tab active" data-authtab="login" id="tab-login">התחברות</button>
+        <button class="tab" data-authtab="signup" id="tab-signup">הרשמה</button>
+      </div>
+      <input id="au-name" placeholder="השם שלך" autocomplete="given-name" hidden>
+      <input id="au-email" type="email" placeholder="מייל" autocomplete="email" dir="ltr">
+      <input id="au-pass" type="password" placeholder="סיסמה (לפחות 6 תווים)" autocomplete="current-password" dir="ltr">
+      <div id="au-msg" class="msg" hidden></div>
+      <button class="btn wide" id="au-go">להתחבר</button>
+      <button class="linkbtn" id="au-forgot">שכחתי סיסמה</button>
+    </div>
+  </section>
+
+  <!-- ---------- onboarding: create or join a household ---------- -->
+  <section class="view" id="view-onboard" hidden>
+    <div class="hero">
+      <div class="hero-emoji e">🏠</div>
+      <h1 id="onboard-title">למי קונים?</h1>
+      <p class="sub" id="onboard-sub">יוצרים משק בית, או מצטרפים לאחד קיים עם קוד הזמנה.</p>
+    </div>
+    <div class="card">
+      <h3 id="create-h">משק בית חדש</h3>
+      <div class="add">
+        <input id="hh-name" placeholder="לדוגמה: הבית שלנו">
+        <button class="btn" id="hh-create">ליצור</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3 id="join-h">יש לי קוד הזמנה</h3>
+      <div class="add">
+        <input id="hh-code" placeholder="קוד הזמנה" dir="ltr" maxlength="8">
+        <button class="btn ghost" id="hh-join">להצטרף</button>
+      </div>
+      <div id="hh-msg" class="msg" hidden></div>
+    </div>
+  </section>
+
+  <!-- ---------- main: the shared list ---------- -->
+  <section class="view" id="view-main" hidden>
+    <div class="hhbar">
+      <button class="hhname" id="hh-switch"><b id="hh-name-lbl">…</b><span class="e">▾</span></button>
+      <div class="members" id="members-strip"></div>
+      <button class="iconbtn" id="invite-btn" aria-label="Invite">➕</button>
+    </div>
+
+    <div class="add">
+      <input id="item-input" placeholder="להוסיף מוצר…" autocomplete="off">
+      <button class="btn" id="item-add">הוספה</button>
+    </div>
+
+    <div id="pending-box" class="pending-box" hidden>
+      <h3 class="pending-h"><span class="e">🙋</span> <span id="pending-title">בקשות לאישור</span></h3>
+      <ul class="list" id="pending-list"></ul>
+    </div>
+
+    <div id="groups"></div>
+
+    <div id="bought-box" class="bought-box" hidden>
+      <button class="linkbtn" id="bought-toggle">✅ <span id="bought-title">נקנה</span> (<span id="bought-count">0</span>)</button>
+      <ul class="list" id="bought-list" hidden></ul>
+    </div>
+
+    <ul class="empty" id="empty-state" hidden>
+      <li><span class="e" style="font-size:2.4rem">🧺</span><span id="empty-text">הרשימה ריקה. מה חסר בבית?</span></li>
+    </ul>
+  </section>
+
+  <div class="shade" id="shade" hidden></div>
+  <div class="sheet" id="sheet" hidden></div>
+  <div class="toast" id="toast" hidden></div>
+
+</div>
