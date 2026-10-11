@@ -23,6 +23,8 @@ he: {
   errGeneric:'משהו לא הסתדר, אפשר לנסות שוב.',
   errInvite:'קוד ההזמנה לא תקין או פג תוקף.',
   needHhName:'צריך לתת שם למשק הבית', needCode:'צריך להזין קוד',
+  versionLabel:'גרסה: {v}', updateAvailable:'יש עדכון', updateNow:'🔄 לעדכן',
+  updateDownloading:'מוריד...', updateFailed:'העדכון נכשל, אפשר לנסות שוב', updateDone:'✅ מותקן',
 },
 en: {
   appName:'CartSync', tagline:'One shopping list, for the whole family',
@@ -47,6 +49,8 @@ en: {
   errGeneric:'Something went wrong, try again.',
   errInvite:'That invite code is invalid or expired.',
   needHhName:'Give the household a name', needCode:'Enter a code',
+  versionLabel:'Version: {v}', updateAvailable:'Update available', updateNow:'🔄 Update',
+  updateDownloading:'Downloading...', updateFailed:'Update failed, try again', updateDone:'✅ Installed',
 },
 };
 

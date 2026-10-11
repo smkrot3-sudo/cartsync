@@ -126,6 +126,8 @@ button:disabled{opacity:.6;cursor:default}
 .sheet .close{border:0;background:var(--soft);width:34px;height:34px;border-radius:50%;color:var(--muted)}
 
 .toast{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));inset-inline:16px;background:var(--fg);color:var(--bg);border-radius:14px;padding:11px 16px;text-align:center;z-index:50;box-shadow:var(--shadow)}
+
+.version-bar{display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 8px calc(14px + env(safe-area-inset-bottom,0px));color:var(--muted);font-size:.78rem;flex-wrap:wrap}
 /* household bar, member avatars, item list grouped by category, pending/bought sections, invite sheet */
 .hhbar{display:flex;align-items:center;gap:8px}
 .hhname{display:flex;align-items:center;gap:4px;border:0;background:var(--surface);box-shadow:var(--shadow);border-radius:999px;padding:9px 14px;flex:1;min-width:0;overflow:hidden;text-align:start}
@@ -315,8 +317,13 @@ button:disabled{opacity:.6;cursor:default}
   <div class="sheet" id="sheet" hidden></div>
   <div class="toast" id="toast" hidden></div>
 
+  <footer class="version-bar">
+    <span id="version-label">…</span>
+    <button class="btn small" id="update-btn" hidden>🔄 לעדכן</button>
+  </footer>
+
 </div>
-<script>window.CS_SITE="https://smkrot3-sudo.github.io/cartsync/";window.CS_BUILD=1791754182251;</script>
+<script>window.CS_SITE="https://smkrot3-sudo.github.io/cartsync/";window.CS_BUILD=1791754784723;</script>
 <script>
 /* Bilingual strings + RTL/LTR switching. Pure UI text lives here; app.js reads it via CS.t(key). */
 const STRINGS = {
@@ -343,6 +350,8 @@ he: {
   errGeneric:'משהו לא הסתדר, אפשר לנסות שוב.',
   errInvite:'קוד ההזמנה לא תקין או פג תוקף.',
   needHhName:'צריך לתת שם למשק הבית', needCode:'צריך להזין קוד',
+  versionLabel:'גרסה: {v}', updateAvailable:'יש עדכון', updateNow:'🔄 לעדכן',
+  updateDownloading:'מוריד...', updateFailed:'העדכון נכשל, אפשר לנסות שוב', updateDone:'✅ מותקן',
 },
 en: {
   appName:'CartSync', tagline:'One shopping list, for the whole family',
@@ -367,6 +376,8 @@ en: {
   errGeneric:'Something went wrong, try again.',
   errInvite:'That invite code is invalid or expired.',
   needHhName:'Give the household a name', needCode:'Enter a code',
+  versionLabel:'Version: {v}', updateAvailable:'Update available', updateNow:'🔄 Update',
+  updateDownloading:'Downloading...', updateFailed:'Update failed, try again', updateDone:'✅ Installed',
 },
 };
 
@@ -1032,6 +1043,65 @@ sb.auth.onAuthStateChange((event,session)=>{ setTimeout(()=>onUser(session?sessi
 
 showOfflineNote(!online);
 window.CS.rerenderMain=paintItems;
+})();
+</script>
+<script>
+/* Version footer + in-app updates. Works two ways:
+   - inside the Android app: compares versionCode against app-version.json and installs via the
+     native CartApp.installUpdate bridge (a PackageInstaller session, no browser/Downloads folder).
+   - on the web/PWA: compares the build timestamp baked into this page and just reloads to the latest. */
+(function(){
+const $=CS.$;
+if(!$('version-label')) return;
+const SITE = window.CS_SITE || './';
+const WEB_BUILD = window.CS_BUILD || 0;
+const inApp = !!window.CartApp;
+
+function showBtn(show, label, onClick){
+  const b=$('update-btn');
+  b.hidden=!show; b.textContent=label; b.disabled=false;
+  b.onclick=onClick;
+}
+
+function startAndroidUpdate(url){
+  showBtn(true, CS.t('updateDownloading'), null);
+  const b=$('update-btn'); b.disabled=true;
+  window.onUpdateProgress=function(pct){
+    if(pct===-2){ showBtn(true, CS.t('updateNow'), ()=>startAndroidUpdate(url)); CS.toast(CS.t('updateFailed')); return; }
+    if(pct>=100){ b.textContent=CS.t('updateDone'); return; }
+    b.textContent='⏳ '+pct+'%';
+  };
+  try{ window.CartApp.installUpdate(url); }catch(e){ CS.toast(CS.t('updateFailed')); }
+}
+
+function paintCurrentLabel(){
+  if(inApp){
+    let current=0, name='';
+    try{ current=window.CartApp.versionCode(); name=window.CartApp.versionName(); }catch(e){}
+    $('version-label').textContent=CS.t('versionLabel').replace('{v}', name+' ('+current+')');
+  }else{
+    const d=new Date(WEB_BUILD);
+    const label=isNaN(d)?'':d.toLocaleString(CS.lang()==='he'?'he-IL':'en-US',{dateStyle:'short',timeStyle:'short'});
+    $('version-label').textContent=CS.t('versionLabel').replace('{v}', label);
+  }
+}
+
+async function check(){
+  paintCurrentLabel(); // always show what we know locally, even before (or instead of) the version-check fetch
+  try{
+    const r=await fetch(SITE+'app-version.json?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok) return;
+    const v=await r.json();
+    if(inApp && v.android){
+      let current=0; try{ current=window.CartApp.versionCode(); }catch(e){}
+      if(v.android.versionCode>current) showBtn(true, CS.t('updateNow'), ()=>startAndroidUpdate(v.android.url));
+    }else if(!inApp && v.build && v.build>WEB_BUILD+5000){
+      showBtn(true, CS.t('updateNow'), ()=>location.reload());
+    }
+  }catch(e){ /* offline or missing file: stay quiet, not worth an error toast */ }
+}
+check();
+window.CS.checkUpdate=check;
 })();
 </script>
 <script>

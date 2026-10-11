@@ -5,6 +5,9 @@ on:
     paths: ["android/**", ".github/workflows/android.yml"]
   workflow_dispatch: {}
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,6 +26,16 @@ jobs:
         # missing platform/build-tools pieces once the licenses are accepted.
         run: yes | "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --licenses || true
 
+      - name: Bump versionCode
+        id: bump
+        run: |
+          set -e
+          CURRENT=$(grep -oP 'versionCode \K\d+' android/app/build.gradle)
+          NEXT=$((CURRENT + 1))
+          sed -i "s/versionCode $CURRENT/versionCode $NEXT/" android/app/build.gradle
+          echo "code=$NEXT" >> "$GITHUB_OUTPUT"
+          echo "name=$(grep -oP 'versionName "\K[^"]+' android/app/build.gradle)" >> "$GITHUB_OUTPUT"
+
       - name: Build debug APK
         working-directory: android
         run: gradle assembleDebug --no-daemon
@@ -31,3 +44,32 @@ jobs:
         with:
           name: cartsync-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Publish APK + update metadata on the live site
+        run: |
+          set -e
+          mkdir -p docs/apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk docs/apk/cartsync-debug.apk
+          python3 - "${{ steps.bump.outputs.code }}" "${{ steps.bump.outputs.name }}" <<'PY'
+          import json, sys, os
+          versioncode, versionname = int(sys.argv[1]), sys.argv[2]
+          path = "docs/app-version.json"
+          data = {}
+          if os.path.exists(path):
+              try: data = json.load(open(path, encoding="utf8"))
+              except Exception: data = {}
+          data["android"] = {
+              "versionCode": versioncode, "versionName": versionname,
+              "url": "https://smkrot3-sudo.github.io/cartsync/apk/cartsync-debug.apk",
+          }
+          json.dump(data, open(path, "w", encoding="utf8"), ensure_ascii=False, indent=2)
+          PY
+
+      - name: Commit updated APK + version metadata
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add android/app/build.gradle docs/apk/cartsync-debug.apk docs/app-version.json
+          git diff --cached --quiet || git commit -m "ci: publish Android build ${{ steps.bump.outputs.code }} [skip ci]"
+          git push

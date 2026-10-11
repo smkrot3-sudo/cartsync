@@ -54,6 +54,8 @@ def page():
 <script>
 {read('web/parts/cloud.js')}</script>
 <script>
+{read('web/parts/update.js')}</script>
+<script>
 if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{{}}));
 </script>
 </body>
@@ -62,4 +64,14 @@ if('serviceWorker' in navigator&&location.protocol==='https:')addEventListener('
 open(P('docs/index.html'), 'w', encoding='utf8').write(page())
 sw = read('web/sw.js').replace('__BUILD__', str(BUILD))
 open(P('docs/sw.js'), 'w', encoding='utf8').write(sw)
+
+# app-version.json: this build's web timestamp, keeping whatever the Android CI last published
+vpath = P('docs/app-version.json')
+vdata = {}
+if os.path.exists(vpath):
+    try: vdata = json.load(open(vpath, encoding='utf8'))
+    except Exception: vdata = {}
+vdata['build'] = BUILD
+json.dump(vdata, open(vpath, 'w', encoding='utf8'), ensure_ascii=False, indent=2)
+
 print('built', BUILD)
