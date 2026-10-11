@@ -1,27 +1,33 @@
-/* Layout: one warm column, phone first — same system as tsaad-katan (CSS vars, .wrap/.card/.btn), different palette. */
+/* Layout: one teal/coral column, phone first — same system as tsaad-katan (CSS vars, .wrap/.card/.btn), own duotone palette. */
 :root{
-  --bg:#FBF9F4; --surface:#FFFFFF; --soft:#FFF1E6; --fg:#2E2A24; --muted:#827A6E; --line:#EDE6DA;
-  --accent:#FF9A61; --accent-ink:#FFFFFF; --accent-soft:#FFE7D6;
-  --ok:#4CAF82; --ok-soft:#DCF3E7;
-  --warn:#F2B134; --warn-soft:#FFF3D6;
-  --danger:#E25C5C; --danger-soft:#FBE2E2;
-  --shadow:0 6px 18px rgba(255,154,97,.14),0 1px 3px rgba(46,42,36,.06);
-  --shade:rgba(46,42,36,.42);
+  --bg:#F3FBFA; --surface:#FFFFFF; --soft:#E3F6F3; --fg:#1E2E2C; --muted:#6C8B86; --line:#DAEEEA;
+  --accent:#1FA998; --accent-ink:#FFFFFF; --accent-soft:#D2F2EC;
+  --coral:#FF6F5E; --coral-ink:#FFFFFF; --coral-soft:#FFE1DB;
+  --gold:#B4890F; --gold-soft:#FBEFD2;
+  --ok:#3FAE6A; --ok-soft:#DDF2E4;
+  --warn:var(--coral); --warn-soft:var(--coral-soft);
+  --danger:#E04F4F; --danger-soft:#FAE1E1;
+  --shadow:0 6px 18px rgba(31,169,152,.14),0 1px 3px rgba(30,46,44,.06);
+  --shade:rgba(20,36,34,.42);
   --display:"Suez One","Varela Round",system-ui,sans-serif;
   --body:"Varela Round",system-ui,"Segoe UI",Arial,sans-serif;
   --emoji:"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif;
   --r:18px;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#1C1A17; --surface:#262320; --soft:#332A22; --fg:#F4EFE8; --muted:#B3A99C; --line:#3A352E;
-  --accent:#FFA873; --accent-ink:#261405; --accent-soft:#4A3324;
-  --ok:#6BD6A4; --ok-soft:#1F4433; --warn:#F2C45E; --warn-soft:#4A3C1A;
+  --bg:#102321; --surface:#17302C; --soft:#1C3B35; --fg:#E8F6F3; --muted:#8FB3AC; --line:#274742;
+  --accent:#3FD2BE; --accent-ink:#062420; --accent-soft:#1C4A42;
+  --coral:#FF8A79; --coral-ink:#3A1410; --coral-soft:#4A2a22;
+  --gold:#E4C260; --gold-soft:#4A3C1A;
+  --ok:#5FD08A; --ok-soft:#1E3F2C; --warn:var(--coral); --warn-soft:var(--coral-soft);
   --danger:#F08787; --danger-soft:#4A2626;
   --shadow:0 6px 18px rgba(0,0,0,.3); --shade:rgba(0,0,0,.6); color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#1C1A17; --surface:#262320; --soft:#332A22; --fg:#F4EFE8; --muted:#B3A99C; --line:#3A352E;
-  --accent:#FFA873; --accent-ink:#261405; --accent-soft:#4A3324;
-  --ok:#6BD6A4; --ok-soft:#1F4433; --warn:#F2C45E; --warn-soft:#4A3C1A;
+  --bg:#102321; --surface:#17302C; --soft:#1C3B35; --fg:#E8F6F3; --muted:#8FB3AC; --line:#274742;
+  --accent:#3FD2BE; --accent-ink:#062420; --accent-soft:#1C4A42;
+  --coral:#FF8A79; --coral-ink:#3A1410; --coral-soft:#4A2a22;
+  --gold:#E4C260; --gold-soft:#4A3C1A;
+  --ok:#5FD08A; --ok-soft:#1E3F2C; --warn:var(--coral); --warn-soft:var(--coral-soft);
   --danger:#F08787; --danger-soft:#4A2626;
   --shadow:0 6px 18px rgba(0,0,0,.3); --shade:rgba(0,0,0,.6); color-scheme:dark}
 
@@ -67,7 +73,7 @@ button:disabled{opacity:.6;cursor:default}
 .msg.err{background:var(--danger-soft);color:var(--danger)}
 .msg.ok{background:var(--ok-soft);color:var(--ok)}
 
-.btn{border:0;background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:11px 18px;font-size:.96rem;white-space:nowrap;box-shadow:0 4px 12px rgba(255,154,97,.3)}
+.btn{border:0;background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:11px 18px;font-size:.96rem;white-space:nowrap;box-shadow:0 4px 12px rgba(31,169,152,.3)}
 .btn.ghost{background:var(--surface);color:var(--accent);border:2px solid var(--accent-soft);box-shadow:none}
 .btn.small{padding:7px 13px;font-size:.86rem}
 .btn.wide{width:100%}

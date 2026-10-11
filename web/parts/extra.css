@@ -7,7 +7,7 @@
 .avatar:first-child{margin-inline-start:0}
 .avatar.big{width:44px;height:44px;font-size:1.05rem;margin:0}
 .role-chip{font-size:.75rem;padding:2px 9px;border-radius:999px;background:var(--soft);color:var(--muted)}
-.role-chip.owner{background:var(--warn-soft);color:#9A6B10}
+.role-chip.owner{background:var(--gold-soft);color:var(--gold)}
 .role-chip.editor{background:var(--ok-soft);color:var(--ok)}
 .role-chip.requester{background:var(--accent-soft);color:var(--accent)}
 .role-chip.viewer{background:var(--soft);color:var(--muted)}
