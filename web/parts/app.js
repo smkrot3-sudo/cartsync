@@ -81,6 +81,7 @@ function paintStrings(){
   $('hh-code').placeholder = t('codePh');
   $('hh-join').textContent = t('join');
   $('item-input').placeholder = t('itemPh');
+  $('item-qty').placeholder = t('qtyPh');
   $('item-add').textContent = t('add');
   $('pending-title').textContent = t('pendingTitle');
   $('bought-title').textContent = t('boughtTitle');
@@ -99,15 +100,24 @@ function renderMembers(members){
     `<span class="avatar" title="${esc(m.display_name||m.email||'')}">${esc(initials(m.display_name||m.email))}</span>`).join('');
 }
 
+/* ---------- view mode: grouped-by-category vs flat+draggable ---------- */
+let viewMode='grouped';
+try{ viewMode = localStorage.getItem('cs-view')||'grouped'; }catch(e){}
+function paintViewToggle(){ $('view-toggle').textContent = viewMode==='flat'?'📋':'🗂️'; }
+function setViewMode(m){ viewMode=m; try{localStorage.setItem('cs-view',m)}catch(e){} paintViewToggle(); if(window.CS.rerenderMain) window.CS.rerenderMain(); }
+$('view-toggle').addEventListener('click',()=>setViewMode(viewMode==='flat'?'grouped':'flat'));
+paintViewToggle();
+
 /* ---------- item rows ---------- */
-function itemRow(item, mode){
+function itemRow(item, mode, draggable){
   const cat = CS.CATS[item.category]||CS.CATS.other;
-  const lang = CS.lang();
   const who = item.checked_by_name ? `<span class="who">${esc(item.checked_by_name)}</span>` : '';
+  const qty = item.qty ? `<span class="qty-tag">${esc(item.qty)}</span>` : '';
   if(mode==='pending'){
     return `<li class="item" data-id="${item.id}">
       <span class="emo e">${esc(item.emoji||cat.emoji)}</span>
       <span class="t">${esc(item.text)}<span class="who">${esc(item.requested_by_name||'')}</span></span>
+      ${qty}
       <span class="pending-actions">
         <button class="ok-btn" data-action="approve" data-id="${item.id}" aria-label="approve">✓</button>
         <button class="no-btn" data-action="reject" data-id="${item.id}" aria-label="reject">✕</button>
@@ -115,21 +125,74 @@ function itemRow(item, mode){
     </li>`;
   }
   const done = item.status==='checked';
-  return `<li class="item ${done?'done':''}" data-id="${item.id}">
+  const handle = draggable ? `<span class="handle">⋮⋮</span>` : '';
+  return `<li class="item ${done?'done':''}" data-id="${item.id}" ${draggable?'draggable="true"':''}>
+    ${handle}
     <button class="check" data-action="toggle" data-id="${item.id}" aria-label="check">
       <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
     <span class="emo e">${esc(item.emoji||cat.emoji)}</span>
     <span class="t">${esc(item.text)}${who}</span>
+    ${qty}
     <button class="del" data-action="del" data-id="${item.id}" aria-label="delete">🗑️</button>
   </li>`;
 }
 
+/* swipe left/right on an item toggles check, as an alternative to the check button */
+function attachSwipe(container){
+  container.querySelectorAll('.item[data-id]').forEach(el=>{
+    let x0=null,y0=null,dx=0,active=false;
+    el.addEventListener('pointerdown',e=>{
+      if(e.target.closest('button,.handle')) return;
+      x0=e.clientX; y0=e.clientY; dx=0; active=true; el.classList.add('swiping'); el.setPointerCapture(e.pointerId);
+    });
+    el.addEventListener('pointermove',e=>{
+      if(!active) return;
+      dx=e.clientX-x0;
+      if(Math.abs(e.clientY-y0)>40){ active=false; el.classList.remove('swiping'); el.style.transform=''; return; }
+      el.style.transform=`translateX(${dx}px)`;
+      el.classList.toggle('swipe-ok',Math.abs(dx)>70);
+    });
+    const end=()=>{
+      if(!active) return;
+      active=false; el.classList.remove('swiping');
+      if(Math.abs(dx)>70) window.CS.on && window.CS.on.toggle && window.CS.on.toggle(el.dataset.id);
+      el.style.transform=''; el.classList.remove('swipe-ok');
+    };
+    el.addEventListener('pointerup',end);
+    el.addEventListener('pointercancel',end);
+  });
+}
+
+/* drag-to-reorder, only active in flat view */
+function attachDrag(listEl){
+  if(!listEl) return;
+  let dragEl=null;
+  listEl.querySelectorAll('.item[draggable="true"]').forEach(el=>{
+    el.addEventListener('dragstart',()=>{ dragEl=el; el.classList.add('dragging'); });
+    el.addEventListener('dragend',()=>{
+      el.classList.remove('dragging'); dragEl=null;
+      const ids=[...listEl.querySelectorAll('.item[data-id]')].map(x=>x.dataset.id);
+      window.CS.on && window.CS.on.reorder && window.CS.on.reorder(ids);
+    });
+    el.addEventListener('dragover',e=>{
+      e.preventDefault();
+      if(!dragEl||dragEl===el) return;
+      const r=el.getBoundingClientRect();
+      const before = (e.clientY - r.top) < r.height/2;
+      listEl.insertBefore(dragEl, before?el:el.nextSibling);
+    });
+  });
+}
+
 function renderGroups(items){
-  const active = items.filter(i=>i.status==='active');
+  const active = items.filter(i=>i.status==='active').sort((a,b)=>(a.position||0)-(b.position||0));
   const box = $('groups');
   if(!active.length){ box.innerHTML=''; }
-  else{
+  else if(viewMode==='flat'){
+    box.innerHTML = `<ul class="list" id="flat-list">${active.map(i=>itemRow(i,'active',true)).join('')}</ul>`;
+    attachDrag($('flat-list'));
+  }else{
     const byCat = {};
     active.forEach(i=>{ (byCat[i.category||'other'] = byCat[i.category||'other']||[]).push(i); });
     box.innerHTML = CS.CAT_ORDER.filter(c=>byCat[c]&&byCat[c].length).map(c=>{
@@ -139,6 +202,7 @@ function renderGroups(items){
     }).join('');
   }
   $('empty-state').hidden = !!active.length;
+  attachSwipe(box);
 
   const pending = items.filter(i=>i.status==='pending');
   $('pending-box').hidden = !pending.length;
@@ -148,6 +212,7 @@ function renderGroups(items){
   $('bought-box').hidden = !bought.length;
   $('bought-count').textContent = bought.length;
   $('bought-list').innerHTML = bought.map(i=>itemRow(i,'active')).join('');
+  attachSwipe($('bought-list'));
 }
 $('bought-toggle').addEventListener('click',()=>{ const l=$('bought-list'); l.hidden=!l.hidden; });
 

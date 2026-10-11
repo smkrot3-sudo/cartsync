@@ -173,14 +173,15 @@ async function aiCategorize(text){
   }catch(e){ return null; }
 }
 async function addItem(){
-  const input=$('item-input');
+  const input=$('item-input'), qtyInput=$('item-qty');
   const text=input.value.trim();
+  const qty=qtyInput.value.trim();
   if(!text||!listId) return;
-  input.value='';
+  input.value=''; qtyInput.value='';
   let g=CS.guess(text);
   if(g.cat==='other'){ const ai=await aiCategorize(text); if(ai) g=ai; } // local dictionary has no match: ask the AI edge function instead of settling for "other"
   const {error}=await sb.from('list_items').insert({
-    list_id:listId, household_id:household, text, category:g.cat, emoji:g.emoji, created_by:user.id,
+    list_id:listId, household_id:household, text, category:g.cat, emoji:g.emoji, qty:qty||null, created_by:user.id,
     position: Date.now(),
   });
   if(error){ toast(CS.authErr(error)); return; }
@@ -188,6 +189,12 @@ async function addItem(){
 }
 $('item-add').addEventListener('click',addItem);
 $('item-input').addEventListener('keydown',e=>{ if(e.key==='Enter') addItem(); });
+$('item-qty').addEventListener('keydown',e=>{ if(e.key==='Enter') addItem(); });
+
+async function reorderItems(ids){
+  // cheap re-stripe of positions for the dragged list — small household lists, one update per row is fine
+  await Promise.all(ids.map((id,i)=>sb.from('list_items').update({position:(i+1)*1000}).eq('id',id)));
+}
 
 async function toggleItem(id){
   const it=items.find(i=>i.id===id); if(!it) return;
@@ -197,6 +204,7 @@ async function toggleItem(id){
 async function delItem(id){ await sb.from('list_items').delete().eq('id',id); }
 async function approveItem(id){ await sb.from('list_items').update({status:'active'}).eq('id',id); toast(CS.t('itemApproved')); }
 async function rejectItem(id){ await sb.from('list_items').delete().eq('id',id); }
+window.CS.on={toggle:toggleItem, reorder:reorderItems};
 
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-action]'); if(!b) return;

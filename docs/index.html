@@ -97,6 +97,7 @@ button:disabled{opacity:.6;cursor:default}
 .add{display:flex;gap:8px}
 .add input{flex:1;min-width:0;border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:12px 14px}
 .add input:focus{border-color:var(--accent);outline:none}
+.add input.qty-input{flex:0 0 72px;min-width:0;text-align:center}
 
 .empty{list-style:none;color:var(--muted);text-align:center;padding:26px 12px;border:2px dashed var(--line);border-radius:var(--r);display:flex;flex-direction:column;align-items:center;gap:8px;margin:0}
 
@@ -125,7 +126,13 @@ button:disabled{opacity:.6;cursor:default}
 .group-h{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:.85rem;padding:6px 4px;font-weight:bold}
 .list{list-style:none;margin:0 0 10px;padding:0;display:flex;flex-direction:column;gap:8px}
 
-.item{display:flex;align-items:center;gap:10px;background:var(--surface);border-radius:16px;padding:10px 12px;box-shadow:var(--shadow)}
+.item{display:flex;align-items:center;gap:10px;background:var(--surface);border-radius:16px;padding:10px 12px;box-shadow:var(--shadow);position:relative;touch-action:pan-y;transition:transform .18s ease,background-color .18s ease}
+.item.swiping{transition:none}
+.item.swipe-ok{background:var(--ok-soft)}
+.item .handle{flex:none;color:var(--line);cursor:grab;font-size:1.1rem;padding:0 2px;touch-action:none}
+.item.dragging{opacity:.5}
+.item .qty-tag{flex:none;font-size:.78rem;color:var(--muted);background:var(--soft);border-radius:8px;padding:2px 7px;font-variant-numeric:tabular-nums}
+.view-toggle-hint{text-align:center;font-size:.8rem;color:var(--muted);margin:-4px 0 2px}
 .item .emo{width:36px;height:36px;border-radius:12px;background:var(--soft);display:grid;place-items:center;font-size:1.2rem;flex:none;font-family:var(--emoji)}
 .item .check{width:28px;height:28px;border-radius:50%;border:2.5px solid var(--ok);background:var(--surface);flex:none;display:grid;place-items:center;padding:0}
 .item .check svg{opacity:0;transform:scale(.4);transition:all .2s cubic-bezier(.3,1.6,.5,1);width:15px;height:15px;stroke:white}
@@ -225,11 +232,13 @@ button:disabled{opacity:.6;cursor:default}
     <div class="hhbar">
       <button class="hhname" id="hh-switch"><b id="hh-name-lbl">…</b><span class="e">▾</span></button>
       <div class="members" id="members-strip"></div>
+      <button class="iconbtn" id="view-toggle" aria-label="View" title="תצוגה">🗂️</button>
       <button class="iconbtn" id="invite-btn" aria-label="Invite">➕</button>
     </div>
 
     <div class="add">
       <input id="item-input" placeholder="להוסיף מוצר…" autocomplete="off">
+      <input id="item-qty" class="qty-input" placeholder="כמות" autocomplete="off">
       <button class="btn" id="item-add">הוספה</button>
     </div>
 
@@ -255,7 +264,7 @@ button:disabled{opacity:.6;cursor:default}
   <div class="toast" id="toast" hidden></div>
 
 </div>
-<script>window.CS_SITE="https://smkrot3-sudo.github.io/cartsync/";window.CS_BUILD=1791751563077;</script>
+<script>window.CS_SITE="https://smkrot3-sudo.github.io/cartsync/";window.CS_BUILD=1791752120393;</script>
 <script>
 /* Bilingual strings + RTL/LTR switching. Pure UI text lives here; app.js reads it via CS.t(key). */
 const STRINGS = {
@@ -269,7 +278,7 @@ he: {
   onboardTitle:'למי קונים?', onboardSub:'יוצרים משק בית, או מצטרפים לאחד קיים עם קוד הזמנה.',
   createHh:'משק בית חדש', hhNamePh:'לדוגמה: הבית שלנו', create:'ליצור',
   joinHh:'יש לי קוד הזמנה', codePh:'קוד הזמנה', join:'להצטרף',
-  itemPh:'להוסיף מוצר…', add:'הוספה',
+  itemPh:'להוסיף מוצר…', qtyPh:'כמות', add:'הוספה',
   pendingTitle:'בקשות לאישור', boughtTitle:'נקנה', emptyList:'הרשימה ריקה. מה חסר בבית?',
   invite:'הזמנת חבר/ה', inviteSub:'כל מי שמקבל את הקוד הזה יכול להצטרף תוך 7 ימים.',
   inviteRole:'הרשאה לחברים חדשים:', inviteCopy:'להעתיק קוד', inviteCopied:'📋 הועתק',
@@ -293,7 +302,7 @@ en: {
   onboardTitle:'Shopping for who?', onboardSub:'Create a household, or join one with an invite code.',
   createHh:'New household', hhNamePh:'e.g. Our home', create:'Create',
   joinHh:'I have an invite code', codePh:'Invite code', join:'Join',
-  itemPh:'Add an item…', add:'Add',
+  itemPh:'Add an item…', qtyPh:'Qty', add:'Add',
   pendingTitle:'Needs approval', boughtTitle:'Bought', emptyList:'The list is empty. What are we out of?',
   invite:'Invite someone', inviteSub:'Anyone with this code can join within 7 days.',
   inviteRole:'Role for new members:', inviteCopy:'Copy code', inviteCopied:'📋 Copied',
@@ -456,6 +465,7 @@ function paintStrings(){
   $('hh-code').placeholder = t('codePh');
   $('hh-join').textContent = t('join');
   $('item-input').placeholder = t('itemPh');
+  $('item-qty').placeholder = t('qtyPh');
   $('item-add').textContent = t('add');
   $('pending-title').textContent = t('pendingTitle');
   $('bought-title').textContent = t('boughtTitle');
@@ -474,15 +484,24 @@ function renderMembers(members){
     `<span class="avatar" title="${esc(m.display_name||m.email||'')}">${esc(initials(m.display_name||m.email))}</span>`).join('');
 }
 
+/* ---------- view mode: grouped-by-category vs flat+draggable ---------- */
+let viewMode='grouped';
+try{ viewMode = localStorage.getItem('cs-view')||'grouped'; }catch(e){}
+function paintViewToggle(){ $('view-toggle').textContent = viewMode==='flat'?'📋':'🗂️'; }
+function setViewMode(m){ viewMode=m; try{localStorage.setItem('cs-view',m)}catch(e){} paintViewToggle(); if(window.CS.rerenderMain) window.CS.rerenderMain(); }
+$('view-toggle').addEventListener('click',()=>setViewMode(viewMode==='flat'?'grouped':'flat'));
+paintViewToggle();
+
 /* ---------- item rows ---------- */
-function itemRow(item, mode){
+function itemRow(item, mode, draggable){
   const cat = CS.CATS[item.category]||CS.CATS.other;
-  const lang = CS.lang();
   const who = item.checked_by_name ? `<span class="who">${esc(item.checked_by_name)}</span>` : '';
+  const qty = item.qty ? `<span class="qty-tag">${esc(item.qty)}</span>` : '';
   if(mode==='pending'){
     return `<li class="item" data-id="${item.id}">
       <span class="emo e">${esc(item.emoji||cat.emoji)}</span>
       <span class="t">${esc(item.text)}<span class="who">${esc(item.requested_by_name||'')}</span></span>
+      ${qty}
       <span class="pending-actions">
         <button class="ok-btn" data-action="approve" data-id="${item.id}" aria-label="approve">✓</button>
         <button class="no-btn" data-action="reject" data-id="${item.id}" aria-label="reject">✕</button>
@@ -490,21 +509,74 @@ function itemRow(item, mode){
     </li>`;
   }
   const done = item.status==='checked';
-  return `<li class="item ${done?'done':''}" data-id="${item.id}">
+  const handle = draggable ? `<span class="handle">⋮⋮</span>` : '';
+  return `<li class="item ${done?'done':''}" data-id="${item.id}" ${draggable?'draggable="true"':''}>
+    ${handle}
     <button class="check" data-action="toggle" data-id="${item.id}" aria-label="check">
       <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
     <span class="emo e">${esc(item.emoji||cat.emoji)}</span>
     <span class="t">${esc(item.text)}${who}</span>
+    ${qty}
     <button class="del" data-action="del" data-id="${item.id}" aria-label="delete">🗑️</button>
   </li>`;
 }
 
+/* swipe left/right on an item toggles check, as an alternative to the check button */
+function attachSwipe(container){
+  container.querySelectorAll('.item[data-id]').forEach(el=>{
+    let x0=null,y0=null,dx=0,active=false;
+    el.addEventListener('pointerdown',e=>{
+      if(e.target.closest('button,.handle')) return;
+      x0=e.clientX; y0=e.clientY; dx=0; active=true; el.classList.add('swiping'); el.setPointerCapture(e.pointerId);
+    });
+    el.addEventListener('pointermove',e=>{
+      if(!active) return;
+      dx=e.clientX-x0;
+      if(Math.abs(e.clientY-y0)>40){ active=false; el.classList.remove('swiping'); el.style.transform=''; return; }
+      el.style.transform=`translateX(${dx}px)`;
+      el.classList.toggle('swipe-ok',Math.abs(dx)>70);
+    });
+    const end=()=>{
+      if(!active) return;
+      active=false; el.classList.remove('swiping');
+      if(Math.abs(dx)>70) window.CS.on && window.CS.on.toggle && window.CS.on.toggle(el.dataset.id);
+      el.style.transform=''; el.classList.remove('swipe-ok');
+    };
+    el.addEventListener('pointerup',end);
+    el.addEventListener('pointercancel',end);
+  });
+}
+
+/* drag-to-reorder, only active in flat view */
+function attachDrag(listEl){
+  if(!listEl) return;
+  let dragEl=null;
+  listEl.querySelectorAll('.item[draggable="true"]').forEach(el=>{
+    el.addEventListener('dragstart',()=>{ dragEl=el; el.classList.add('dragging'); });
+    el.addEventListener('dragend',()=>{
+      el.classList.remove('dragging'); dragEl=null;
+      const ids=[...listEl.querySelectorAll('.item[data-id]')].map(x=>x.dataset.id);
+      window.CS.on && window.CS.on.reorder && window.CS.on.reorder(ids);
+    });
+    el.addEventListener('dragover',e=>{
+      e.preventDefault();
+      if(!dragEl||dragEl===el) return;
+      const r=el.getBoundingClientRect();
+      const before = (e.clientY - r.top) < r.height/2;
+      listEl.insertBefore(dragEl, before?el:el.nextSibling);
+    });
+  });
+}
+
 function renderGroups(items){
-  const active = items.filter(i=>i.status==='active');
+  const active = items.filter(i=>i.status==='active').sort((a,b)=>(a.position||0)-(b.position||0));
   const box = $('groups');
   if(!active.length){ box.innerHTML=''; }
-  else{
+  else if(viewMode==='flat'){
+    box.innerHTML = `<ul class="list" id="flat-list">${active.map(i=>itemRow(i,'active',true)).join('')}</ul>`;
+    attachDrag($('flat-list'));
+  }else{
     const byCat = {};
     active.forEach(i=>{ (byCat[i.category||'other'] = byCat[i.category||'other']||[]).push(i); });
     box.innerHTML = CS.CAT_ORDER.filter(c=>byCat[c]&&byCat[c].length).map(c=>{
@@ -514,6 +586,7 @@ function renderGroups(items){
     }).join('');
   }
   $('empty-state').hidden = !!active.length;
+  attachSwipe(box);
 
   const pending = items.filter(i=>i.status==='pending');
   $('pending-box').hidden = !pending.length;
@@ -523,6 +596,7 @@ function renderGroups(items){
   $('bought-box').hidden = !bought.length;
   $('bought-count').textContent = bought.length;
   $('bought-list').innerHTML = bought.map(i=>itemRow(i,'active')).join('');
+  attachSwipe($('bought-list'));
 }
 $('bought-toggle').addEventListener('click',()=>{ const l=$('bought-list'); l.hidden=!l.hidden; });
 
@@ -726,14 +800,15 @@ async function aiCategorize(text){
   }catch(e){ return null; }
 }
 async function addItem(){
-  const input=$('item-input');
+  const input=$('item-input'), qtyInput=$('item-qty');
   const text=input.value.trim();
+  const qty=qtyInput.value.trim();
   if(!text||!listId) return;
-  input.value='';
+  input.value=''; qtyInput.value='';
   let g=CS.guess(text);
   if(g.cat==='other'){ const ai=await aiCategorize(text); if(ai) g=ai; } // local dictionary has no match: ask the AI edge function instead of settling for "other"
   const {error}=await sb.from('list_items').insert({
-    list_id:listId, household_id:household, text, category:g.cat, emoji:g.emoji, created_by:user.id,
+    list_id:listId, household_id:household, text, category:g.cat, emoji:g.emoji, qty:qty||null, created_by:user.id,
     position: Date.now(),
   });
   if(error){ toast(CS.authErr(error)); return; }
@@ -741,6 +816,12 @@ async function addItem(){
 }
 $('item-add').addEventListener('click',addItem);
 $('item-input').addEventListener('keydown',e=>{ if(e.key==='Enter') addItem(); });
+$('item-qty').addEventListener('keydown',e=>{ if(e.key==='Enter') addItem(); });
+
+async function reorderItems(ids){
+  // cheap re-stripe of positions for the dragged list — small household lists, one update per row is fine
+  await Promise.all(ids.map((id,i)=>sb.from('list_items').update({position:(i+1)*1000}).eq('id',id)));
+}
 
 async function toggleItem(id){
   const it=items.find(i=>i.id===id); if(!it) return;
@@ -750,6 +831,7 @@ async function toggleItem(id){
 async function delItem(id){ await sb.from('list_items').delete().eq('id',id); }
 async function approveItem(id){ await sb.from('list_items').update({status:'active'}).eq('id',id); toast(CS.t('itemApproved')); }
 async function rejectItem(id){ await sb.from('list_items').delete().eq('id',id); }
+window.CS.on={toggle:toggleItem, reorder:reorderItems};
 
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-action]'); if(!b) return;
