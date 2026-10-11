@@ -14,9 +14,7 @@
   --marker:"Rubik Wet Paint",var(--display);
   --emoji:"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif;
   --r:18px;
-  --paper:#FFFDF5; --paper-ink:#2E2A1F; --paper-line:rgba(70,110,170,.16);
-  --board:#D8C6A6; --board-dot:rgba(120,90,50,.16);
-  --sticky:#FFE07A; --sticky-ink:#4A3B10; --sticky-line:rgba(120,95,20,.18);
+  --rule:rgba(31,169,152,.08);
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#102321; --surface:#17302C; --soft:#1C3B35; --fg:#E8F6F3; --muted:#8FB3AC; --line:#274742;
@@ -25,18 +23,14 @@
   --gold:#E4C260; --gold-soft:#4A3C1A;
   --ok:#5FD08A; --ok-soft:#1E3F2C; --warn:var(--coral); --warn-soft:var(--coral-soft);
   --danger:#F08787; --danger-soft:#4A2626;
-  --paper:#241F17; --paper-ink:#F0E9D8; --paper-line:rgba(255,255,255,.08);
-  --board:#1A1510; --board-dot:rgba(255,255,255,.05);
-  --sticky:#4A3C10; --sticky-ink:#F5E7A8; --sticky-line:rgba(255,255,255,.1);
+  --rule:rgba(255,255,255,.055);
   --shadow:0 6px 18px rgba(0,0,0,.3); --shade:rgba(0,0,0,.6); color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#102321; --surface:#17302C; --soft:#1C3B35; --fg:#E8F6F3; --muted:#8FB3AC; --line:#274742;
   --accent:#3FD2BE; --accent-ink:#062420; --accent-soft:#1C4A42;
   --coral:#FF8A79; --coral-ink:#3A1410; --coral-soft:#4A2a22;
   --gold:#E4C260; --gold-soft:#4A3C1A;
-  --paper:#241F17; --paper-ink:#F0E9D8; --paper-line:rgba(255,255,255,.08);
-  --board:#1A1510; --board-dot:rgba(255,255,255,.05);
-  --sticky:#4A3C10; --sticky-ink:#F5E7A8; --sticky-line:rgba(255,255,255,.1);
+  --rule:rgba(255,255,255,.055);
   --ok:#5FD08A; --ok-soft:#1E3F2C; --warn:var(--coral); --warn-soft:var(--coral-soft);
   --danger:#F08787; --danger-soft:#4A2626;
   --shadow:0 6px 18px rgba(0,0,0,.3); --shade:rgba(0,0,0,.6); color-scheme:dark}

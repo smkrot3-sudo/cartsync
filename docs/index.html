@@ -36,9 +36,7 @@
   --marker:"Rubik Wet Paint",var(--display);
   --emoji:"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif;
   --r:18px;
-  --paper:#FFFDF5; --paper-ink:#2E2A1F; --paper-line:rgba(70,110,170,.16);
-  --board:#D8C6A6; --board-dot:rgba(120,90,50,.16);
-  --sticky:#FFE07A; --sticky-ink:#4A3B10; --sticky-line:rgba(120,95,20,.18);
+  --rule:rgba(31,169,152,.08);
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#102321; --surface:#17302C; --soft:#1C3B35; --fg:#E8F6F3; --muted:#8FB3AC; --line:#274742;
@@ -47,18 +45,14 @@
   --gold:#E4C260; --gold-soft:#4A3C1A;
   --ok:#5FD08A; --ok-soft:#1E3F2C; --warn:var(--coral); --warn-soft:var(--coral-soft);
   --danger:#F08787; --danger-soft:#4A2626;
-  --paper:#241F17; --paper-ink:#F0E9D8; --paper-line:rgba(255,255,255,.08);
-  --board:#1A1510; --board-dot:rgba(255,255,255,.05);
-  --sticky:#4A3C10; --sticky-ink:#F5E7A8; --sticky-line:rgba(255,255,255,.1);
+  --rule:rgba(255,255,255,.055);
   --shadow:0 6px 18px rgba(0,0,0,.3); --shade:rgba(0,0,0,.6); color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#102321; --surface:#17302C; --soft:#1C3B35; --fg:#E8F6F3; --muted:#8FB3AC; --line:#274742;
   --accent:#3FD2BE; --accent-ink:#062420; --accent-soft:#1C4A42;
   --coral:#FF8A79; --coral-ink:#3A1410; --coral-soft:#4A2a22;
   --gold:#E4C260; --gold-soft:#4A3C1A;
-  --paper:#241F17; --paper-ink:#F0E9D8; --paper-line:rgba(255,255,255,.08);
-  --board:#1A1510; --board-dot:rgba(255,255,255,.05);
-  --sticky:#4A3C10; --sticky-ink:#F5E7A8; --sticky-line:rgba(255,255,255,.1);
+  --rule:rgba(255,255,255,.055);
   --ok:#5FD08A; --ok-soft:#1E3F2C; --warn:var(--coral); --warn-soft:var(--coral-soft);
   --danger:#F08787; --danger-soft:#4A2626;
   --shadow:0 6px 18px rgba(0,0,0,.3); --shade:rgba(0,0,0,.6); color-scheme:dark}
@@ -142,58 +136,43 @@ button:disabled{opacity:.6;cursor:default}
 .role-chip.requester{background:var(--accent-soft);color:var(--accent)}
 .role-chip.viewer{background:var(--soft);color:var(--muted)}
 
-/* ---------- the corkboard the notes are pinned to ---------- */
-#view-main{background-color:var(--board);background-image:radial-gradient(var(--board-dot) 1.1px,transparent 1.1px);background-size:9px 9px;border-radius:22px;padding:14px 10px 20px;margin:0 -16px;padding-inline:26px}
+/* ---------- list card: a quiet nod to a paper pad (ruled lines + a thin accent edge), nothing literal ---------- */
+.note{position:relative;background:var(--surface);border-radius:var(--r);padding:16px;margin:0 0 14px;box-shadow:var(--shadow)}
+.note::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:3px;border-start-start-radius:var(--r);border-end-start-radius:var(--r);background:var(--accent-edge,var(--line))}
 
-/* ---------- pinned paper notes (shared skeleton) ---------- */
-.note{position:relative;border-radius:3px;padding:22px 16px 16px;margin:26px 6px 16px;box-shadow:0 14px 26px -8px rgba(20,14,5,.35),0 2px 5px rgba(20,14,5,.18)}
-.note::before{content:"";position:absolute;top:-9px;left:10%;right:10%;height:15px;background:inherit;
-  clip-path:polygon(0 100%,4% 35%,9% 100%,13% 30%,18% 100%,22% 40%,27% 100%,31% 25%,36% 100%,40% 45%,45% 100%,49% 30%,54% 100%,58% 40%,63% 100%,67% 25%,72% 100%,76% 45%,81% 100%,85% 30%,90% 100%,94% 40%,100% 100%)}
-.note::after{content:"";position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:15px;height:15px;border-radius:50%;
-  background:radial-gradient(circle at 32% 28%,#fff9,var(--pin,var(--coral)) 58%);box-shadow:0 3px 5px rgba(0,0,0,.35);z-index:2}
-
-.note-main{--pin:var(--coral);background:var(--paper);color:var(--paper-ink);transform:rotate(-.5deg);
-  background-image:repeating-linear-gradient(var(--paper) 0 27px,var(--paper-line) 27px 28px);}
-.note-main .group-h,.note-main .t,.note-main .empty{color:var(--paper-ink)}
-
-.note-sticky{--pin:var(--gold);background:var(--sticky);color:var(--sticky-ink);transform:rotate(1.4deg);padding-top:20px}
-.note-sticky .item{background:transparent;box-shadow:none;border-bottom:1px solid var(--sticky-line);border-radius:0;padding-inline:2px}
-.note-sticky .item:last-child{border-bottom:0}
-.note-sticky .t,.note-sticky .who{color:var(--sticky-ink)}
-
-.note-small{--pin:var(--muted);background:var(--paper);color:var(--paper-ink);transform:rotate(-1.1deg);opacity:.86;padding-top:16px}
-.note-small .item{background:transparent;box-shadow:none;padding-inline:2px}
+.note-main{--accent-edge:var(--accent);background-image:repeating-linear-gradient(var(--surface) 0 29px,var(--rule) 29px 30px)}
+.note-sticky{--accent-edge:var(--coral)}
+.note-small{--accent-edge:var(--line);opacity:.82}
 
 .group{margin-top:2px}
-.group-h{display:flex;align-items:center;gap:7px;font-family:var(--marker);font-size:1.15rem;padding:4px 2px 2px;font-weight:400}
-.list{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-direction:column;gap:2px}
+.group+.group{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.group-h{display:flex;align-items:center;gap:7px;font-family:var(--display);font-size:.92rem;letter-spacing:.02em;color:var(--muted);padding:2px 2px 8px;font-weight:400}
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
 
-.item{display:flex;align-items:center;gap:10px;background:transparent;border-radius:10px;padding:8px 4px;position:relative;touch-action:pan-y;transition:transform .18s ease,background-color .18s ease}
+.item{display:flex;align-items:center;gap:10px;background:transparent;border-radius:10px;padding:9px 4px;position:relative;touch-action:pan-y;transition:transform .18s ease,background-color .18s ease}
 .item.swiping{transition:none}
 .item.swipe-ok{background:var(--ok-soft)}
 .item .handle{flex:none;color:var(--muted);cursor:grab;font-size:1.1rem;padding:0 2px;touch-action:none}
 .item.dragging{opacity:.5}
-.item .qty-tag{flex:none;font-size:.76rem;color:var(--muted);background:transparent;border:1.5px dashed var(--muted);border-radius:8px;padding:1px 7px;font-variant-numeric:tabular-nums}
+.item .qty-tag{flex:none;font-size:.76rem;color:var(--muted);background:var(--soft);border-radius:8px;padding:2px 8px;font-variant-numeric:tabular-nums}
 .item .emo{width:30px;height:30px;display:grid;place-items:center;font-size:1.25rem;flex:none;font-family:var(--emoji)}
-.item .check{width:24px;height:24px;border:2.5px solid var(--accent);background:transparent;border-radius:3px;flex:none;display:grid;place-items:center;padding:0;filter:url(#sketchy)}
-.item .check svg{opacity:0;transform:scale(.5);transition:all .2s cubic-bezier(.3,1.6,.5,1);width:15px;height:15px;stroke:var(--coral);stroke-width:4}
-.item.done .check{border-color:var(--coral)}
+.item .check{width:23px;height:23px;border:2px solid var(--line);background:transparent;border-radius:7px;flex:none;display:grid;place-items:center;padding:0;transition:border-color .15s ease}
+.item .check svg{opacity:0;transform:scale(.5);transition:all .2s cubic-bezier(.3,1.6,.5,1);width:14px;height:14px;stroke:#fff;stroke-width:4}
+.item.done .check{border-color:var(--ok);background:var(--ok)}
 .item.done .check svg{opacity:1;transform:scale(1)}
-.item .t{flex:1;min-width:0;overflow-wrap:anywhere;font-size:1.04rem}
-.item.done .t{color:var(--muted);text-decoration:line-through;text-decoration-style:wavy;text-decoration-color:var(--coral);text-decoration-thickness:1.5px}
+.item .t{flex:1;min-width:0;overflow-wrap:anywhere;font-size:1rem}
+.item.done .t{color:var(--muted);text-decoration:line-through;text-decoration-style:wavy;text-decoration-color:var(--ok);text-decoration-thickness:1.3px}
 .item .who{font-size:.72rem;color:var(--muted);display:block}
 .item .del{border:0;background:transparent;color:var(--muted);width:28px;height:28px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:.95rem}
 
-.pending-h{display:flex;align-items:center;gap:6px;font-family:var(--marker);font-size:1.2rem;font-weight:400;margin:0 0 6px}
+.pending-h{display:flex;align-items:center;gap:6px;font-family:var(--display);font-size:1.02rem;font-weight:400;margin:0 0 8px}
 .pending-actions{display:flex;gap:6px;flex:none}
 .pending-actions button{border:0;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:.95rem}
 .pending-actions .ok-btn{background:var(--ok-soft);color:var(--ok)}
 .pending-actions .no-btn{background:var(--danger-soft);color:var(--danger)}
 
-.note-main .empty{border-color:var(--muted);font-family:var(--marker);font-size:1.15rem;color:var(--paper-ink)}
-
 .bought-box .item .emo{opacity:.55}
-.bought-box .linkbtn{font-family:var(--marker);font-size:1.05rem;text-decoration:none;color:var(--paper-ink)}
+.bought-box .linkbtn{font-size:.95rem;text-decoration:none;color:var(--muted)}
 
 .auth input[hidden]{display:none}
 .auth .actions-row{display:flex;justify-content:space-between;align-items:center}
@@ -213,17 +192,6 @@ button:disabled{opacity:.6;cursor:default}
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <filter id="sketchy" x="-20%" y="-20%" width="140%" height="140%">
-    <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="7" result="n"/>
-    <feDisplacementMap in="SourceGraphic" in2="n" scale="3.2"/>
-  </filter>
-  <filter id="sketchy-lg" x="-20%" y="-20%" width="140%" height="140%">
-    <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="4" result="n"/>
-    <feDisplacementMap in="SourceGraphic" in2="n" scale="6"/>
-  </filter>
-</svg>
-
 <div class="wrap" id="app">
 
   <header class="top">
@@ -323,7 +291,7 @@ button:disabled{opacity:.6;cursor:default}
   </footer>
 
 </div>
-<script>window.CS_SITE="https://smkrot3-sudo.github.io/cartsync/";window.CS_BUILD=1791754784723;</script>
+<script>window.CS_SITE="https://smkrot3-sudo.github.io/cartsync/";window.CS_BUILD=1791756134673;</script>
 <script>
 /* Bilingual strings + RTL/LTR switching. Pure UI text lives here; app.js reads it via CS.t(key). */
 const STRINGS = {
