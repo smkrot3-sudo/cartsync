@@ -16,9 +16,25 @@ android {
         versionName "0.1.0"
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
+    // A stable signing identity so every build updates in place instead of conflicting with the
+    // last install. CI supplies the real keystore via -P flags; local/dev builds fall back to
+    // Gradle's own debug key (fine for installing fresh on a device, just won't update in place).
+    if (project.hasProperty("androidKeystore")) {
+        signingConfigs {
+            cartsync {
+                storeFile file(project.property("androidKeystore"))
+                storePassword project.property("androidKeystorePassword")
+                keyAlias project.property("androidKeyAlias")
+                keyPassword project.property("androidKeyPassword")
+            }
+        }
+        buildTypes {
+            debug { signingConfig signingConfigs.cartsync }
+            release { signingConfig signingConfigs.cartsync; minifyEnabled false }
+        }
+    } else {
+        buildTypes {
+            release { minifyEnabled false }
         }
     }
     compileOptions {

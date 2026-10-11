@@ -26,11 +26,21 @@ jobs:
         # missing platform/build-tools pieces once the licenses are accepted.
         run: yes | "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --licenses || true
 
+      - name: Restore signing keystore
+        run: echo "${{ secrets.ANDROID_KEYSTORE_B64 }}" | base64 -d > "$RUNNER_TEMP/cartsync.jks"
+
       - name: Build debug APK
         # the run number is a free, ever-increasing versionCode — no need to commit a bump
-        # back to build.gradle (which would just retrigger this same workflow)
+        # back to build.gradle (which would just retrigger this same workflow). Signed with the
+        # stable keystore (not Gradle's own ephemeral debug key) so every build updates in place.
         working-directory: android
-        run: gradle assembleDebug --no-daemon -PappVersionCode=${{ github.run_number }}
+        run: |
+          gradle assembleDebug --no-daemon \
+            -PappVersionCode=${{ github.run_number }} \
+            -PandroidKeystore="$RUNNER_TEMP/cartsync.jks" \
+            -PandroidKeystorePassword="${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
+            -PandroidKeyAlias="${{ secrets.ANDROID_KEY_ALIAS }}" \
+            -PandroidKeyPassword="${{ secrets.ANDROID_KEY_PASSWORD }}"
 
       - uses: actions/upload-artifact@v4
         with:
