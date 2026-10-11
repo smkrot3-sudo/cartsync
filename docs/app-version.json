@@ -1,3 +1,8 @@
 {
-  "build": 1791754784723
+  "build": 1791754784723,
+  "android": {
+    "versionCode": 2,
+    "versionName": "0.1.0",
+    "url": "https://smkrot3-sudo.github.io/cartsync/apk/cartsync-debug.apk"
+  }
 }
