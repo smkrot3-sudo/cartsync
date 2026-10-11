@@ -29,3 +29,10 @@ dependencies {
     implementation "androidx.appcompat:appcompat:1.7.0"
     implementation "androidx.activity:activity:1.9.2"
 }
+
+// kotlin-stdlib-jdk7/jdk8 are folded into kotlin-stdlib since Kotlin 1.8 — an old transitive
+// dependency still pulling the split jars collides with AGP's own newer kotlin-stdlib.
+configurations.all {
+    exclude group: "org.jetbrains.kotlin", module: "kotlin-stdlib-jdk7"
+    exclude group: "org.jetbrains.kotlin", module: "kotlin-stdlib-jdk8"
+}
