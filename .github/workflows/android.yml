@@ -26,19 +26,11 @@ jobs:
         # missing platform/build-tools pieces once the licenses are accepted.
         run: yes | "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --licenses || true
 
-      - name: Bump versionCode
-        id: bump
-        run: |
-          set -e
-          CURRENT=$(grep -oP 'versionCode \K\d+' android/app/build.gradle)
-          NEXT=$((CURRENT + 1))
-          sed -i "s/versionCode $CURRENT/versionCode $NEXT/" android/app/build.gradle
-          echo "code=$NEXT" >> "$GITHUB_OUTPUT"
-          echo "name=$(grep -oP 'versionName "\K[^"]+' android/app/build.gradle)" >> "$GITHUB_OUTPUT"
-
       - name: Build debug APK
+        # the run number is a free, ever-increasing versionCode — no need to commit a bump
+        # back to build.gradle (which would just retrigger this same workflow)
         working-directory: android
-        run: gradle assembleDebug --no-daemon
+        run: gradle assembleDebug --no-daemon -PappVersionCode=${{ github.run_number }}
 
       - uses: actions/upload-artifact@v4
         with:
@@ -50,7 +42,8 @@ jobs:
           set -e
           mkdir -p docs/apk
           cp android/app/build/outputs/apk/debug/app-debug.apk docs/apk/cartsync-debug.apk
-          python3 - "${{ steps.bump.outputs.code }}" "${{ steps.bump.outputs.name }}" <<'PY'
+          VNAME=$(grep -oP 'versionName "\K[^"]+' android/app/build.gradle)
+          python3 - "${{ github.run_number }}" "$VNAME" <<'PY'
           import json, sys, os
           versioncode, versionname = int(sys.argv[1]), sys.argv[2]
           path = "docs/app-version.json"
@@ -66,10 +59,12 @@ jobs:
           PY
 
       - name: Commit updated APK + version metadata
+        # deliberately NOT [skip ci]: docs/ changing here is exactly what should redeploy Pages.
+        # Nothing under android/** is touched, so this push won't retrigger this workflow.
         run: |
           set -e
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add android/app/build.gradle docs/apk/cartsync-debug.apk docs/app-version.json
-          git diff --cached --quiet || git commit -m "ci: publish Android build ${{ steps.bump.outputs.code }} [skip ci]"
+          git add docs/apk/cartsync-debug.apk docs/app-version.json
+          git diff --cached --quiet || git commit -m "ci: publish Android build ${{ github.run_number }}"
           git push

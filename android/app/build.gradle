@@ -10,7 +10,9 @@ android {
         applicationId "il.cartsync.app"
         minSdk 24
         targetSdk 34
-        versionCode 2
+        // CI overrides this with -PappVersionCode=<run number> so it never needs to commit a bump
+        // back to this file (which would just retrigger the workflow that pushed it).
+        versionCode project.hasProperty("appVersionCode") ? (project.appVersionCode as Integer) : 1
         versionName "0.1.0"
     }
 
