@@ -164,12 +164,21 @@ async function fetchItems(){
   items=data||[];
   paintItems();
 }
+async function aiCategorize(text){
+  try{
+    const {data,error}=await sb.functions.invoke('categorize',{body:{text}});
+    if(error||!data||!data.results||!data.results[0]) return null;
+    const r=data.results[0];
+    return {cat:r.category,emoji:r.emoji};
+  }catch(e){ return null; }
+}
 async function addItem(){
   const input=$('item-input');
   const text=input.value.trim();
   if(!text||!listId) return;
-  const g=CS.guess(text);
   input.value='';
+  let g=CS.guess(text);
+  if(g.cat==='other'){ const ai=await aiCategorize(text); if(ai) g=ai; } // local dictionary has no match: ask the AI edge function instead of settling for "other"
   const {error}=await sb.from('list_items').insert({
     list_id:listId, household_id:household, text, category:g.cat, emoji:g.emoji, created_by:user.id,
     position: Date.now(),

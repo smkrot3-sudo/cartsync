@@ -255,7 +255,7 @@ button:disabled{opacity:.6;cursor:default}
   <div class="toast" id="toast" hidden></div>
 
 </div>
-<script>window.CS_SITE="https://smkrot3-sudo.github.io/cartsync/";window.CS_BUILD=1791750916236;</script>
+<script>window.CS_SITE="https://smkrot3-sudo.github.io/cartsync/";window.CS_BUILD=1791751563077;</script>
 <script>
 /* Bilingual strings + RTL/LTR switching. Pure UI text lives here; app.js reads it via CS.t(key). */
 const STRINGS = {
@@ -717,12 +717,21 @@ async function fetchItems(){
   items=data||[];
   paintItems();
 }
+async function aiCategorize(text){
+  try{
+    const {data,error}=await sb.functions.invoke('categorize',{body:{text}});
+    if(error||!data||!data.results||!data.results[0]) return null;
+    const r=data.results[0];
+    return {cat:r.category,emoji:r.emoji};
+  }catch(e){ return null; }
+}
 async function addItem(){
   const input=$('item-input');
   const text=input.value.trim();
   if(!text||!listId) return;
-  const g=CS.guess(text);
   input.value='';
+  let g=CS.guess(text);
+  if(g.cat==='other'){ const ai=await aiCategorize(text); if(ai) g=ai; } // local dictionary has no match: ask the AI edge function instead of settling for "other"
   const {error}=await sb.from('list_items').insert({
     list_id:listId, household_id:household, text, category:g.cat, emoji:g.emoji, created_by:user.id,
     position: Date.now(),
