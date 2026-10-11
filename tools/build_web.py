@@ -16,6 +16,8 @@ local_fonts = '''<style>
 @font-face{font-family:"Varela Round";src:url(fonts/varela-round-latin-400-normal.woff2) format("woff2");font-display:swap}
 @font-face{font-family:"Suez One";src:url(fonts/suez-one-hebrew-400-normal.woff2) format("woff2");unicode-range:U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F;font-display:swap}
 @font-face{font-family:"Suez One";src:url(fonts/suez-one-latin-400-normal.woff2) format("woff2");font-display:swap}
+@font-face{font-family:"Rubik Wet Paint";src:url(fonts/rubik-wetpaint-hebrew.woff2) format("woff2");unicode-range:U+0307-0308,U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F;font-display:swap}
+@font-face{font-family:"Rubik Wet Paint";src:url(fonts/rubik-wetpaint-latin.woff2) format("woff2");font-display:swap}
 </style>'''
 
 # 1. design-only preview (no cloud, no service worker) — fast to open while iterating on layout
