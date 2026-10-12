@@ -66,22 +66,21 @@ button{cursor:pointer;touch-action:manipulation}
 button:disabled{opacity:.6;cursor:default}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:10px}
 
+/* hero brand moment: small quiet utility row up top, then the mark + wordmark centered and dominant below it */
 .top{
-  display:flex;align-items:center;justify-content:space-between;gap:8px;
-  margin:-12px -16px 0;padding:14px 16px 20px;
-  background:var(--header-grad);
-  border-radius:0 0 26px 26px;
-  box-shadow:0 10px 24px rgba(18,26,51,.22);
-  position:relative;z-index:5;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  margin:-12px -16px 0;padding:14px 16px 24px;
+  background:var(--surface);
 }
-.brand{display:flex;align-items:center;gap:9px;font-family:var(--display);font-size:1.15rem;border:0;background:transparent;color:var(--header-ink);padding:0;letter-spacing:.01em}
-.brand-badge{display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:var(--coral);box-shadow:0 3px 8px rgba(0,0,0,.2);flex:none}
-.brand-badge .e{font-size:1.15rem;line-height:1}
-.top-actions{display:flex;align-items:center;gap:8px}
+.top-utility{display:flex;align-items:center;justify-content:space-between;width:100%}
+.brand{display:flex;flex-direction:column;align-items:center;gap:8px;border:0;background:transparent;color:var(--fg);padding:4px 0 0}
+.brand-mark{width:48px;height:48px;border-radius:15px;flex:none;box-shadow:0 4px 14px rgba(18,26,51,.18)}
+.brand b{font-family:var(--display);font-weight:400;font-size:1.38rem;letter-spacing:-.01em;color:var(--fg)}
 .iconbtn{border:0;background:var(--surface);box-shadow:var(--shadow);width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:var(--muted);flex:none;font-size:1.15rem;transition:transform .1s ease}
 .iconbtn:active{transform:scale(.92)}
-.top .iconbtn{background:rgba(255,255,255,.14);box-shadow:none;color:var(--header-ink);border:1.5px solid rgba(255,255,255,.22)}
-.top .iconbtn:active{background:rgba(255,255,255,.24)}
+.top-utility .iconbtn{background:transparent;box-shadow:none;color:var(--muted);width:auto;height:auto;font-size:1.2rem}
+.top-utility .iconbtn:active{opacity:.6}
+.top-utility .avatarbtn{background:var(--soft);color:var(--accent);width:30px;height:30px;font-size:.78rem;font-weight:bold}
 
 .view{display:flex;flex-direction:column;gap:14px}
 .view[hidden]{display:none!important}
@@ -137,17 +136,15 @@ button:disabled{opacity:.6;cursor:default}
 .trip-bar #trip-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .trip-bar .btn.small{flex:none}
 
-/* sits right under .top and overlaps its rounded bottom edge, so the two read as one connected header
-   instead of two disconnected floating bars */
+/* sits directly under .top, sharing its background with one hairline divider closing off the whole
+   header zone — reads as one quiet header, not a floating card */
 .hhbar{
-  display:flex;align-items:center;gap:8px;
+  display:flex;align-items:center;gap:10px;
   background:var(--surface);
-  margin:-14px -16px 0;padding:14px 16px;
-  border-radius:20px;
-  box-shadow:0 10px 22px rgba(18,26,51,.14);
-  position:relative;z-index:4;
+  margin:0 -16px;padding:2px 16px 14px;
+  border-bottom:1px solid var(--line);
 }
-.hhbar .iconbtn{background:var(--soft);box-shadow:none}
+.hhbar .iconbtn{background:transparent;box-shadow:none;color:var(--muted);width:auto;height:auto;font-size:1.15rem}
 .hhname{display:flex;align-items:center;gap:4px;border:0;background:var(--surface);box-shadow:var(--shadow);border-radius:999px;padding:9px 14px;flex:1;min-width:0;overflow:hidden;text-align:start}
 .hhname b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .list-name-lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:1.15rem;font-family:var(--display);font-weight:400}
@@ -268,11 +265,14 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
 <div class="wrap" id="app">
 
   <header class="top">
-    <button class="brand" id="brand-home-btn"><span class="brand-badge"><span class="e" id="brand-emoji">🛒</span></span><b id="brand-name">קניות ביחד</b></button>
-    <div class="top-actions">
+    <div class="top-utility">
       <button class="iconbtn" id="lang-btn" aria-label="Language">🌐</button>
       <span id="acct-top"></span>
     </div>
+    <button class="brand" id="brand-home-btn">
+      <img class="brand-mark" src="icons/icon-192.png" width="48" height="48" alt="">
+      <b id="brand-name">קניות ביחד</b>
+    </button>
   </header>
 
   <!-- ---------- splash: shown until we know whether a session already exists ---------- -->

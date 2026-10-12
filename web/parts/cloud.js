@@ -118,7 +118,7 @@ $('au-go').addEventListener('click',doAuth);
 function renderAccount(){
   const box=$('acct-top');
   if(!user){ box.innerHTML=''; return; }
-  box.innerHTML=`<button class="iconbtn" id="acct-btn" aria-label="account">${esc(CS.initials(user.user_metadata&&user.user_metadata.full_name||user.email))}</button>`;
+  box.innerHTML=`<button class="iconbtn avatarbtn" id="acct-btn" aria-label="account">${esc(CS.initials(user.user_metadata&&user.user_metadata.full_name||user.email))}</button>`;
   $('acct-btn').onclick=openAccountSheet;
 }
 function openAccountSheet(){

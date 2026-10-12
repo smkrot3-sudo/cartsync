@@ -3,17 +3,15 @@
 .trip-bar #trip-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .trip-bar .btn.small{flex:none}
 
-/* sits right under .top and overlaps its rounded bottom edge, so the two read as one connected header
-   instead of two disconnected floating bars */
+/* sits directly under .top, sharing its background with one hairline divider closing off the whole
+   header zone — reads as one quiet header, not a floating card */
 .hhbar{
-  display:flex;align-items:center;gap:8px;
+  display:flex;align-items:center;gap:10px;
   background:var(--surface);
-  margin:-14px -16px 0;padding:14px 16px;
-  border-radius:20px;
-  box-shadow:0 10px 22px rgba(18,26,51,.14);
-  position:relative;z-index:4;
+  margin:0 -16px;padding:2px 16px 14px;
+  border-bottom:1px solid var(--line);
 }
-.hhbar .iconbtn{background:var(--soft);box-shadow:none}
+.hhbar .iconbtn{background:transparent;box-shadow:none;color:var(--muted);width:auto;height:auto;font-size:1.15rem}
 .hhname{display:flex;align-items:center;gap:4px;border:0;background:var(--surface);box-shadow:var(--shadow);border-radius:999px;padding:9px 14px;flex:1;min-width:0;overflow:hidden;text-align:start}
 .hhname b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .list-name-lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:1.15rem;font-family:var(--display);font-weight:400}
