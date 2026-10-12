@@ -81,6 +81,7 @@ button:disabled{opacity:.6;cursor:default}
 .msg{font-size:.88rem;border-radius:12px;padding:8px 10px}
 .msg.err{background:var(--danger-soft);color:var(--danger)}
 .msg.ok{background:var(--ok-soft);color:var(--ok)}
+.msg.warn{background:var(--gold-soft);color:var(--gold)}
 
 .btn{border:0;background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:11px 18px;font-size:.96rem;white-space:nowrap;box-shadow:0 4px 12px rgba(46,74,158,.35);transition:transform .1s ease}
 .btn.ghost{background:var(--surface);color:var(--accent);border:2px solid var(--accent-soft);box-shadow:none}

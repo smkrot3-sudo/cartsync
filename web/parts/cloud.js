@@ -608,12 +608,29 @@ async function aiCategorize(text){
     return {cat:r.category,emoji:r.emoji};
   }catch(e){ return null; }
 }
+function normText(s){ return (s||'').trim().toLowerCase().replace(/\s+/g,' '); }
+let forceAddDup=false;
 async function addItem(){
   const input=$('item-input'), qtyInput=$('item-qty');
   if(!input||!qtyInput) return;
   const text=input.value.trim();
   const qty=qtyInput.value.trim();
   if(!text||!listId) return;
+  if(!forceAddDup){
+    const norm=normText(text);
+    const dup=items.find(i=>i.status!=='checked' && normText(i.text)===norm);
+    if(dup){
+      const msg=$('item-dup-msg');
+      if(msg){
+        msg.hidden=false; msg.className='msg warn';
+        msg.innerHTML=`${esc(CS.t('dupWarning').replace('{n}',dup.text))} <button class="linkbtn" id="item-dup-force" type="button" style="color:inherit">${esc(CS.t('dupAddAnyway'))}</button>`;
+        const fb=$('item-dup-force'); if(fb) fb.onclick=()=>{ forceAddDup=true; addItem(); };
+      }
+      return;
+    }
+  }
+  forceAddDup=false;
+  const dupMsg=$('item-dup-msg'); if(dupMsg) dupMsg.hidden=true;
   input.value=''; qtyInput.value=''; input.focus(); // keep the sheet open for fast multi-add before heading to the store
   let g=CS.guess(text);
   if(online && g.cat==='other'){ const ai=await aiCategorize(text); if(ai) g=ai; } // local dictionary has no match: ask the AI edge function instead of settling for "other"
@@ -625,13 +642,16 @@ async function addItem(){
 }
 function openAddSheet(){
   const t=CS.t;
+  forceAddDup=false;
   openSheet(sheetHead(t('add'))+`<div class="card">
     <input id="item-input" placeholder="${esc(t('itemPh'))}" autocomplete="off">
     <input id="item-qty" class="qty-input" placeholder="${esc(t('qtyPh'))}" autocomplete="off">
+    <div id="item-dup-msg" class="msg" hidden></div>
     <button class="btn wide" id="item-add">${esc(t('add'))}</button>
   </div>`);
   $('item-add').addEventListener('click',addItem);
   $('item-input').addEventListener('keydown',e=>{ if(e.key==='Enter') addItem(); });
+  $('item-input').addEventListener('input',()=>{ forceAddDup=false; const m=$('item-dup-msg'); if(m) m.hidden=true; });
   $('item-qty').addEventListener('keydown',e=>{ if(e.key==='Enter') addItem(); });
   $('item-input').focus();
 }
