@@ -12,7 +12,7 @@ let queue=[], flushing=false;
 /* ---------- offline cache + outbox: lets add/check/delete work with no network, synced once back online ---------- */
 const CACHE_KEY='cs-cache';
 function cacheSnapshot(){
-  try{ localStorage.setItem(CACHE_KEY, JSON.stringify({hhId:household,hhName:$('hh-name-lbl').textContent,members,role,listId,items,ts:Date.now()})); }catch(e){}
+  try{ localStorage.setItem(CACHE_KEY, JSON.stringify({hhId:household,hhName,members,role,listId,items,ts:Date.now()})); }catch(e){}
 }
 function loadCache(){ try{ return JSON.parse(localStorage.getItem(CACHE_KEY)||'null'); }catch(e){ return null; } }
 function queueKeyFor(lid){ return 'cs-queue-'+lid; }
@@ -130,41 +130,38 @@ async function listMyHouseholds(){
   if(error){ console.warn(error); return []; }
   return (data||[]).map(r=>({id:r.household_id,name:r.households&&r.households.name,role:r.role}));
 }
+let hhName='';
+function goHome(){
+  if(!household) return;
+  $('home-hh-name').textContent=hhName;
+  CS.renderMembers(members, 'home-members-strip');
+  CS.setScreen('home');
+}
 function applyCachedHousehold(cache){
-  household=cache.hhId; listId=cache.listId; role=cache.role; members=cache.members||[];
+  household=cache.hhId; hhName=cache.hhName||''; role=cache.role; members=cache.members||[];
   membersById={}; members.forEach(m=>membersById[m.user_id]=m);
-  items=cache.items||[];
-  $('hh-name-lbl').textContent=cache.hhName||'';
   CS.renderMembers(members);
-  CS.setScreen('main');
-  queue=listId?loadQueueFor(listId):[];
-  paintItems();
+  goHome();
   showOfflineNote(true);
 }
 async function loadHousehold(hh){
   household=hh;
   try{ localStorage.setItem('cs-last-hh',hh); }catch(e){}
   try{
-    const [{data:hrow,error:e1},{data:mrows,error:e2},{data:lrows,error:e3}]=await Promise.all([
+    const [{data:hrow,error:e1},{data:mrows,error:e2}]=await Promise.all([
       sb.from('households').select('*').eq('id',hh).maybeSingle(),
       sb.from('household_members').select('*').eq('household_id',hh),
-      sb.from('shopping_lists').select('*').eq('household_id',hh).eq('status','open').limit(1),
     ]);
-    if(e1||e2||e3) throw (e1||e2||e3);
+    if(e1||e2) throw (e1||e2);
     if(!hrow){ CS.setScreen('onboard'); return; }
     members=mrows||[]; membersById={}; members.forEach(m=>membersById[m.user_id]=m);
     role=(membersById[user.id]||{}).role||null;
-    listId=lrows&&lrows[0]&&lrows[0].id;
+    hhName=hrow.name;
     await ensureDisplayName(hh);
-    $('hh-name-lbl').textContent=hrow.name;
     CS.renderMembers(members);
-    CS.setScreen('main');
-    queue=listId?loadQueueFor(listId):[];
     showOfflineNote(false);
-    if(listId) await fetchItems();
-    cacheSnapshot();
-    subscribeRealtime();
-    if(queue.length) flushQueue();
+    goHome();
+    subscribeHouseholdRealtime();
   }catch(e){
     const cache=loadCache();
     if(cache && cache.hhId===hh) applyCachedHousehold(cache);
@@ -172,6 +169,7 @@ async function loadHousehold(hh){
   }
 }
 async function refreshHousehold(){ if(household) await loadHousehold(household); }
+$('brand-home-btn').addEventListener('click',()=>{ if(household) goHome(); });
 
 async function createHousehold(){
   const name=$('hh-name').value.trim();
@@ -202,9 +200,63 @@ async function openHouseholdSwitcher(){
   $('sheet').querySelectorAll('[data-hh]').forEach(b=>b.onclick=async()=>{ closeSheet(); await loadHousehold(b.dataset.hh); });
   $('hh-new').onclick=()=>{ closeSheet(); CS.setScreen('onboard'); };
 }
-$('hh-switch').addEventListener('click',openHouseholdSwitcher);
+$('home-switch-btn').addEventListener('click',openHouseholdSwitcher);
 
-/* ---------- shopping trips ---------- */
+/* ---------- lists directory ---------- */
+let lists=[];
+async function fetchLists(){
+  const {data,error}=await sb.from('shopping_lists').select('*').eq('household_id',household).order('created_at',{ascending:false});
+  if(error){ console.warn(error); return; }
+  lists=data||[];
+  CS.renderLists(lists);
+}
+async function openListsPage(){
+  CS.setScreen('lists');
+  await fetchLists();
+}
+$('lists-back').addEventListener('click',goHome);
+$('list-back').addEventListener('click',openListsPage);
+
+function openNewListSheet(){
+  const t=CS.t;
+  openSheet(sheetHead(t('newListTitle'))+`<div class="card">
+    <input id="new-list-name" placeholder="${esc(t('newListName'))}">
+    <div id="new-list-msg" class="msg err" hidden></div>
+    <button class="btn wide" id="new-list-go">${esc(t('newListGo'))}</button>
+  </div>`);
+  $('new-list-name').focus();
+  const go=async()=>{
+    const name=$('new-list-name').value.trim();
+    if(!name){ const m=$('new-list-msg'); m.textContent=t('needListName'); m.hidden=false; return; }
+    const {data,error}=await sb.rpc('create_shopping_list',{p_household:household,p_name:name});
+    if(error){ const m=$('new-list-msg'); m.textContent=CS.authErr(error); m.hidden=false; return; }
+    closeSheet();
+    await openList(data);
+  };
+  $('new-list-go').onclick=go;
+  $('new-list-name').addEventListener('keydown',e=>{ if(e.key==='Enter') go(); });
+}
+$('lists-new').addEventListener('click',openNewListSheet);
+
+document.addEventListener('click',e=>{
+  const row=e.target.closest('[data-list]'); if(!row) return;
+  openList(row.dataset.list);
+});
+
+async function openList(id){
+  const {data:lrow,error}=await sb.from('shopping_lists').select('*').eq('id',id).maybeSingle();
+  if(error||!lrow){ toast(CS.authErr(error||'not_found')); return; }
+  listId=id;
+  $('list-name-lbl').textContent=lrow.name;
+  $('trip-bar').hidden=lrow.status!=='open';
+  CS.setScreen('main');
+  queue=loadQueueFor(listId);
+  await fetchItems();
+  cacheSnapshot();
+  subscribeListRealtime();
+  if(queue.length) flushQueue();
+}
+
 function openCloseTripSheet(){
   const t=CS.t;
   openSheet(sheetHead(t('tripCloseTitle'))+`<div class="card">
@@ -214,14 +266,10 @@ function openCloseTripSheet(){
   </div>`);
   $('trip-confirm').onclick=async()=>{
     closeSheet();
-    const {data,error}=await sb.rpc('close_shopping_trip',{p_list_id:listId});
+    const {error}=await sb.rpc('close_shopping_trip',{p_list_id:listId});
     if(error){ toast(CS.authErr(error)); return; }
-    listId=data;
-    try{ queue=[]; saveQueue(); }catch(e){}
-    await fetchItems();
-    cacheSnapshot();
-    subscribeRealtime();
     toast(t('tripClosed'));
+    await openListsPage();
   };
 }
 $('trip-close').addEventListener('click',openCloseTripSheet);
@@ -254,7 +302,7 @@ function openInviteSheet(){
     };
   };
 }
-$('invite-btn').addEventListener('click',openInviteSheet);
+$('home-invite-btn').addEventListener('click',openInviteSheet);
 
 /* ---------- items ---------- */
 function decorate(list){
@@ -355,7 +403,33 @@ document.addEventListener('click',e=>{
 });
 
 /* ---------- realtime ---------- */
-function subscribeRealtime(){
+let hhChannel=null;
+function subscribeHouseholdRealtime(){
+  if(hhChannel){ sb.removeChannel(hhChannel); hhChannel=null; }
+  if(!household) return;
+  hhChannel=sb.channel('household:'+household)
+    .on('postgres_changes',{event:'*',schema:'public',table:'household_members',filter:'household_id=eq.'+household},()=>{
+      refreshHousehold();
+    })
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'shopping_lists',filter:'household_id=eq.'+household},payload=>{
+      const row=payload.new;
+      if(row.created_by && row.created_by!==user.id){
+        const name=membersById[row.created_by]?membersById[row.created_by].display_name:'';
+        toast(CS.t('notifyListOpened').replace('{n}',name||'?').replace('{l}',row.name));
+      }
+      if(!$('view-lists').hidden) fetchLists();
+    })
+    .on('postgres_changes',{event:'UPDATE',schema:'public',table:'shopping_lists',filter:'household_id=eq.'+household},payload=>{
+      const row=payload.new;
+      if(row.status==='closed' && payload.old.status!=='closed' && row.closed_by && row.closed_by!==user.id){
+        const name=membersById[row.closed_by]?membersById[row.closed_by].display_name:'';
+        toast(CS.t('notifyListClosed').replace('{n}',name||'?').replace('{l}',row.name));
+      }
+      if(!$('view-lists').hidden) fetchLists();
+    })
+    .subscribe();
+}
+function subscribeListRealtime(){
   if(channel){ sb.removeChannel(channel); channel=null; }
   if(!listId) return;
   channel=sb.channel('list:'+listId)
@@ -364,9 +438,6 @@ function subscribeRealtime(){
       else if(payload.eventType==='UPDATE') items=items.map(i=>i.id===payload.new.id?payload.new:i);
       else if(payload.eventType==='DELETE') items=items.filter(i=>i.id!==payload.old.id);
       paintItems();
-    })
-    .on('postgres_changes',{event:'*',schema:'public',table:'household_members',filter:'household_id=eq.'+household},()=>{
-      refreshHousehold();
     })
     .subscribe();
 }

@@ -1,7 +1,7 @@
 <div class="wrap" id="app">
 
   <header class="top">
-    <div class="brand"><span class="e" id="brand-emoji">🛒</span><b id="brand-name">קניות ביחד</b></div>
+    <button class="brand" id="brand-home-btn"><span class="e" id="brand-emoji">🛒</span><b id="brand-name">קניות ביחד</b></button>
     <div class="top-actions">
       <button class="iconbtn" id="lang-btn" aria-label="Language">🌐</button>
       <span id="acct-top"></span>
@@ -58,17 +58,52 @@
     </div>
   </section>
 
-  <!-- ---------- main: the shared list ---------- -->
+  <!-- ---------- home: landing page for a household ---------- -->
+  <section class="view" id="view-home" hidden>
+    <div class="hero">
+      <div class="hero-emoji e">🏠</div>
+      <h1 id="home-hh-name">…</h1>
+      <p class="sub" id="home-sub">כל הרשימות המשותפות של משק הבית, במקום אחד.</p>
+    </div>
+    <div class="members" id="home-members-strip"></div>
+    <div class="card">
+      <button class="btn wide" id="home-lists-btn">📋 <span id="home-lists-label">הרשימות שלי</span></button>
+      <button class="btn ghost wide" id="home-invite-btn">👥 <span id="home-invite-label">הזמנת בן/בת משפחה</span></button>
+      <button class="btn ghost wide" id="home-switch-btn">🔀 <span id="home-switch-label">להחליף משק בית</span></button>
+    </div>
+  </section>
+
+  <!-- ---------- lists: directory of this household's shopping lists ---------- -->
+  <section class="view" id="view-lists" hidden>
+    <div class="hhbar">
+      <button class="iconbtn" id="lists-back" aria-label="Back">→</button>
+      <b id="lists-title" style="flex:1">הרשימות שלי</b>
+      <button class="iconbtn" id="lists-new" aria-label="New list">➕</button>
+    </div>
+    <div>
+      <div class="group-h"><span class="e">🛒</span><span id="lists-open-title">פעילות</span></div>
+      <ul class="list" id="lists-open"></ul>
+      <ul class="empty" id="lists-empty" hidden>
+        <li><span class="e" style="font-size:2.2rem">📋</span><span id="lists-empty-text">אין עדיין רשימות פעילות. ליצור אחת?</span></li>
+      </ul>
+    </div>
+    <div id="lists-closed-box" hidden>
+      <div class="group-h"><span class="e">🗂️</span><span id="lists-closed-title">היסטוריה</span></div>
+      <ul class="list" id="lists-closed"></ul>
+    </div>
+  </section>
+
+  <!-- ---------- main: a single shared list ---------- -->
   <section class="view" id="view-main" hidden>
     <div id="offline-note" class="offline-note" hidden></div>
     <div class="hhbar">
-      <button class="hhname" id="hh-switch"><b id="hh-name-lbl">…</b><span class="e">▾</span></button>
+      <button class="iconbtn" id="list-back" aria-label="Back">→</button>
+      <b id="list-name-lbl" class="list-name-lbl">…</b>
       <div class="members" id="members-strip"></div>
       <button class="iconbtn" id="view-toggle" aria-label="View" title="תצוגה">🗂️</button>
-      <button class="iconbtn" id="invite-btn" aria-label="Invite">👥</button>
     </div>
 
-    <div class="trip-bar">
+    <div class="trip-bar" id="trip-bar">
       <span class="e">🛒</span> <span id="trip-label">סבב קניות פעיל</span>
       <button class="btn small ghost" id="trip-close">✅ סיום קניות</button>
     </div>
