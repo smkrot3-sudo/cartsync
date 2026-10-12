@@ -391,7 +391,7 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
   </footer>
 
 </div>
-<script>window.CS_SITE="https://smkrot3-sudo.github.io/cartsync/";window.CS_BUILD=1791817066801;</script>
+<script>window.CS_SITE="https://smkrot3-sudo.github.io/cartsync/";window.CS_BUILD=1791817901381;</script>
 <script>
 /* Bilingual strings + RTL/LTR switching. Pure UI text lives here; app.js reads it via CS.t(key). */
 const STRINGS = {
@@ -1535,13 +1535,37 @@ async function fetchItems(){
   }
   paintItems();
 }
-async function aiCategorize(text){
+/* best-effort background category/emoji upgrade for items the local dictionary couldn't place —
+   batched (debounced) so a fast multi-add only costs one AI call, and never blocks the add itself */
+let aiPending=[], aiTimer=null;
+function queueAiUpgrade(text){
+  aiPending.push(text);
+  clearTimeout(aiTimer);
+  aiTimer=setTimeout(flushAiUpgrade,500);
+}
+function applyAiUpgrade(text,r,retried){
+  const matches=items.filter(i=>i.text===text && i.created_by===user.id && !isTemp(i.id) && i.category==='other');
+  if(!matches.length){
+    if(!retried) setTimeout(()=>applyAiUpgrade(text,r,true),600); // the matching add may still be mid-sync — retry once
+    return;
+  }
+  matches.forEach(it=>{
+    it.category=r.category; it.emoji=r.emoji;
+    sb.from('list_items').update({category:r.category,emoji:r.emoji}).eq('id',it.id);
+  });
+  paintItems();
+}
+async function flushAiUpgrade(){
+  const texts=[...new Set(aiPending)]; aiPending=[];
+  if(!texts.length || !online) return;
   try{
-    const {data,error}=await sb.functions.invoke('categorize',{body:{text}});
-    if(error||!data||!data.results||!data.results[0]) return null;
-    const r=data.results[0];
-    return {cat:r.category,emoji:r.emoji};
-  }catch(e){ return null; }
+    const {data,error}=await sb.functions.invoke('categorize',{body:{texts}});
+    if(error||!data||!data.results) return;
+    texts.forEach((text,i)=>{
+      const r=data.results[i];
+      if(r && r.category!=='other') applyAiUpgrade(text,r);
+    });
+  }catch(e){ /* best-effort only: the item already has a sensible fallback category */ }
 }
 function normText(s){ return (s||'').trim().toLowerCase().replace(/\s+/g,' '); }
 let forceAddDup=false;
@@ -1567,13 +1591,12 @@ async function addItem(){
   forceAddDup=false;
   const dupMsg=$('item-dup-msg'); if(dupMsg) dupMsg.hidden=true;
   input.value=''; qtyInput.value=''; input.focus(); // keep the sheet open for fast multi-add before heading to the store
-  let g=CS.guess(text);
-  if(online && g.cat==='other'){ const ai=await aiCategorize(text); if(ai) g=ai; } // local dictionary has no match: ask the AI edge function instead of settling for "other"
+  const g=CS.guess(text); // instant local dictionary guess — the item appears right away, no network wait
   const row={ list_id:listId, household_id:household, text, category:g.cat, emoji:g.emoji, qty:qty||null, created_by:user.id, position:Date.now() };
-  if(!online){ queueAdd(row); toast(role==='requester'?CS.t('itemRequested'):CS.t('itemAdded')); return; }
-  const {error}=await sb.from('list_items').insert(row);
-  if(error){ toast(CS.authErr(error)); return; }
+  queueAdd(row); // optimistic: shows immediately and syncs in the background, online or not
   toast(role==='requester'?CS.t('itemRequested'):CS.t('itemAdded'));
+  if(online) flushQueue();
+  if(online && g.cat==='other') queueAiUpgrade(text); // ask the AI to refine it once it's safely saved, never blocking the add
 }
 function openAddSheet(){
   const t=CS.t;
@@ -1702,7 +1725,8 @@ function subscribeListRealtime(){
   channel=sb.channel('list:'+listId)
     .on('postgres_changes',{event:'*',schema:'public',table:'list_items',filter:'list_id=eq.'+listId},payload=>{
       if(payload.eventType==='INSERT'){
-        items.push(payload.new);
+        const idx=items.findIndex(i=>i.id===payload.new.id);
+        if(idx>-1) items[idx]=payload.new; else items.push(payload.new); // our own optimistic adds echo back here too — upsert, don't duplicate
         if(payload.new.status==='pending' && payload.new.created_by!==user.id){
           const name=membersById[payload.new.created_by]?membersById[payload.new.created_by].display_name:'?';
           toast(CS.t('newPendingToast').replace('{n}',name).replace('{t}',payload.new.text));
