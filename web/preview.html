@@ -177,19 +177,18 @@ button:disabled{opacity:.6;cursor:default}
 .item .t{flex:1;min-width:0;overflow-wrap:anywhere;font-size:1rem;cursor:pointer}
 .search-input{width:100%;border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:10px 14px;margin-bottom:12px}
 .search-input:focus{outline:none;border-color:var(--accent)}
-.item.done .t{color:var(--muted);text-decoration:line-through;text-decoration-style:wavy;text-decoration-color:var(--ok);text-decoration-thickness:1.3px}
+.item.done .t{color:var(--muted)}
+.item.done .t-text{text-decoration:line-through;text-decoration-style:wavy;text-decoration-color:var(--ok);text-decoration-thickness:1.3px}
 .item .del{border:0;background:transparent;color:var(--muted);width:28px;height:28px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:.95rem}
 
-.who-name{display:block;font-size:.74rem;color:var(--muted);font-weight:normal}
+.who-name{display:block;font-size:.74rem;color:var(--muted);font-weight:normal;text-decoration:none}
+.who-name.checked-label{color:var(--ok)}
 
 .pending-h{display:flex;align-items:center;gap:6px;font-family:var(--display);font-size:1.02rem;font-weight:400;margin:0 0 8px}
 .pending-actions{display:flex;gap:6px;flex:none}
 .pending-actions button{border:0;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:.95rem}
 .pending-actions .ok-btn{background:var(--ok-soft);color:var(--ok)}
 .pending-actions .no-btn{background:var(--danger-soft);color:var(--danger)}
-
-.bought-box .item .emo{opacity:.6}
-.bought-box .linkbtn{font-size:.95rem;text-decoration:none;color:var(--muted)}
 
 /* ---------- floating add button ---------- */
 .fab{position:fixed;inset-inline-end:18px;bottom:calc(88px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);font-size:1.9rem;line-height:1;box-shadow:0 10px 24px rgba(18,26,51,.35);z-index:30;display:grid;place-items:center}
@@ -336,11 +335,6 @@ button:disabled{opacity:.6;cursor:default}
       <ul class="empty" id="empty-state" hidden>
         <li><span class="e" style="font-size:2.4rem">🧺</span><span id="empty-text">הרשימה ריקה. מה חסר בבית?</span></li>
       </ul>
-    </div>
-
-    <div id="bought-box" class="note note-small" hidden>
-      <button class="linkbtn" id="bought-toggle">✅ <span id="bought-title">נקנה</span> (<span id="bought-count">0</span>)</button>
-      <ul class="list" id="bought-list" hidden></ul>
     </div>
 
     <button class="fab" id="fab-add" aria-label="Add item">+</button>
@@ -660,7 +654,6 @@ function paintStrings(){
   if($('item-qty')) $('item-qty').placeholder = t('qtyPh');
   if($('item-add')) $('item-add').textContent = t('add');
   $('pending-title').textContent = t('pendingTitle');
-  $('bought-title').textContent = t('boughtTitle');
   $('empty-text').textContent = t('emptyList');
   const authGoMode = $('au-go').dataset.mode || 'login';
   $('au-go').textContent = authGoMode==='signup'?t('signupGo'):authGoMode==='reset'?t('resetGo'):t('loginGo');
@@ -729,8 +722,8 @@ function itemRow(item, mode, draggable){
     </li>`;
   }
   const done = item.status==='checked';
-  const checkedWho = personName(item.checked_by_name);
-  const who = done ? checkedWho : addedWho;
+  const checkedWho = (done && item.checked_by_name)
+    ? `<span class="who-name checked-label">✅ ${esc(CS.t('checkedBy').replace('{n}',item.checked_by_name))}</span>` : '';
   const handle = draggable ? `<span class="handle">⋮⋮</span>` : '';
   return `<li class="item ${done?'done':''}" data-id="${item.id}" ${draggable?'draggable="true"':''}>
     ${handle}
@@ -738,7 +731,7 @@ function itemRow(item, mode, draggable){
       <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
     <span class="emo e" data-cat="${esc(item.category||'other')}">${esc(item.emoji||cat.emoji)}</span>
-    <span class="t" data-action="edit" data-id="${item.id}">${esc(item.text)}${who}</span>
+    <span class="t" data-action="edit" data-id="${item.id}"><span class="t-text">${esc(item.text)}</span>${addedWho}${checkedWho}</span>
     ${qty}
     <button class="del" data-action="del" data-id="${item.id}" aria-label="delete">🗑️</button>
   </li>`;
@@ -792,35 +785,29 @@ function attachDrag(listEl){
 }
 
 function renderGroups(items){
-  const active = items.filter(i=>i.status==='active').sort((a,b)=>(a.position||0)-(b.position||0));
+  // checked items stay put among the active ones (same category, same position) — just marked done in place
+  const visible = items.filter(i=>i.status!=='pending').sort((a,b)=>(a.position||0)-(b.position||0));
   const box = $('groups');
-  if(!active.length){ box.innerHTML=''; }
+  if(!visible.length){ box.innerHTML=''; }
   else if(viewMode==='flat'){
-    box.innerHTML = `<ul class="list" id="flat-list">${active.map(i=>itemRow(i,'active',true)).join('')}</ul>`;
+    box.innerHTML = `<ul class="list" id="flat-list">${visible.map(i=>itemRow(i,'active',true)).join('')}</ul>`;
     attachDrag($('flat-list'));
   }else{
     const byCat = {};
-    active.forEach(i=>{ (byCat[i.category||'other'] = byCat[i.category||'other']||[]).push(i); });
+    visible.forEach(i=>{ (byCat[i.category||'other'] = byCat[i.category||'other']||[]).push(i); });
     box.innerHTML = CS.CAT_ORDER.filter(c=>byCat[c]&&byCat[c].length).map(c=>{
       const meta = CS.CATS[c];
       return `<div class="group"><div class="group-h"><span class="e">${meta.emoji}</span><span>${CS.lang()==='he'?meta.he:meta.en}</span></div>
         <ul class="list">${byCat[c].map(i=>itemRow(i,'active')).join('')}</ul></div>`;
     }).join('');
   }
-  $('empty-state').hidden = !!active.length;
+  $('empty-state').hidden = !!visible.length;
   attachSwipe(box);
 
   const pending = items.filter(i=>i.status==='pending');
   $('pending-box').hidden = !pending.length;
   $('pending-list').innerHTML = pending.map(i=>itemRow(i,'pending')).join('');
-
-  const bought = items.filter(i=>i.status==='checked');
-  $('bought-box').hidden = !bought.length;
-  $('bought-count').textContent = bought.length;
-  $('bought-list').innerHTML = bought.map(i=>itemRow(i,'active')).join('');
-  attachSwipe($('bought-list'));
 }
-$('bought-toggle').addEventListener('click',()=>{ const l=$('bought-list'); l.hidden=!l.hidden; });
 
 /* ---------- auth tabs ---------- */
 function setAuthMode(mode){

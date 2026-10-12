@@ -108,7 +108,6 @@ function paintStrings(){
   if($('item-qty')) $('item-qty').placeholder = t('qtyPh');
   if($('item-add')) $('item-add').textContent = t('add');
   $('pending-title').textContent = t('pendingTitle');
-  $('bought-title').textContent = t('boughtTitle');
   $('empty-text').textContent = t('emptyList');
   const authGoMode = $('au-go').dataset.mode || 'login';
   $('au-go').textContent = authGoMode==='signup'?t('signupGo'):authGoMode==='reset'?t('resetGo'):t('loginGo');
@@ -177,8 +176,8 @@ function itemRow(item, mode, draggable){
     </li>`;
   }
   const done = item.status==='checked';
-  const checkedWho = personName(item.checked_by_name);
-  const who = done ? checkedWho : addedWho;
+  const checkedWho = (done && item.checked_by_name)
+    ? `<span class="who-name checked-label">✅ ${esc(CS.t('checkedBy').replace('{n}',item.checked_by_name))}</span>` : '';
   const handle = draggable ? `<span class="handle">⋮⋮</span>` : '';
   return `<li class="item ${done?'done':''}" data-id="${item.id}" ${draggable?'draggable="true"':''}>
     ${handle}
@@ -186,7 +185,7 @@ function itemRow(item, mode, draggable){
       <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
     <span class="emo e" data-cat="${esc(item.category||'other')}">${esc(item.emoji||cat.emoji)}</span>
-    <span class="t" data-action="edit" data-id="${item.id}">${esc(item.text)}${who}</span>
+    <span class="t" data-action="edit" data-id="${item.id}"><span class="t-text">${esc(item.text)}</span>${addedWho}${checkedWho}</span>
     ${qty}
     <button class="del" data-action="del" data-id="${item.id}" aria-label="delete">🗑️</button>
   </li>`;
@@ -240,35 +239,29 @@ function attachDrag(listEl){
 }
 
 function renderGroups(items){
-  const active = items.filter(i=>i.status==='active').sort((a,b)=>(a.position||0)-(b.position||0));
+  // checked items stay put among the active ones (same category, same position) — just marked done in place
+  const visible = items.filter(i=>i.status!=='pending').sort((a,b)=>(a.position||0)-(b.position||0));
   const box = $('groups');
-  if(!active.length){ box.innerHTML=''; }
+  if(!visible.length){ box.innerHTML=''; }
   else if(viewMode==='flat'){
-    box.innerHTML = `<ul class="list" id="flat-list">${active.map(i=>itemRow(i,'active',true)).join('')}</ul>`;
+    box.innerHTML = `<ul class="list" id="flat-list">${visible.map(i=>itemRow(i,'active',true)).join('')}</ul>`;
     attachDrag($('flat-list'));
   }else{
     const byCat = {};
-    active.forEach(i=>{ (byCat[i.category||'other'] = byCat[i.category||'other']||[]).push(i); });
+    visible.forEach(i=>{ (byCat[i.category||'other'] = byCat[i.category||'other']||[]).push(i); });
     box.innerHTML = CS.CAT_ORDER.filter(c=>byCat[c]&&byCat[c].length).map(c=>{
       const meta = CS.CATS[c];
       return `<div class="group"><div class="group-h"><span class="e">${meta.emoji}</span><span>${CS.lang()==='he'?meta.he:meta.en}</span></div>
         <ul class="list">${byCat[c].map(i=>itemRow(i,'active')).join('')}</ul></div>`;
     }).join('');
   }
-  $('empty-state').hidden = !!active.length;
+  $('empty-state').hidden = !!visible.length;
   attachSwipe(box);
 
   const pending = items.filter(i=>i.status==='pending');
   $('pending-box').hidden = !pending.length;
   $('pending-list').innerHTML = pending.map(i=>itemRow(i,'pending')).join('');
-
-  const bought = items.filter(i=>i.status==='checked');
-  $('bought-box').hidden = !bought.length;
-  $('bought-count').textContent = bought.length;
-  $('bought-list').innerHTML = bought.map(i=>itemRow(i,'active')).join('');
-  attachSwipe($('bought-list'));
 }
-$('bought-toggle').addEventListener('click',()=>{ const l=$('bought-list'); l.hidden=!l.hidden; });
 
 /* ---------- auth tabs ---------- */
 function setAuthMode(mode){

@@ -170,7 +170,8 @@ function applyCachedHousehold(cache){
   goHome();
   showOfflineNote(true);
 }
-async function loadHousehold(hh){
+async function loadHousehold(hh, navigate){
+  if(navigate===undefined) navigate=true;
   household=hh;
   try{ localStorage.setItem('cs-last-hh',hh); }catch(e){}
   try{
@@ -179,22 +180,28 @@ async function loadHousehold(hh){
       sb.from('household_members').select('*').eq('household_id',hh),
     ]);
     if(e1||e2) throw (e1||e2);
-    if(!hrow){ CS.setScreen('onboard'); return; }
+    if(!hrow){ if(navigate) CS.setScreen('onboard'); return; }
     members=mrows||[]; membersById={}; members.forEach(m=>membersById[m.user_id]=m);
     role=(membersById[user.id]||{}).role||null;
     hhName=hrow.name;
     await ensureDisplayName(hh);
     CS.renderMembers(members);
+    if(!$('view-lists').hidden) CS.renderLists(lists); // keep the open lists page's data fresh without navigating away from it
     showOfflineNote(false);
-    goHome();
     subscribeHouseholdRealtime();
+    if(!navigate) return; // a background refresh (realtime update, resumed tab) must never yank the user off whatever screen they're on
+    // resume exactly where this household was left — a fresh boot should land in the list you
+    // were shopping from, not back at Home every time
+    let lastList=null; try{ lastList=localStorage.getItem('cs-last-list-'+hh); }catch(e){}
+    if(lastList && await openList(lastList, true)) return;
+    goHome();
   }catch(e){
     const cache=loadCache();
     if(cache && cache.hhId===hh) applyCachedHousehold(cache);
-    else toast(CS.t('offline'));
+    else if(navigate) toast(CS.t('offline'));
   }
 }
-async function refreshHousehold(){ if(household) await loadHousehold(household); }
+async function refreshHousehold(){ if(household) await loadHousehold(household, false); }
 $('brand-home-btn').addEventListener('click',()=>{ if(household) goHome(); });
 
 async function createHousehold(){
@@ -375,10 +382,11 @@ document.addEventListener('click',e=>{
   openList(row.dataset.list);
 });
 
-async function openList(id){
+async function openList(id, silent){
   const {data:lrow,error}=await sb.from('shopping_lists').select('*').eq('id',id).maybeSingle();
-  if(error||!lrow){ toast(CS.authErr(error||'not_found')); return; }
+  if(error||!lrow){ if(!silent) toast(CS.authErr(error||'not_found')); return false; }
   listId=id;
+  try{ localStorage.setItem('cs-last-list-'+household,id); }catch(e){}
   $('list-name-lbl').textContent=lrow.name;
   $('trip-bar').hidden=lrow.status!=='open';
   searchQuery=''; $('search-input').value='';
@@ -388,6 +396,7 @@ async function openList(id){
   cacheSnapshot();
   subscribeListRealtime();
   if(queue.length) flushQueue();
+  return true;
 }
 
 function openCloseTripSheet(){
@@ -648,7 +657,21 @@ async function onUser(u){
   const pick=(last&&list.find(h=>h.id===last))||list[0];
   await loadHousehold(pick.id);
 }
-sb.auth.onAuthStateChange((event,session)=>{ setTimeout(()=>onUser(session?session.user:null),0); });
+let bootedUserId=null;
+sb.auth.onAuthStateChange((event,session)=>{
+  setTimeout(()=>{
+    const u=session?session.user:null;
+    // the app resuming from background (or a profile/password edit) fires TOKEN_REFRESHED /
+    // USER_UPDATED for the same already-signed-in user — re-running the whole boot flow for those
+    // was throwing people back to Home mid-list every time they switched back to the app.
+    if((event==='TOKEN_REFRESHED'||event==='USER_UPDATED') && u && u.id===bootedUserId){
+      user=u; renderAccount();
+      return;
+    }
+    bootedUserId=u?u.id:null;
+    onUser(u);
+  },0);
+});
 
 showOfflineNote(!online);
 window.CS.rerenderMain=paintItems;

@@ -63,19 +63,18 @@
 .item .t{flex:1;min-width:0;overflow-wrap:anywhere;font-size:1rem;cursor:pointer}
 .search-input{width:100%;border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:10px 14px;margin-bottom:12px}
 .search-input:focus{outline:none;border-color:var(--accent)}
-.item.done .t{color:var(--muted);text-decoration:line-through;text-decoration-style:wavy;text-decoration-color:var(--ok);text-decoration-thickness:1.3px}
+.item.done .t{color:var(--muted)}
+.item.done .t-text{text-decoration:line-through;text-decoration-style:wavy;text-decoration-color:var(--ok);text-decoration-thickness:1.3px}
 .item .del{border:0;background:transparent;color:var(--muted);width:28px;height:28px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:.95rem}
 
-.who-name{display:block;font-size:.74rem;color:var(--muted);font-weight:normal}
+.who-name{display:block;font-size:.74rem;color:var(--muted);font-weight:normal;text-decoration:none}
+.who-name.checked-label{color:var(--ok)}
 
 .pending-h{display:flex;align-items:center;gap:6px;font-family:var(--display);font-size:1.02rem;font-weight:400;margin:0 0 8px}
 .pending-actions{display:flex;gap:6px;flex:none}
 .pending-actions button{border:0;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:.95rem}
 .pending-actions .ok-btn{background:var(--ok-soft);color:var(--ok)}
 .pending-actions .no-btn{background:var(--danger-soft);color:var(--danger)}
-
-.bought-box .item .emo{opacity:.6}
-.bought-box .linkbtn{font-size:.95rem;text-decoration:none;color:var(--muted)}
 
 /* ---------- floating add button ---------- */
 .fab{position:fixed;inset-inline-end:18px;bottom:calc(88px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);font-size:1.9rem;line-height:1;box-shadow:0 10px 24px rgba(18,26,51,.35);z-index:30;display:grid;place-items:center}
