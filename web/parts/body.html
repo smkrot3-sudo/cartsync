@@ -8,8 +8,13 @@
     </div>
   </header>
 
+  <!-- ---------- splash: shown until we know whether a session already exists ---------- -->
+  <div class="splash" id="splash">
+    <div class="hero-emoji e">🛒</div>
+  </div>
+
   <!-- ---------- auth screen ---------- -->
-  <section class="view" id="view-auth">
+  <section class="view" id="view-auth" hidden>
     <div class="hero">
       <div class="hero-emoji e">🛒🥦🧺</div>
       <h1 id="auth-title">רשימת קניות אחת, לכל המשפחה</h1>
@@ -60,13 +65,12 @@
       <button class="hhname" id="hh-switch"><b id="hh-name-lbl">…</b><span class="e">▾</span></button>
       <div class="members" id="members-strip"></div>
       <button class="iconbtn" id="view-toggle" aria-label="View" title="תצוגה">🗂️</button>
-      <button class="iconbtn" id="invite-btn" aria-label="Invite">➕</button>
+      <button class="iconbtn" id="invite-btn" aria-label="Invite">👥</button>
     </div>
 
-    <div class="add">
-      <input id="item-input" placeholder="להוסיף מוצר…" autocomplete="off">
-      <input id="item-qty" class="qty-input" placeholder="כמות" autocomplete="off">
-      <button class="btn" id="item-add">הוספה</button>
+    <div class="trip-bar">
+      <span class="e">🛒</span> <span id="trip-label">סבב קניות פעיל</span>
+      <button class="btn small ghost" id="trip-close">✅ סיום קניות</button>
     </div>
 
     <div id="pending-box" class="note note-sticky" hidden>
@@ -85,6 +89,8 @@
       <button class="linkbtn" id="bought-toggle">✅ <span id="bought-title">נקנה</span> (<span id="bought-count">0</span>)</button>
       <ul class="list" id="bought-list" hidden></ul>
     </div>
+
+    <button class="fab" id="fab-add" aria-label="Add item">+</button>
   </section>
 
   <div class="shade" id="shade" hidden></div>

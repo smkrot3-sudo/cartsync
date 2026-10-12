@@ -57,6 +57,7 @@ document.addEventListener('click',e=>{ if(e.target.closest('[data-act="sheet-clo
 
 /* ---------- screens ---------- */
 function setScreen(name){
+  $('splash').hidden = true;
   ['auth','onboard','main'].forEach(s=>{ $('view-'+s).hidden = s!==name; });
 }
 
@@ -80,9 +81,11 @@ function paintStrings(){
   $('join-h').textContent = t('joinHh');
   $('hh-code').placeholder = t('codePh');
   $('hh-join').textContent = t('join');
-  $('item-input').placeholder = t('itemPh');
-  $('item-qty').placeholder = t('qtyPh');
-  $('item-add').textContent = t('add');
+  $('trip-label').textContent = t('tripActive');
+  $('trip-close').textContent = t('tripClose');
+  if($('item-input')) $('item-input').placeholder = t('itemPh'); // only exists while the add sheet is open
+  if($('item-qty')) $('item-qty').placeholder = t('qtyPh');
+  if($('item-add')) $('item-add').textContent = t('add');
   $('pending-title').textContent = t('pendingTitle');
   $('bought-title').textContent = t('boughtTitle');
   $('empty-text').textContent = t('emptyList');
@@ -90,14 +93,23 @@ function paintStrings(){
   $('au-go').textContent = authGoMode==='signup'?t('signupGo'):authGoMode==='reset'?t('resetGo'):t('loginGo');
 }
 
-/* ---------- member avatars ---------- */
+/* ---------- member avatars: each person gets a stable color, hashed from their user id ---------- */
 function initials(nameOrEmail){
   const s = (nameOrEmail||'?').trim();
   return (s[0]||'?').toUpperCase();
 }
+function personColor(uid){
+  let h=0; const s=String(uid||'');
+  for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))%360;
+  return `hsl(${h} 62% 46%)`;
+}
 function renderMembers(members){
   $('members-strip').innerHTML = (members||[]).slice(0,5).map(m=>
-    `<span class="avatar" title="${esc(m.display_name||m.email||'')}">${esc(initials(m.display_name||m.email))}</span>`).join('');
+    `<span class="avatar" style="background:${personColor(m.user_id)}" title="${esc(m.display_name||m.email||'')}">${esc(initials(m.display_name||m.email))}</span>`).join('');
+}
+function personAvatar(uid,name){
+  if(!uid) return '';
+  return `<span class="mini-avatar" style="background:${personColor(uid)}" title="${esc(name||'')}">${esc(initials(name))}</span>`;
 }
 
 /* ---------- view mode: grouped-by-category vs flat+draggable ---------- */
@@ -111,12 +123,13 @@ paintViewToggle();
 /* ---------- item rows ---------- */
 function itemRow(item, mode, draggable){
   const cat = CS.CATS[item.category]||CS.CATS.other;
-  const who = item.checked_by_name ? `<span class="who">${esc(item.checked_by_name)}</span>` : '';
   const qty = item.qty ? `<span class="qty-tag">${esc(item.qty)}</span>` : '';
+  const addedWho = personAvatar(item.created_by, item.added_by_name);
   if(mode==='pending'){
     return `<li class="item" data-id="${item.id}">
-      <span class="emo e">${esc(item.emoji||cat.emoji)}</span>
-      <span class="t">${esc(item.text)}<span class="who">${esc(item.requested_by_name||'')}</span></span>
+      <span class="emo e" data-cat="${esc(item.category||'other')}">${esc(item.emoji||cat.emoji)}</span>
+      <span class="t">${esc(item.text)}</span>
+      ${addedWho}
       ${qty}
       <span class="pending-actions">
         <button class="ok-btn" data-action="approve" data-id="${item.id}" aria-label="approve">✓</button>
@@ -125,14 +138,17 @@ function itemRow(item, mode, draggable){
     </li>`;
   }
   const done = item.status==='checked';
+  const checkedWho = personAvatar(item.checked_by, item.checked_by_name);
+  const who = done ? checkedWho : addedWho;
   const handle = draggable ? `<span class="handle">⋮⋮</span>` : '';
   return `<li class="item ${done?'done':''}" data-id="${item.id}" ${draggable?'draggable="true"':''}>
     ${handle}
     <button class="check" data-action="toggle" data-id="${item.id}" aria-label="check">
       <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
-    <span class="emo e">${esc(item.emoji||cat.emoji)}</span>
-    <span class="t">${esc(item.text)}${who}</span>
+    <span class="emo e" data-cat="${esc(item.category||'other')}">${esc(item.emoji||cat.emoji)}</span>
+    <span class="t">${esc(item.text)}</span>
+    ${who}
     ${qty}
     <button class="del" data-action="del" data-id="${item.id}" aria-label="delete">🗑️</button>
   </li>`;

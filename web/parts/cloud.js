@@ -148,7 +148,7 @@ async function loadHousehold(hh){
     const [{data:hrow,error:e1},{data:mrows,error:e2},{data:lrows,error:e3}]=await Promise.all([
       sb.from('households').select('*').eq('id',hh).maybeSingle(),
       sb.from('household_members').select('*').eq('household_id',hh),
-      sb.from('shopping_lists').select('*').eq('household_id',hh).order('created_at').limit(1),
+      sb.from('shopping_lists').select('*').eq('household_id',hh).eq('status','open').limit(1),
     ]);
     if(e1||e2||e3) throw (e1||e2||e3);
     if(!hrow){ CS.setScreen('onboard'); return; }
@@ -204,6 +204,28 @@ async function openHouseholdSwitcher(){
 }
 $('hh-switch').addEventListener('click',openHouseholdSwitcher);
 
+/* ---------- shopping trips ---------- */
+function openCloseTripSheet(){
+  const t=CS.t;
+  openSheet(sheetHead(t('tripCloseTitle'))+`<div class="card">
+    <p>${esc(t('tripCloseBody'))}</p>
+    <button class="btn wide" id="trip-confirm">${esc(t('tripClose'))}</button>
+    <button class="btn ghost wide" data-act="sheet-close">${esc(t('cancel'))}</button>
+  </div>`);
+  $('trip-confirm').onclick=async()=>{
+    closeSheet();
+    const {data,error}=await sb.rpc('close_shopping_trip',{p_list_id:listId});
+    if(error){ toast(CS.authErr(error)); return; }
+    listId=data;
+    try{ queue=[]; saveQueue(); }catch(e){}
+    await fetchItems();
+    cacheSnapshot();
+    subscribeRealtime();
+    toast(t('tripClosed'));
+  };
+}
+$('trip-close').addEventListener('click',openCloseTripSheet);
+
 /* ---------- invites ---------- */
 function openInviteSheet(){
   const t=CS.t;
@@ -238,7 +260,7 @@ $('invite-btn').addEventListener('click',openInviteSheet);
 function decorate(list){
   return list.map(i=>({...i,
     checked_by_name: i.checked_by&&membersById[i.checked_by]?membersById[i.checked_by].display_name:'',
-    requested_by_name: i.created_by&&membersById[i.created_by]?membersById[i.created_by].display_name:'',
+    added_by_name: i.created_by&&membersById[i.created_by]?membersById[i.created_by].display_name:'',
   }));
 }
 function paintItems(){ CS.renderGroups(decorate(items)); cacheSnapshot(); }
@@ -263,10 +285,11 @@ async function aiCategorize(text){
 }
 async function addItem(){
   const input=$('item-input'), qtyInput=$('item-qty');
+  if(!input||!qtyInput) return;
   const text=input.value.trim();
   const qty=qtyInput.value.trim();
   if(!text||!listId) return;
-  input.value=''; qtyInput.value='';
+  input.value=''; qtyInput.value=''; input.focus(); // keep the sheet open for fast multi-add before heading to the store
   let g=CS.guess(text);
   if(online && g.cat==='other'){ const ai=await aiCategorize(text); if(ai) g=ai; } // local dictionary has no match: ask the AI edge function instead of settling for "other"
   const row={ list_id:listId, household_id:household, text, category:g.cat, emoji:g.emoji, qty:qty||null, created_by:user.id, position:Date.now() };
@@ -275,9 +298,19 @@ async function addItem(){
   if(error){ toast(CS.authErr(error)); return; }
   toast(role==='requester'?CS.t('itemRequested'):CS.t('itemAdded'));
 }
-$('item-add').addEventListener('click',addItem);
-$('item-input').addEventListener('keydown',e=>{ if(e.key==='Enter') addItem(); });
-$('item-qty').addEventListener('keydown',e=>{ if(e.key==='Enter') addItem(); });
+function openAddSheet(){
+  const t=CS.t;
+  openSheet(sheetHead(t('add'))+`<div class="card">
+    <input id="item-input" placeholder="${esc(t('itemPh'))}" autocomplete="off">
+    <input id="item-qty" class="qty-input" placeholder="${esc(t('qtyPh'))}" autocomplete="off">
+    <button class="btn wide" id="item-add">${esc(t('add'))}</button>
+  </div>`);
+  $('item-add').addEventListener('click',addItem);
+  $('item-input').addEventListener('keydown',e=>{ if(e.key==='Enter') addItem(); });
+  $('item-qty').addEventListener('keydown',e=>{ if(e.key==='Enter') addItem(); });
+  $('item-input').focus();
+}
+$('fab-add').addEventListener('click',openAddSheet);
 
 async function reorderItems(ids){
   if(!online) return; // manual reorder is an online-only convenience for v1

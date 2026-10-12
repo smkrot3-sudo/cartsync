@@ -26,6 +26,10 @@ he: {
   versionLabel:'גרסה: {v}', updateAvailable:'יש עדכון', updateNow:'🔄 לעדכן',
   updateDownloading:'מוריד...', updateFailed:'העדכון נכשל, אפשר לנסות שוב', updateDone:'✅ מותקן',
   themeLabel:'מצב תצוגה', themeLight:'☀️ בהיר', themeDark:'🌙 כהה', themeSystem:'⚙️ אוטומטי',
+  addedBy:'הוספה ע״י {n}', checkedBy:'נאסף ע״י {n}',
+  tripActive:'סבב קניות פעיל', tripClose:'✅ סיום קניות', tripCloseTitle:'לסיים את סבב הקניות?',
+  tripCloseBody:'מוצרים שסומנו כ"נלקח" יישמרו בהיסטוריה. מוצרים שלא נלקחו יעברו לרשימה החדשה.',
+  tripClosed:'✅ הסבב הסתיים, רשימה חדשה מחכה',
 },
 en: {
   appName:'CartSync', tagline:'One shopping list, for the whole family',
@@ -53,6 +57,10 @@ en: {
   versionLabel:'Version: {v}', updateAvailable:'Update available', updateNow:'🔄 Update',
   updateDownloading:'Downloading...', updateFailed:'Update failed, try again', updateDone:'✅ Installed',
   themeLabel:'Appearance', themeLight:'☀️ Light', themeDark:'🌙 Dark', themeSystem:'⚙️ Auto',
+  addedBy:'Added by {n}', checkedBy:'Collected by {n}',
+  tripActive:'Shopping trip in progress', tripClose:'✅ Finish shopping', tripCloseTitle:'Finish this shopping trip?',
+  tripCloseBody:'Items checked off will be saved to history. Items not yet taken move to the new list.',
+  tripClosed:'✅ Trip closed, a fresh list is ready',
 },
 };
 
