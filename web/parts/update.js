@@ -14,6 +14,17 @@ function showBtn(show, label, onClick){
   b.hidden=!show; b.textContent=label; b.disabled=false;
   b.onclick=onClick;
 }
+let sheetShown=false;
+function showUpdateSheet(onUpdate){
+  if(sheetShown) return; // one popup per page load is enough, even if check() runs again later
+  sheetShown=true;
+  CS.openSheet(CS.sheetHead(CS.t('updateAvailable'))+`<div class="card">
+    <p class="sub">${CS.esc(CS.t('updateSheetBody'))}</p>
+    <button class="btn wide" id="update-sheet-go">${CS.esc(CS.t('updateNow'))}</button>
+    <button class="btn ghost wide" data-act="sheet-close">${CS.esc(CS.t('updateLater'))}</button>
+  </div>`);
+  const b=$('update-sheet-go'); if(b) b.onclick=()=>{ CS.closeSheet(); onUpdate(); };
+}
 
 function startAndroidUpdate(url){
   showBtn(true, CS.t('updateDownloading'), null);
@@ -46,9 +57,13 @@ async function check(){
     const v=await r.json();
     if(inApp && v.android){
       let current=0; try{ current=window.CartApp.versionCode(); }catch(e){}
-      if(v.android.versionCode>current) showBtn(true, CS.t('updateNow'), ()=>startAndroidUpdate(v.android.url));
+      if(v.android.versionCode>current){
+        showBtn(true, CS.t('updateNow'), ()=>startAndroidUpdate(v.android.url));
+        showUpdateSheet(()=>startAndroidUpdate(v.android.url));
+      }
     }else if(!inApp && v.build && v.build>WEB_BUILD+5000){
       showBtn(true, CS.t('updateNow'), ()=>location.reload());
+      showUpdateSheet(()=>location.reload());
     }
   }catch(e){ /* offline or missing file: stay quiet, not worth an error toast */ }
 }

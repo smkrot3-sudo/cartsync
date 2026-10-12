@@ -5,6 +5,9 @@
 .guide-section h3{display:flex;align-items:center;gap:7px;margin:0 0 6px}
 .guide-section p{color:var(--muted);font-size:.92rem;line-height:1.6;margin:0}
 .guide-section p b{color:var(--fg)}
+.whats-new-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+.whats-new-list li{position:relative;padding-inline-start:20px;font-size:.92rem;color:var(--fg);line-height:1.5}
+.whats-new-list li::before{content:"✨";position:absolute;inset-inline-start:0;top:0;font-size:.8rem}
 
 .trip-bar{display:flex;align-items:center;gap:8px;background:var(--accent-soft);color:var(--fg);border-radius:14px;padding:9px 12px;font-size:.9rem}
 .trip-bar #trip-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

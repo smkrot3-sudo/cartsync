@@ -30,6 +30,8 @@ he: {
   needHhName:'צריך לתת שם למשק הבית', needCode:'צריך להזין קוד',
   versionLabel:'גרסה: {v}', updateAvailable:'יש עדכון', updateNow:'🔄 לעדכן',
   updateDownloading:'מוריד...', updateFailed:'העדכון נכשל, אפשר לנסות שוב', updateDone:'✅ מותקן',
+  updateSheetBody:'גרסה חדשה של קניות ביחד מוכנה להתקנה.', updateLater:'אחר כך',
+  whatsNewTitle:'מה חדש', whatsNewIntro:'כמה שיפורים שהתווספו מאז הפעם האחרונה שנכנסת:', whatsNewClose:'הבנתי',
   themeLabel:'מצב תצוגה', themeLight:'☀️ בהיר', themeDark:'🌙 כהה', themeSystem:'⚙️ אוטומטי',
   addedBy:'הוספה ע״י {n}', checkedBy:'נאסף ע״י {n}',
   tripActive:'סבב קניות פעיל', tripClose:'✅ סיום קניות', tripCloseTitle:'לסיים את סבב הקניות?',
@@ -99,6 +101,8 @@ en: {
   needHhName:'Give the household a name', needCode:'Enter a code',
   versionLabel:'Version: {v}', updateAvailable:'Update available', updateNow:'🔄 Update',
   updateDownloading:'Downloading...', updateFailed:'Update failed, try again', updateDone:'✅ Installed',
+  updateSheetBody:'A new version of CartSync is ready to install.', updateLater:'Later',
+  whatsNewTitle:'What’s new', whatsNewIntro:'A few improvements since you were last here:', whatsNewClose:'Got it',
   themeLabel:'Appearance', themeLight:'☀️ Light', themeDark:'🌙 Dark', themeSystem:'⚙️ Auto',
   addedBy:'Added by {n}', checkedBy:'Collected by {n}',
   tripActive:'Shopping trip in progress', tripClose:'✅ Finish shopping', tripCloseTitle:'Finish this shopping trip?',
@@ -178,6 +182,37 @@ const CATS = {
 };
 const CAT_ORDER = ['produce','dairy','bakery','meat','frozen','pantry','beverages','snacks','household','care','baby','pet','other'];
 
+/* "what's new" — bump WHATS_NEW_VERSION and add one new entry at the END of each array whenever
+   there's something worth announcing to EXISTING users (not every build, just real features).
+   A brand-new user never sees this — they get the full guide instead, and are marked caught-up. */
+const WHATS_NEW_VERSION = 1;
+const WHATS_NEW = {
+he: [
+  {version:1, items:[
+    'ראש האפליקציה עוצב מחדש',
+    'הוספה, איסוף והסרה של מוצרים — מיידיים, בלי להמתין לרשת',
+    'התראות בזמן אמת על שינויים ברשימה, וכרטיס היסטוריית פעולות מלא בכל רשימה',
+    'התרעה עדינה כשמוסיפים מוצר שכבר קיים ברשימה',
+    'שיפור הדיוק של ה-AI שבוחר קטגוריה ואימוג׳י למוצרים',
+    'אפשר עכשיו למחוק ולעזוב משקי בית',
+    'שיתוף סיכום קניות ישירות ל-WhatsApp',
+    'מדריך שימוש מלא לאפליקציה, נגיש מתפריט החשבון',
+  ]},
+],
+en: [
+  {version:1, items:[
+    'The app header was redesigned',
+    'Adding, collecting and removing items is now instant, no more waiting on the network',
+    'Real-time notifications for list changes, and a full activity history card on every list',
+    'A gentle warning when adding an item that’s already on the list',
+    'More accurate AI category and emoji matching for items',
+    'You can now delete or leave a household',
+    'Share a shopping summary straight to WhatsApp',
+    'A full in-app user guide, reachable from the account menu',
+  ]},
+],
+};
+
 /* the in-app guide — edit here whenever a feature changes, this is the single source shown to
    both new users (automatically, once) and anyone opening it later from Settings */
 const GUIDE = {
@@ -252,5 +287,6 @@ en: [
   }
   function setLang(l){ lang = l==='en'?'en':'he'; try{localStorage.setItem('cs-lang',lang)}catch(e){} apply(); if(window.CS.render) window.CS.render(); }
   apply();
-  Object.assign(window.CS,{t,lang:()=>lang,setLang,theme:()=>theme,setTheme,fontSize:()=>fontSize,setFontSize,authErr,CATS,CAT_ORDER,guide:()=>GUIDE[lang]||GUIDE.he});
+  Object.assign(window.CS,{t,lang:()=>lang,setLang,theme:()=>theme,setTheme,fontSize:()=>fontSize,setFontSize,authErr,CATS,CAT_ORDER,
+    guide:()=>GUIDE[lang]||GUIDE.he, whatsNew:()=>WHATS_NEW[lang]||WHATS_NEW.he, whatsNewVersion:WHATS_NEW_VERSION});
 })();

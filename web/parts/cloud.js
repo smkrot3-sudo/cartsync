@@ -162,12 +162,33 @@ function openGuideSheet(){
     ${sections}
   </div>`);
 }
-function maybeShowGuide(){
+function openWhatsNewSheet(entries){
+  const t=CS.t;
+  const items=entries.flatMap(e=>e.items).map(i=>`<li>${esc(i)}</li>`).join('');
+  openSheet(sheetHead(t('whatsNewTitle'))+`<div class="card">
+    <p class="sub">${esc(t('whatsNewIntro'))}</p>
+    <ul class="whats-new-list">${items}</ul>
+    <button class="btn wide" data-act="sheet-close">${esc(t('whatsNewClose'))}</button>
+  </div>`);
+}
+/* a brand-new user gets the full guide and is marked caught-up on "what's new" (nothing to catch up
+   on); a returning user whose last-seen version is behind gets just the "what's new" summary */
+function maybeShowOnboarding(){
+  let guideSeen=null, whatsNewSeen=0;
   try{
-    if(localStorage.getItem('cs-guide-seen')) return;
-    localStorage.setItem('cs-guide-seen','1');
+    guideSeen=localStorage.getItem('cs-guide-seen');
+    whatsNewSeen=parseInt(localStorage.getItem('cs-whatsnew-seen')||'0',10)||0;
   }catch(e){ return; }
-  setTimeout(()=>openGuideSheet(),500); // let the screen transition settle first
+  if(!guideSeen){
+    try{ localStorage.setItem('cs-guide-seen','1'); localStorage.setItem('cs-whatsnew-seen',String(CS.whatsNewVersion)); }catch(e){}
+    setTimeout(()=>openGuideSheet(),500); // let the screen transition settle first
+    return;
+  }
+  if(whatsNewSeen<CS.whatsNewVersion){
+    const entries=CS.whatsNew().filter(e=>e.version>whatsNewSeen);
+    try{ localStorage.setItem('cs-whatsnew-seen',String(CS.whatsNewVersion)); }catch(e){}
+    if(entries.length) setTimeout(()=>openWhatsNewSheet(entries),500);
+  }
 }
 
 /* ---------- households ---------- */
@@ -907,17 +928,17 @@ async function onUser(u){
   user=u; window.CS.myId=u?u.id:null;
   renderAccount();
   if(!u){ household=null; listId=null; items=[]; CS.setScreen('auth'); return; }
-  if(pendingJoin && await consumePendingJoin()){ maybeShowGuide(); return; }
+  if(pendingJoin && await consumePendingJoin()){ maybeShowOnboarding(); return; }
   const list=await listMyHouseholds();
   if(!list.length){
     const cache=loadCache();
-    if(cache && cache.hhId){ await loadHousehold(cache.hhId); maybeShowGuide(); return; } // offline cold start: fall back to last-known household
-    CS.setScreen('onboard'); maybeShowGuide(); return;
+    if(cache && cache.hhId){ await loadHousehold(cache.hhId); maybeShowOnboarding(); return; } // offline cold start: fall back to last-known household
+    CS.setScreen('onboard'); maybeShowOnboarding(); return;
   }
   let last=null; try{ last=localStorage.getItem('cs-last-hh'); }catch(e){}
   const pick=(last&&list.find(h=>h.id===last))||list[0];
   await loadHousehold(pick.id);
-  maybeShowGuide();
+  maybeShowOnboarding();
 }
 let bootedUserId=null;
 sb.auth.onAuthStateChange((event,session)=>{
