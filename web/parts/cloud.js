@@ -130,12 +130,14 @@ function openAccountSheet(){
       <div class="role-pick" id="font-pick">
         ${['normal','large','xlarge'].map(v=>`<button data-font-opt="${v}" class="${v===curFont?'active':''}">${esc(t('font'+v[0].toUpperCase()+v.slice(1)))}</button>`).join('')}
       </div>
+      <button class="btn ghost" id="acct-profile">${esc(t('editProfile'))}</button>
       <button class="btn ghost" id="acct-sync">🔄 ${esc(t('syncNow'))}</button>
       <button class="btn ghost" id="acct-switch">🏠 ${esc(t('switchHousehold'))}</button>
       <button class="btn ghost" id="acct-signout">👋 ${esc(t('signOut'))}</button>
     </div>`);
   $('theme-pick').querySelectorAll('[data-theme-opt]').forEach(b=>b.onclick=()=>{ CS.setTheme(b.dataset.themeOpt); openAccountSheet(); });
   $('font-pick').querySelectorAll('[data-font-opt]').forEach(b=>b.onclick=()=>{ CS.setFontSize(b.dataset.fontOpt); openAccountSheet(); });
+  $('acct-profile').onclick=openProfileSheet;
   $('acct-sync').onclick=async()=>{ await flushQueue(); await refreshHousehold(); toast('🔄'); };
   $('acct-switch').onclick=()=>{ closeSheet(); openHouseholdSwitcher(); };
   $('acct-signout').onclick=async()=>{ await sb.auth.signOut(); closeSheet(); };
@@ -239,6 +241,7 @@ function drawMembersSheet(){
           ${['editor','requester','viewer'].map(r=>`<option value="${r}" ${r===m.role?'selected':''}>${esc(t('role'+r[0].toUpperCase()+r.slice(1)))}</option>`).join('')}
         </select>`
       : `<span class="role-chip ${esc(m.role)}">${esc(t('role'+m.role[0].toUpperCase()+m.role.slice(1)))}</span>`;
+    const editBtn = isSelf ? `<button class="member-remove" data-edit-name="${m.user_id}" aria-label="edit name">✏️</button>` : '';
     const removeBtn = (isSelf || (isOwner && !isSelf))
       ? `<button class="member-remove" data-remove-member="${m.user_id}" aria-label="remove">${isSelf?'🚪':'✕'}</button>`
       : '';
@@ -246,6 +249,7 @@ function drawMembersSheet(){
       <span class="avatar" style="background:${CS.personColor(m.user_id)};margin-inline-start:0">${esc(CS.initials(name))}</span>
       <span class="nm">${label}</span>
       ${roleControl}
+      ${editBtn}
       ${removeBtn}
     </div>`;
   }).join('');
@@ -259,6 +263,7 @@ function drawMembersSheet(){
     toast(t('roleUpdated'));
     drawMembersSheet();
   });
+  $('sheet').querySelectorAll('[data-edit-name]').forEach(b=>b.onclick=()=>openEditNameSheet());
   $('sheet').querySelectorAll('[data-remove-member]').forEach(b=>b.onclick=async()=>{
     const uid=b.dataset.removeMember, isSelf=uid===user.id;
     const m=members.find(x=>x.user_id===uid);
@@ -274,6 +279,59 @@ function drawMembersSheet(){
   });
 }
 $('home-members-btn').addEventListener('click',drawMembersSheet);
+
+function openEditNameSheet(){
+  const t=CS.t;
+  const mine=members.find(x=>x.user_id===user.id);
+  openSheet(sheetHead(t('editNameTitle'))+`<div class="card">
+    <p class="sub">${esc(t('editNameSub'))}</p>
+    <input id="edit-name-input" value="${esc(mine?mine.display_name||'':'')}">
+    <button class="btn wide" id="edit-name-save">${esc(t('editSave'))}</button>
+  </div>`);
+  $('edit-name-input').focus();
+  $('edit-name-save').onclick=async()=>{
+    const name=$('edit-name-input').value.trim();
+    if(!name) return;
+    const {error}=await sb.from('household_members').update({display_name:name}).eq('household_id',household).eq('user_id',user.id);
+    if(error){ toast(CS.authErr(error)); return; }
+    if(mine) mine.display_name=name;
+    CS.renderMembers(members,'home-members-strip'); CS.renderMembers(members);
+    toast(t('nameUpdated'));
+    drawMembersSheet();
+  };
+}
+
+function openProfileSheet(){
+  const t=CS.t;
+  const curName=(user.user_metadata&&user.user_metadata.full_name)||'';
+  openSheet(sheetHead(t('profileTitle'))+`<div class="card">
+    <div style="font-size:.9rem;color:var(--muted)" dir="ltr">${esc(user.email)}</div>
+    <p class="sub">${esc(t('profileNameSub'))}</p>
+    <input id="profile-name" value="${esc(curName)}">
+    <button class="btn wide" id="profile-save">${esc(t('editSave'))}</button>
+    <p class="sub" style="margin-top:8px">${esc(t('profilePassSub'))}</p>
+    <input id="profile-pass" type="password" placeholder="${esc(t('newPasswordPh'))}" dir="ltr">
+    <button class="btn ghost wide" id="profile-pass-save">${esc(t('profilePassSave'))}</button>
+    <div id="profile-msg" class="msg" hidden></div>
+  </div>`);
+  $('profile-name').focus();
+  $('profile-save').onclick=async()=>{
+    const name=$('profile-name').value.trim();
+    if(!name) return;
+    const {error}=await sb.auth.updateUser({data:{full_name:name}});
+    if(error){ const m=$('profile-msg'); m.className='msg err'; m.textContent=CS.authErr(error); m.hidden=false; return; }
+    renderAccount();
+    toast(t('profileSaved'));
+  };
+  $('profile-pass-save').onclick=async()=>{
+    const pass=$('profile-pass').value;
+    if(!pass||pass.length<6) return;
+    const {error}=await sb.auth.updateUser({password:pass});
+    if(error){ const m=$('profile-msg'); m.className='msg err'; m.textContent=CS.authErr(error); m.hidden=false; return; }
+    $('profile-pass').value='';
+    toast(t('passwordUpdated'));
+  };
+}
 
 /* ---------- lists directory ---------- */
 let lists=[];
