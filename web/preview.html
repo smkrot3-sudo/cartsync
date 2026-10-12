@@ -142,6 +142,13 @@ button:disabled{opacity:.6;cursor:default}
 @keyframes splash-pulse{0%,100%{opacity:.35;transform:scale(.92)}50%{opacity:1;transform:scale(1.05)}}
 @media (prefers-reduced-motion: reduce){.splash .hero-emoji{animation:none;opacity:.8}}
 /* household bar, member avatars, item list grouped by category, pending/bought sections, invite sheet */
+.guide-card{gap:14px}
+.guide-section{padding-top:12px;border-top:1px solid var(--line)}
+.guide-section:first-of-type{padding-top:0;border-top:0}
+.guide-section h3{display:flex;align-items:center;gap:7px;margin:0 0 6px}
+.guide-section p{color:var(--muted);font-size:.92rem;line-height:1.6;margin:0}
+.guide-section p b{color:var(--fg)}
+
 .trip-bar{display:flex;align-items:center;gap:8px;background:var(--accent-soft);color:var(--fg);border-radius:14px;padding:9px 12px;font-size:.9rem}
 .trip-bar #trip-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .trip-bar .btn.small{flex:none}
@@ -482,12 +489,17 @@ he: {
   transferOwnerAction:'העברת בעלות', transferOwnerTitle:'העברת בעלות על משק הבית',
   transferOwnerConfirm:'להעביר את הבעלות על משק הבית ל{n}? את/ה תהפכו לעורך/ת, ול{n} תהיה שליטה מלאה כבעלים.',
   ownerTransferred:'👑 הבעלות הועברה',
+  deleteHousehold:'🗑️ מחיקת משק הבית', deleteHouseholdTitle:'מחיקת משק הבית',
+  deleteHouseholdConfirm:'למחוק לצמיתות את משק הבית "{n}"? כל הרשימות, המוצרים וההיסטוריה של כל החברים יימחקו ולא ניתן יהיה לשחזר. פעולה זו משפיעה על כולם, לא רק עליך.',
+  householdDeleted:'🗑️ משק הבית נמחק',
+  ownerMustTransferFirst:'את/ה ראש/ת משק הבית — צריך להעביר בעלות למישהו אחר לפני שעוזבים, או למחוק את משק הבית.',
   roleUpdated:'✅ ההרשאה עודכנה', you:'(את/ה)',
   editNameTitle:'שם במשק הבית הזה', editNameSub:'איך שמך יוצג לשאר חברי משק הבית הזה. אפשר לקבוע שם שונה בכל משק בית.',
   nameUpdated:'✅ השם עודכן',
   profileTitle:'עריכת פרופיל', profileNameSub:'השם שלך (ברירת מחדל למשקי בית חדשים שתצטרף/י אליהם):',
   profileSaved:'✅ הפרופיל נשמר', profilePassSub:'שינוי סיסמה:', newPasswordPh:'סיסמה חדשה (לפחות 6 תווים)',
   profilePassSave:'לעדכן סיסמה', passwordUpdated:'✅ הסיסמה עודכנה', editProfile:'✏️ עריכת פרופיל',
+  guideTitle:'מדריך שימוש', guideOpen:'מדריך שימוש', guideIntro:'כל מה שצריך לדעת כדי להשתמש באפליקציה.',
 },
 en: {
   appName:'CartSync', tagline:'One shopping list, for the whole family', langLabel:'Language',
@@ -546,12 +558,17 @@ en: {
   transferOwnerAction:'Transfer ownership', transferOwnerTitle:'Transfer household ownership',
   transferOwnerConfirm:'Transfer ownership of the household to {n}? You will become an editor, and {n} will have full owner control.',
   ownerTransferred:'👑 Ownership transferred',
+  deleteHousehold:'🗑️ Delete household', deleteHouseholdTitle:'Delete household',
+  deleteHouseholdConfirm:'Permanently delete the household "{n}"? All lists, items and history for every member will be deleted and cannot be recovered. This affects everyone, not just you.',
+  householdDeleted:'🗑️ Household deleted',
+  ownerMustTransferFirst:'You’re the household owner — transfer ownership to someone else before leaving, or delete the household instead.',
   roleUpdated:'✅ Role updated', you:'(you)',
   editNameTitle:'Name in this household', editNameSub:'How your name shows to others in this household. You can set a different name per household.',
   nameUpdated:'✅ Name updated',
   profileTitle:'Edit profile', profileNameSub:'Your name (default for new households you join):',
   profileSaved:'✅ Profile saved', profilePassSub:'Change password:', newPasswordPh:'New password (6+ characters)',
   profilePassSave:'Update password', passwordUpdated:'✅ Password updated', editProfile:'✏️ Edit profile',
+  guideTitle:'User guide', guideOpen:'User guide', guideIntro:'Everything you need to know to use the app.',
 },
 };
 
@@ -592,6 +609,37 @@ const CATS = {
   other:{he:'אחר',en:'Other',emoji:'🛒'},
 };
 const CAT_ORDER = ['produce','dairy','bakery','meat','frozen','pantry','beverages','snacks','household','care','baby','pet','other'];
+
+/* the in-app guide — edit here whenever a feature changes, this is the single source shown to
+   both new users (automatically, once) and anyone opening it later from Settings */
+const GUIDE = {
+he: [
+  {icon:'🏠', title:'משק בית ותפקידים', body:'כל רשימת קניות שייכת ל"משק בית" — קבוצת אנשים שקונים ביחד. לכל חבר יש תפקיד: <b>ראש/ת משק בית</b> שולט/ת בהכל כולל הזמנות ומחיקה, <b>עריכה מלאה</b> יכול/ה להוסיף ולסמן בלי אישור, <b>בקשת מוצרים</b> צריך/ה אישור של עורך לפני שהמוצר מופיע ברשימה, ו<b>צפייה בלבד</b> רואה הכל בלי לגעת. אפשר לשנות תפקיד של כל חבר מתוך "ניהול חברי משק הבית".'},
+  {icon:'📋', title:'רשימות קניות', body:'במשק בית אחד אפשר לפתוח כמה רשימות (למשל "סופר שבועי" ו"בית מרקחת"). רשימה "פעילה" פתוחה להוספה וסימון; אחרי שסוגרים אותה היא עוברת ל"היסטוריה" ונשארת לקריאה בלבד.'},
+  {icon:'➕', title:'הוספת מוצרים', body:'לוחצים על + ומקלידים שם מוצר. האפליקציה מנחשת קטגוריה ואימוג׳י מתאים לבד — מילון מקומי מיידי, ואם הוא לא מזהה את המוצר, AI משדרג את הסיווג ברקע תוך כמה שניות בלי לעכב את ההוספה. אם המוצר כבר ברשימה, תופיע התראה עדינה עם אפשרות להוסיף בכל זאת.'},
+  {icon:'✅', title:'סימון מוצרים', body:'לוחצים על העיגול ליד המוצר, או מחליקים עליו, כדי לסמן שהוא נאסף. ליד כל מוצר רואים בקטן מי הוסיף אותו, ומוצר שנאסף מראה גם מי אסף אותו — כך כשמתפזרים בסופר כל אחד רואה מה כבר נלקח.'},
+  {icon:'🙋', title:'בקשות לאישור', body:'מי שבתפקיד "בקשת מוצרים" מוסיף פריטים שממתינים לאישור בראש הרשימה. ראש משק הבית או מי שיש לו עריכה מלאה יכולים לאשר (✓) או לדחות (✕). מי שביקש יכול גם לערוך או למחוק את הבקשה שלו לפני שהיא מאושרת.'},
+  {icon:'🔄', title:'סנכרון חי ואופליין', body:'כל שינוי מופיע אצל כל בני משק הבית כמעט מיידית, בלי לרענן. כשאין רשת, אפשר להמשיך להוסיף ולסמן כרגיל — הכל נשמר במכשיר ומסתנכרן אוטומטית ברגע שחוזר חיבור.'},
+  {icon:'🏁', title:'סיום קניות', body:'בסיום סבב קניות לוחצים "סיום קניות". אם נשארו מוצרים שלא נאספו, האפליקציה שואלת מה לעשות איתם: להשאיר ברשימה הסגורה, להעביר לרשימה פתוחה אחרת, או לפתוח להם רשימה חדשה.'},
+  {icon:'📜', title:'היסטוריית פעולות', body:'בתחתית כל רשימה יש כרטיס מתקפל שמראה מי הוסיף, אישר, אסף או הסיר כל מוצר, ובאיזו שעה בדיוק — תיעוד מלא ושקוף של כל מה שקרה ברשימה.'},
+  {icon:'📤', title:'שיתוף והזמנות', body:'אפשר להזמין בני משפחה למשק הבית עם קוד או קישור, ולבחור לכל מוזמן תפקיד מראש. בתוך רשימה אפשר גם לשלוח סיכום "נאסף/חסר" ישירות ב-WhatsApp.'},
+  {icon:'⚙️', title:'הגדרות אישיות', body:'מתפריט החשבון (האווטאר למעלה) אפשר לשנות ערכת נושא (בהיר/כהה/לפי המכשיר), גודל טקסט, שם תצוגה, סיסמה, ולסנכרן ידנית.'},
+  {icon:'👥', title:'ניהול משק הבית', body:'ראש משק הבית יכול להעביר את הבעלות לחבר אחר, להסיר חברים, ולמחוק משק בית לצמיתות (כולל כל הרשימות וההיסטוריה שלו). כל חבר יכול לעזוב משק בית בכל עת — חוץ מראש משק הבית, שצריך קודם להעביר בעלות אם יש עוד חברים.'},
+],
+en: [
+  {icon:'🏠', title:'Household & roles', body:'Every shopping list belongs to a "household" — a group that shops together. Each member has a role: <b>owner</b> controls everything including invites and deletion, <b>editor</b> can add and check items without approval, <b>requester</b> needs an editor to approve items before they appear on the list, and <b>viewer</b> sees everything without touching it. Change anyone’s role from "Manage household members".'},
+  {icon:'📋', title:'Shopping lists', body:'One household can have several lists at once (e.g. "weekly groceries" and "pharmacy"). An "open" list accepts new items and checkmarks; once you close it, it moves to history as read-only.'},
+  {icon:'➕', title:'Adding items', body:'Tap + and type an item name. The app guesses a category and emoji instantly from a local dictionary, and if it doesn’t recognize the item, AI upgrades the category in the background within seconds without ever delaying the add. If the item is already on the list, a gentle warning lets you add it anyway if you really mean to.'},
+  {icon:'✅', title:'Checking items off', body:'Tap the circle next to an item, or swipe it, to mark it collected. Each item shows who added it, and a collected item also shows who collected it — so when everyone splits up in the store, everyone can see what’s already taken.'},
+  {icon:'🙋', title:'Pending requests', body:'Anyone with the "requester" role adds items that wait for approval at the top of the list. The owner or any editor can approve (✓) or reject (✕). The requester can also edit or delete their own request before it’s approved.'},
+  {icon:'🔄', title:'Real-time sync & offline', body:'Every change appears for the whole household almost instantly, no refresh needed. With no connection, you can keep adding and checking items as usual — everything is saved on the device and syncs automatically the moment you’re back online.'},
+  {icon:'🏁', title:'Finishing a shopping trip', body:'When you’re done, tap "finish shopping". If anything is still unchecked, the app asks what to do with it: leave it in the closed list, move it to another open list, or start a new list for it.'},
+  {icon:'📜', title:'Activity history', body:'A collapsible card at the bottom of every list shows who added, approved, collected or removed each item, and exactly when — a full, transparent record of everything that happened.'},
+  {icon:'📤', title:'Sharing & invites', body:'Invite family members to the household with a code or link, and pick a role for them in advance. From inside a list you can also send a "collected/still needed" summary straight to WhatsApp.'},
+  {icon:'⚙️', title:'Personal settings', body:'From the account menu (the avatar up top) you can change the theme (light/dark/system), text size, display name, password, and sync manually.'},
+  {icon:'👥', title:'Managing the household', body:'The owner can transfer ownership to another member, remove members, and permanently delete a household (including all of its lists and history). Any member can leave at any time — except the owner, who needs to transfer ownership first if other members remain.'},
+],
+};
 
 (function(){
   window.CS = window.CS || {};
@@ -636,7 +684,7 @@ const CAT_ORDER = ['produce','dairy','bakery','meat','frozen','pantry','beverage
   }
   function setLang(l){ lang = l==='en'?'en':'he'; try{localStorage.setItem('cs-lang',lang)}catch(e){} apply(); if(window.CS.render) window.CS.render(); }
   apply();
-  Object.assign(window.CS,{t,lang:()=>lang,setLang,theme:()=>theme,setTheme,fontSize:()=>fontSize,setFontSize,authErr,CATS,CAT_ORDER});
+  Object.assign(window.CS,{t,lang:()=>lang,setLang,theme:()=>theme,setTheme,fontSize:()=>fontSize,setFontSize,authErr,CATS,CAT_ORDER,guide:()=>GUIDE[lang]||GUIDE.he});
 })();
 </script>
 <script>

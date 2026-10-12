@@ -136,6 +136,7 @@ function openAccountSheet(){
         ${['normal','large','xlarge'].map(v=>`<button data-font-opt="${v}" class="${v===curFont?'active':''}">${esc(t('font'+v[0].toUpperCase()+v.slice(1)))}</button>`).join('')}
       </div>
       <button class="btn ghost" id="acct-profile">${esc(t('editProfile'))}</button>
+      <button class="btn ghost" id="acct-guide">📖 ${esc(t('guideOpen'))}</button>
       <button class="btn ghost" id="acct-sync">🔄 ${esc(t('syncNow'))}</button>
       <button class="btn ghost" id="acct-switch">🏠 ${esc(t('switchHousehold'))}</button>
       <button class="btn ghost" id="acct-signout">👋 ${esc(t('signOut'))}</button>
@@ -143,9 +144,30 @@ function openAccountSheet(){
   $('theme-pick').querySelectorAll('[data-theme-opt]').forEach(b=>b.onclick=()=>{ CS.setTheme(b.dataset.themeOpt); openAccountSheet(); });
   $('font-pick').querySelectorAll('[data-font-opt]').forEach(b=>b.onclick=()=>{ CS.setFontSize(b.dataset.fontOpt); openAccountSheet(); });
   $('acct-profile').onclick=openProfileSheet;
+  $('acct-guide').onclick=()=>openGuideSheet();
   $('acct-sync').onclick=async()=>{ await flushQueue({resync:true}); await refreshHousehold(); toast('🔄'); };
   $('acct-switch').onclick=()=>{ closeSheet(); openHouseholdSwitcher(); };
   $('acct-signout').onclick=async()=>{ await sb.auth.signOut(); closeSheet(); };
+}
+
+/* ---------- in-app guide: shown once automatically to every new user, reachable anytime from Settings ---------- */
+function openGuideSheet(){
+  const t=CS.t;
+  const sections=CS.guide().map(s=>`<div class="guide-section">
+    <h3><span class="e">${esc(s.icon)}</span> ${esc(s.title)}</h3>
+    <p>${s.body}</p>
+  </div>`).join('');
+  openSheet(sheetHead(t('guideTitle'))+`<div class="card guide-card">
+    <p class="sub">${esc(t('guideIntro'))}</p>
+    ${sections}
+  </div>`);
+}
+function maybeShowGuide(){
+  try{
+    if(localStorage.getItem('cs-guide-seen')) return;
+    localStorage.setItem('cs-guide-seen','1');
+  }catch(e){ return; }
+  setTimeout(()=>openGuideSheet(),500); // let the screen transition settle first
 }
 
 /* ---------- households ---------- */
@@ -275,7 +297,9 @@ function drawMembersSheet(){
       ${removeBtn}
     </div>`;
   }).join('');
-  openSheet(sheetHead(t('membersTitle'))+`<div class="card">${rows}</div>`);
+  const deleteHhRow = isOwner ? `<button class="btn danger wide" id="delete-household-btn">${esc(t('deleteHousehold'))}</button>` : '';
+  openSheet(sheetHead(t('membersTitle'))+`<div class="card">${rows}${deleteHhRow}</div>`);
+  if(isOwner) $('delete-household-btn').onclick=deleteHousehold;
   $('sheet').querySelectorAll('[data-transfer-owner]').forEach(b=>b.onclick=async()=>{
     const uid=b.dataset.transferOwner;
     const m=members.find(x=>x.user_id===uid);
@@ -307,6 +331,14 @@ function drawMembersSheet(){
   $('sheet').querySelectorAll('[data-remove-member]').forEach(b=>b.onclick=async()=>{
     const uid=b.dataset.removeMember, isSelf=uid===user.id;
     const m=members.find(x=>x.user_id===uid);
+    if(isSelf && role==='owner' && members.length>1){
+      toast(t('ownerMustTransferFirst'));
+      return;
+    }
+    if(isSelf && role==='owner' && members.length===1){
+      await deleteHousehold();
+      return;
+    }
     const ok=await CS.confirmSheet({
       title:isSelf?t('leaveTitle'):t('removeTitle'),
       body:isSelf?t('leaveConfirm'):t('removeConfirm').replace('{n}',m?(m.display_name||m.email):''),
@@ -324,6 +356,21 @@ function drawMembersSheet(){
   });
 }
 $('home-members-btn').addEventListener('click',drawMembersSheet);
+
+async function deleteHousehold(){
+  const t=CS.t;
+  const ok=await CS.confirmSheet({
+    title:t('deleteHouseholdTitle'),
+    body:t('deleteHouseholdConfirm').replace('{n}',hhName||''),
+    confirmLabel:t('deleteHousehold'), danger:true
+  });
+  if(!ok){ drawMembersSheet(); return; }
+  const {error}=await sb.from('households').delete().eq('id',household);
+  if(error){ toast(CS.authErr(error)); return; }
+  closeSheet();
+  toast(t('householdDeleted'));
+  await onUser(user);
+}
 
 function openEditNameSheet(){
   const t=CS.t;
@@ -860,16 +907,17 @@ async function onUser(u){
   user=u; window.CS.myId=u?u.id:null;
   renderAccount();
   if(!u){ household=null; listId=null; items=[]; CS.setScreen('auth'); return; }
-  if(pendingJoin && await consumePendingJoin()) return;
+  if(pendingJoin && await consumePendingJoin()){ maybeShowGuide(); return; }
   const list=await listMyHouseholds();
   if(!list.length){
     const cache=loadCache();
-    if(cache && cache.hhId){ await loadHousehold(cache.hhId); return; } // offline cold start: fall back to last-known household
-    CS.setScreen('onboard'); return;
+    if(cache && cache.hhId){ await loadHousehold(cache.hhId); maybeShowGuide(); return; } // offline cold start: fall back to last-known household
+    CS.setScreen('onboard'); maybeShowGuide(); return;
   }
   let last=null; try{ last=localStorage.getItem('cs-last-hh'); }catch(e){}
   const pick=(last&&list.find(h=>h.id===last))||list[0];
   await loadHousehold(pick.id);
+  maybeShowGuide();
 }
 let bootedUserId=null;
 sb.auth.onAuthStateChange((event,session)=>{
