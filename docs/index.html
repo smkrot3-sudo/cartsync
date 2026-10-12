@@ -78,7 +78,7 @@ h3{font-size:1.05rem}
 p{margin:0}
 .e{font-family:var(--emoji);font-style:normal;line-height:1}
 button,input,textarea,select{font:inherit;color:inherit}
-button{cursor:pointer}
+button{cursor:pointer;touch-action:manipulation}
 button:disabled{opacity:.6;cursor:default}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:10px}
 
@@ -122,7 +122,7 @@ button:disabled{opacity:.6;cursor:default}
 
 /* bottom sheet */
 .shade{position:fixed;inset:0;background:var(--shade);z-index:40}
-.sheet{position:fixed;inset-inline:0;bottom:0;background:var(--surface);border-radius:22px 22px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.2);max-height:85vh;overflow:auto;z-index:41;padding:16px 16px calc(20px + env(safe-area-inset-bottom,0px))}
+.sheet{position:fixed;inset-inline:0;bottom:0;background:var(--surface);border-radius:22px 22px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.2);max-height:85vh;overflow:auto;overscroll-behavior:contain;z-index:41;padding:16px 16px calc(20px + env(safe-area-inset-bottom,0px))}
 .sheet-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .sheet .close{border:0;background:var(--soft);width:34px;height:34px;border-radius:50%;color:var(--muted)}
 
@@ -381,7 +381,7 @@ button:disabled{opacity:.6;cursor:default}
   </footer>
 
 </div>
-<script>window.CS_SITE="https://smkrot3-sudo.github.io/cartsync/";window.CS_BUILD=1791814907216;</script>
+<script>window.CS_SITE="https://smkrot3-sudo.github.io/cartsync/";window.CS_BUILD=1791814980057;</script>
 <script>
 /* Bilingual strings + RTL/LTR switching. Pure UI text lives here; app.js reads it via CS.t(key). */
 const STRINGS = {
