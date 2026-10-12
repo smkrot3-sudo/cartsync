@@ -6,7 +6,7 @@ const $=CS.$, esc=CS.esc, toast=CS.toast, toastAction=CS.toastAction, openSheet=
 if(!window.supabase) return;
 const sb=supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'cartsync-auth'}});
 
-let user=null, household=null, role=null, members=[], membersById={}, listId=null, listStatus='open', items=[], online=navigator.onLine, channel=null;
+let user=null, household=null, role=null, members=[], membersById={}, listId=null, listStatus='open', items=[], activity=[], online=navigator.onLine, channel=null;
 let queue=[], flushing=false;
 
 /* ---------- invite links: ?join=CODE, persisted across the email-confirmation round trip ---------- */
@@ -450,11 +450,13 @@ async function openList(id, silent){
   $('view-main').classList.toggle('readonly',listStatus!=='open');
   searchQuery=''; $('search-input').value='';
   items=[]; paintItems(); // clear the previous list's items so they don't flash under this list's name while loading
+  activity=[]; CS.renderActivity([]);
   CS.setScreen('main');
   queue=loadQueueFor(listId);
   await fetchItems();
   cacheSnapshot();
   subscribeListRealtime();
+  fetchActivity(); // not awaited — the item list shouldn't wait on history loading
   if(queue.length) flushQueue({resync:true});
   return true;
 }
@@ -620,6 +622,21 @@ async function fetchItems(){
   }
   paintItems();
 }
+
+/* ---------- activity log ---------- */
+function decorateActivity(a){
+  const name = a.actor===user.id ? CS.t('you') : (a.actor&&membersById[a.actor]?(membersById[a.actor].display_name||membersById[a.actor].email):'?');
+  return {...a, actorName:name};
+}
+async function fetchActivity(){
+  try{
+    const {data,error}=await sb.from('list_activity').select('*').eq('list_id',listId).order('created_at',{ascending:false}).limit(50);
+    if(error) throw error;
+    activity=data||[];
+  }catch(e){ activity=[]; }
+  CS.renderActivity(activity.map(decorateActivity));
+}
+
 /* best-effort background category/emoji upgrade for items the local dictionary couldn't place —
    batched (debounced) so a fast multi-add only costs one AI call, and never blocks the add itself */
 let aiPending=[], aiTimer=null;
@@ -820,14 +837,18 @@ function subscribeListRealtime(){
       if(payload.eventType==='INSERT'){
         const idx=items.findIndex(i=>i.id===payload.new.id);
         if(idx>-1) items[idx]=payload.new; else items.push(payload.new); // our own optimistic adds echo back here too — upsert, don't duplicate
-        if(payload.new.status==='pending' && payload.new.created_by!==user.id){
-          const name=membersById[payload.new.created_by]?membersById[payload.new.created_by].display_name:'?';
-          toast(CS.t('newPendingToast').replace('{n}',name).replace('{t}',payload.new.text));
-        }
       }
       else if(payload.eventType==='UPDATE') items=items.map(i=>i.id===payload.new.id?payload.new:i);
       else if(payload.eventType==='DELETE') items=items.filter(i=>i.id!==payload.old.id);
       paintItems();
+    })
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'list_activity',filter:'list_id=eq.'+listId},payload=>{
+      activity=[payload.new, ...activity].slice(0,50);
+      CS.renderActivity(activity.map(decorateActivity));
+      if(payload.new.actor && payload.new.actor!==user.id){
+        const f=CS.formatActivity(decorateActivity(payload.new));
+        toast(f.icon+' '+f.text);
+      }
     })
     .subscribe();
 }

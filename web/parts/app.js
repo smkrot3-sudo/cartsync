@@ -137,6 +137,7 @@ function paintStrings(){
   if($('item-add')) $('item-add').textContent = t('add');
   $('pending-title').textContent = t('pendingTitle');
   $('empty-text').textContent = t('emptyList');
+  $('activity-title').textContent = t('activityTitle');
   const authGoMode = $('au-go').dataset.mode || 'login';
   $('au-go').textContent = authGoMode==='signup'?t('signupGo'):authGoMode==='reset'?t('resetGo'):t('loginGo');
 }
@@ -166,6 +167,41 @@ function fmtDate(iso){
   if(!iso) return '';
   try{ return new Date(iso).toLocaleDateString(CS.lang()==='he'?'he-IL':'en-US',{day:'numeric',month:'short'}); }catch(e){ return ''; }
 }
+function fmtTime(iso){
+  if(!iso) return '';
+  try{ return new Date(iso).toLocaleTimeString(CS.lang()==='he'?'he-IL':'en-US',{hour:'2-digit',minute:'2-digit'}); }catch(e){ return ''; }
+}
+
+/* ---------- list activity log: who added/checked/removed what, and when ---------- */
+const ACTION_META={
+  added:{icon:'➕',key:'actAdded'}, requested:{icon:'🙋',key:'actRequested'},
+  approved:{icon:'✅',key:'actApproved'}, rejected:{icon:'🚫',key:'actRejected'},
+  checked:{icon:'🧺',key:'actChecked'}, unchecked:{icon:'↩️',key:'actUnchecked'},
+  deleted:{icon:'🗑️',key:'actDeleted'},
+};
+function formatActivity(a){
+  const meta=ACTION_META[a.action]||ACTION_META.added;
+  const text=CS.t(meta.key).replace('{n}',a.actorName||'?').replace('{t}',a.item_text||'');
+  return {icon:meta.icon, text};
+}
+function activityRow(a){
+  const {icon,text}=formatActivity(a);
+  return `<li class="activity-row"><span class="e">${icon}</span><span class="activity-text">${esc(text)}</span><span class="activity-time">${esc(fmtTime(a.created_at))}</span></li>`;
+}
+function renderActivity(entries){
+  const box=$('activity-list');
+  if(!box) return;
+  box.innerHTML = (entries&&entries.length)
+    ? entries.map(activityRow).join('')
+    : `<li class="activity-empty">${esc(CS.t('activityEmpty'))}</li>`;
+}
+let activityOpen=false;
+function paintActivityToggle(){
+  const btn=$('activity-toggle'); if(!btn) return;
+  btn.setAttribute('aria-expanded', activityOpen?'true':'false');
+  const box=$('activity-list'); if(box) box.hidden=!activityOpen;
+}
+if($('activity-toggle')) $('activity-toggle').addEventListener('click',()=>{ activityOpen=!activityOpen; paintActivityToggle(); });
 function renderLists(lists, canManage){
   const open=(lists||[]).filter(l=>l.status==='open');
   const closed=(lists||[]).filter(l=>l.status==='closed');
@@ -320,6 +356,7 @@ $('lang-btn').addEventListener('click',()=>{ CS.setLang(CS.lang()==='he'?'en':'h
 Object.assign(window.CS,{
   $, esc, guess, openSheet, closeSheet, sheetHead, toast, toastAction, confirmSheet,
   setScreen, paintStrings, setAuthMode, renderMembers, renderGroups, renderLists, initials, personColor,
+  renderActivity, formatActivity,
   render(){ paintStrings(); if(window.CS.rerenderMain) window.CS.rerenderMain(); },
 });
 paintStrings(); // body.html's hardcoded defaults are Hebrew; an English-preferring first visit needs this to actually show English, not just flip direction
