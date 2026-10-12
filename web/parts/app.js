@@ -105,6 +105,7 @@ function field(id,text){ const el=$(id); if(!el) return; el.placeholder=text; el
 function paintStrings(){
   const t = CS.t;
   $('brand-name').textContent = t('appName');
+  $('lang-label').textContent = t('langLabel');
   $('auth-title').textContent = t('authHero');
   $('auth-sub').textContent = t('authSub');
   $('tab-login').textContent = t('login');

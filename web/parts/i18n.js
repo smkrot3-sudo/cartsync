@@ -1,7 +1,7 @@
 /* Bilingual strings + RTL/LTR switching. Pure UI text lives here; app.js reads it via CS.t(key). */
 const STRINGS = {
 he: {
-  appName:'קניות ביחד', tagline:'רשימת קניות אחת, לכל המשפחה',
+  appName:'קניות ביחד', tagline:'רשימת קניות אחת, לכל המשפחה', langLabel:'שפה',
   authHero:'רשימת קניות אחת, לכל המשפחה',
   authSub:'מוסיפים, מסמנים, ורואים את זה חי אצל כולם — גם כשכל אחד בחלק אחר של הסופר.',
   login:'התחברות', signup:'הרשמה', name:'השם שלך', email:'מייל', password:'סיסמה (לפחות 6 תווים)',
@@ -65,7 +65,7 @@ he: {
   profilePassSave:'לעדכן סיסמה', passwordUpdated:'✅ הסיסמה עודכנה', editProfile:'✏️ עריכת פרופיל',
 },
 en: {
-  appName:'CartSync', tagline:'One shopping list, for the whole family',
+  appName:'CartSync', tagline:'One shopping list, for the whole family', langLabel:'Language',
   authHero:'One shopping list, for the whole family',
   authSub:'Add, check off, and see it live for everyone — even when you split up around the store.',
   login:'Log in', signup:'Sign up', name:'Your name', email:'Email', password:'Password (6+ characters)',
