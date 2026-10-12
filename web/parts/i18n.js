@@ -12,8 +12,10 @@ he: {
   joinHh:'יש לי קוד הזמנה', codePh:'קוד הזמנה', join:'להצטרף',
   itemPh:'להוסיף מוצר…', qtyPh:'כמות', add:'הוספה',
   pendingTitle:'בקשות לאישור', boughtTitle:'נקנה', emptyList:'הרשימה ריקה. מה חסר בבית?',
-  invite:'הזמנת חבר/ה', inviteSub:'כל מי שמקבל את הקוד הזה יכול להצטרף תוך 7 ימים.',
+  invite:'הזמנת חבר/ה', inviteSub:'כל מי שמקבל את הקוד או הקישור הזה יכול להצטרף תוך 7 ימים.',
   inviteRole:'הרשאה לחברים חדשים:', inviteCopy:'להעתיק קוד', inviteCopied:'📋 הועתק',
+  inviteShare:'📤 שליחת קישור הזמנה', inviteShareText:'הצטרפו אלינו ב"קניות ביחד" כדי לנהל יחד את רשימת הקניות:',
+  joinedViaLink:'✅ הצטרפת למשק הבית!',
   roleOwner:'ראש/ת משק בית', roleEditor:'עריכה מלאה', roleRequester:'בקשת מוצרים', roleViewer:'צפייה בלבד',
   members:'חברי משק הבית', signOut:'יציאה', deleteAccount:'מחיקת חשבון', syncNow:'לסנכרן עכשיו',
   settings:'הגדרות', language:'שפה', switchHousehold:'להחליף משק בית',
@@ -37,6 +39,9 @@ he: {
   newListGo:'ליצור ולפתוח', needListName:'צריך לתת שם לרשימה',
   itemsCount:'{n} פריטים', closedOn:'נסגרה ב-{d}',
   notifyListOpened:'🛒 {n} פתח/ה רשימה חדשה: {l}', notifyListClosed:'✅ {n} סיים/ה קניות ב-{l}',
+  undo:'↩️ בטל', deleted:'🗑️ נמחק', editItem:'עריכת מוצר', editSave:'לשמור',
+  fontSizeLabel:'גודל טקסט', fontNormal:'רגיל', fontLarge:'גדול', fontXlarge:'גדול מאוד',
+  searchPh:'חיפוש ברשימה…', newPendingToast:'🙋 {n} ביקש/ה להוסיף: {t}',
 },
 en: {
   appName:'CartSync', tagline:'One shopping list, for the whole family',
@@ -50,8 +55,10 @@ en: {
   joinHh:'I have an invite code', codePh:'Invite code', join:'Join',
   itemPh:'Add an item…', qtyPh:'Qty', add:'Add',
   pendingTitle:'Needs approval', boughtTitle:'Bought', emptyList:'The list is empty. What are we out of?',
-  invite:'Invite someone', inviteSub:'Anyone with this code can join within 7 days.',
+  invite:'Invite someone', inviteSub:'Anyone with this code or link can join within 7 days.',
   inviteRole:'Role for new members:', inviteCopy:'Copy code', inviteCopied:'📋 Copied',
+  inviteShare:'📤 Share invite link', inviteShareText:'Join us on "CartSync" to manage our shopping list together:',
+  joinedViaLink:'✅ You joined the household!',
   roleOwner:'Household head', roleEditor:'Full editor', roleRequester:'Can request items', roleViewer:'View only',
   members:'Household members', signOut:'Sign out', deleteAccount:'Delete account', syncNow:'Sync now',
   settings:'Settings', language:'Language', switchHousehold:'Switch household',
@@ -75,6 +82,9 @@ en: {
   newListGo:'Create and open', needListName:'Give the list a name',
   itemsCount:'{n} items', closedOn:'Closed {d}',
   notifyListOpened:'🛒 {n} opened a new list: {l}', notifyListClosed:'✅ {n} finished shopping in {l}',
+  undo:'↩️ Undo', deleted:'🗑️ Deleted', editItem:'Edit item', editSave:'Save',
+  fontSizeLabel:'Text size', fontNormal:'Normal', fontLarge:'Large', fontXlarge:'Extra large',
+  searchPh:'Search the list…', newPendingToast:'🙋 {n} requested to add: {t}',
 },
 };
 
@@ -129,15 +139,25 @@ const CAT_ORDER = ['produce','dairy','bakery','meat','frozen','pantry','beverage
   try{ theme = localStorage.getItem('cs-theme') || 'system'; }catch(e){}
   if(theme!=='light'&&theme!=='dark'&&theme!=='system') theme='system';
 
+  let fontSize = 'normal';
+  try{ fontSize = localStorage.getItem('cs-fontsize') || 'normal'; }catch(e){}
+  if(fontSize!=='normal'&&fontSize!=='large'&&fontSize!=='xlarge') fontSize='normal';
+
   function apply(){
     document.documentElement.lang = lang;
     document.documentElement.dir = lang==='he' ? 'rtl' : 'ltr';
     if(theme==='system') document.documentElement.removeAttribute('data-theme');
     else document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.setAttribute('data-fontsize', fontSize);
   }
   function setTheme(t){
     theme = (t==='light'||t==='dark') ? t : 'system';
     try{ localStorage.setItem('cs-theme', theme); }catch(e){}
+    apply();
+  }
+  function setFontSize(s){
+    fontSize = (s==='large'||s==='xlarge') ? s : 'normal';
+    try{ localStorage.setItem('cs-fontsize', fontSize); }catch(e){}
     apply();
   }
   function t(key){ return (STRINGS[lang]&&STRINGS[lang][key]) || STRINGS.he[key] || key; }
@@ -149,5 +169,5 @@ const CAT_ORDER = ['produce','dairy','bakery','meat','frozen','pantry','beverage
   }
   function setLang(l){ lang = l==='en'?'en':'he'; try{localStorage.setItem('cs-lang',lang)}catch(e){} apply(); if(window.CS.render) window.CS.render(); }
   apply();
-  Object.assign(window.CS,{t,lang:()=>lang,setLang,theme:()=>theme,setTheme,authErr,CATS,CAT_ORDER});
+  Object.assign(window.CS,{t,lang:()=>lang,setLang,theme:()=>theme,setTheme,fontSize:()=>fontSize,setFontSize,authErr,CATS,CAT_ORDER});
 })();

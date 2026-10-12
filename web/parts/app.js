@@ -51,7 +51,19 @@ function openSheet(html){ $('sheet').innerHTML = html; $('sheet').hidden=false; 
 function closeSheet(){ $('sheet').hidden=true; $('shade').hidden=true; $('sheet').innerHTML=''; }
 function sheetHead(title){ return `<div class="sheet-head"><h2>${esc(title)}</h2><button class="close" data-act="sheet-close">✕</button></div>`; }
 let toastTimer=null;
-function toast(msg){ const el=$('toast'); el.textContent=msg; el.hidden=false; clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.hidden=true,2600); }
+function toast(msg){
+  const el=$('toast'); el.innerHTML=''; el.textContent=msg; el.hidden=false;
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.hidden=true,2600);
+}
+function toastAction(msg,actionLabel,onAction,ms){
+  const el=$('toast');
+  el.innerHTML=`<span></span><button class="toast-action" id="toast-act-btn"></button>`;
+  el.querySelector('span').textContent=msg;
+  el.querySelector('#toast-act-btn').textContent=actionLabel;
+  el.hidden=false;
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.hidden=true,ms||5000);
+  $('toast-act-btn').onclick=()=>{ clearTimeout(toastTimer); el.hidden=true; onAction(); };
+}
 $('shade').addEventListener('click',closeSheet);
 document.addEventListener('click',e=>{ if(e.target.closest('[data-act="sheet-close"]')) closeSheet(); });
 
@@ -91,6 +103,7 @@ function paintStrings(){
   $('lists-open-title').textContent = t('listsOpenTitle');
   $('lists-closed-title').textContent = t('listsClosedTitle');
   $('lists-empty-text').textContent = t('listsEmpty');
+  $('search-input').placeholder = t('searchPh');
   if($('item-input')) $('item-input').placeholder = t('itemPh'); // only exists while the add sheet is open
   if($('item-qty')) $('item-qty').placeholder = t('qtyPh');
   if($('item-add')) $('item-add').textContent = t('add');
@@ -173,7 +186,7 @@ function itemRow(item, mode, draggable){
       <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
     <span class="emo e" data-cat="${esc(item.category||'other')}">${esc(item.emoji||cat.emoji)}</span>
-    <span class="t">${esc(item.text)}${who}</span>
+    <span class="t" data-action="edit" data-id="${item.id}">${esc(item.text)}${who}</span>
     ${qty}
     <button class="del" data-action="del" data-id="${item.id}" aria-label="delete">🗑️</button>
   </li>`;
@@ -274,7 +287,7 @@ $('au-forgot').addEventListener('click',()=>setAuthMode('reset'));
 $('lang-btn').addEventListener('click',()=>{ CS.setLang(CS.lang()==='he'?'en':'he'); });
 
 Object.assign(window.CS,{
-  $, esc, guess, openSheet, closeSheet, sheetHead, toast,
+  $, esc, guess, openSheet, closeSheet, sheetHead, toast, toastAction,
   setScreen, paintStrings, setAuthMode, renderMembers, renderGroups, renderLists, initials,
   render(){ paintStrings(); if(window.CS.rerenderMain) window.CS.rerenderMain(); },
 });

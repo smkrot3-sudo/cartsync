@@ -60,7 +60,9 @@
 .item .check svg{opacity:0;transform:scale(.5);transition:all .2s cubic-bezier(.3,1.6,.5,1);width:14px;height:14px;stroke:#fff;stroke-width:4}
 .item.done .check{border-color:var(--ok);background:var(--ok)}
 .item.done .check svg{opacity:1;transform:scale(1)}
-.item .t{flex:1;min-width:0;overflow-wrap:anywhere;font-size:1rem}
+.item .t{flex:1;min-width:0;overflow-wrap:anywhere;font-size:1rem;cursor:pointer}
+.search-input{width:100%;border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:10px 14px;margin-bottom:12px}
+.search-input:focus{outline:none;border-color:var(--accent)}
 .item.done .t{color:var(--muted);text-decoration:line-through;text-decoration-style:wavy;text-decoration-color:var(--ok);text-decoration-thickness:1.3px}
 .item .del{border:0;background:transparent;color:var(--muted);width:28px;height:28px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:.95rem}
 

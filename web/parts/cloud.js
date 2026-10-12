@@ -2,12 +2,31 @@
 (function(){
 const SB_URL='https://pzrzwilkloksfxsvcwji.supabase.co';
 const SB_KEY='sb_publishable_kTKMU6nUUWtGAgb-SJvYyQ_QweS_o60';
-const $=CS.$, esc=CS.esc, toast=CS.toast, openSheet=CS.openSheet, closeSheet=CS.closeSheet, sheetHead=CS.sheetHead;
+const $=CS.$, esc=CS.esc, toast=CS.toast, toastAction=CS.toastAction, openSheet=CS.openSheet, closeSheet=CS.closeSheet, sheetHead=CS.sheetHead;
 if(!window.supabase) return;
 const sb=supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'cartsync-auth'}});
 
 let user=null, household=null, role=null, members=[], membersById={}, listId=null, items=[], online=navigator.onLine, channel=null;
 let queue=[], flushing=false;
+
+/* ---------- invite links: ?join=CODE, persisted across the email-confirmation round trip ---------- */
+let pendingJoin=null;
+try{
+  const qp=new URLSearchParams(location.search);
+  const j=qp.get('join');
+  if(j){ pendingJoin=j; localStorage.setItem('cs-pending-join',j); history.replaceState(null,'',location.pathname); }
+  else pendingJoin=localStorage.getItem('cs-pending-join');
+}catch(e){}
+async function consumePendingJoin(){
+  if(!pendingJoin) return false;
+  const code=pendingJoin; pendingJoin=null;
+  try{ localStorage.removeItem('cs-pending-join'); }catch(e){}
+  const {data,error}=await sb.rpc('accept_invite',{p_code:code});
+  if(error){ toast(CS.t('errInvite')); return false; }
+  await loadHousehold(data);
+  toast(CS.t('joinedViaLink'));
+  return true;
+}
 
 /* ---------- offline cache + outbox: lets add/check/delete work with no network, synced once back online ---------- */
 const CACHE_KEY='cs-cache';
@@ -50,7 +69,7 @@ async function flushQueue(){
         const {data,error}=await sb.from('list_items').insert(op.row).select().single();
         if(error) throw error;
         idMap[op.id]=data.id;
-      }else if(op.op==='toggle'){
+      }else if(op.op==='toggle'||op.op==='update'){
         if(isTemp(realId)) throw new Error('unresolved temp id');
         const {error}=await sb.from('list_items').update(op.patch).eq('id',realId);
         if(error) throw error;
@@ -99,7 +118,7 @@ function renderAccount(){
 }
 function openAccountSheet(){
   const t=CS.t;
-  const curTheme=CS.theme();
+  const curTheme=CS.theme(), curFont=CS.fontSize();
   openSheet(sheetHead(t('settings'))+`
     <div class="card">
       <div style="font-size:.9rem;color:var(--muted)" dir="ltr">${esc(user.email)}</div>
@@ -107,11 +126,16 @@ function openAccountSheet(){
       <div class="role-pick" id="theme-pick">
         ${['light','dark','system'].map(v=>`<button data-theme-opt="${v}" class="${v===curTheme?'active':''}">${esc(t('theme'+v[0].toUpperCase()+v.slice(1)))}</button>`).join('')}
       </div>
+      <p style="margin:2px 0 -4px">${esc(t('fontSizeLabel'))}</p>
+      <div class="role-pick" id="font-pick">
+        ${['normal','large','xlarge'].map(v=>`<button data-font-opt="${v}" class="${v===curFont?'active':''}">${esc(t('font'+v[0].toUpperCase()+v.slice(1)))}</button>`).join('')}
+      </div>
       <button class="btn ghost" id="acct-sync">🔄 ${esc(t('syncNow'))}</button>
       <button class="btn ghost" id="acct-switch">🏠 ${esc(t('switchHousehold'))}</button>
       <button class="btn ghost" id="acct-signout">👋 ${esc(t('signOut'))}</button>
     </div>`);
   $('theme-pick').querySelectorAll('[data-theme-opt]').forEach(b=>b.onclick=()=>{ CS.setTheme(b.dataset.themeOpt); openAccountSheet(); });
+  $('font-pick').querySelectorAll('[data-font-opt]').forEach(b=>b.onclick=()=>{ CS.setFontSize(b.dataset.fontOpt); openAccountSheet(); });
   $('acct-sync').onclick=async()=>{ await flushQueue(); await refreshHousehold(); toast('🔄'); };
   $('acct-switch').onclick=()=>{ closeSheet(); openHouseholdSwitcher(); };
   $('acct-signout').onclick=async()=>{ await sb.auth.signOut(); closeSheet(); };
@@ -249,6 +273,7 @@ async function openList(id){
   listId=id;
   $('list-name-lbl').textContent=lrow.name;
   $('trip-bar').hidden=lrow.status!=='open';
+  searchQuery=''; $('search-input').value='';
   CS.setScreen('main');
   queue=loadQueueFor(listId);
   await fetchItems();
@@ -294,8 +319,18 @@ function openInviteSheet(){
   document.getElementById('inv-go').onclick=async()=>{
     const {data,error}=await sb.rpc('create_invite',{p_household:household,p_role:pickedRole});
     if(error){ toast(CS.authErr(error)); return; }
+    const joinUrl=(window.CS_SITE||location.origin+location.pathname.replace(/[^/]*$/,''))+'?join='+data;
     document.getElementById('inv-code-box').innerHTML=`<div class="invite-code">${esc(data)}</div>
+      <button class="btn wide" id="inv-share">${esc(t('inviteShare'))}</button>
       <button class="btn ghost wide" id="inv-copy">📋 ${esc(t('inviteCopy'))}</button>`;
+    document.getElementById('inv-share').onclick=async()=>{
+      if(navigator.share){
+        try{ await navigator.share({title:CS.t('appName'),text:t('inviteShareText'),url:joinUrl}); }catch(e){}
+      }else{
+        navigator.clipboard&&navigator.clipboard.writeText(joinUrl).catch(()=>{});
+        toast(t('inviteCopied'));
+      }
+    };
     document.getElementById('inv-copy').onclick=()=>{
       navigator.clipboard&&navigator.clipboard.writeText(data).catch(()=>{});
       toast(t('inviteCopied'));
@@ -311,7 +346,14 @@ function decorate(list){
     added_by_name: i.created_by&&membersById[i.created_by]?membersById[i.created_by].display_name:'',
   }));
 }
-function paintItems(){ CS.renderGroups(decorate(items)); cacheSnapshot(); }
+let searchQuery='';
+function paintItems(){
+  let list=decorate(items);
+  if(searchQuery) list=list.filter(i=>i.text.toLowerCase().includes(searchQuery));
+  CS.renderGroups(list);
+  cacheSnapshot();
+}
+$('search-input').addEventListener('input',e=>{ searchQuery=e.target.value.trim().toLowerCase(); paintItems(); });
 async function fetchItems(){
   try{
     const {data,error}=await sb.from('list_items').select('*').eq('list_id',listId).order('position');
@@ -376,12 +418,43 @@ async function toggleItem(id){
   }
   await sb.from('list_items').update(patch).eq('id',id);
 }
+let pendingDeletes={};
 async function delItem(id){
-  if(!online || isTemp(id)){
-    items=items.filter(i=>i.id!==id); queueOp('del',id); paintItems();
-    return;
-  }
-  await sb.from('list_items').delete().eq('id',id);
+  const it=items.find(i=>i.id===id); if(!it) return;
+  items=items.filter(i=>i.id!==id); paintItems();
+  if(!online || isTemp(id)){ queueOp('del',id); return; } // no undo window offline: it's already safely queued
+  if(pendingDeletes[id]) clearTimeout(pendingDeletes[id].timer);
+  pendingDeletes[id]={item:it, timer:setTimeout(async()=>{
+    delete pendingDeletes[id];
+    await sb.from('list_items').delete().eq('id',id);
+  },5000)};
+  toastAction(CS.t('deleted'), CS.t('undo'), ()=>{
+    const p=pendingDeletes[id]; if(!p) return;
+    clearTimeout(p.timer); delete pendingDeletes[id];
+    items.push(p.item); paintItems();
+  });
+}
+function openEditSheet(id){
+  const it=items.find(i=>i.id===id); if(!it) return;
+  const t=CS.t;
+  openSheet(sheetHead(t('editItem'))+`<div class="card">
+    <input id="edit-text" value="${esc(it.text)}">
+    <input id="edit-qty" class="qty-input" placeholder="${esc(t('qtyPh'))}" value="${esc(it.qty||'')}">
+    <button class="btn wide" id="edit-save">${esc(t('editSave'))}</button>
+  </div>`);
+  $('edit-text').focus();
+  const save=async()=>{
+    const text=$('edit-text').value.trim(), qty=$('edit-qty').value.trim();
+    if(!text) return;
+    closeSheet();
+    const patch={text, qty:qty||null};
+    const g=CS.guess(text);
+    if(g.cat!=='other'){ patch.category=g.cat; patch.emoji=g.emoji; } // keep the current category when the edited text doesn't match anything specific
+    if(!online || isTemp(id)){ Object.assign(it,patch); queueOp('update',id,patch); paintItems(); return; }
+    await sb.from('list_items').update(patch).eq('id',id);
+  };
+  $('edit-save').onclick=save;
+  $('edit-text').addEventListener('keydown',e=>{ if(e.key==='Enter') save(); });
 }
 async function approveItem(id){
   if(!online){ toast(CS.t('offline')); return; }
@@ -398,6 +471,7 @@ document.addEventListener('click',e=>{
   const id=b.dataset.id, action=b.dataset.action;
   if(action==='toggle') toggleItem(id);
   else if(action==='del') delItem(id);
+  else if(action==='edit') openEditSheet(id);
   else if(action==='approve') approveItem(id);
   else if(action==='reject') rejectItem(id);
 });
@@ -434,7 +508,13 @@ function subscribeListRealtime(){
   if(!listId) return;
   channel=sb.channel('list:'+listId)
     .on('postgres_changes',{event:'*',schema:'public',table:'list_items',filter:'list_id=eq.'+listId},payload=>{
-      if(payload.eventType==='INSERT') items.push(payload.new);
+      if(payload.eventType==='INSERT'){
+        items.push(payload.new);
+        if(payload.new.status==='pending' && payload.new.created_by!==user.id){
+          const name=membersById[payload.new.created_by]?membersById[payload.new.created_by].display_name:'?';
+          toast(CS.t('newPendingToast').replace('{n}',name).replace('{t}',payload.new.text));
+        }
+      }
       else if(payload.eventType==='UPDATE') items=items.map(i=>i.id===payload.new.id?payload.new:i);
       else if(payload.eventType==='DELETE') items=items.filter(i=>i.id!==payload.old.id);
       paintItems();
@@ -449,6 +529,7 @@ async function onUser(u){
   user=u;
   renderAccount();
   if(!u){ household=null; listId=null; items=[]; CS.setScreen('auth'); return; }
+  if(pendingJoin && await consumePendingJoin()) return;
   const list=await listMyHouseholds();
   if(!list.length){
     const cache=loadCache();
