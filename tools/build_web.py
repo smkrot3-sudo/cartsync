@@ -34,8 +34,11 @@ def page():
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>קניות ביחד · CartSync</title>
 <meta name="description" content="רשימת קניות אחת, לכל המשפחה, בזמן אמת.">
-<meta name="theme-color" content="#F3FBFA" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#102321" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F2F4FB" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0A1026" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="קניות ביחד">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
