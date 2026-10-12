@@ -240,6 +240,7 @@ async function openListsPage(){
 }
 $('lists-back').addEventListener('click',goHome);
 $('list-back').addEventListener('click',openListsPage);
+$('home-lists-btn').addEventListener('click',openListsPage);
 
 function openNewListSheet(){
   const t=CS.t;
