@@ -18,6 +18,8 @@
   --emoji:"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif;
   --r:18px;
   --rule:rgba(46,74,158,.08);
+  --header-grad:linear-gradient(135deg,#233B86 0%,#2E4A9E 48%,#4262C2 100%);
+  --header-ink:#FFFFFF;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0A1026; --surface:#131C3C; --soft:#1A2449; --fg:#E9ECFB; --muted:#8C94C2; --line:#283264;
@@ -28,7 +30,9 @@
   --warn:var(--coral); --warn-soft:var(--coral-soft);
   --danger:#F28A96; --danger-soft:#481C24;
   --rule:rgba(255,255,255,.055);
-  --shadow:0 8px 20px rgba(0,0,0,.4); --shade:rgba(0,0,0,.6); color-scheme:dark}}
+  --shadow:0 8px 20px rgba(0,0,0,.4); --shade:rgba(0,0,0,.6); color-scheme:dark;
+  --header-grad:linear-gradient(135deg,#0B1230 0%,#162048 50%,#223170 100%);
+}}
 :root[data-theme="dark"]{
   --bg:#0A1026; --surface:#131C3C; --soft:#1A2449; --fg:#E9ECFB; --muted:#8C94C2; --line:#283264;
   --accent:#6B8CF5; --accent-ink:#081021; --accent-soft:#213269;
@@ -38,7 +42,9 @@
   --warn:var(--coral); --warn-soft:var(--coral-soft);
   --danger:#F28A96; --danger-soft:#481C24;
   --rule:rgba(255,255,255,.055);
-  --shadow:0 8px 20px rgba(0,0,0,.4); --shade:rgba(0,0,0,.6); color-scheme:dark}
+  --shadow:0 8px 20px rgba(0,0,0,.4); --shade:rgba(0,0,0,.6); color-scheme:dark;
+  --header-grad:linear-gradient(135deg,#0B1230 0%,#162048 50%,#223170 100%);
+}
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 [hidden]{display:none!important}
@@ -60,12 +66,22 @@ button{cursor:pointer;touch-action:manipulation}
 button:disabled{opacity:.6;cursor:default}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:10px}
 
-.top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-block:10px 14px}
-.brand{display:flex;align-items:center;gap:8px;font-family:var(--display);font-size:1.2rem;border:0;background:transparent;color:inherit;padding:0}
-.brand .e{font-size:1.4rem}
-.top-actions{display:flex;align-items:center;gap:6px}
+.top{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  margin:-12px -16px 0;padding:14px 16px 20px;
+  background:var(--header-grad);
+  border-radius:0 0 26px 26px;
+  box-shadow:0 10px 24px rgba(18,26,51,.22);
+  position:relative;z-index:5;
+}
+.brand{display:flex;align-items:center;gap:9px;font-family:var(--display);font-size:1.15rem;border:0;background:transparent;color:var(--header-ink);padding:0;letter-spacing:.01em}
+.brand-badge{display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:var(--coral);box-shadow:0 3px 8px rgba(0,0,0,.2);flex:none}
+.brand-badge .e{font-size:1.15rem;line-height:1}
+.top-actions{display:flex;align-items:center;gap:8px}
 .iconbtn{border:0;background:var(--surface);box-shadow:var(--shadow);width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:var(--muted);flex:none;font-size:1.15rem;transition:transform .1s ease}
 .iconbtn:active{transform:scale(.92)}
+.top .iconbtn{background:rgba(255,255,255,.14);box-shadow:none;color:var(--header-ink);border:1.5px solid rgba(255,255,255,.22)}
+.top .iconbtn:active{background:rgba(255,255,255,.24)}
 
 .view{display:flex;flex-direction:column;gap:14px}
 .view[hidden]{display:none!important}
@@ -121,10 +137,20 @@ button:disabled{opacity:.6;cursor:default}
 .trip-bar #trip-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .trip-bar .btn.small{flex:none}
 
-.hhbar{display:flex;align-items:center;gap:8px}
+/* sits right under .top and overlaps its rounded bottom edge, so the two read as one connected header
+   instead of two disconnected floating bars */
+.hhbar{
+  display:flex;align-items:center;gap:8px;
+  background:var(--surface);
+  margin:-14px -16px 0;padding:14px 16px;
+  border-radius:20px;
+  box-shadow:0 10px 22px rgba(18,26,51,.14);
+  position:relative;z-index:4;
+}
+.hhbar .iconbtn{background:var(--soft);box-shadow:none}
 .hhname{display:flex;align-items:center;gap:4px;border:0;background:var(--surface);box-shadow:var(--shadow);border-radius:999px;padding:9px 14px;flex:1;min-width:0;overflow:hidden;text-align:start}
 .hhname b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.list-name-lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:1.05rem}
+.list-name-lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:1.15rem;font-family:var(--display);font-weight:400}
 
 .list-row{display:flex;align-items:center;gap:10px;background:var(--surface);border-radius:16px;padding:12px 14px;box-shadow:var(--shadow);width:100%;border:0;text-align:start;color:inherit;cursor:pointer}
 .list-row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:1rem}
@@ -231,7 +257,7 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
 <div class="wrap" id="app">
 
   <header class="top">
-    <button class="brand" id="brand-home-btn"><span class="e" id="brand-emoji">🛒</span><b id="brand-name">קניות ביחד</b></button>
+    <button class="brand" id="brand-home-btn"><span class="brand-badge"><span class="e" id="brand-emoji">🛒</span></span><b id="brand-name">קניות ביחד</b></button>
     <div class="top-actions">
       <button class="iconbtn" id="lang-btn" aria-label="Language">🌐</button>
       <span id="acct-top"></span>
@@ -308,7 +334,7 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
   <section class="view" id="view-lists" hidden>
     <div class="hhbar">
       <button class="iconbtn" id="lists-back" aria-label="Back">→</button>
-      <b id="lists-title" style="flex:1">הרשימות שלי</b>
+      <b id="lists-title" class="list-name-lbl" style="flex:1">הרשימות שלי</b>
       <button class="iconbtn" id="lists-new" aria-label="New list">➕</button>
     </div>
     <div>
