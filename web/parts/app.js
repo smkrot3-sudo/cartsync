@@ -47,8 +47,12 @@ function guess(text){
 }
 
 /* ---------- sheet / toast ---------- */
+let pendingConfirmCancel=null;
 function openSheet(html){ $('sheet').innerHTML = html; $('sheet').hidden=false; $('shade').hidden=false; }
-function closeSheet(){ $('sheet').hidden=true; $('shade').hidden=true; $('sheet').innerHTML=''; }
+function closeSheet(){
+  $('sheet').hidden=true; $('shade').hidden=true; $('sheet').innerHTML='';
+  if(pendingConfirmCancel){ const c=pendingConfirmCancel; pendingConfirmCancel=null; c(); }
+}
 function sheetHead(title){ return `<div class="sheet-head"><h2>${esc(title)}</h2><button class="close" data-act="sheet-close">✕</button></div>`; }
 let toastTimer=null;
 function toast(msg){
@@ -66,6 +70,27 @@ function toastAction(msg,actionLabel,onAction,ms){
 }
 $('shade').addEventListener('click',closeSheet);
 document.addEventListener('click',e=>{ if(e.target.closest('[data-act="sheet-close"]')) closeSheet(); });
+
+/* ---------- app-styled confirmation sheet (replaces native confirm()) ---------- */
+function confirmSheet(opts){
+  const t=CS.t;
+  const title=opts.title||'', body=opts.body||'';
+  const yesLabel=opts.confirmLabel||t('yes'), noLabel=opts.cancelLabel||t('cancel');
+  return new Promise(resolve=>{
+    openSheet(sheetHead(title)+`<div class="card">
+      <p class="sub">${esc(body)}</p>
+      <div class="actions-row" style="display:flex;gap:8px;margin-top:4px">
+        <button class="btn ghost wide" id="cs-no">${esc(noLabel)}</button>
+        <button class="btn wide${opts.danger?' danger':''}" id="cs-yes">${esc(yesLabel)}</button>
+      </div>
+    </div>`);
+    let done=false;
+    const finish=v=>{ if(done) return; done=true; pendingConfirmCancel=null; closeSheet(); resolve(v); };
+    pendingConfirmCancel=()=>finish(false);
+    $('cs-yes').onclick=()=>finish(true);
+    $('cs-no').onclick=()=>finish(false);
+  });
+}
 
 /* ---------- screens ---------- */
 function setScreen(name){
@@ -141,7 +166,7 @@ function fmtDate(iso){
   if(!iso) return '';
   try{ return new Date(iso).toLocaleDateString(CS.lang()==='he'?'he-IL':'en-US',{day:'numeric',month:'short'}); }catch(e){ return ''; }
 }
-function renderLists(lists){
+function renderLists(lists, canManage){
   const open=(lists||[]).filter(l=>l.status==='open');
   const closed=(lists||[]).filter(l=>l.status==='closed');
   $('lists-open').innerHTML = open.map(l=>`<li><button class="list-row" data-list="${l.id}">
@@ -149,9 +174,12 @@ function renderLists(lists){
   </button></li>`).join('');
   $('lists-empty').hidden = !!open.length;
   $('lists-closed-box').hidden = !closed.length;
-  $('lists-closed').innerHTML = closed.map(l=>`<li><button class="list-row closed" data-list="${l.id}">
-    <span class="e" style="font-size:1.3rem">✅</span><span class="nm">${esc(l.name)}</span><span class="meta">${esc(CS.t('closedOn').replace('{d}',fmtDate(l.closed_at)))}</span>
-  </button></li>`).join('');
+  $('lists-closed').innerHTML = closed.map(l=>`<li class="list-row-wrap">
+    <button class="list-row closed" data-list="${l.id}">
+      <span class="e" style="font-size:1.3rem">✅</span><span class="nm">${esc(l.name)}</span><span class="meta">${esc(CS.t('closedOn').replace('{d}',fmtDate(l.closed_at)))}</span>
+    </button>
+    ${canManage?`<button class="list-del" data-del-list="${l.id}" aria-label="${esc(CS.t('deleteList'))}">🗑️</button>`:''}
+  </li>`).join('');
 }
 
 /* ---------- view mode: grouped-by-category vs flat+draggable ---------- */
@@ -168,14 +196,21 @@ function itemRow(item, mode, draggable){
   const qty = item.qty ? `<span class="qty-tag">${esc(item.qty)}</span>` : '';
   const addedWho = personName(item.added_by_name);
   if(mode==='pending'){
+    const mine = item.created_by && CS.myId && item.created_by===CS.myId;
+    const actions = mine
+      ? `<span class="pending-actions">
+          <button class="ok-btn" data-action="edit" data-id="${item.id}" aria-label="${esc(CS.t('editItem'))}">✏️</button>
+          <button class="no-btn" data-action="del" data-id="${item.id}" aria-label="delete">🗑️</button>
+        </span>`
+      : `<span class="pending-actions">
+          <button class="ok-btn" data-action="approve" data-id="${item.id}" aria-label="approve">✓</button>
+          <button class="no-btn" data-action="reject" data-id="${item.id}" aria-label="reject">✕</button>
+        </span>`;
     return `<li class="item" data-id="${item.id}">
       <span class="emo e" data-cat="${esc(item.category||'other')}">${esc(item.emoji||cat.emoji)}</span>
       <span class="t">${esc(item.text)}${addedWho}</span>
       ${qty}
-      <span class="pending-actions">
-        <button class="ok-btn" data-action="approve" data-id="${item.id}" aria-label="approve">✓</button>
-        <button class="no-btn" data-action="reject" data-id="${item.id}" aria-label="reject">✕</button>
-      </span>
+      ${actions}
     </li>`;
   }
   const done = item.status==='checked';
@@ -283,7 +318,7 @@ $('au-forgot').addEventListener('click',()=>setAuthMode('reset'));
 $('lang-btn').addEventListener('click',()=>{ CS.setLang(CS.lang()==='he'?'en':'he'); });
 
 Object.assign(window.CS,{
-  $, esc, guess, openSheet, closeSheet, sheetHead, toast, toastAction,
+  $, esc, guess, openSheet, closeSheet, sheetHead, toast, toastAction, confirmSheet,
   setScreen, paintStrings, setAuthMode, renderMembers, renderGroups, renderLists, initials, personColor,
   render(){ paintStrings(); if(window.CS.rerenderMain) window.CS.rerenderMain(); },
 });

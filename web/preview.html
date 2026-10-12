@@ -64,7 +64,8 @@ button:disabled{opacity:.6;cursor:default}
 .brand{display:flex;align-items:center;gap:8px;font-family:var(--display);font-size:1.2rem;border:0;background:transparent;color:inherit;padding:0}
 .brand .e{font-size:1.4rem}
 .top-actions{display:flex;align-items:center;gap:6px}
-.iconbtn{border:0;background:var(--surface);box-shadow:var(--shadow);width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:var(--muted);flex:none;font-size:1.15rem}
+.iconbtn{border:0;background:var(--surface);box-shadow:var(--shadow);width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:var(--muted);flex:none;font-size:1.15rem;transition:transform .1s ease}
+.iconbtn:active{transform:scale(.92)}
 
 .view{display:flex;flex-direction:column;gap:14px}
 .view[hidden]{display:none!important}
@@ -84,11 +85,12 @@ button:disabled{opacity:.6;cursor:default}
 .msg.err{background:var(--danger-soft);color:var(--danger)}
 .msg.ok{background:var(--ok-soft);color:var(--ok)}
 
-.btn{border:0;background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:11px 18px;font-size:.96rem;white-space:nowrap;box-shadow:0 4px 12px rgba(46,74,158,.35)}
+.btn{border:0;background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:11px 18px;font-size:.96rem;white-space:nowrap;box-shadow:0 4px 12px rgba(46,74,158,.35);transition:transform .1s ease}
 .btn.ghost{background:var(--surface);color:var(--accent);border:2px solid var(--accent-soft);box-shadow:none}
 .btn.small{padding:7px 13px;font-size:.86rem}
 .btn.wide{width:100%}
-.btn.danger{background:var(--danger)}
+.btn.danger{background:var(--danger);box-shadow:0 4px 12px rgba(224,57,79,.35)}
+.btn:active{transform:scale(.97)}
 .linkbtn{border:0;background:transparent;color:var(--accent);text-decoration:underline;padding:4px;font-size:.92rem}
 
 .add{display:flex;gap:8px}
@@ -127,6 +129,9 @@ button:disabled{opacity:.6;cursor:default}
 .list-row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:1rem}
 .list-row .meta{font-size:.78rem;color:var(--muted)}
 .list-row.closed{opacity:.75}
+.list-row-wrap{display:flex;align-items:center;gap:6px}
+.list-row-wrap .list-row{flex:1}
+.list-del{border:0;background:var(--danger-soft);color:var(--danger);width:40px;height:40px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:1rem}
 .members{display:flex}
 .avatar{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:.85rem;font-weight:bold;color:#fff;border:2px solid var(--surface);margin-inline-start:-8px;flex:none}
 .avatar:first-child{margin-inline-start:0}
@@ -138,8 +143,9 @@ button:disabled{opacity:.6;cursor:default}
 .role-chip.viewer{background:var(--soft);color:var(--muted)}
 
 /* ---------- note wrapper: just a section container now, the cards underneath carry the color ---------- */
-.note{position:relative;padding:0;margin:0 0 16px}
-.note-sticky{background:var(--coral-soft);border-radius:var(--r);padding:14px}
+/* no margin here — these are direct children of .view, which already sets the 14px rhythm via flex gap */
+.note{position:relative;padding:0}
+.note-sticky{background:var(--coral-soft);border-radius:var(--r);padding:16px}
 .note-small{opacity:.85}
 
 .group{margin-top:2px}
@@ -212,7 +218,9 @@ button:disabled{opacity:.6;cursor:default}
 .member-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
 .member-row:last-child{border-bottom:0}
 .member-row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.member-row .role-select{border:2px solid var(--line);background:var(--bg);color:inherit;border-radius:10px;padding:5px 8px;font:inherit;font-size:.82rem;flex:none}
+.role-select{appearance:none;-webkit-appearance:none;border:2px solid var(--line);background:var(--bg);color:inherit;border-radius:10px;padding:5px 26px 5px 8px;font:inherit;font-size:.82rem;flex:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23656D90' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 9px center}
+html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 9px center}
+.role-select:focus-visible{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 .member-row .member-remove{border:0;background:var(--danger-soft);color:var(--danger);width:28px;height:28px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:.85rem}
 
 .offline-note{background:var(--danger-soft);color:var(--danger);border-radius:12px;padding:8px 12px;font-size:.85rem;text-align:center}
@@ -322,6 +330,7 @@ button:disabled{opacity:.6;cursor:default}
       <button class="iconbtn" id="list-back" aria-label="Back">→</button>
       <b id="list-name-lbl" class="list-name-lbl">…</b>
       <div class="members" id="members-strip"></div>
+      <button class="iconbtn" id="list-share" aria-label="Share">📤</button>
       <button class="iconbtn" id="view-toggle" aria-label="View" title="תצוגה">🗂️</button>
     </div>
 
@@ -391,20 +400,28 @@ he: {
   addedBy:'הוספה ע״י {n}', checkedBy:'נאסף ע״י {n}',
   tripActive:'סבב קניות פעיל', tripClose:'✅ סיום קניות', tripCloseTitle:'לסיים את סבב הקניות?',
   tripCloseBody:'הרשימה תיסגר ותישמר בהיסטוריה, כולל מוצרים שלא נלקחו. אפשר תמיד ליצור רשימה חדשה.',
-  tripClosed:'✅ הרשימה נסגרה',
+  tripCloseBodyEmpty:'כל הפריטים ברשימה נאספו. הרשימה תיסגר ותישמר בהיסטוריה.',
+  tripCloseBodyUnchecked:'יש {n} פריטים שלא נאספו. מה לעשות איתם?',
+  tripLeave:'להשאיר ברשימה הסגורה', tripMoveExisting:'להעביר לרשימה פתוחה אחרת', tripMoveNew:'להעביר לרשימה חדשה',
+  tripClosed:'✅ הרשימה נסגרה', boughtHeader:'נאסף', notBoughtHeader:'חסר',
   homeSub:'כל הרשימות המשותפות של משק הבית, במקום אחד.',
   homeLists:'הרשימות שלי', homeInvite:'הזמנת בן/בת משפחה', homeSwitch:'להחליף משק בית',
   listsTitle:'הרשימות שלי', listsOpenTitle:'פעילות', listsClosedTitle:'היסטוריה',
   listsEmpty:'אין עדיין רשימות פעילות. ליצור אחת?', newListTitle:'רשימה חדשה', newListName:'שם הרשימה (לדוגמה: קניות לשבת)',
   newListGo:'ליצור ולפתוח', needListName:'צריך לתת שם לרשימה',
   itemsCount:'{n} פריטים', closedOn:'נסגרה ב-{d}',
+  deleteList:'🗑️ מחיקה', deleteListTitle:'מחיקת רשימה', deleteListConfirm:'למחוק לצמיתות את הרשימה "{n}"? לא ניתן לשחזר.', listDeleted:'🗑️ הרשימה נמחקה',
   notifyListOpened:'🛒 {n} פתח/ה רשימה חדשה: {l}', notifyListClosed:'✅ {n} סיים/ה קניות ב-{l}',
   undo:'↩️ בטל', deleted:'🗑️ נמחק', editItem:'עריכת מוצר', editSave:'לשמור',
   fontSizeLabel:'גודל טקסט', fontNormal:'רגיל', fontLarge:'גדול', fontXlarge:'גדול מאוד',
   searchPh:'חיפוש ברשימה…', newPendingToast:'🙋 {n} ביקש/ה להוסיף: {t}',
   manageMembers:'👥 ניהול חברי משק הבית', membersTitle:'חברי משק הבית',
   removeConfirm:'להסיר את {n} ממשק הבית?', leaveConfirm:'לצאת ממשק הבית?',
+  removeTitle:'הסרת חבר/ת משק בית', leaveTitle:'יציאה ממשק הבית', removeAction:'להסיר', leaveAction:'לצאת',
   leaveHousehold:'יציאה ממשק הבית', memberRemoved:'✅ הוסר/ה ממשק הבית', youLeft:'👋 יצאת ממשק הבית',
+  transferOwnerAction:'העברת בעלות', transferOwnerTitle:'העברת בעלות על משק הבית',
+  transferOwnerConfirm:'להעביר את הבעלות על משק הבית ל{n}? את/ה תהפכו לעורך/ת, ול{n} תהיה שליטה מלאה כבעלים.',
+  ownerTransferred:'👑 הבעלות הועברה',
   roleUpdated:'✅ ההרשאה עודכנה', you:'(את/ה)',
   editNameTitle:'שם במשק הבית הזה', editNameSub:'איך שמך יוצג לשאר חברי משק הבית הזה. אפשר לקבוע שם שונה בכל משק בית.',
   nameUpdated:'✅ השם עודכן',
@@ -443,20 +460,28 @@ en: {
   addedBy:'Added by {n}', checkedBy:'Collected by {n}',
   tripActive:'Shopping trip in progress', tripClose:'✅ Finish shopping', tripCloseTitle:'Finish this shopping trip?',
   tripCloseBody:'The list will close and move to history, including anything not yet taken. You can always start a new list.',
-  tripClosed:'✅ List closed',
+  tripCloseBodyEmpty:'Everything on the list was collected. The list will close and move to history.',
+  tripCloseBodyUnchecked:'{n} items were not collected. What should happen to them?',
+  tripLeave:'Leave them in the closed list', tripMoveExisting:'Move to another open list', tripMoveNew:'Move to a new list',
+  tripClosed:'✅ List closed', boughtHeader:'Collected', notBoughtHeader:'Still needed',
   homeSub:'All of your household\'s shared lists, in one place.',
   homeLists:'My lists', homeInvite:'Invite a family member', homeSwitch:'Switch household',
   listsTitle:'My lists', listsOpenTitle:'Active', listsClosedTitle:'History',
   listsEmpty:'No active lists yet. Create one?', newListTitle:'New list', newListName:'List name (e.g. Saturday shopping)',
   newListGo:'Create and open', needListName:'Give the list a name',
   itemsCount:'{n} items', closedOn:'Closed {d}',
+  deleteList:'🗑️ Delete', deleteListTitle:'Delete list', deleteListConfirm:'Permanently delete the list "{n}"? This cannot be undone.', listDeleted:'🗑️ List deleted',
   notifyListOpened:'🛒 {n} opened a new list: {l}', notifyListClosed:'✅ {n} finished shopping in {l}',
   undo:'↩️ Undo', deleted:'🗑️ Deleted', editItem:'Edit item', editSave:'Save',
   fontSizeLabel:'Text size', fontNormal:'Normal', fontLarge:'Large', fontXlarge:'Extra large',
   searchPh:'Search the list…', newPendingToast:'🙋 {n} requested to add: {t}',
   manageMembers:'👥 Manage household members', membersTitle:'Household members',
   removeConfirm:'Remove {n} from the household?', leaveConfirm:'Leave this household?',
+  removeTitle:'Remove member', leaveTitle:'Leave household', removeAction:'Remove', leaveAction:'Leave',
   leaveHousehold:'Leave household', memberRemoved:'✅ Removed from the household', youLeft:'👋 You left the household',
+  transferOwnerAction:'Transfer ownership', transferOwnerTitle:'Transfer household ownership',
+  transferOwnerConfirm:'Transfer ownership of the household to {n}? You will become an editor, and {n} will have full owner control.',
+  ownerTransferred:'👑 Ownership transferred',
   roleUpdated:'✅ Role updated', you:'(you)',
   editNameTitle:'Name in this household', editNameSub:'How your name shows to others in this household. You can set a different name per household.',
   nameUpdated:'✅ Name updated',
@@ -600,8 +625,12 @@ function guess(text){
 }
 
 /* ---------- sheet / toast ---------- */
+let pendingConfirmCancel=null;
 function openSheet(html){ $('sheet').innerHTML = html; $('sheet').hidden=false; $('shade').hidden=false; }
-function closeSheet(){ $('sheet').hidden=true; $('shade').hidden=true; $('sheet').innerHTML=''; }
+function closeSheet(){
+  $('sheet').hidden=true; $('shade').hidden=true; $('sheet').innerHTML='';
+  if(pendingConfirmCancel){ const c=pendingConfirmCancel; pendingConfirmCancel=null; c(); }
+}
 function sheetHead(title){ return `<div class="sheet-head"><h2>${esc(title)}</h2><button class="close" data-act="sheet-close">✕</button></div>`; }
 let toastTimer=null;
 function toast(msg){
@@ -619,6 +648,27 @@ function toastAction(msg,actionLabel,onAction,ms){
 }
 $('shade').addEventListener('click',closeSheet);
 document.addEventListener('click',e=>{ if(e.target.closest('[data-act="sheet-close"]')) closeSheet(); });
+
+/* ---------- app-styled confirmation sheet (replaces native confirm()) ---------- */
+function confirmSheet(opts){
+  const t=CS.t;
+  const title=opts.title||'', body=opts.body||'';
+  const yesLabel=opts.confirmLabel||t('yes'), noLabel=opts.cancelLabel||t('cancel');
+  return new Promise(resolve=>{
+    openSheet(sheetHead(title)+`<div class="card">
+      <p class="sub">${esc(body)}</p>
+      <div class="actions-row" style="display:flex;gap:8px;margin-top:4px">
+        <button class="btn ghost wide" id="cs-no">${esc(noLabel)}</button>
+        <button class="btn wide${opts.danger?' danger':''}" id="cs-yes">${esc(yesLabel)}</button>
+      </div>
+    </div>`);
+    let done=false;
+    const finish=v=>{ if(done) return; done=true; pendingConfirmCancel=null; closeSheet(); resolve(v); };
+    pendingConfirmCancel=()=>finish(false);
+    $('cs-yes').onclick=()=>finish(true);
+    $('cs-no').onclick=()=>finish(false);
+  });
+}
 
 /* ---------- screens ---------- */
 function setScreen(name){
@@ -694,7 +744,7 @@ function fmtDate(iso){
   if(!iso) return '';
   try{ return new Date(iso).toLocaleDateString(CS.lang()==='he'?'he-IL':'en-US',{day:'numeric',month:'short'}); }catch(e){ return ''; }
 }
-function renderLists(lists){
+function renderLists(lists, canManage){
   const open=(lists||[]).filter(l=>l.status==='open');
   const closed=(lists||[]).filter(l=>l.status==='closed');
   $('lists-open').innerHTML = open.map(l=>`<li><button class="list-row" data-list="${l.id}">
@@ -702,9 +752,12 @@ function renderLists(lists){
   </button></li>`).join('');
   $('lists-empty').hidden = !!open.length;
   $('lists-closed-box').hidden = !closed.length;
-  $('lists-closed').innerHTML = closed.map(l=>`<li><button class="list-row closed" data-list="${l.id}">
-    <span class="e" style="font-size:1.3rem">✅</span><span class="nm">${esc(l.name)}</span><span class="meta">${esc(CS.t('closedOn').replace('{d}',fmtDate(l.closed_at)))}</span>
-  </button></li>`).join('');
+  $('lists-closed').innerHTML = closed.map(l=>`<li class="list-row-wrap">
+    <button class="list-row closed" data-list="${l.id}">
+      <span class="e" style="font-size:1.3rem">✅</span><span class="nm">${esc(l.name)}</span><span class="meta">${esc(CS.t('closedOn').replace('{d}',fmtDate(l.closed_at)))}</span>
+    </button>
+    ${canManage?`<button class="list-del" data-del-list="${l.id}" aria-label="${esc(CS.t('deleteList'))}">🗑️</button>`:''}
+  </li>`).join('');
 }
 
 /* ---------- view mode: grouped-by-category vs flat+draggable ---------- */
@@ -721,14 +774,21 @@ function itemRow(item, mode, draggable){
   const qty = item.qty ? `<span class="qty-tag">${esc(item.qty)}</span>` : '';
   const addedWho = personName(item.added_by_name);
   if(mode==='pending'){
+    const mine = item.created_by && CS.myId && item.created_by===CS.myId;
+    const actions = mine
+      ? `<span class="pending-actions">
+          <button class="ok-btn" data-action="edit" data-id="${item.id}" aria-label="${esc(CS.t('editItem'))}">✏️</button>
+          <button class="no-btn" data-action="del" data-id="${item.id}" aria-label="delete">🗑️</button>
+        </span>`
+      : `<span class="pending-actions">
+          <button class="ok-btn" data-action="approve" data-id="${item.id}" aria-label="approve">✓</button>
+          <button class="no-btn" data-action="reject" data-id="${item.id}" aria-label="reject">✕</button>
+        </span>`;
     return `<li class="item" data-id="${item.id}">
       <span class="emo e" data-cat="${esc(item.category||'other')}">${esc(item.emoji||cat.emoji)}</span>
       <span class="t">${esc(item.text)}${addedWho}</span>
       ${qty}
-      <span class="pending-actions">
-        <button class="ok-btn" data-action="approve" data-id="${item.id}" aria-label="approve">✓</button>
-        <button class="no-btn" data-action="reject" data-id="${item.id}" aria-label="reject">✕</button>
-      </span>
+      ${actions}
     </li>`;
   }
   const done = item.status==='checked';
@@ -836,7 +896,7 @@ $('au-forgot').addEventListener('click',()=>setAuthMode('reset'));
 $('lang-btn').addEventListener('click',()=>{ CS.setLang(CS.lang()==='he'?'en':'he'); });
 
 Object.assign(window.CS,{
-  $, esc, guess, openSheet, closeSheet, sheetHead, toast, toastAction,
+  $, esc, guess, openSheet, closeSheet, sheetHead, toast, toastAction, confirmSheet,
   setScreen, paintStrings, setAuthMode, renderMembers, renderGroups, renderLists, initials, personColor,
   render(){ paintStrings(); if(window.CS.rerenderMain) window.CS.rerenderMain(); },
 });

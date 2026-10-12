@@ -249,6 +249,9 @@ function drawMembersSheet(){
         </select>`
       : `<span class="role-chip ${esc(m.role)}">${esc(t('role'+m.role[0].toUpperCase()+m.role.slice(1)))}</span>`;
     const editBtn = isSelf ? `<button class="member-remove" data-edit-name="${m.user_id}" aria-label="edit name">✏️</button>` : '';
+    const transferBtn = (isOwner && !isSelf)
+      ? `<button class="member-remove" data-transfer-owner="${m.user_id}" aria-label="${esc(t('transferOwnerAction'))}" title="${esc(t('transferOwnerAction'))}">👑</button>`
+      : '';
     const removeBtn = (isSelf || (isOwner && !isSelf))
       ? `<button class="member-remove" data-remove-member="${m.user_id}" aria-label="remove">${isSelf?'🚪':'✕'}</button>`
       : '';
@@ -257,10 +260,29 @@ function drawMembersSheet(){
       <span class="nm">${label}</span>
       ${roleControl}
       ${editBtn}
+      ${transferBtn}
       ${removeBtn}
     </div>`;
   }).join('');
   openSheet(sheetHead(t('membersTitle'))+`<div class="card">${rows}</div>`);
+  $('sheet').querySelectorAll('[data-transfer-owner]').forEach(b=>b.onclick=async()=>{
+    const uid=b.dataset.transferOwner;
+    const m=members.find(x=>x.user_id===uid);
+    const ok=await CS.confirmSheet({
+      title:t('transferOwnerTitle'),
+      body:t('transferOwnerConfirm').replace('{n}',m?(m.display_name||m.email):''),
+      confirmLabel:t('transferOwnerAction'), danger:true
+    });
+    if(!ok){ drawMembersSheet(); return; }
+    const {error}=await sb.rpc('transfer_household_ownership',{p_household:household,p_new_owner:uid});
+    if(error){ toast(CS.authErr(error)); return; }
+    role='editor';
+    const me=members.find(x=>x.user_id===user.id); if(me) me.role='editor';
+    if(m) m.role='owner';
+    membersById=Object.fromEntries(members.map(x=>[x.user_id,x]));
+    toast(t('ownerTransferred'));
+    drawMembersSheet();
+  });
   $('sheet').querySelectorAll('[data-role-member]').forEach(sel=>sel.onchange=async()=>{
     const uid=sel.dataset.roleMember, newRole=sel.value;
     const {error}=await sb.from('household_members').update({role:newRole}).eq('household_id',household).eq('user_id',uid);
@@ -274,7 +296,12 @@ function drawMembersSheet(){
   $('sheet').querySelectorAll('[data-remove-member]').forEach(b=>b.onclick=async()=>{
     const uid=b.dataset.removeMember, isSelf=uid===user.id;
     const m=members.find(x=>x.user_id===uid);
-    if(!confirm(isSelf?t('leaveConfirm'):t('removeConfirm').replace('{n}',m?(m.display_name||m.email):''))) return;
+    const ok=await CS.confirmSheet({
+      title:isSelf?t('leaveTitle'):t('removeTitle'),
+      body:isSelf?t('leaveConfirm'):t('removeConfirm').replace('{n}',m?(m.display_name||m.email):''),
+      confirmLabel:isSelf?t('leaveAction'):t('removeAction'), danger:true
+    });
+    if(!ok){ drawMembersSheet(); return; }
     const {error}=await sb.from('household_members').delete().eq('household_id',household).eq('user_id',uid);
     if(error){ toast(CS.authErr(error)); return; }
     if(isSelf){ closeSheet(); toast(t('youLeft')); await onUser(user); return; }
@@ -346,7 +373,7 @@ async function fetchLists(){
   const {data,error}=await sb.from('shopping_lists').select('*').eq('household_id',household).order('created_at',{ascending:false});
   if(error){ console.warn(error); return; }
   lists=data||[];
-  CS.renderLists(lists);
+  CS.renderLists(lists, role==='owner'||role==='editor');
 }
 async function openListsPage(){
   CS.setScreen('lists');
@@ -377,7 +404,23 @@ function openNewListSheet(){
 }
 $('lists-new').addEventListener('click',openNewListSheet);
 
-document.addEventListener('click',e=>{
+document.addEventListener('click',async e=>{
+  const delBtn=e.target.closest('[data-del-list]');
+  if(delBtn){
+    const id=delBtn.dataset.delList;
+    const l=lists.find(x=>x.id===id);
+    const ok=await CS.confirmSheet({
+      title:CS.t('deleteListTitle'),
+      body:CS.t('deleteListConfirm').replace('{n}',l?l.name:''),
+      confirmLabel:CS.t('deleteList'), danger:true
+    });
+    if(!ok) return;
+    const {error}=await sb.from('shopping_lists').delete().eq('id',id);
+    if(error){ toast(CS.authErr(error)); return; }
+    toast(CS.t('listDeleted'));
+    await fetchLists();
+    return;
+  }
   const row=e.target.closest('[data-list]'); if(!row) return;
   openList(row.dataset.list);
 });
@@ -401,22 +444,95 @@ async function openList(id, silent){
   return true;
 }
 
-function openCloseTripSheet(){
+async function doCloseTrip(payload){
+  closeSheet();
+  const {error}=await sb.rpc('close_shopping_trip',payload);
+  if(error){ toast(CS.authErr(error)); return; }
+  toast(CS.t('tripClosed'));
+  await openListsPage();
+}
+async function openCloseTripSheet(){
   const t=CS.t;
+  const uncheckedCount=items.filter(i=>i.status==='active'||i.status==='pending').length;
+  if(!uncheckedCount){
+    openSheet(sheetHead(t('tripCloseTitle'))+`<div class="card">
+      <p>${esc(t('tripCloseBodyEmpty'))}</p>
+      <button class="btn wide" id="trip-confirm">${esc(t('tripClose'))}</button>
+      <button class="btn ghost wide" data-act="sheet-close">${esc(t('cancel'))}</button>
+    </div>`);
+    $('trip-confirm').onclick=()=>doCloseTrip({p_list_id:listId,p_action:'leave'});
+    return;
+  }
+  const {data:openRows}=await sb.from('shopping_lists').select('id,name').eq('household_id',household).eq('status','open').neq('id',listId);
+  const otherLists=openRows||[];
   openSheet(sheetHead(t('tripCloseTitle'))+`<div class="card">
-    <p>${esc(t('tripCloseBody'))}</p>
+    <p>${esc(t('tripCloseBodyUnchecked').replace('{n}',uncheckedCount))}</p>
+    <div class="role-pick" id="trip-choice">
+      <button class="active" data-choice="leave" type="button">${esc(t('tripLeave'))}</button>
+      ${otherLists.length?`<button data-choice="move_existing" type="button">${esc(t('tripMoveExisting'))}</button>`:''}
+      <button data-choice="move_new" type="button">${esc(t('tripMoveNew'))}</button>
+    </div>
+    <div id="trip-choice-detail"></div>
     <button class="btn wide" id="trip-confirm">${esc(t('tripClose'))}</button>
     <button class="btn ghost wide" data-act="sheet-close">${esc(t('cancel'))}</button>
   </div>`);
-  $('trip-confirm').onclick=async()=>{
-    closeSheet();
-    const {error}=await sb.rpc('close_shopping_trip',{p_list_id:listId});
-    if(error){ toast(CS.authErr(error)); return; }
-    toast(t('tripClosed'));
-    await openListsPage();
+  let choice='leave';
+  const detail=$('trip-choice-detail');
+  function renderDetail(){
+    if(choice==='move_existing'){
+      detail.innerHTML=`<select class="role-select" id="trip-target-list" style="width:100%;margin-top:8px">
+        ${otherLists.map(l=>`<option value="${l.id}">${esc(l.name)}</option>`).join('')}
+      </select>`;
+    }else if(choice==='move_new'){
+      detail.innerHTML=`<input id="trip-new-name" placeholder="${esc(t('newListName'))}" style="margin-top:8px">`;
+    }else{
+      detail.innerHTML='';
+    }
+  }
+  renderDetail();
+  $('trip-choice').querySelectorAll('[data-choice]').forEach(b=>b.onclick=()=>{
+    choice=b.dataset.choice;
+    $('trip-choice').querySelectorAll('[data-choice]').forEach(x=>x.classList.toggle('active',x===b));
+    renderDetail();
+  });
+  $('trip-confirm').onclick=()=>{
+    const payload={p_list_id:listId,p_action:choice};
+    if(choice==='move_existing'){
+      const sel=$('trip-target-list');
+      if(!sel||!sel.value) return;
+      payload.p_target_list_id=sel.value;
+    }else if(choice==='move_new'){
+      const nm=$('trip-new-name')?$('trip-new-name').value.trim():'';
+      if(!nm) return;
+      payload.p_new_list_name=nm;
+    }
+    doCloseTrip(payload);
   };
 }
 $('trip-close').addEventListener('click',openCloseTripSheet);
+
+function buildTripSummaryText(){
+  const t=CS.t;
+  const bought=items.filter(i=>i.status==='checked');
+  const notBought=items.filter(i=>i.status==='active'||i.status==='pending');
+  const name=$('list-name-lbl').textContent||'';
+  const lines=[`🛒 ${name}`.trim(),''];
+  lines.push(`✅ ${t('boughtHeader')} (${bought.length})`);
+  bought.forEach(i=>lines.push('• '+i.text));
+  lines.push('');
+  lines.push(`🧺 ${t('notBoughtHeader')} (${notBought.length})`);
+  notBought.forEach(i=>lines.push('• '+i.text));
+  return lines.join('\n');
+}
+async function shareTripSummary(){
+  const text=buildTripSummaryText();
+  if(navigator.share){
+    try{ await navigator.share({title:CS.t('appName'),text}); }catch(e){}
+    return;
+  }
+  window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');
+}
+$('list-share').addEventListener('click',shareTripSummary);
 
 /* ---------- invites ---------- */
 function openInviteSheet(){
@@ -648,7 +764,7 @@ addEventListener('offline',()=>{ online=false; showOfflineNote(true); });
 
 /* ---------- boot ---------- */
 async function onUser(u){
-  user=u;
+  user=u; window.CS.myId=u?u.id:null;
   renderAccount();
   if(!u){ household=null; listId=null; items=[]; CS.setScreen('auth'); return; }
   if(pendingJoin && await consumePendingJoin()) return;
@@ -670,7 +786,7 @@ sb.auth.onAuthStateChange((event,session)=>{
     // USER_UPDATED for the same already-signed-in user — re-running the whole boot flow for those
     // was throwing people back to Home mid-list every time they switched back to the app.
     if((event==='TOKEN_REFRESHED'||event==='USER_UPDATED') && u && u.id===bootedUserId){
-      user=u; renderAccount();
+      user=u; window.CS.myId=u.id; renderAccount();
       return;
     }
     bootedUserId=u?u.id:null;
