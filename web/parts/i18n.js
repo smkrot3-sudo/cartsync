@@ -42,6 +42,10 @@ he: {
   undo:'↩️ בטל', deleted:'🗑️ נמחק', editItem:'עריכת מוצר', editSave:'לשמור',
   fontSizeLabel:'גודל טקסט', fontNormal:'רגיל', fontLarge:'גדול', fontXlarge:'גדול מאוד',
   searchPh:'חיפוש ברשימה…', newPendingToast:'🙋 {n} ביקש/ה להוסיף: {t}',
+  manageMembers:'👥 ניהול חברי משק הבית', membersTitle:'חברי משק הבית',
+  removeConfirm:'להסיר את {n} ממשק הבית?', leaveConfirm:'לצאת ממשק הבית?',
+  leaveHousehold:'יציאה ממשק הבית', memberRemoved:'✅ הוסר/ה ממשק הבית', youLeft:'👋 יצאת ממשק הבית',
+  roleUpdated:'✅ ההרשאה עודכנה', you:'(את/ה)',
 },
 en: {
   appName:'CartSync', tagline:'One shopping list, for the whole family',
@@ -85,6 +89,10 @@ en: {
   undo:'↩️ Undo', deleted:'🗑️ Deleted', editItem:'Edit item', editSave:'Save',
   fontSizeLabel:'Text size', fontNormal:'Normal', fontLarge:'Large', fontXlarge:'Extra large',
   searchPh:'Search the list…', newPendingToast:'🙋 {n} requested to add: {t}',
+  manageMembers:'👥 Manage household members', membersTitle:'Household members',
+  removeConfirm:'Remove {n} from the household?', leaveConfirm:'Leave this household?',
+  leaveHousehold:'Leave household', memberRemoved:'✅ Removed from the household', youLeft:'👋 You left the household',
+  roleUpdated:'✅ Role updated', you:'(you)',
 },
 };
 

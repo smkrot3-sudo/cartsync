@@ -226,6 +226,55 @@ async function openHouseholdSwitcher(){
 }
 $('home-switch-btn').addEventListener('click',openHouseholdSwitcher);
 
+/* ---------- household members management ---------- */
+function drawMembersSheet(){
+  const t=CS.t;
+  const isOwner=role==='owner';
+  const rows=members.map(m=>{
+    const isSelf=m.user_id===user.id;
+    const name=m.display_name||m.email||'?';
+    const label=esc(name)+(isSelf?' '+esc(t('you')):'');
+    const roleControl = (isOwner && !isSelf)
+      ? `<select class="role-select" data-role-member="${m.user_id}">
+          ${['editor','requester','viewer'].map(r=>`<option value="${r}" ${r===m.role?'selected':''}>${esc(t('role'+r[0].toUpperCase()+r.slice(1)))}</option>`).join('')}
+        </select>`
+      : `<span class="role-chip ${esc(m.role)}">${esc(t('role'+m.role[0].toUpperCase()+m.role.slice(1)))}</span>`;
+    const removeBtn = (isSelf || (isOwner && !isSelf))
+      ? `<button class="member-remove" data-remove-member="${m.user_id}" aria-label="remove">${isSelf?'🚪':'✕'}</button>`
+      : '';
+    return `<div class="member-row">
+      <span class="avatar" style="background:${CS.personColor(m.user_id)};margin-inline-start:0">${esc(CS.initials(name))}</span>
+      <span class="nm">${label}</span>
+      ${roleControl}
+      ${removeBtn}
+    </div>`;
+  }).join('');
+  openSheet(sheetHead(t('membersTitle'))+`<div class="card">${rows}</div>`);
+  $('sheet').querySelectorAll('[data-role-member]').forEach(sel=>sel.onchange=async()=>{
+    const uid=sel.dataset.roleMember, newRole=sel.value;
+    const {error}=await sb.from('household_members').update({role:newRole}).eq('household_id',household).eq('user_id',uid);
+    if(error){ toast(CS.authErr(error)); return; }
+    const m=members.find(x=>x.user_id===uid); if(m) m.role=newRole;
+    membersById=Object.fromEntries(members.map(x=>[x.user_id,x]));
+    toast(t('roleUpdated'));
+    drawMembersSheet();
+  });
+  $('sheet').querySelectorAll('[data-remove-member]').forEach(b=>b.onclick=async()=>{
+    const uid=b.dataset.removeMember, isSelf=uid===user.id;
+    const m=members.find(x=>x.user_id===uid);
+    if(!confirm(isSelf?t('leaveConfirm'):t('removeConfirm').replace('{n}',m?(m.display_name||m.email):''))) return;
+    const {error}=await sb.from('household_members').delete().eq('household_id',household).eq('user_id',uid);
+    if(error){ toast(CS.authErr(error)); return; }
+    if(isSelf){ closeSheet(); toast(t('youLeft')); await onUser(user); return; }
+    members=members.filter(x=>x.user_id!==uid);
+    membersById=Object.fromEntries(members.map(x=>[x.user_id,x]));
+    CS.renderMembers(members,'home-members-strip'); CS.renderMembers(members);
+    toast(t('memberRemoved'));
+    drawMembersSheet();
+  });
+}
+$('home-members-btn').addEventListener('click',drawMembersSheet);
+
 /* ---------- lists directory ---------- */
 let lists=[];
 async function fetchLists(){

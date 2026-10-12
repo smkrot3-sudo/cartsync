@@ -288,7 +288,7 @@ $('lang-btn').addEventListener('click',()=>{ CS.setLang(CS.lang()==='he'?'en':'h
 
 Object.assign(window.CS,{
   $, esc, guess, openSheet, closeSheet, sheetHead, toast, toastAction,
-  setScreen, paintStrings, setAuthMode, renderMembers, renderGroups, renderLists, initials,
+  setScreen, paintStrings, setAuthMode, renderMembers, renderGroups, renderLists, initials, personColor,
   render(){ paintStrings(); if(window.CS.rerenderMain) window.CS.rerenderMain(); },
 });
 })();

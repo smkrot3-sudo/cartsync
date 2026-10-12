@@ -206,6 +206,8 @@ button:disabled{opacity:.6;cursor:default}
 .member-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
 .member-row:last-child{border-bottom:0}
 .member-row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.member-row .role-select{border:2px solid var(--line);background:var(--bg);color:inherit;border-radius:10px;padding:5px 8px;font:inherit;font-size:.82rem;flex:none}
+.member-row .member-remove{border:0;background:var(--danger-soft);color:var(--danger);width:28px;height:28px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:.85rem}
 
 .offline-note{background:var(--danger-soft);color:var(--danger);border-radius:12px;padding:8px 12px;font-size:.85rem;text-align:center}
 
@@ -281,7 +283,8 @@ button:disabled{opacity:.6;cursor:default}
     <div class="members" id="home-members-strip"></div>
     <div class="card">
       <button class="btn wide" id="home-lists-btn">📋 <span id="home-lists-label">הרשימות שלי</span></button>
-      <button class="btn ghost wide" id="home-invite-btn">👥 <span id="home-invite-label">הזמנת בן/בת משפחה</span></button>
+      <button class="btn ghost wide" id="home-members-btn"><span id="home-members-label">👥 ניהול חברי משק הבית</span></button>
+      <button class="btn ghost wide" id="home-invite-btn">➕ <span id="home-invite-label">הזמנת בן/בת משפחה</span></button>
       <button class="btn ghost wide" id="home-switch-btn">🔀 <span id="home-switch-label">להחליף משק בית</span></button>
     </div>
   </section>
@@ -398,6 +401,10 @@ he: {
   undo:'↩️ בטל', deleted:'🗑️ נמחק', editItem:'עריכת מוצר', editSave:'לשמור',
   fontSizeLabel:'גודל טקסט', fontNormal:'רגיל', fontLarge:'גדול', fontXlarge:'גדול מאוד',
   searchPh:'חיפוש ברשימה…', newPendingToast:'🙋 {n} ביקש/ה להוסיף: {t}',
+  manageMembers:'👥 ניהול חברי משק הבית', membersTitle:'חברי משק הבית',
+  removeConfirm:'להסיר את {n} ממשק הבית?', leaveConfirm:'לצאת ממשק הבית?',
+  leaveHousehold:'יציאה ממשק הבית', memberRemoved:'✅ הוסר/ה ממשק הבית', youLeft:'👋 יצאת ממשק הבית',
+  roleUpdated:'✅ ההרשאה עודכנה', you:'(את/ה)',
 },
 en: {
   appName:'CartSync', tagline:'One shopping list, for the whole family',
@@ -441,6 +448,10 @@ en: {
   undo:'↩️ Undo', deleted:'🗑️ Deleted', editItem:'Edit item', editSave:'Save',
   fontSizeLabel:'Text size', fontNormal:'Normal', fontLarge:'Large', fontXlarge:'Extra large',
   searchPh:'Search the list…', newPendingToast:'🙋 {n} requested to add: {t}',
+  manageMembers:'👥 Manage household members', membersTitle:'Household members',
+  removeConfirm:'Remove {n} from the household?', leaveConfirm:'Leave this household?',
+  leaveHousehold:'Leave household', memberRemoved:'✅ Removed from the household', youLeft:'👋 You left the household',
+  roleUpdated:'✅ Role updated', you:'(you)',
 },
 };
 
@@ -819,7 +830,7 @@ $('lang-btn').addEventListener('click',()=>{ CS.setLang(CS.lang()==='he'?'en':'h
 
 Object.assign(window.CS,{
   $, esc, guess, openSheet, closeSheet, sheetHead, toast, toastAction,
-  setScreen, paintStrings, setAuthMode, renderMembers, renderGroups, renderLists, initials,
+  setScreen, paintStrings, setAuthMode, renderMembers, renderGroups, renderLists, initials, personColor,
   render(){ paintStrings(); if(window.CS.rerenderMain) window.CS.rerenderMain(); },
 });
 })();
