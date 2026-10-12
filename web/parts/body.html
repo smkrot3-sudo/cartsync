@@ -62,19 +62,32 @@
     </div>
   </section>
 
-  <!-- ---------- home: landing page for a household ---------- -->
+  <!-- ---------- home: a real dashboard, not just a menu ---------- -->
   <section class="view" id="view-home" hidden>
-    <div class="hero">
-      <div class="hero-emoji e">🏠</div>
-      <h1 id="home-hh-name">…</h1>
-      <p class="sub" id="home-sub">כל הרשימות המשותפות של משק הבית, במקום אחד.</p>
+    <div class="home-greeting">
+      <h1 id="home-greeting">…</h1>
+      <p class="sub" id="home-hh-sub"><span class="e">🏠</span> <span id="home-hh-name">…</span></p>
     </div>
     <div class="members" id="home-members-strip"></div>
+
+    <div id="home-lists-section">
+      <div class="group-h"><span class="e">🛒</span><span id="home-lists-heading">הרשימות הפעילות</span></div>
+      <ul class="list" id="home-lists-preview"></ul>
+      <ul class="empty" id="home-lists-empty" hidden>
+        <li><span class="e" style="font-size:2.2rem">📋</span><span id="home-lists-empty-text">אין רשימות פעילות. ליצור אחת?</span>
+          <button class="btn small" id="home-lists-empty-btn">➕ <span id="home-lists-new-label">רשימה חדשה</span></button>
+        </li>
+      </ul>
+      <button class="linkbtn" id="home-lists-more" hidden>הרשימות שלי ←</button>
+    </div>
+
+    <div id="home-activity-section" hidden>
+      <div class="group-h"><span class="e">📜</span><span id="home-activity-heading">פעילות אחרונה</span></div>
+      <ul class="list activity-list" id="home-activity-list"></ul>
+    </div>
+
     <div class="card">
-      <button class="btn wide" id="home-lists-btn">📋 <span id="home-lists-label">הרשימות שלי</span></button>
-      <button class="btn ghost wide" id="home-members-btn"><span id="home-members-label">👥 ניהול חברי משק הבית</span></button>
-      <button class="btn ghost wide" id="home-invite-btn">➕ <span id="home-invite-label">הזמנת בן/בת משפחה</span></button>
-      <button class="btn ghost wide" id="home-switch-btn">🔀 <span id="home-switch-label">להחליף משק בית</span></button>
+      <button class="btn ghost wide" id="home-members-btn">👥 <span id="home-members-label">משק הבית</span></button>
     </div>
   </section>
 

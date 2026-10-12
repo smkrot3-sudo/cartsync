@@ -95,6 +95,9 @@ button:disabled{opacity:.6;cursor:default}
 .view{display:flex;flex-direction:column;gap:14px}
 .view[hidden]{display:none!important}
 .hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:18px 8px 4px}
+.home-greeting{display:flex;flex-direction:column;gap:3px;padding:4px 2px 0}
+.home-greeting h1{font-size:1.4rem}
+.home-greeting .sub{display:flex;align-items:center;gap:5px}
 .hero-emoji{font-size:2.6rem}
 .sub{color:var(--muted);font-size:.95rem}
 
@@ -346,19 +349,32 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
     </div>
   </section>
 
-  <!-- ---------- home: landing page for a household ---------- -->
+  <!-- ---------- home: a real dashboard, not just a menu ---------- -->
   <section class="view" id="view-home" hidden>
-    <div class="hero">
-      <div class="hero-emoji e">🏠</div>
-      <h1 id="home-hh-name">…</h1>
-      <p class="sub" id="home-sub">כל הרשימות המשותפות של משק הבית, במקום אחד.</p>
+    <div class="home-greeting">
+      <h1 id="home-greeting">…</h1>
+      <p class="sub" id="home-hh-sub"><span class="e">🏠</span> <span id="home-hh-name">…</span></p>
     </div>
     <div class="members" id="home-members-strip"></div>
+
+    <div id="home-lists-section">
+      <div class="group-h"><span class="e">🛒</span><span id="home-lists-heading">הרשימות הפעילות</span></div>
+      <ul class="list" id="home-lists-preview"></ul>
+      <ul class="empty" id="home-lists-empty" hidden>
+        <li><span class="e" style="font-size:2.2rem">📋</span><span id="home-lists-empty-text">אין רשימות פעילות. ליצור אחת?</span>
+          <button class="btn small" id="home-lists-empty-btn">➕ <span id="home-lists-new-label">רשימה חדשה</span></button>
+        </li>
+      </ul>
+      <button class="linkbtn" id="home-lists-more" hidden>הרשימות שלי ←</button>
+    </div>
+
+    <div id="home-activity-section" hidden>
+      <div class="group-h"><span class="e">📜</span><span id="home-activity-heading">פעילות אחרונה</span></div>
+      <ul class="list activity-list" id="home-activity-list"></ul>
+    </div>
+
     <div class="card">
-      <button class="btn wide" id="home-lists-btn">📋 <span id="home-lists-label">הרשימות שלי</span></button>
-      <button class="btn ghost wide" id="home-members-btn"><span id="home-members-label">👥 ניהול חברי משק הבית</span></button>
-      <button class="btn ghost wide" id="home-invite-btn">➕ <span id="home-invite-label">הזמנת בן/בת משפחה</span></button>
-      <button class="btn ghost wide" id="home-switch-btn">🔀 <span id="home-switch-label">להחליף משק בית</span></button>
+      <button class="btn ghost wide" id="home-members-btn">👥 <span id="home-members-label">משק הבית</span></button>
     </div>
   </section>
 
@@ -477,6 +493,9 @@ he: {
   tripClosed:'✅ הרשימה נסגרה', boughtHeader:'נאסף', notBoughtHeader:'חסר',
   homeSub:'כל הרשימות המשותפות של משק הבית, במקום אחד.',
   homeLists:'הרשימות שלי', homeInvite:'הזמנת בן/בת משפחה', homeSwitch:'להחליף משק בית',
+  homeListsHeading:'הרשימות הפעילות', homeActivityHeading:'פעילות אחרונה', homeListsMore:'כל הרשימות ←',
+  homeMembers:'משק הבית', itemsLeft:'{n} פריטים נשארו', allCollected:'הכל נאסף ✅',
+  greetingMorning:'בוקר טוב{n} ☀️', greetingAfternoon:'צהריים טובים{n} 👋', greetingEvening:'ערב טוב{n} 🌆', greetingNeutral:'היי{n} 👋',
   listsTitle:'הרשימות שלי', listsOpenTitle:'פעילות', listsClosedTitle:'היסטוריה',
   listsEmpty:'אין עדיין רשימות פעילות. ליצור אחת?', newListTitle:'רשימה חדשה', newListName:'שם הרשימה (לדוגמה: קניות לשבת)',
   newListGo:'ליצור ולפתוח', needListName:'צריך לתת שם לרשימה',
@@ -548,6 +567,9 @@ en: {
   tripClosed:'✅ List closed', boughtHeader:'Collected', notBoughtHeader:'Still needed',
   homeSub:'All of your household\'s shared lists, in one place.',
   homeLists:'My lists', homeInvite:'Invite a family member', homeSwitch:'Switch household',
+  homeListsHeading:'Active lists', homeActivityHeading:'Recent activity', homeListsMore:'All lists →',
+  homeMembers:'Household', itemsLeft:'{n} items left', allCollected:'All collected ✅',
+  greetingMorning:'Good morning{n} ☀️', greetingAfternoon:'Good afternoon{n} 👋', greetingEvening:'Good evening{n} 🌆', greetingNeutral:'Hey{n} 👋',
   listsTitle:'My lists', listsOpenTitle:'Active', listsClosedTitle:'History',
   listsEmpty:'No active lists yet. Create one?', newListTitle:'New list', newListName:'List name (e.g. Saturday shopping)',
   newListGo:'Create and open', needListName:'Give the list a name',
@@ -853,10 +875,12 @@ function paintStrings(){
   $('hh-join').textContent = t('join');
   $('trip-label').textContent = t('tripActive');
   $('trip-close').textContent = t('tripClose');
-  $('home-sub').textContent = t('homeSub');
-  $('home-lists-label').textContent = t('homeLists');
-  $('home-invite-label').textContent = t('homeInvite');
-  $('home-switch-label').textContent = t('homeSwitch');
+  $('home-lists-heading').textContent = t('homeListsHeading');
+  $('home-activity-heading').textContent = t('homeActivityHeading');
+  $('home-lists-more').textContent = t('homeListsMore');
+  $('home-lists-empty-text').textContent = t('listsEmpty');
+  $('home-lists-new-label').textContent = t('newListTitle');
+  $('home-members-label').textContent = t('homeMembers');
   $('lists-title').textContent = t('listsTitle');
   $('lists-open-title').textContent = t('listsOpenTitle');
   $('lists-closed-title').textContent = t('listsClosedTitle');
@@ -916,7 +940,29 @@ function formatActivity(a){
 }
 function activityRow(a){
   const {icon,text}=formatActivity(a);
-  return `<li class="activity-row"><span class="e">${icon}</span><span class="activity-text">${esc(text)}</span><span class="activity-time">${esc(fmtTime(a.created_at))}</span></li>`;
+  const tag=a.listName?` · ${esc(a.listName)}`:'';
+  return `<li class="activity-row"><span class="e">${icon}</span><span class="activity-text">${esc(text)}${tag}</span><span class="activity-time">${esc(fmtTime(a.created_at))}</span></li>`;
+}
+
+/* ---------- home dashboard: list previews with remaining counts, short cross-list activity feed ---------- */
+function renderHomeLists(previewLists, counts, hasMore){
+  const box=$('home-lists-preview');
+  box.innerHTML=(previewLists||[]).map(l=>{
+    const n=(counts&&counts[l.id])||0;
+    const meta=n?CS.t('itemsLeft').replace('{n}',n):CS.t('allCollected');
+    return `<li><button class="list-row" data-list="${l.id}">
+      <span class="e" style="font-size:1.3rem">🛒</span><span class="nm">${esc(l.name)}</span><span class="meta">${esc(meta)}</span>
+    </button></li>`;
+  }).join('');
+  $('home-lists-empty').hidden=!!(previewLists&&previewLists.length);
+  box.hidden=!(previewLists&&previewLists.length);
+  $('home-lists-more').hidden=!hasMore;
+}
+function renderHomeActivity(entries){
+  const section=$('home-activity-section');
+  if(!entries||!entries.length){ section.hidden=true; return; }
+  section.hidden=false;
+  $('home-activity-list').innerHTML=entries.map(activityRow).join('');
 }
 function renderActivity(entries){
   const box=$('activity-list');
@@ -1086,7 +1132,7 @@ $('lang-btn').addEventListener('click',()=>{ CS.setLang(CS.lang()==='he'?'en':'h
 Object.assign(window.CS,{
   $, esc, guess, openSheet, closeSheet, sheetHead, toast, toastAction, confirmSheet,
   setScreen, paintStrings, setAuthMode, renderMembers, renderGroups, renderLists, initials, personColor,
-  renderActivity, formatActivity,
+  renderActivity, formatActivity, renderHomeLists, renderHomeActivity,
   render(){ paintStrings(); if(window.CS.rerenderMain) window.CS.rerenderMain(); },
 });
 paintStrings(); // body.html's hardcoded defaults are Hebrew; an English-preferring first visit needs this to actually show English, not just flip direction

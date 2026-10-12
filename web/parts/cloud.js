@@ -205,11 +205,21 @@ async function listMyHouseholds(){
   return (data||[]).map(r=>({id:r.household_id,name:r.households&&r.households.name,role:r.role}));
 }
 let hhName='';
+function greetingText(){
+  const h=new Date().getHours();
+  const key = h>=5&&h<12 ? 'greetingMorning' : h>=12&&h<17 ? 'greetingAfternoon' : h>=17&&h<21 ? 'greetingEvening' : 'greetingNeutral';
+  const mine=members.find(m=>m.user_id===user.id);
+  const full=(mine&&mine.display_name)||(user.user_metadata&&user.user_metadata.full_name)||'';
+  const first=full.trim().split(' ')[0];
+  return CS.t(key).replace('{n}', first?(' '+first):'');
+}
 function goHome(){
   if(!household) return;
+  $('home-greeting').textContent=greetingText();
   $('home-hh-name').textContent=hhName;
   CS.renderMembers(members, 'home-members-strip');
   CS.setScreen('home');
+  fetchHomeData().catch(()=>{}); // best-effort dashboard content — the screen already works without it
 }
 function applyCachedHousehold(cache){
   household=cache.hhId; hhName=cache.hhName||''; role=cache.role; members=cache.members||[];
@@ -287,7 +297,6 @@ async function openHouseholdSwitcher(){
   $('sheet').querySelectorAll('[data-hh]').forEach(b=>b.onclick=async()=>{ closeSheet(); await loadHousehold(b.dataset.hh); });
   $('hh-new').onclick=()=>{ closeSheet(); CS.setScreen('onboard'); };
 }
-$('home-switch-btn').addEventListener('click',openHouseholdSwitcher);
 
 /* ---------- household members management ---------- */
 function drawMembersSheet(){
@@ -318,8 +327,10 @@ function drawMembersSheet(){
       ${removeBtn}
     </div>`;
   }).join('');
+  const inviteRow = (isOwner||role==='editor') ? `<button class="btn wide" id="members-invite-btn">➕ ${esc(t('homeInvite'))}</button>` : '';
   const deleteHhRow = isOwner ? `<button class="btn danger wide" id="delete-household-btn">${esc(t('deleteHousehold'))}</button>` : '';
-  openSheet(sheetHead(t('membersTitle'))+`<div class="card">${rows}${deleteHhRow}</div>`);
+  openSheet(sheetHead(t('membersTitle'))+`<div class="card">${inviteRow}${rows}${deleteHhRow}</div>`);
+  if(inviteRow) $('members-invite-btn').onclick=()=>{ closeSheet(); openInviteSheet(); };
   if(isOwner) $('delete-household-btn').onclick=deleteHousehold;
   $('sheet').querySelectorAll('[data-transfer-owner]').forEach(b=>b.onclick=async()=>{
     const uid=b.dataset.transferOwner;
@@ -460,7 +471,28 @@ async function openListsPage(){
 }
 $('lists-back').addEventListener('click',goHome);
 $('list-back').addEventListener('click',openListsPage);
-$('home-lists-btn').addEventListener('click',openListsPage);
+$('home-lists-more').addEventListener('click',openListsPage);
+$('home-lists-empty-btn').addEventListener('click',openNewListSheet);
+
+/* ---------- home dashboard: open-list previews with remaining counts + a short cross-list activity feed ---------- */
+async function fetchHomeData(){
+  await fetchLists();
+  const openLists=lists.filter(l=>l.status==='open');
+  const preview=openLists.slice(0,4);
+  let counts={};
+  if(preview.length){
+    const {data}=await sb.from('list_items').select('list_id,status').eq('household_id',household).in('status',['active','pending']);
+    (data||[]).forEach(r=>{ counts[r.list_id]=(counts[r.list_id]||0)+1; });
+  }
+  CS.renderHomeLists(preview, counts, openLists.length>preview.length);
+  const {data:actData}=await sb.from('list_activity').select('*').eq('household_id',household).order('created_at',{ascending:false}).limit(5);
+  CS.renderHomeActivity((actData||[]).map(decorateHomeActivity));
+}
+function decorateHomeActivity(a){
+  const base=decorateActivity(a);
+  const l=lists.find(x=>x.id===a.list_id);
+  return {...base, listName:l?l.name:''};
+}
 
 function openNewListSheet(){
   const t=CS.t;
@@ -662,7 +694,6 @@ function openInviteSheet(){
   }
   draw();
 }
-$('home-invite-btn').addEventListener('click',openInviteSheet);
 
 /* ---------- items ---------- */
 function decorate(list){

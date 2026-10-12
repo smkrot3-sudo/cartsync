@@ -124,10 +124,12 @@ function paintStrings(){
   $('hh-join').textContent = t('join');
   $('trip-label').textContent = t('tripActive');
   $('trip-close').textContent = t('tripClose');
-  $('home-sub').textContent = t('homeSub');
-  $('home-lists-label').textContent = t('homeLists');
-  $('home-invite-label').textContent = t('homeInvite');
-  $('home-switch-label').textContent = t('homeSwitch');
+  $('home-lists-heading').textContent = t('homeListsHeading');
+  $('home-activity-heading').textContent = t('homeActivityHeading');
+  $('home-lists-more').textContent = t('homeListsMore');
+  $('home-lists-empty-text').textContent = t('listsEmpty');
+  $('home-lists-new-label').textContent = t('newListTitle');
+  $('home-members-label').textContent = t('homeMembers');
   $('lists-title').textContent = t('listsTitle');
   $('lists-open-title').textContent = t('listsOpenTitle');
   $('lists-closed-title').textContent = t('listsClosedTitle');
@@ -187,7 +189,29 @@ function formatActivity(a){
 }
 function activityRow(a){
   const {icon,text}=formatActivity(a);
-  return `<li class="activity-row"><span class="e">${icon}</span><span class="activity-text">${esc(text)}</span><span class="activity-time">${esc(fmtTime(a.created_at))}</span></li>`;
+  const tag=a.listName?` · ${esc(a.listName)}`:'';
+  return `<li class="activity-row"><span class="e">${icon}</span><span class="activity-text">${esc(text)}${tag}</span><span class="activity-time">${esc(fmtTime(a.created_at))}</span></li>`;
+}
+
+/* ---------- home dashboard: list previews with remaining counts, short cross-list activity feed ---------- */
+function renderHomeLists(previewLists, counts, hasMore){
+  const box=$('home-lists-preview');
+  box.innerHTML=(previewLists||[]).map(l=>{
+    const n=(counts&&counts[l.id])||0;
+    const meta=n?CS.t('itemsLeft').replace('{n}',n):CS.t('allCollected');
+    return `<li><button class="list-row" data-list="${l.id}">
+      <span class="e" style="font-size:1.3rem">🛒</span><span class="nm">${esc(l.name)}</span><span class="meta">${esc(meta)}</span>
+    </button></li>`;
+  }).join('');
+  $('home-lists-empty').hidden=!!(previewLists&&previewLists.length);
+  box.hidden=!(previewLists&&previewLists.length);
+  $('home-lists-more').hidden=!hasMore;
+}
+function renderHomeActivity(entries){
+  const section=$('home-activity-section');
+  if(!entries||!entries.length){ section.hidden=true; return; }
+  section.hidden=false;
+  $('home-activity-list').innerHTML=entries.map(activityRow).join('');
 }
 function renderActivity(entries){
   const box=$('activity-list');
@@ -357,7 +381,7 @@ $('lang-btn').addEventListener('click',()=>{ CS.setLang(CS.lang()==='he'?'en':'h
 Object.assign(window.CS,{
   $, esc, guess, openSheet, closeSheet, sheetHead, toast, toastAction, confirmSheet,
   setScreen, paintStrings, setAuthMode, renderMembers, renderGroups, renderLists, initials, personColor,
-  renderActivity, formatActivity,
+  renderActivity, formatActivity, renderHomeLists, renderHomeActivity,
   render(){ paintStrings(); if(window.CS.rerenderMain) window.CS.rerenderMain(); },
 });
 paintStrings(); // body.html's hardcoded defaults are Hebrew; an English-preferring first visit needs this to actually show English, not just flip direction
