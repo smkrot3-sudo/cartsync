@@ -57,7 +57,7 @@ function queueOp(op,id,patch){
   queue.push({op,id,patch});
   saveQueue();
 }
-async function flushQueue(){
+async function flushQueue(opts){
   if(!navigator.onLine || flushing || !queue.length) return;
   flushing=true;
   const idMap={};
@@ -69,6 +69,8 @@ async function flushQueue(){
         const {data,error}=await sb.from('list_items').insert(op.row).select().single();
         if(error) throw error;
         idMap[op.id]=data.id;
+        const idx=items.findIndex(i=>i.id===op.id);
+        if(idx>-1) items[idx]=data; // swap the temp id for the real row locally — no refetch needed for this
       }else if(op.op==='toggle'||op.op==='update'){
         if(isTemp(realId)) throw new Error('unresolved temp id');
         const {error}=await sb.from('list_items').update(op.patch).eq('id',realId);
@@ -80,7 +82,10 @@ async function flushQueue(){
     queue.shift(); saveQueue();
   }
   flushing=false;
-  if(listId) await fetchItems(); // reconcile with server truth, replacing any leftover temp ids
+  // a full resync (reconnecting after being offline, or an explicit "sync now") should catch up with
+  // whatever other members changed meanwhile; a routine flush after one local add doesn't need that round trip
+  if(opts && opts.resync && listId) await fetchItems();
+  else paintItems();
 }
 
 /* ---------- auth ---------- */
@@ -138,7 +143,7 @@ function openAccountSheet(){
   $('theme-pick').querySelectorAll('[data-theme-opt]').forEach(b=>b.onclick=()=>{ CS.setTheme(b.dataset.themeOpt); openAccountSheet(); });
   $('font-pick').querySelectorAll('[data-font-opt]').forEach(b=>b.onclick=()=>{ CS.setFontSize(b.dataset.fontOpt); openAccountSheet(); });
   $('acct-profile').onclick=openProfileSheet;
-  $('acct-sync').onclick=async()=>{ await flushQueue(); await refreshHousehold(); toast('🔄'); };
+  $('acct-sync').onclick=async()=>{ await flushQueue({resync:true}); await refreshHousehold(); toast('🔄'); };
   $('acct-switch').onclick=()=>{ closeSheet(); openHouseholdSwitcher(); };
   $('acct-signout').onclick=async()=>{ await sb.auth.signOut(); closeSheet(); };
 }
@@ -208,7 +213,10 @@ async function createHousehold(){
   const name=$('hh-name').value.trim();
   const msg=$('hh-msg');
   if(!name){ msg.className='msg err'; msg.textContent=CS.t('needHhName'); msg.hidden=false; return; }
+  if($('hh-create').disabled) return;
+  $('hh-create').disabled=true;
   const {data,error}=await sb.rpc('create_household',{p_name:name});
+  $('hh-create').disabled=false;
   if(error){ msg.className='msg err'; msg.textContent=CS.authErr(error); msg.hidden=false; return; }
   await loadHousehold(data);
 }
@@ -216,7 +224,10 @@ async function joinHousehold(){
   const code=$('hh-code').value.trim();
   const msg=$('hh-msg');
   if(!code){ msg.className='msg err'; msg.textContent=CS.t('needCode'); msg.hidden=false; return; }
+  if($('hh-join').disabled) return;
+  $('hh-join').disabled=true;
   const {data,error}=await sb.rpc('accept_invite',{p_code:code});
+  $('hh-join').disabled=false;
   if(error){ msg.className='msg err'; msg.textContent=CS.t('errInvite'); msg.hidden=false; return; }
   await loadHousehold(data);
 }
@@ -394,7 +405,10 @@ function openNewListSheet(){
   const go=async()=>{
     const name=$('new-list-name').value.trim();
     if(!name){ const m=$('new-list-msg'); m.textContent=t('needListName'); m.hidden=false; return; }
+    const btn=$('new-list-go'); if(btn.disabled) return;
+    btn.disabled=true;
     const {data,error}=await sb.rpc('create_shopping_list',{p_household:household,p_name:name});
+    btn.disabled=false;
     if(error){ const m=$('new-list-msg'); m.textContent=CS.authErr(error); m.hidden=false; return; }
     closeSheet();
     await openList(data);
@@ -435,12 +449,13 @@ async function openList(id, silent){
   $('trip-bar').hidden=listStatus!=='open';
   $('view-main').classList.toggle('readonly',listStatus!=='open');
   searchQuery=''; $('search-input').value='';
+  items=[]; paintItems(); // clear the previous list's items so they don't flash under this list's name while loading
   CS.setScreen('main');
   queue=loadQueueFor(listId);
   await fetchItems();
   cacheSnapshot();
   subscribeListRealtime();
-  if(queue.length) flushQueue();
+  if(queue.length) flushQueue({resync:true});
   return true;
 }
 
@@ -535,24 +550,28 @@ async function shareTripSummary(){
 $('list-share').addEventListener('click',shareTripSummary);
 
 /* ---------- invites ---------- */
+let inviteRole='editor';
 function openInviteSheet(){
   const t=CS.t;
-  let pickedRole='editor';
-  const draw=()=>openSheet(sheetHead(t('invite'))+`<div class="card">
+  inviteRole='editor';
+  const draw=()=>{
+    openSheet(sheetHead(t('invite'))+`<div class="card">
       <p class="sub">${esc(t('inviteSub'))}</p>
       <p>${esc(t('inviteRole'))}</p>
       <div class="role-pick">
-        ${['editor','requester','viewer'].map(r=>`<button data-role="${r}" class="${r===pickedRole?'active':''}">${esc(t('role'+r[0].toUpperCase()+r.slice(1)))}</button>`).join('')}
+        ${['editor','requester','viewer'].map(r=>`<button data-role="${r}" class="${r===inviteRole?'active':''}" type="button">${esc(t('role'+r[0].toUpperCase()+r.slice(1)))}</button>`).join('')}
       </div>
       <button class="btn wide" id="inv-go">${esc(t('invite'))}</button>
       <div id="inv-code-box"></div>
     </div>`);
-  draw();
-  $('sheet').addEventListener('click',e=>{
-    const rb=e.target.closest('[data-role]'); if(rb){ pickedRole=rb.dataset.role; draw(); }
-  });
-  document.getElementById('inv-go').onclick=async()=>{
-    const {data,error}=await sb.rpc('create_invite',{p_household:household,p_role:pickedRole});
+    $('sheet').querySelectorAll('[data-role]').forEach(rb=>rb.onclick=()=>{ inviteRole=rb.dataset.role; draw(); });
+    $('inv-go').onclick=go;
+  };
+  async function go(){
+    const btn=$('inv-go'); if(btn.disabled) return;
+    btn.disabled=true;
+    const {data,error}=await sb.rpc('create_invite',{p_household:household,p_role:inviteRole});
+    btn.disabled=false;
     if(error){ toast(CS.authErr(error)); return; }
     const joinUrl=(window.CS_SITE||location.origin+location.pathname.replace(/[^/]*$/,''))+'?join='+data;
     document.getElementById('inv-code-box').innerHTML=`<div class="invite-code">${esc(data)}</div>
@@ -570,7 +589,8 @@ function openInviteSheet(){
       navigator.clipboard&&navigator.clipboard.writeText(data).catch(()=>{});
       toast(t('inviteCopied'));
     };
-  };
+  }
+  draw();
 }
 $('home-invite-btn').addEventListener('click',openInviteSheet);
 
@@ -688,14 +708,14 @@ async function reorderItems(ids){
 async function toggleItem(id){
   if(listStatus!=='open') return; // a closed list is history, not editable
   const it=items.find(i=>i.id===id); if(!it) return;
+  const prev={status:it.status,checked_by:it.checked_by,checked_at:it.checked_at};
   const patch = it.status==='checked'
     ? {status:'active',checked_by:null,checked_at:null}
     : {status:'checked',checked_by:user.id,checked_at:new Date().toISOString()};
-  if(!online || isTemp(id)){
-    Object.assign(it,patch); queueOp('toggle',id,patch); paintItems();
-    return;
-  }
-  await sb.from('list_items').update(patch).eq('id',id);
+  Object.assign(it,patch); paintItems(); // instant feedback — a checkbox tap shouldn't wait on a round trip
+  if(!online || isTemp(id)){ queueOp('toggle',id,patch); return; }
+  const {error}=await sb.from('list_items').update(patch).eq('id',id);
+  if(error){ Object.assign(it,prev); paintItems(); toast(CS.authErr(error)); }
 }
 let pendingDeletes={};
 async function delItem(id){
@@ -731,7 +751,8 @@ function openEditSheet(id){
     const patch={text, qty:qty||null};
     const g=CS.guess(text);
     if(g.cat!=='other'){ patch.category=g.cat; patch.emoji=g.emoji; } // keep the current category when the edited text doesn't match anything specific
-    if(!online || isTemp(id)){ Object.assign(it,patch); queueOp('update',id,patch); paintItems(); return; }
+    Object.assign(it,patch); paintItems(); // instant feedback, same as the rest of the item actions
+    if(!online || isTemp(id)){ queueOp('update',id,patch); return; }
     await sb.from('list_items').update(patch).eq('id',id);
   };
   $('edit-save').onclick=save;
@@ -739,11 +760,18 @@ function openEditSheet(id){
 }
 async function approveItem(id){
   if(!online){ toast(CS.t('offline')); return; }
-  await sb.from('list_items').update({status:'active'}).eq('id',id); toast(CS.t('itemApproved'));
+  const it=items.find(i=>i.id===id);
+  if(it){ it.status='active'; paintItems(); }
+  const {error}=await sb.from('list_items').update({status:'active'}).eq('id',id);
+  if(error){ if(it) it.status='pending'; paintItems(); toast(CS.authErr(error)); return; }
+  toast(CS.t('itemApproved'));
 }
 async function rejectItem(id){
   if(!online){ toast(CS.t('offline')); return; }
-  await sb.from('list_items').delete().eq('id',id);
+  const it=items.find(i=>i.id===id);
+  items=items.filter(i=>i.id!==id); paintItems();
+  const {error}=await sb.from('list_items').delete().eq('id',id);
+  if(error){ if(it) items.push(it); paintItems(); toast(CS.authErr(error)); }
 }
 window.CS.on={toggle:toggleItem, reorder:reorderItems};
 
@@ -803,7 +831,7 @@ function subscribeListRealtime(){
     })
     .subscribe();
 }
-addEventListener('online',()=>{ online=true; showOfflineNote(false); flushQueue(); });
+addEventListener('online',()=>{ online=true; showOfflineNote(false); flushQueue({resync:true}); });
 addEventListener('offline',()=>{ online=false; showOfflineNote(true); });
 
 /* ---------- boot ---------- */
