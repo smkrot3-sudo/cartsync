@@ -74,6 +74,9 @@ function setScreen(name){
 }
 
 /* ---------- i18n paint ---------- */
+// placeholder text disappears on input and isn't a reliable accessible name on its own — every
+// field that relies on it for a label gets the same string as aria-label too.
+function field(id,text){ const el=$(id); if(!el) return; el.placeholder=text; el.setAttribute('aria-label',text); }
 function paintStrings(){
   const t = CS.t;
   $('brand-name').textContent = t('appName');
@@ -81,17 +84,17 @@ function paintStrings(){
   $('auth-sub').textContent = t('authSub');
   $('tab-login').textContent = t('login');
   $('tab-signup').textContent = t('signup');
-  $('au-email').placeholder = t('email');
-  $('au-pass').placeholder = t('password');
-  $('au-name').placeholder = t('name');
+  field('au-email', t('email'));
+  field('au-pass', t('password'));
+  field('au-name', t('name'));
   $('au-forgot').textContent = t('forgot');
   $('onboard-title').textContent = t('onboardTitle');
   $('onboard-sub').textContent = t('onboardSub');
   $('create-h').textContent = t('createHh');
-  $('hh-name').placeholder = t('hhNamePh');
+  field('hh-name', t('hhNamePh'));
   $('hh-create').textContent = t('create');
   $('join-h').textContent = t('joinHh');
-  $('hh-code').placeholder = t('codePh');
+  field('hh-code', t('codePh'));
   $('hh-join').textContent = t('join');
   $('trip-label').textContent = t('tripActive');
   $('trip-close').textContent = t('tripClose');
@@ -103,9 +106,9 @@ function paintStrings(){
   $('lists-open-title').textContent = t('listsOpenTitle');
   $('lists-closed-title').textContent = t('listsClosedTitle');
   $('lists-empty-text').textContent = t('listsEmpty');
-  $('search-input').placeholder = t('searchPh');
-  if($('item-input')) $('item-input').placeholder = t('itemPh'); // only exists while the add sheet is open
-  if($('item-qty')) $('item-qty').placeholder = t('qtyPh');
+  field('search-input', t('searchPh'));
+  if($('item-input')) field('item-input', t('itemPh')); // only exists while the add sheet is open
+  if($('item-qty')) field('item-qty', t('qtyPh'));
   if($('item-add')) $('item-add').textContent = t('add');
   $('pending-title').textContent = t('pendingTitle');
   $('empty-text').textContent = t('emptyList');
@@ -185,7 +188,7 @@ function itemRow(item, mode, draggable){
       <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
     <span class="emo e" data-cat="${esc(item.category||'other')}">${esc(item.emoji||cat.emoji)}</span>
-    <span class="t" data-action="edit" data-id="${item.id}"><span class="t-text">${esc(item.text)}</span>${addedWho}${checkedWho}</span>
+    <button class="t" data-action="edit" data-id="${item.id}" aria-label="${esc(CS.t('editItem'))}"><span class="t-text">${esc(item.text)}</span>${addedWho}${checkedWho}</button>
     ${qty}
     <button class="del" data-action="del" data-id="${item.id}" aria-label="delete">🗑️</button>
   </li>`;
@@ -284,4 +287,5 @@ Object.assign(window.CS,{
   setScreen, paintStrings, setAuthMode, renderMembers, renderGroups, renderLists, initials, personColor,
   render(){ paintStrings(); if(window.CS.rerenderMain) window.CS.rerenderMain(); },
 });
+paintStrings(); // body.html's hardcoded defaults are Hebrew; an English-preferring first visit needs this to actually show English, not just flip direction
 })();

@@ -60,9 +60,10 @@
 .item .check svg{opacity:0;transform:scale(.5);transition:all .2s cubic-bezier(.3,1.6,.5,1);width:14px;height:14px;stroke:#fff;stroke-width:4}
 .item.done .check{border-color:var(--ok);background:var(--ok)}
 .item.done .check svg{opacity:1;transform:scale(1)}
-.item .t{flex:1;min-width:0;overflow-wrap:anywhere;font-size:1rem;cursor:pointer}
+.item .t{flex:1;min-width:0;overflow-wrap:anywhere;font-size:1rem;cursor:pointer;border:0;background:transparent;color:inherit;text-align:start;padding:0;font-family:inherit}
+.item .t:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
 .search-input{width:100%;border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:10px 14px;margin-bottom:12px}
-.search-input:focus{outline:none;border-color:var(--accent)}
+.search-input:focus-visible{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 .item.done .t{color:var(--muted)}
 .item.done .t-text{text-decoration:line-through;text-decoration-style:wavy;text-decoration-color:var(--ok);text-decoration-thickness:1.3px}
 .item .del{border:0;background:transparent;color:var(--muted);width:28px;height:28px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:.95rem}
@@ -79,6 +80,11 @@
 /* ---------- floating add button ---------- */
 .fab{position:fixed;inset-inline-end:18px;bottom:calc(88px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);font-size:1.9rem;line-height:1;box-shadow:0 10px 24px rgba(18,26,51,.35);z-index:30;display:grid;place-items:center}
 .fab:active{transform:scale(.94)}
+
+/* a closed list is history: no adding, checking, editing or deleting */
+#view-main.readonly .fab{display:none}
+#view-main.readonly .item .check,#view-main.readonly .item .del,#view-main.readonly .item .t[data-action="edit"]{pointer-events:none;opacity:.55}
+#view-main.readonly .item .handle{display:none}
 
 .auth input[hidden]{display:none}
 .auth .actions-row{display:flex;justify-content:space-between;align-items:center}

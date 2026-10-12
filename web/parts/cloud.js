@@ -6,7 +6,7 @@ const $=CS.$, esc=CS.esc, toast=CS.toast, toastAction=CS.toastAction, openSheet=
 if(!window.supabase) return;
 const sb=supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'cartsync-auth'}});
 
-let user=null, household=null, role=null, members=[], membersById={}, listId=null, items=[], online=navigator.onLine, channel=null;
+let user=null, household=null, role=null, members=[], membersById={}, listId=null, listStatus='open', items=[], online=navigator.onLine, channel=null;
 let queue=[], flushing=false;
 
 /* ---------- invite links: ?join=CODE, persisted across the email-confirmation round trip ---------- */
@@ -388,7 +388,9 @@ async function openList(id, silent){
   listId=id;
   try{ localStorage.setItem('cs-last-list-'+household,id); }catch(e){}
   $('list-name-lbl').textContent=lrow.name;
-  $('trip-bar').hidden=lrow.status!=='open';
+  listStatus=lrow.status;
+  $('trip-bar').hidden=listStatus!=='open';
+  $('view-main').classList.toggle('readonly',listStatus!=='open');
   searchQuery=''; $('search-input').value='';
   CS.setScreen('main');
   queue=loadQueueFor(listId);
@@ -525,6 +527,7 @@ async function reorderItems(ids){
 }
 
 async function toggleItem(id){
+  if(listStatus!=='open') return; // a closed list is history, not editable
   const it=items.find(i=>i.id===id); if(!it) return;
   const patch = it.status==='checked'
     ? {status:'active',checked_by:null,checked_at:null}
@@ -537,6 +540,7 @@ async function toggleItem(id){
 }
 let pendingDeletes={};
 async function delItem(id){
+  if(listStatus!=='open') return;
   const it=items.find(i=>i.id===id); if(!it) return;
   items=items.filter(i=>i.id!==id); paintItems();
   if(!online || isTemp(id)){ queueOp('del',id); return; } // no undo window offline: it's already safely queued
@@ -552,6 +556,7 @@ async function delItem(id){
   });
 }
 function openEditSheet(id){
+  if(listStatus!=='open') return;
   const it=items.find(i=>i.id===id); if(!it) return;
   const t=CS.t;
   openSheet(sheetHead(t('editItem'))+`<div class="card">
