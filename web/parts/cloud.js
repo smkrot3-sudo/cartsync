@@ -677,8 +677,13 @@ function openInviteSheet(){
     if(error){ toast(CS.authErr(error)); return; }
     const joinUrl=(window.CS_SITE||location.origin+location.pathname.replace(/[^/]*$/,''))+'?join='+data;
     document.getElementById('inv-code-box').innerHTML=`<div class="invite-code">${esc(data)}</div>
-      <button class="btn wide" id="inv-share">${esc(t('inviteShare'))}</button>
+      <button class="btn wide" id="inv-whatsapp">${esc(t('inviteWhatsapp'))}</button>
+      <button class="btn ghost wide" id="inv-share">${esc(t('inviteShare'))}</button>
       <button class="btn ghost wide" id="inv-copy">📋 ${esc(t('inviteCopy'))}</button>`;
+    document.getElementById('inv-whatsapp').onclick=()=>{
+      const text=t('inviteShareText')+'\n'+joinUrl;
+      window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');
+    };
     document.getElementById('inv-share').onclick=async()=>{
       if(navigator.share){
         try{ await navigator.share({title:CS.t('appName'),text:t('inviteShareText'),url:joinUrl}); }catch(e){}
