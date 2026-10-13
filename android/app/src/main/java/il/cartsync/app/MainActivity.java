@@ -12,7 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
     private static final String SITE = "https://smkrot3-sudo.github.io/cartsync/";
+    private static final long STALE_AFTER_MS = 3 * 60 * 1000; // reload if the app sat in the background longer than this
     private WebView webView;
+    private long pausedAt = 0;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -45,6 +47,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         webView.saveState(outState);
+    }
+
+    // onCreate's loadUrl() only ever runs once — when Android keeps the process alive across
+    // backgrounding (the common case), reopening the app just resumes the same already-loaded
+    // page forever, with no new network request and so no way for a fix or a redesign to reach
+    // it. Reload for real once the app has been away long enough that staying fresh matters more
+    // than preserving an in-progress scroll position or an open sheet.
+    @Override
+    protected void onPause() {
+        super.onPause();
+        pausedAt = System.currentTimeMillis();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (pausedAt > 0 && System.currentTimeMillis() - pausedAt > STALE_AFTER_MS) {
+            webView.reload();
+        }
     }
 
     private void js(final String code) {
