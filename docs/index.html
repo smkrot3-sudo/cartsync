@@ -472,7 +472,7 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
   </footer>
 
 </div>
-<script>window.CS_SITE="https://smkrot3-sudo.github.io/cartsync/";window.CS_BUILD=1791876172239;</script>
+<script>window.CS_SITE="https://smkrot3-sudo.github.io/cartsync/";window.CS_BUILD=1791878239477;</script>
 <script>
 /* Bilingual strings + RTL/LTR switching. Pure UI text lives here; app.js reads it via CS.t(key). */
 const STRINGS = {
@@ -1846,13 +1846,8 @@ function openInviteSheet(){
     if(error){ toast(CS.authErr(error)); return; }
     const joinUrl=(window.CS_SITE||location.origin+location.pathname.replace(/[^/]*$/,''))+'?join='+data;
     document.getElementById('inv-code-box').innerHTML=`<div class="invite-code">${esc(data)}</div>
-      <button class="btn wide" id="inv-whatsapp">${esc(t('inviteWhatsapp'))}</button>
-      <button class="btn ghost wide" id="inv-share">${esc(t('inviteShare'))}</button>
+      <button class="btn wide" id="inv-share">${esc(t('inviteShare'))}</button>
       <button class="btn ghost wide" id="inv-copy">📋 ${esc(t('inviteCopy'))}</button>`;
-    document.getElementById('inv-whatsapp').onclick=()=>{
-      const text=t('inviteShareText')+'\n'+joinUrl;
-      window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');
-    };
     document.getElementById('inv-share').onclick=async()=>{
       if(navigator.share){
         try{ await navigator.share({title:CS.t('appName'),text:t('inviteShareText'),url:joinUrl}); }catch(e){}
