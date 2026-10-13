@@ -805,7 +805,7 @@ function openAddSheet(){
   forceAddDup=false;
   openSheet(sheetHead(t('add'))+`<div class="card">
     <input id="item-input" placeholder="${esc(t('itemPh'))}" autocomplete="off">
-    <input id="item-qty" class="qty-input" placeholder="${esc(t('qtyPh'))}" autocomplete="off">
+    <input id="item-qty" class="qty-input" placeholder="${esc(t('qtyPh'))}" autocomplete="off" inputmode="numeric">
     <div id="item-dup-msg" class="msg" hidden></div>
     <button class="btn wide" id="item-add">${esc(t('add'))}</button>
   </div>`);
@@ -857,7 +857,7 @@ function openEditSheet(id){
   const t=CS.t;
   openSheet(sheetHead(t('editItem'))+`<div class="card">
     <input id="edit-text" value="${esc(it.text)}">
-    <input id="edit-qty" class="qty-input" placeholder="${esc(t('qtyPh'))}" value="${esc(it.qty||'')}">
+    <input id="edit-qty" class="qty-input" placeholder="${esc(t('qtyPh'))}" value="${esc(it.qty||'')}" inputmode="numeric">
     <button class="btn wide" id="edit-save">${esc(t('editSave'))}</button>
   </div>`);
   $('edit-text').focus();

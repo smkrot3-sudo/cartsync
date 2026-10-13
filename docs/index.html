@@ -482,7 +482,7 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
   </footer>
 
 </div>
-<script>window.CS_SITE="https://smkrot3-sudo.github.io/cartsync/";window.CS_BUILD=1791881376623;</script>
+<script>window.CS_SITE="https://smkrot3-sudo.github.io/cartsync/";window.CS_BUILD=1791881909960;</script>
 <script>
 /* Bilingual strings + RTL/LTR switching. Pure UI text lives here; app.js reads it via CS.t(key). */
 const STRINGS = {
@@ -496,7 +496,7 @@ he: {
   onboardTitle:'למי קונים?', onboardSub:'יוצרים משק בית, או מצטרפים לאחד קיים עם קוד הזמנה.',
   createHh:'משק בית חדש', hhNamePh:'לדוגמה: הבית שלנו', create:'ליצור',
   joinHh:'יש לי קוד הזמנה', codePh:'קוד הזמנה', join:'להצטרף',
-  itemPh:'להוסיף מוצר…', qtyPh:'כמות', add:'הוספה', addToListFab:'הוסף לרשימה',
+  itemPh:'שם המוצר', qtyPh:'כמות', add:'הוספה', addToListFab:'הוסף לרשימה',
   pendingTitle:'בקשות לאישור', boughtTitle:'נקנה', emptyList:'הרשימה ריקה. מה חסר בבית?',
   activityTitle:'היסטוריית פעולות', activityEmpty:'אין עדיין פעולות ברשימה',
   actAdded:'{n} הוסיף/ה: {t}', actRequested:'{n} ביקש/ה להוסיף: {t}', actApproved:'{n} אישר/ה בקשה: {t}',
@@ -571,7 +571,7 @@ en: {
   onboardTitle:'Shopping for who?', onboardSub:'Create a household, or join one with an invite code.',
   createHh:'New household', hhNamePh:'e.g. Our home', create:'Create',
   joinHh:'I have an invite code', codePh:'Invite code', join:'Join',
-  itemPh:'Add an item…', qtyPh:'Qty', add:'Add', addToListFab:'Add to list',
+  itemPh:'Product name', qtyPh:'Qty', add:'Add', addToListFab:'Add to list',
   pendingTitle:'Needs approval', boughtTitle:'Bought', emptyList:'The list is empty. What are we out of?',
   activityTitle:'Activity history', activityEmpty:'No activity on this list yet',
   actAdded:'{n} added: {t}', actRequested:'{n} requested to add: {t}', actApproved:'{n} approved: {t}',
@@ -1987,7 +1987,7 @@ function openAddSheet(){
   forceAddDup=false;
   openSheet(sheetHead(t('add'))+`<div class="card">
     <input id="item-input" placeholder="${esc(t('itemPh'))}" autocomplete="off">
-    <input id="item-qty" class="qty-input" placeholder="${esc(t('qtyPh'))}" autocomplete="off">
+    <input id="item-qty" class="qty-input" placeholder="${esc(t('qtyPh'))}" autocomplete="off" inputmode="numeric">
     <div id="item-dup-msg" class="msg" hidden></div>
     <button class="btn wide" id="item-add">${esc(t('add'))}</button>
   </div>`);
@@ -2039,7 +2039,7 @@ function openEditSheet(id){
   const t=CS.t;
   openSheet(sheetHead(t('editItem'))+`<div class="card">
     <input id="edit-text" value="${esc(it.text)}">
-    <input id="edit-qty" class="qty-input" placeholder="${esc(t('qtyPh'))}" value="${esc(it.qty||'')}">
+    <input id="edit-qty" class="qty-input" placeholder="${esc(t('qtyPh'))}" value="${esc(it.qty||'')}" inputmode="numeric">
     <button class="btn wide" id="edit-save">${esc(t('editSave'))}</button>
   </div>`);
   $('edit-text').focus();
