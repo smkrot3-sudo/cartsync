@@ -202,6 +202,8 @@ button:disabled{opacity:.6;cursor:default}
 .avatar{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:.85rem;font-weight:bold;color:#fff;border:2px solid var(--surface);margin-inline-start:-8px;flex:none}
 .avatar:first-child{margin-inline-start:0}
 .avatar.big{width:44px;height:44px;font-size:1.05rem;margin:0}
+.avatar-more{background:var(--muted);font-size:.72rem}
+.hhbar .avatar-more{background:rgba(255,255,255,.22)}
 .role-chip{font-size:.75rem;padding:2px 9px;border-radius:999px;background:var(--soft);color:var(--muted)}
 .role-chip.owner{background:var(--gold-soft);color:var(--gold)}
 .role-chip.editor{background:var(--ok-soft);color:var(--ok)}
@@ -920,9 +922,14 @@ function personColor(uid){
   for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))%360;
   return `hsl(${h} 62% 46%)`;
 }
-function renderMembers(members, targetId){
-  const html = (members||[]).slice(0,5).map(m=>
+function renderMembers(members, targetId, limit){
+  // the hhbar is tight on space (back + title + avatars + actions all in one row) — cap hard there;
+  // give the Home strip room to show more since it has a whole line to itself
+  const all=members||[];
+  const shown=all.slice(0,limit||2);
+  let html = shown.map(m=>
     `<span class="avatar" style="background:${personColor(m.user_id)}" title="${esc(m.display_name||m.email||'')}">${esc(initials(m.display_name||m.email))}</span>`).join('');
+  if(all.length>shown.length) html += `<span class="avatar avatar-more">+${all.length-shown.length}</span>`;
   $(targetId||'top-hhbar-members').innerHTML = html;
 }
 function personName(name){

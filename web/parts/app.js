@@ -151,9 +151,14 @@ function personColor(uid){
   for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))%360;
   return `hsl(${h} 62% 46%)`;
 }
-function renderMembers(members, targetId){
-  const html = (members||[]).slice(0,5).map(m=>
+function renderMembers(members, targetId, limit){
+  // the hhbar is tight on space (back + title + avatars + actions all in one row) — cap hard there;
+  // give the Home strip room to show more since it has a whole line to itself
+  const all=members||[];
+  const shown=all.slice(0,limit||2);
+  let html = shown.map(m=>
     `<span class="avatar" style="background:${personColor(m.user_id)}" title="${esc(m.display_name||m.email||'')}">${esc(initials(m.display_name||m.email))}</span>`).join('');
+  if(all.length>shown.length) html += `<span class="avatar avatar-more">+${all.length-shown.length}</span>`;
   $(targetId||'top-hhbar-members').innerHTML = html;
 }
 function personName(name){

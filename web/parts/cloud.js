@@ -237,7 +237,7 @@ function goHome(){
   if(!household) return;
   $('home-greeting').textContent=greetingText();
   $('home-hh-name').textContent=hhName;
-  CS.renderMembers(members, 'home-members-strip');
+  CS.renderMembers(members, 'home-members-strip', 5);
   setTopHhbar('none');
   CS.setScreen('home');
   fetchHomeData().catch(()=>{}); // best-effort dashboard content — the screen already works without it
@@ -400,7 +400,7 @@ function drawMembersSheet(){
     if(isSelf){ closeSheet(); toast(t('youLeft')); await onUser(user); return; }
     members=members.filter(x=>x.user_id!==uid);
     membersById=Object.fromEntries(members.map(x=>[x.user_id,x]));
-    CS.renderMembers(members,'home-members-strip'); CS.renderMembers(members);
+    CS.renderMembers(members,'home-members-strip',5); CS.renderMembers(members);
     toast(t('memberRemoved'));
     drawMembersSheet();
   });
@@ -436,7 +436,7 @@ function openEditNameSheet(){
     const {error}=await sb.from('household_members').update({display_name:name}).eq('household_id',household).eq('user_id',user.id);
     if(error){ toast(CS.authErr(error)); return; }
     if(mine) mine.display_name=name;
-    CS.renderMembers(members,'home-members-strip'); CS.renderMembers(members);
+    CS.renderMembers(members,'home-members-strip',5); CS.renderMembers(members);
     toast(t('nameUpdated'));
     drawMembersSheet();
   };

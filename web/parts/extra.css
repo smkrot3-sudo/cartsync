@@ -42,6 +42,8 @@
 .avatar{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:.85rem;font-weight:bold;color:#fff;border:2px solid var(--surface);margin-inline-start:-8px;flex:none}
 .avatar:first-child{margin-inline-start:0}
 .avatar.big{width:44px;height:44px;font-size:1.05rem;margin:0}
+.avatar-more{background:var(--muted);font-size:.72rem}
+.hhbar .avatar-more{background:rgba(255,255,255,.22)}
 .role-chip{font-size:.75rem;padding:2px 9px;border-radius:999px;background:var(--soft);color:var(--muted)}
 .role-chip.owner{background:var(--gold-soft);color:var(--gold)}
 .role-chip.editor{background:var(--ok-soft);color:var(--ok)}
