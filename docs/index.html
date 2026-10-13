@@ -472,7 +472,7 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
   </footer>
 
 </div>
-<script>window.CS_SITE="https://smkrot3-sudo.github.io/cartsync/";window.CS_BUILD=1791878239477;</script>
+<script>window.CS_SITE="https://smkrot3-sudo.github.io/cartsync/";window.CS_BUILD=1791878842389;</script>
 <script>
 /* Bilingual strings + RTL/LTR switching. Pure UI text lives here; app.js reads it via CS.t(key). */
 const STRINGS = {
@@ -494,7 +494,7 @@ he: {
   invite:'הזמנת חבר/ה', inviteSub:'כל מי שמקבל את הקוד או הקישור הזה יכול להצטרף תוך 7 ימים.',
   inviteRole:'הרשאה לחברים חדשים:', inviteCopy:'להעתיק קוד', inviteCopied:'📋 הועתק',
   inviteShare:'📤 שליחת קישור הזמנה', inviteShareText:'הצטרפו אלינו ב"קניות ביחד" כדי לנהל יחד את רשימת הקניות:',
-  inviteWhatsapp:'📱 שליחה בוואטסאפ',
+  inviteReadySub:'ההזמנה מוכנה. איך לשלוח אותה?',
   joinedViaLink:'✅ הצטרפת למשק הבית!',
   roleOwner:'ראש/ת משק בית', roleEditor:'עריכה מלאה', roleRequester:'בקשת מוצרים', roleViewer:'צפייה בלבד',
   members:'חברי משק הבית', signOut:'יציאה', deleteAccount:'מחיקת חשבון', syncNow:'לסנכרן עכשיו',
@@ -569,7 +569,7 @@ en: {
   invite:'Invite someone', inviteSub:'Anyone with this code or link can join within 7 days.',
   inviteRole:'Role for new members:', inviteCopy:'Copy code', inviteCopied:'📋 Copied',
   inviteShare:'📤 Share invite link', inviteShareText:'Join us on "CartSync" to manage our shopping list together:',
-  inviteWhatsapp:'📱 Share via WhatsApp',
+  inviteReadySub:'The invite is ready. How would you like to send it?',
   joinedViaLink:'✅ You joined the household!',
   roleOwner:'Household head', roleEditor:'Full editor', roleRequester:'Can request items', roleViewer:'View only',
   members:'Household members', signOut:'Sign out', deleteAccount:'Delete account', syncNow:'Sync now',
@@ -1821,6 +1821,17 @@ async function shareTripSummary(){
 $('list-share').addEventListener('click',shareTripSummary);
 
 /* ---------- invites ---------- */
+async function shareInvite(text){
+  if(window.CartApp && window.CartApp.shareText){
+    try{ window.CartApp.shareText(text); return; }catch(e){} // native Android share chooser — plain WebView has no navigator.share
+  }
+  if(navigator.share){
+    try{ await navigator.share({title:CS.t('appName'), text}); return; }catch(e){ return; } // cancelled or failed — don't fall through to a copy they didn't ask for
+  }
+  navigator.clipboard&&navigator.clipboard.writeText(text).catch(()=>{});
+  toast(CS.t('inviteCopied'));
+}
+
 let inviteRole='editor';
 function openInviteSheet(){
   const t=CS.t;
@@ -1833,7 +1844,6 @@ function openInviteSheet(){
         ${['editor','requester','viewer'].map(r=>`<button data-role="${r}" class="${r===inviteRole?'active':''}" type="button">${esc(t('role'+r[0].toUpperCase()+r.slice(1)))}</button>`).join('')}
       </div>
       <button class="btn wide" id="inv-go">${esc(t('invite'))}</button>
-      <div id="inv-code-box"></div>
     </div>`);
     $('sheet').querySelectorAll('[data-role]').forEach(rb=>rb.onclick=()=>{ inviteRole=rb.dataset.role; draw(); });
     $('inv-go').onclick=go;
@@ -1845,21 +1855,12 @@ function openInviteSheet(){
     btn.disabled=false;
     if(error){ toast(CS.authErr(error)); return; }
     const joinUrl=(window.CS_SITE||location.origin+location.pathname.replace(/[^/]*$/,''))+'?join='+data;
-    document.getElementById('inv-code-box').innerHTML=`<div class="invite-code">${esc(data)}</div>
+    const shareMsg=t('inviteShareText')+'\n'+joinUrl;
+    openSheet(sheetHead(t('invite'))+`<div class="card">
+      <p class="sub">${esc(t('inviteReadySub'))}</p>
       <button class="btn wide" id="inv-share">${esc(t('inviteShare'))}</button>
-      <button class="btn ghost wide" id="inv-copy">📋 ${esc(t('inviteCopy'))}</button>`;
-    document.getElementById('inv-share').onclick=async()=>{
-      if(navigator.share){
-        try{ await navigator.share({title:CS.t('appName'),text:t('inviteShareText'),url:joinUrl}); }catch(e){}
-      }else{
-        navigator.clipboard&&navigator.clipboard.writeText(joinUrl).catch(()=>{});
-        toast(t('inviteCopied'));
-      }
-    };
-    document.getElementById('inv-copy').onclick=()=>{
-      navigator.clipboard&&navigator.clipboard.writeText(data).catch(()=>{});
-      toast(t('inviteCopied'));
-    };
+    </div>`);
+    $('inv-share').onclick=()=>shareInvite(shareMsg);
   }
   draw();
 }

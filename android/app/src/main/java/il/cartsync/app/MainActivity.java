@@ -1,6 +1,7 @@
 package il.cartsync.app;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
@@ -62,6 +63,16 @@ public class MainActivity extends AppCompatActivity {
             Updater.install(MainActivity.this, url, new Updater.Progress() {
                 public void on(final int pct) { js("window.onUpdateProgress&&window.onUpdateProgress(" + pct + ")"); }
                 public void fail(String why) { js("window.onUpdateProgress&&window.onUpdateProgress(-2)"); }
+            });
+        }
+        @JavascriptInterface public void shareText(final String text) {
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Intent send = new Intent(Intent.ACTION_SEND);
+                    send.setType("text/plain");
+                    send.putExtra(Intent.EXTRA_TEXT, text);
+                    startActivity(Intent.createChooser(send, null));
+                }
             });
         }
     }
