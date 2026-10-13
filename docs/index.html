@@ -482,7 +482,7 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
   </footer>
 
 </div>
-<script>window.CS_SITE="https://smkrot3-sudo.github.io/cartsync/";window.CS_BUILD=1791881175398;</script>
+<script>window.CS_SITE="https://smkrot3-sudo.github.io/cartsync/";window.CS_BUILD=1791881376623;</script>
 <script>
 /* Bilingual strings + RTL/LTR switching. Pure UI text lives here; app.js reads it via CS.t(key). */
 const STRINGS = {
@@ -674,7 +674,9 @@ const CATS = {
   pet:{he:'חיות מחמד',en:'Pet',emoji:'🐾'},
   other:{he:'אחר',en:'Other',emoji:'🛒'},
 };
-const CAT_ORDER = ['produce','dairy','bakery','meat','frozen','pantry','beverages','snacks','household','care','baby','pet','other'];
+/* ordered for an actual shopping trip, not alphabetically: produce/bakery/dry-goods/non-food first,
+   then the categories you want in the cart last so they spend the least time out of the fridge/freezer */
+const CAT_ORDER = ['produce','bakery','pantry','beverages','snacks','household','care','baby','pet','dairy','meat','frozen','other'];
 
 /* "what's new" — bump WHATS_NEW_VERSION and add one new entry at the END of each array whenever
    there's something worth announcing to EXISTING users (not every build, just real features).
