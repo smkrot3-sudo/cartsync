@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
     private static final String SITE = "https://smkrot3-sudo.github.io/cartsync/";
-    private static final long STALE_AFTER_MS = 3 * 60 * 1000; // reload if the app sat in the background longer than this
+    private static final long STALE_AFTER_MS = 45 * 1000; // reload if the app sat in the background longer than this
     private WebView webView;
     private long pausedAt = 0;
 

@@ -137,6 +137,7 @@ function paintStrings(){
   $('empty-text').textContent = t('emptyList');
   $('activity-title').textContent = t('activityTitle');
   $('fab-add-label').textContent = t('addToListFab');
+  $('refresh-label').textContent = t('refreshLabel');
   const authGoMode = $('au-go').dataset.mode || 'login';
   $('au-go').textContent = authGoMode==='signup'?t('signupGo'):authGoMode==='reset'?t('resetGo'):t('loginGo');
 }
@@ -420,6 +421,7 @@ $('tab-signup').addEventListener('click',()=>setAuthMode('signup'));
 $('au-forgot').addEventListener('click',()=>setAuthMode('reset'));
 
 $('lang-btn').addEventListener('click',()=>{ CS.setLang(CS.lang()==='he'?'en':'he'); });
+$('refresh-btn').addEventListener('click',()=>location.reload());
 
 Object.assign(window.CS,{
   $, esc, guess, openSheet, closeSheet, sheetHead, toast, toastAction, confirmSheet,
