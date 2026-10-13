@@ -1,5 +1,5 @@
 /* network first, cache as fallback: always the latest version when online, still works offline */
-const CACHE='cartsync-1791881909960';
+const CACHE='cartsync-1791882506620';
 const CORE=['./','index.html','manifest.webmanifest','vendor/supabase.js','fonts/varela-round-hebrew-400-normal.woff2','fonts/varela-round-latin-400-normal.woff2','fonts/suez-one-hebrew-400-normal.woff2','fonts/suez-one-latin-400-normal.woff2','fonts/rubik-wetpaint-hebrew.woff2','fonts/rubik-wetpaint-latin.woff2','icons/icon-192.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});

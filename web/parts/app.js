@@ -228,6 +228,43 @@ function paintActivityToggle(){
   const box=$('activity-list'); if(box) box.hidden=!activityOpen;
 }
 if($('activity-toggle')) $('activity-toggle').addEventListener('click',()=>{ activityOpen=!activityOpen; paintActivityToggle(); });
+/* long-press an open list row to reveal a delete button, same as closed-list rows already have —
+   a plain tap still navigates; only a sustained press exposes the destructive action */
+function attachLongPress(container){
+  container.querySelectorAll('li > .list-row[data-list]').forEach(btn=>{
+    const li=btn.parentElement;
+    let timer=null, justRevealed=false;
+    const clearTimer=()=>{ clearTimeout(timer); timer=null; };
+    btn.addEventListener('pointerdown',()=>{
+      clearTimer();
+      timer=setTimeout(()=>{
+        timer=null;
+        if(!li.classList.contains('list-row-wrap')){
+          li.classList.add('list-row-wrap');
+          const del=document.createElement('button');
+          del.className='list-del';
+          del.dataset.delList=btn.dataset.list;
+          del.setAttribute('aria-label', CS.t('deleteList'));
+          del.textContent='🗑️';
+          li.appendChild(del);
+          justRevealed=true;
+          if(navigator.vibrate) navigator.vibrate(15);
+        }
+      },550);
+    });
+    btn.addEventListener('pointerup',clearTimer);
+    btn.addEventListener('pointercancel',clearTimer);
+    btn.addEventListener('pointerleave',clearTimer);
+    btn.addEventListener('click',e=>{
+      if(justRevealed){ justRevealed=false; e.preventDefault(); e.stopPropagation(); return; }
+      if(li.classList.contains('list-row-wrap')){
+        e.preventDefault(); e.stopPropagation();
+        li.classList.remove('list-row-wrap');
+        const del=li.querySelector('.list-del'); if(del) del.remove();
+      }
+    });
+  });
+}
 function renderLists(lists, canManage){
   const open=(lists||[]).filter(l=>l.status==='open');
   const closed=(lists||[]).filter(l=>l.status==='closed');
@@ -235,6 +272,7 @@ function renderLists(lists, canManage){
     <span class="e" style="font-size:1.3rem">🛒</span><span class="nm">${esc(l.name)}</span><span class="meta">${esc(fmtDate(l.created_at))}</span>
   </button></li>`).join('');
   $('lists-empty').hidden = !!open.length;
+  if(canManage) attachLongPress($('lists-open'));
   $('lists-closed-box').hidden = !closed.length;
   $('lists-closed').innerHTML = closed.map(l=>`<li class="list-row-wrap">
     <button class="list-row closed" data-list="${l.id}">
