@@ -119,9 +119,6 @@ function paintStrings(){
   $('create-h').textContent = t('createHh');
   field('hh-name', t('hhNamePh'));
   $('hh-create').textContent = t('create');
-  $('join-h').textContent = t('joinHh');
-  field('hh-code', t('codePh'));
-  $('hh-join').textContent = t('join');
   $('trip-label').textContent = t('tripActive');
   $('trip-close').textContent = t('tripClose');
   $('home-lists-heading').textContent = t('homeListsHeading');
@@ -129,8 +126,6 @@ function paintStrings(){
   $('home-lists-more').textContent = t('homeListsMore');
   $('home-lists-empty-text').textContent = t('listsEmpty');
   $('home-lists-new-label').textContent = t('newListTitle');
-  $('home-members-label').textContent = t('homeMembers');
-  $('lists-title').textContent = t('listsTitle');
   $('lists-open-title').textContent = t('listsOpenTitle');
   $('lists-closed-title').textContent = t('listsClosedTitle');
   $('lists-empty-text').textContent = t('listsEmpty');
@@ -159,7 +154,7 @@ function personColor(uid){
 function renderMembers(members, targetId){
   const html = (members||[]).slice(0,5).map(m=>
     `<span class="avatar" style="background:${personColor(m.user_id)}" title="${esc(m.display_name||m.email||'')}">${esc(initials(m.display_name||m.email))}</span>`).join('');
-  $(targetId||'members-strip').innerHTML = html;
+  $(targetId||'top-hhbar-members').innerHTML = html;
 }
 function personName(name){
   if(!name) return '';
@@ -221,13 +216,17 @@ function renderActivity(entries){
     ? entries.map(activityRow).join('')
     : `<li class="activity-empty">${esc(CS.t('activityEmpty'))}</li>`;
 }
-let activityOpen=false;
-function paintActivityToggle(){
-  const btn=$('activity-toggle'); if(!btn) return;
-  btn.setAttribute('aria-expanded', activityOpen?'true':'false');
-  const box=$('activity-list'); if(box) box.hidden=!activityOpen;
+/* search collapses to a single pill by default — tapping it reveals the field in its place */
+function collapseSearch(){
+  const input=$('search-input'); if(!input) return;
+  if(!input.value.trim()){ input.hidden=true; $('search-toggle').hidden=false; }
 }
-if($('activity-toggle')) $('activity-toggle').addEventListener('click',()=>{ activityOpen=!activityOpen; paintActivityToggle(); });
+if($('search-toggle')) $('search-toggle').addEventListener('click',()=>{
+  $('search-toggle').hidden=true;
+  const input=$('search-input'); input.hidden=false; input.focus();
+});
+if($('search-input')) $('search-input').addEventListener('blur',()=>setTimeout(collapseSearch,120));
+
 /* long-press an open list row to reveal a delete button, same as closed-list rows already have —
    a plain tap still navigates; only a sustained press exposes the destructive action */
 function attachLongPress(container){
@@ -285,9 +284,9 @@ function renderLists(lists, canManage){
 /* ---------- view mode: grouped-by-category vs flat+draggable ---------- */
 let viewMode='grouped';
 try{ viewMode = localStorage.getItem('cs-view')||'grouped'; }catch(e){}
-function paintViewToggle(){ $('view-toggle').textContent = viewMode==='flat'?'📋':'🗂️'; }
+function paintViewToggle(){ $('top-hhbar-view').textContent = viewMode==='flat'?'📋':'🗂️'; }
 function setViewMode(m){ viewMode=m; try{localStorage.setItem('cs-view',m)}catch(e){} paintViewToggle(); if(window.CS.rerenderMain) window.CS.rerenderMain(); }
-$('view-toggle').addEventListener('click',()=>setViewMode(viewMode==='flat'?'grouped':'flat'));
+$('top-hhbar-view').addEventListener('click',()=>setViewMode(viewMode==='flat'?'grouped':'flat'));
 paintViewToggle();
 
 /* ---------- item rows ---------- */

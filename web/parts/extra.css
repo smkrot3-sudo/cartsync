@@ -9,22 +9,27 @@
 .whats-new-list li{position:relative;padding-inline-start:20px;font-size:.92rem;color:var(--fg);line-height:1.5}
 .whats-new-list li::before{content:"✨";position:absolute;inset-inline-start:0;top:0;font-size:.8rem}
 
-.trip-bar{display:flex;align-items:center;gap:8px;background:var(--accent-soft);color:var(--fg);border-radius:14px;padding:9px 12px;font-size:.9rem}
+.trip-bar{display:flex;align-items:center;gap:8px;background:var(--accent-soft);color:var(--fg);border-radius:var(--r);padding:12px 14px;font-size:.9rem}
 .trip-bar #trip-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .trip-bar .btn.small{flex:none}
 
-/* sits directly under .top, sharing its background with one hairline divider closing off the whole
-   header zone — reads as one quiet header, not a floating card */
+/* the second segment of the brand capsule — same dark fill and ring, continuing directly below
+   .brand with no gap, so the two read as one connected header instead of a bold bar sitting over
+   a disconnected quiet row */
 .hhbar{
-  display:flex;align-items:center;gap:10px;
-  background:var(--surface);
-  margin:0 -16px;padding:2px 16px 14px;
-  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:10px;width:100%;
+  background:linear-gradient(135deg,#1C2550 0%,#11162E 100%);
+  border:1.5px solid rgba(255,94,112,.38);
+  border-top:1px solid rgba(255,255,255,.14);
+  border-radius:0 0 24px 24px;
+  padding:10px 16px;
+  box-shadow:0 14px 28px rgba(10,14,30,.3);
+  margin-top:-1.5px;position:relative;z-index:1;
 }
-.hhbar .iconbtn{background:transparent;box-shadow:none;color:var(--muted);width:auto;height:auto;font-size:1.15rem}
-.hhname{display:flex;align-items:center;gap:4px;border:0;background:var(--surface);box-shadow:var(--shadow);border-radius:999px;padding:9px 14px;flex:1;min-width:0;overflow:hidden;text-align:start}
-.hhname b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.list-name-lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:1.15rem;font-family:var(--display);font-weight:400}
+.hhbar .iconbtn{background:transparent;box-shadow:none;color:rgba(255,255,255,.82);width:auto;height:auto;font-size:1.1rem}
+.hhbar .iconbtn:active{opacity:.6}
+.hhbar .avatar{border-color:rgba(255,255,255,.35)}
+.list-name-lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:1.1rem;font-family:var(--display);font-weight:400;color:#fff}
 
 .list-row{display:flex;align-items:center;gap:10px;background:var(--surface);border-radius:16px;padding:12px 14px;box-shadow:var(--shadow);width:100%;border:0;text-align:start;color:inherit;cursor:pointer}
 .list-row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:1rem}
@@ -84,7 +89,9 @@
 .item.done .check svg{opacity:1;transform:scale(1)}
 .item .t{flex:1;min-width:0;overflow-wrap:anywhere;font-size:1rem;cursor:pointer;border:0;background:transparent;color:inherit;text-align:start;padding:0;font-family:inherit}
 .item .t:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
-.search-input{width:100%;border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:10px 14px;margin-bottom:12px}
+.search-row{display:block}
+.search-toggle{display:flex;align-items:center;gap:8px;width:100%;border:0;background:var(--surface);box-shadow:var(--shadow);border-radius:var(--r);padding:12px 14px;color:var(--muted);font-size:.95rem;text-align:start}
+.search-input{width:100%;border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:10px 14px}
 .search-input:focus-visible{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 .item.done .t{color:var(--muted)}
 .item.done .t-text{text-decoration:line-through;text-decoration-style:wavy;text-decoration-color:var(--ok);text-decoration-thickness:1.3px}
@@ -103,7 +110,7 @@
 .fab{
   position:fixed;inset-inline:16px;bottom:calc(88px + env(safe-area-inset-bottom,0px));
   height:58px;border-radius:999px;border:0;
-  background:linear-gradient(135deg,var(--accent) 0%,#4A64C9 100%);
+  background:var(--btn-grad);
   color:var(--accent-ink);
   display:flex;align-items:center;justify-content:center;gap:9px;
   font-family:var(--display);font-weight:400;font-size:1.05rem;
@@ -136,11 +143,7 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
 
 .offline-note{background:var(--danger-soft);color:var(--danger);border-radius:12px;padding:8px 12px;font-size:.85rem;text-align:center}
 
-.activity-box{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
-.activity-head{display:flex;align-items:center;gap:8px;width:100%;border:0;background:transparent;padding:14px 16px;font-family:var(--display);font-size:.98rem;color:inherit;text-align:start}
-.activity-chevron{margin-inline-start:auto;font-size:.8rem;transition:transform .15s ease}
-.activity-head[aria-expanded="true"] .activity-chevron{transform:rotate(180deg)}
-.activity-list{list-style:none;margin:0;padding:0 16px 14px;display:flex;flex-direction:column}
+.activity-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
 .activity-row{display:flex;align-items:baseline;gap:8px;padding:8px 0;border-top:1px solid var(--line);font-size:.86rem}
 .activity-row:first-child{border-top:0}
 .activity-text{flex:1;min-width:0;color:var(--muted);overflow-wrap:anywhere}

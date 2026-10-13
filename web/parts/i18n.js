@@ -7,7 +7,7 @@ he: {
   login:'התחברות', signup:'הרשמה', name:'השם שלך', email:'מייל', password:'סיסמה (לפחות 6 תווים)',
   loginGo:'להתחבר', signupGo:'ליצור חשבון', forgot:'שכחתי סיסמה', resetGo:'לשלוח קישור לאיפוס',
   resetSent:'📬 שלחנו מייל עם קישור לבחירת סיסמה חדשה.',
-  onboardTitle:'למי קונים?', onboardSub:'יוצרים משק בית, או מצטרפים לאחד קיים עם קוד הזמנה.',
+  onboardTitle:'למי קונים?', onboardSub:'יוצרים משק בית, ומזמינים את שאר המשפחה בקישור.',
   createHh:'משק בית חדש', hhNamePh:'לדוגמה: הבית שלנו', create:'ליצור',
   joinHh:'יש לי קוד הזמנה', codePh:'קוד הזמנה', join:'להצטרף',
   itemPh:'שם המוצר', qtyPh:'כמות', add:'הוספה', addToListFab:'הוסף לרשימה',
@@ -74,6 +74,7 @@ he: {
   profileSaved:'✅ הפרופיל נשמר', profilePassSub:'שינוי סיסמה:', newPasswordPh:'סיסמה חדשה (לפחות 6 תווים)',
   profilePassSave:'לעדכן סיסמה', passwordUpdated:'✅ הסיסמה עודכנה', editProfile:'✏️ עריכת פרופיל',
   guideTitle:'מדריך שימוש', guideOpen:'מדריך שימוש', guideIntro:'כל מה שצריך לדעת כדי להשתמש באפליקציה.',
+  leaveListTitle:'לצאת מהרשימה?', leaveListConfirm:'חוזרים למסך הבית. הרשימה תישמר בדיוק כמו שהיא.', leaveListAction:'כן, לצאת',
 },
 en: {
   appName:'CartSync', tagline:'One shopping list, for the whole family', langLabel:'Language',
@@ -82,7 +83,7 @@ en: {
   login:'Log in', signup:'Sign up', name:'Your name', email:'Email', password:'Password (6+ characters)',
   loginGo:'Log in', signupGo:'Create account', forgot:'Forgot password', resetGo:'Send reset link',
   resetSent:'📬 We sent an email with a link to set a new password.',
-  onboardTitle:'Shopping for who?', onboardSub:'Create a household, or join one with an invite code.',
+  onboardTitle:'Shopping for who?', onboardSub:'Create a household, then invite the rest of the family with a link.',
   createHh:'New household', hhNamePh:'e.g. Our home', create:'Create',
   joinHh:'I have an invite code', codePh:'Invite code', join:'Join',
   itemPh:'Product name', qtyPh:'Qty', add:'Add', addToListFab:'Add to list',
@@ -149,6 +150,7 @@ en: {
   profileSaved:'✅ Profile saved', profilePassSub:'Change password:', newPasswordPh:'New password (6+ characters)',
   profilePassSave:'Update password', passwordUpdated:'✅ Password updated', editProfile:'✏️ Edit profile',
   guideTitle:'User guide', guideOpen:'User guide', guideIntro:'Everything you need to know to use the app.',
+  leaveListTitle:'Leave this list?', leaveListConfirm:'You’ll go back to the home screen. The list stays exactly as it is.', leaveListAction:'Yes, leave',
 },
 };
 

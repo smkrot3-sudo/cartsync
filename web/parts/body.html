@@ -10,6 +10,14 @@
       <button class="brand-name-btn" id="brand-home-btn"><b id="brand-name">קניות ביחד</b></button>
       <span class="brand-end-badge" aria-hidden="true"><span class="e">🛒</span></span>
     </div>
+    <div class="hhbar" id="top-hhbar" hidden>
+      <button class="iconbtn" id="top-hhbar-back" aria-label="Back">→</button>
+      <b id="top-hhbar-title" class="list-name-lbl">…</b>
+      <div class="members" id="top-hhbar-members"></div>
+      <button class="iconbtn" id="top-hhbar-share" aria-label="Share" hidden>📤</button>
+      <button class="iconbtn" id="top-hhbar-view" aria-label="View" hidden>🗂️</button>
+      <button class="iconbtn" id="top-hhbar-new" aria-label="New list" hidden>➕</button>
+    </div>
   </header>
 
   <!-- ---------- splash: shown until we know whether a session already exists ---------- -->
@@ -38,25 +46,18 @@
     </div>
   </section>
 
-  <!-- ---------- onboarding: create or join a household ---------- -->
+  <!-- ---------- onboarding: create a household (joining only happens via a shared invite link) ---------- -->
   <section class="view" id="view-onboard" hidden>
     <div class="hero">
       <div class="hero-emoji e">🏠</div>
       <h1 id="onboard-title">למי קונים?</h1>
-      <p class="sub" id="onboard-sub">יוצרים משק בית, או מצטרפים לאחד קיים עם קוד הזמנה.</p>
+      <p class="sub" id="onboard-sub">יוצרים משק בית, ומזמינים את שאר המשפחה בקישור.</p>
     </div>
     <div class="card">
       <h3 id="create-h">משק בית חדש</h3>
       <div class="add">
         <input id="hh-name" placeholder="לדוגמה: הבית שלנו">
         <button class="btn" id="hh-create">ליצור</button>
-      </div>
-    </div>
-    <div class="card">
-      <h3 id="join-h">יש לי קוד הזמנה</h3>
-      <div class="add">
-        <input id="hh-code" placeholder="קוד הזמנה" dir="ltr" maxlength="8">
-        <button class="btn ghost" id="hh-join">להצטרף</button>
       </div>
       <div id="hh-msg" class="msg" hidden></div>
     </div>
@@ -85,19 +86,10 @@
       <div class="group-h"><span class="e">📜</span><span id="home-activity-heading">פעילות אחרונה</span></div>
       <ul class="list activity-list" id="home-activity-list"></ul>
     </div>
-
-    <div class="card">
-      <button class="btn ghost wide" id="home-members-btn">👥 <span id="home-members-label">משק הבית</span></button>
-    </div>
   </section>
 
   <!-- ---------- lists: directory of this household's shopping lists ---------- -->
   <section class="view" id="view-lists" hidden>
-    <div class="hhbar">
-      <button class="iconbtn" id="lists-back" aria-label="Back">→</button>
-      <b id="lists-title" class="list-name-lbl" style="flex:1">הרשימות שלי</b>
-      <button class="iconbtn" id="lists-new" aria-label="New list">➕</button>
-    </div>
     <div>
       <div class="group-h"><span class="e">🛒</span><span id="lists-open-title">פעילות</span></div>
       <ul class="list" id="lists-open"></ul>
@@ -114,20 +106,16 @@
   <!-- ---------- main: a single shared list ---------- -->
   <section class="view" id="view-main" hidden>
     <div id="offline-note" class="offline-note" hidden></div>
-    <div class="hhbar">
-      <button class="iconbtn" id="list-back" aria-label="Back">→</button>
-      <b id="list-name-lbl" class="list-name-lbl">…</b>
-      <div class="members" id="members-strip"></div>
-      <button class="iconbtn" id="list-share" aria-label="Share">📤</button>
-      <button class="iconbtn" id="view-toggle" aria-label="View" title="תצוגה">🗂️</button>
-    </div>
 
     <div class="trip-bar" id="trip-bar">
       <span class="e">🛒</span> <span id="trip-label">סבב קניות פעיל</span>
       <button class="btn small ghost" id="trip-close">✅ סיום קניות</button>
     </div>
 
-    <input id="search-input" class="search-input" placeholder="חיפוש ברשימה…" autocomplete="off">
+    <div class="search-row" id="search-row">
+      <button class="search-toggle" id="search-toggle" type="button"><span class="e">🔍</span><span id="search-toggle-label">חיפוש ברשימה</span></button>
+      <input id="search-input" class="search-input" placeholder="חיפוש ברשימה…" autocomplete="off" hidden>
+    </div>
 
     <div id="pending-box" class="note note-sticky" hidden>
       <h3 class="pending-h"><span class="e">🙋</span> <span id="pending-title">בקשות לאישור</span></h3>
@@ -141,12 +129,9 @@
       </ul>
     </div>
 
-    <div class="note activity-box">
-      <button class="activity-head" id="activity-toggle" type="button" aria-expanded="false">
-        <span class="e">📜</span><span id="activity-title">היסטוריית פעולות</span><span class="e activity-chevron">🔽</span>
-      </button>
-      <ul class="list activity-list" id="activity-list" hidden></ul>
-    </div>
+    <button class="list-row" id="activity-open" type="button">
+      <span class="e" style="font-size:1.3rem">📜</span><span class="nm" id="activity-title">היסטוריית פעולות</span><span class="meta">‹</span>
+    </button>
 
     <button class="fab" id="fab-add"><span class="e" aria-hidden="true">➕</span><span id="fab-add-label">הוסף לרשימה</span></button>
   </section>

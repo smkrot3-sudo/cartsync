@@ -42,6 +42,8 @@
   --rule:rgba(46,74,158,.08);
   --header-grad:linear-gradient(135deg,#233B86 0%,#2E4A9E 48%,#4262C2 100%);
   --header-ink:#FFFFFF;
+  --btn-grad:linear-gradient(135deg,#2E4A9E 0%,#4A64C9 100%);
+  --btn-danger-grad:linear-gradient(135deg,#D43450 0%,#FF5E70 100%);
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0A1026; --surface:#131C3C; --soft:#1A2449; --fg:#E9ECFB; --muted:#8C94C2; --line:#283264;
@@ -54,6 +56,8 @@
   --rule:rgba(255,255,255,.055);
   --shadow:0 8px 20px rgba(0,0,0,.4); --shade:rgba(0,0,0,.6); color-scheme:dark;
   --header-grad:linear-gradient(135deg,#0B1230 0%,#162048 50%,#223170 100%);
+  --btn-grad:linear-gradient(135deg,#6B8CF5 0%,#8AA3FF 100%);
+  --btn-danger-grad:linear-gradient(135deg,#E26575 0%,#FF8294 100%);
 }}
 :root[data-theme="dark"]{
   --bg:#0A1026; --surface:#131C3C; --soft:#1A2449; --fg:#E9ECFB; --muted:#8C94C2; --line:#283264;
@@ -66,6 +70,8 @@
   --rule:rgba(255,255,255,.055);
   --shadow:0 8px 20px rgba(0,0,0,.4); --shade:rgba(0,0,0,.6); color-scheme:dark;
   --header-grad:linear-gradient(135deg,#0B1230 0%,#162048 50%,#223170 100%);
+  --btn-grad:linear-gradient(135deg,#6B8CF5 0%,#8AA3FF 100%);
+  --btn-danger-grad:linear-gradient(135deg,#E26575 0%,#FF8294 100%);
 }
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -101,6 +107,14 @@ button:disabled{opacity:.6;cursor:default}
   border-radius:999px;
   padding:7px 16px 7px 7px;
   box-shadow:0 14px 28px rgba(10,14,30,.3);
+  position:relative;z-index:2;
+}
+/* when a list/lists context bar follows, the two segments read as one connected capsule —
+   square where they meet, rounded only at the true outer corners */
+.top:has(> .hhbar:not([hidden])) .brand{
+  border-radius:24px 24px 0 0;
+  border-bottom-width:0;
+  box-shadow:none;
 }
 .brand-name-btn{flex:1;min-width:0;border:0;background:transparent;padding:0;text-align:center;font-family:var(--display);font-weight:400;font-size:1.12rem;letter-spacing:.01em;
   background-image:linear-gradient(90deg,#FF8FA0,#FFC48A);-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -136,11 +150,11 @@ button:disabled{opacity:.6;cursor:default}
 .msg.ok{background:var(--ok-soft);color:var(--ok)}
 .msg.warn{background:var(--gold-soft);color:var(--gold)}
 
-.btn{border:0;background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:11px 18px;font-size:.96rem;white-space:nowrap;box-shadow:0 4px 12px rgba(46,74,158,.35);transition:transform .1s ease}
+.btn{border:0;background:var(--btn-grad);color:var(--accent-ink);border-radius:999px;padding:11px 18px;font-size:.96rem;white-space:nowrap;box-shadow:0 6px 16px rgba(46,74,158,.32);transition:transform .1s ease}
 .btn.ghost{background:var(--surface);color:var(--accent);border:2px solid var(--accent-soft);box-shadow:none}
 .btn.small{padding:7px 13px;font-size:.86rem}
 .btn.wide{width:100%}
-.btn.danger{background:var(--danger);box-shadow:0 4px 12px rgba(224,57,79,.35)}
+.btn.danger{background:var(--btn-danger-grad);box-shadow:0 6px 16px rgba(224,57,79,.32)}
 .btn:active{transform:scale(.97)}
 .linkbtn{border:0;background:transparent;color:var(--accent);text-decoration:underline;padding:4px;font-size:.92rem}
 
@@ -177,22 +191,27 @@ button:disabled{opacity:.6;cursor:default}
 .whats-new-list li{position:relative;padding-inline-start:20px;font-size:.92rem;color:var(--fg);line-height:1.5}
 .whats-new-list li::before{content:"✨";position:absolute;inset-inline-start:0;top:0;font-size:.8rem}
 
-.trip-bar{display:flex;align-items:center;gap:8px;background:var(--accent-soft);color:var(--fg);border-radius:14px;padding:9px 12px;font-size:.9rem}
+.trip-bar{display:flex;align-items:center;gap:8px;background:var(--accent-soft);color:var(--fg);border-radius:var(--r);padding:12px 14px;font-size:.9rem}
 .trip-bar #trip-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .trip-bar .btn.small{flex:none}
 
-/* sits directly under .top, sharing its background with one hairline divider closing off the whole
-   header zone — reads as one quiet header, not a floating card */
+/* the second segment of the brand capsule — same dark fill and ring, continuing directly below
+   .brand with no gap, so the two read as one connected header instead of a bold bar sitting over
+   a disconnected quiet row */
 .hhbar{
-  display:flex;align-items:center;gap:10px;
-  background:var(--surface);
-  margin:0 -16px;padding:2px 16px 14px;
-  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:10px;width:100%;
+  background:linear-gradient(135deg,#1C2550 0%,#11162E 100%);
+  border:1.5px solid rgba(255,94,112,.38);
+  border-top:1px solid rgba(255,255,255,.14);
+  border-radius:0 0 24px 24px;
+  padding:10px 16px;
+  box-shadow:0 14px 28px rgba(10,14,30,.3);
+  margin-top:-1.5px;position:relative;z-index:1;
 }
-.hhbar .iconbtn{background:transparent;box-shadow:none;color:var(--muted);width:auto;height:auto;font-size:1.15rem}
-.hhname{display:flex;align-items:center;gap:4px;border:0;background:var(--surface);box-shadow:var(--shadow);border-radius:999px;padding:9px 14px;flex:1;min-width:0;overflow:hidden;text-align:start}
-.hhname b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.list-name-lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:1.15rem;font-family:var(--display);font-weight:400}
+.hhbar .iconbtn{background:transparent;box-shadow:none;color:rgba(255,255,255,.82);width:auto;height:auto;font-size:1.1rem}
+.hhbar .iconbtn:active{opacity:.6}
+.hhbar .avatar{border-color:rgba(255,255,255,.35)}
+.list-name-lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:1.1rem;font-family:var(--display);font-weight:400;color:#fff}
 
 .list-row{display:flex;align-items:center;gap:10px;background:var(--surface);border-radius:16px;padding:12px 14px;box-shadow:var(--shadow);width:100%;border:0;text-align:start;color:inherit;cursor:pointer}
 .list-row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:1rem}
@@ -252,7 +271,9 @@ button:disabled{opacity:.6;cursor:default}
 .item.done .check svg{opacity:1;transform:scale(1)}
 .item .t{flex:1;min-width:0;overflow-wrap:anywhere;font-size:1rem;cursor:pointer;border:0;background:transparent;color:inherit;text-align:start;padding:0;font-family:inherit}
 .item .t:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
-.search-input{width:100%;border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:10px 14px;margin-bottom:12px}
+.search-row{display:block}
+.search-toggle{display:flex;align-items:center;gap:8px;width:100%;border:0;background:var(--surface);box-shadow:var(--shadow);border-radius:var(--r);padding:12px 14px;color:var(--muted);font-size:.95rem;text-align:start}
+.search-input{width:100%;border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:10px 14px}
 .search-input:focus-visible{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 .item.done .t{color:var(--muted)}
 .item.done .t-text{text-decoration:line-through;text-decoration-style:wavy;text-decoration-color:var(--ok);text-decoration-thickness:1.3px}
@@ -271,7 +292,7 @@ button:disabled{opacity:.6;cursor:default}
 .fab{
   position:fixed;inset-inline:16px;bottom:calc(88px + env(safe-area-inset-bottom,0px));
   height:58px;border-radius:999px;border:0;
-  background:linear-gradient(135deg,var(--accent) 0%,#4A64C9 100%);
+  background:var(--btn-grad);
   color:var(--accent-ink);
   display:flex;align-items:center;justify-content:center;gap:9px;
   font-family:var(--display);font-weight:400;font-size:1.05rem;
@@ -304,11 +325,7 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
 
 .offline-note{background:var(--danger-soft);color:var(--danger);border-radius:12px;padding:8px 12px;font-size:.85rem;text-align:center}
 
-.activity-box{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
-.activity-head{display:flex;align-items:center;gap:8px;width:100%;border:0;background:transparent;padding:14px 16px;font-family:var(--display);font-size:.98rem;color:inherit;text-align:start}
-.activity-chevron{margin-inline-start:auto;font-size:.8rem;transition:transform .15s ease}
-.activity-head[aria-expanded="true"] .activity-chevron{transform:rotate(180deg)}
-.activity-list{list-style:none;margin:0;padding:0 16px 14px;display:flex;flex-direction:column}
+.activity-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
 .activity-row{display:flex;align-items:baseline;gap:8px;padding:8px 0;border-top:1px solid var(--line);font-size:.86rem}
 .activity-row:first-child{border-top:0}
 .activity-text{flex:1;min-width:0;color:var(--muted);overflow-wrap:anywhere}
@@ -330,6 +347,14 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
       </div>
       <button class="brand-name-btn" id="brand-home-btn"><b id="brand-name">קניות ביחד</b></button>
       <span class="brand-end-badge" aria-hidden="true"><span class="e">🛒</span></span>
+    </div>
+    <div class="hhbar" id="top-hhbar" hidden>
+      <button class="iconbtn" id="top-hhbar-back" aria-label="Back">→</button>
+      <b id="top-hhbar-title" class="list-name-lbl">…</b>
+      <div class="members" id="top-hhbar-members"></div>
+      <button class="iconbtn" id="top-hhbar-share" aria-label="Share" hidden>📤</button>
+      <button class="iconbtn" id="top-hhbar-view" aria-label="View" hidden>🗂️</button>
+      <button class="iconbtn" id="top-hhbar-new" aria-label="New list" hidden>➕</button>
     </div>
   </header>
 
@@ -359,25 +384,18 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
     </div>
   </section>
 
-  <!-- ---------- onboarding: create or join a household ---------- -->
+  <!-- ---------- onboarding: create a household (joining only happens via a shared invite link) ---------- -->
   <section class="view" id="view-onboard" hidden>
     <div class="hero">
       <div class="hero-emoji e">🏠</div>
       <h1 id="onboard-title">למי קונים?</h1>
-      <p class="sub" id="onboard-sub">יוצרים משק בית, או מצטרפים לאחד קיים עם קוד הזמנה.</p>
+      <p class="sub" id="onboard-sub">יוצרים משק בית, ומזמינים את שאר המשפחה בקישור.</p>
     </div>
     <div class="card">
       <h3 id="create-h">משק בית חדש</h3>
       <div class="add">
         <input id="hh-name" placeholder="לדוגמה: הבית שלנו">
         <button class="btn" id="hh-create">ליצור</button>
-      </div>
-    </div>
-    <div class="card">
-      <h3 id="join-h">יש לי קוד הזמנה</h3>
-      <div class="add">
-        <input id="hh-code" placeholder="קוד הזמנה" dir="ltr" maxlength="8">
-        <button class="btn ghost" id="hh-join">להצטרף</button>
       </div>
       <div id="hh-msg" class="msg" hidden></div>
     </div>
@@ -406,19 +424,10 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
       <div class="group-h"><span class="e">📜</span><span id="home-activity-heading">פעילות אחרונה</span></div>
       <ul class="list activity-list" id="home-activity-list"></ul>
     </div>
-
-    <div class="card">
-      <button class="btn ghost wide" id="home-members-btn">👥 <span id="home-members-label">משק הבית</span></button>
-    </div>
   </section>
 
   <!-- ---------- lists: directory of this household's shopping lists ---------- -->
   <section class="view" id="view-lists" hidden>
-    <div class="hhbar">
-      <button class="iconbtn" id="lists-back" aria-label="Back">→</button>
-      <b id="lists-title" class="list-name-lbl" style="flex:1">הרשימות שלי</b>
-      <button class="iconbtn" id="lists-new" aria-label="New list">➕</button>
-    </div>
     <div>
       <div class="group-h"><span class="e">🛒</span><span id="lists-open-title">פעילות</span></div>
       <ul class="list" id="lists-open"></ul>
@@ -435,20 +444,16 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
   <!-- ---------- main: a single shared list ---------- -->
   <section class="view" id="view-main" hidden>
     <div id="offline-note" class="offline-note" hidden></div>
-    <div class="hhbar">
-      <button class="iconbtn" id="list-back" aria-label="Back">→</button>
-      <b id="list-name-lbl" class="list-name-lbl">…</b>
-      <div class="members" id="members-strip"></div>
-      <button class="iconbtn" id="list-share" aria-label="Share">📤</button>
-      <button class="iconbtn" id="view-toggle" aria-label="View" title="תצוגה">🗂️</button>
-    </div>
 
     <div class="trip-bar" id="trip-bar">
       <span class="e">🛒</span> <span id="trip-label">סבב קניות פעיל</span>
       <button class="btn small ghost" id="trip-close">✅ סיום קניות</button>
     </div>
 
-    <input id="search-input" class="search-input" placeholder="חיפוש ברשימה…" autocomplete="off">
+    <div class="search-row" id="search-row">
+      <button class="search-toggle" id="search-toggle" type="button"><span class="e">🔍</span><span id="search-toggle-label">חיפוש ברשימה</span></button>
+      <input id="search-input" class="search-input" placeholder="חיפוש ברשימה…" autocomplete="off" hidden>
+    </div>
 
     <div id="pending-box" class="note note-sticky" hidden>
       <h3 class="pending-h"><span class="e">🙋</span> <span id="pending-title">בקשות לאישור</span></h3>
@@ -462,12 +467,9 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
       </ul>
     </div>
 
-    <div class="note activity-box">
-      <button class="activity-head" id="activity-toggle" type="button" aria-expanded="false">
-        <span class="e">📜</span><span id="activity-title">היסטוריית פעולות</span><span class="e activity-chevron">🔽</span>
-      </button>
-      <ul class="list activity-list" id="activity-list" hidden></ul>
-    </div>
+    <button class="list-row" id="activity-open" type="button">
+      <span class="e" style="font-size:1.3rem">📜</span><span class="nm" id="activity-title">היסטוריית פעולות</span><span class="meta">‹</span>
+    </button>
 
     <button class="fab" id="fab-add"><span class="e" aria-hidden="true">➕</span><span id="fab-add-label">הוסף לרשימה</span></button>
   </section>
@@ -482,7 +484,7 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
   </footer>
 
 </div>
-<script>window.CS_SITE="https://smkrot3-sudo.github.io/cartsync/";window.CS_BUILD=1791882506620;</script>
+<script>window.CS_SITE="https://smkrot3-sudo.github.io/cartsync/";window.CS_BUILD=1791884446775;</script>
 <script>
 /* Bilingual strings + RTL/LTR switching. Pure UI text lives here; app.js reads it via CS.t(key). */
 const STRINGS = {
@@ -493,7 +495,7 @@ he: {
   login:'התחברות', signup:'הרשמה', name:'השם שלך', email:'מייל', password:'סיסמה (לפחות 6 תווים)',
   loginGo:'להתחבר', signupGo:'ליצור חשבון', forgot:'שכחתי סיסמה', resetGo:'לשלוח קישור לאיפוס',
   resetSent:'📬 שלחנו מייל עם קישור לבחירת סיסמה חדשה.',
-  onboardTitle:'למי קונים?', onboardSub:'יוצרים משק בית, או מצטרפים לאחד קיים עם קוד הזמנה.',
+  onboardTitle:'למי קונים?', onboardSub:'יוצרים משק בית, ומזמינים את שאר המשפחה בקישור.',
   createHh:'משק בית חדש', hhNamePh:'לדוגמה: הבית שלנו', create:'ליצור',
   joinHh:'יש לי קוד הזמנה', codePh:'קוד הזמנה', join:'להצטרף',
   itemPh:'שם המוצר', qtyPh:'כמות', add:'הוספה', addToListFab:'הוסף לרשימה',
@@ -560,6 +562,7 @@ he: {
   profileSaved:'✅ הפרופיל נשמר', profilePassSub:'שינוי סיסמה:', newPasswordPh:'סיסמה חדשה (לפחות 6 תווים)',
   profilePassSave:'לעדכן סיסמה', passwordUpdated:'✅ הסיסמה עודכנה', editProfile:'✏️ עריכת פרופיל',
   guideTitle:'מדריך שימוש', guideOpen:'מדריך שימוש', guideIntro:'כל מה שצריך לדעת כדי להשתמש באפליקציה.',
+  leaveListTitle:'לצאת מהרשימה?', leaveListConfirm:'חוזרים למסך הבית. הרשימה תישמר בדיוק כמו שהיא.', leaveListAction:'כן, לצאת',
 },
 en: {
   appName:'CartSync', tagline:'One shopping list, for the whole family', langLabel:'Language',
@@ -568,7 +571,7 @@ en: {
   login:'Log in', signup:'Sign up', name:'Your name', email:'Email', password:'Password (6+ characters)',
   loginGo:'Log in', signupGo:'Create account', forgot:'Forgot password', resetGo:'Send reset link',
   resetSent:'📬 We sent an email with a link to set a new password.',
-  onboardTitle:'Shopping for who?', onboardSub:'Create a household, or join one with an invite code.',
+  onboardTitle:'Shopping for who?', onboardSub:'Create a household, then invite the rest of the family with a link.',
   createHh:'New household', hhNamePh:'e.g. Our home', create:'Create',
   joinHh:'I have an invite code', codePh:'Invite code', join:'Join',
   itemPh:'Product name', qtyPh:'Qty', add:'Add', addToListFab:'Add to list',
@@ -635,6 +638,7 @@ en: {
   profileSaved:'✅ Profile saved', profilePassSub:'Change password:', newPasswordPh:'New password (6+ characters)',
   profilePassSave:'Update password', passwordUpdated:'✅ Password updated', editProfile:'✏️ Edit profile',
   guideTitle:'User guide', guideOpen:'User guide', guideIntro:'Everything you need to know to use the app.',
+  leaveListTitle:'Leave this list?', leaveListConfirm:'You’ll go back to the home screen. The list stays exactly as it is.', leaveListAction:'Yes, leave',
 },
 };
 
@@ -909,9 +913,6 @@ function paintStrings(){
   $('create-h').textContent = t('createHh');
   field('hh-name', t('hhNamePh'));
   $('hh-create').textContent = t('create');
-  $('join-h').textContent = t('joinHh');
-  field('hh-code', t('codePh'));
-  $('hh-join').textContent = t('join');
   $('trip-label').textContent = t('tripActive');
   $('trip-close').textContent = t('tripClose');
   $('home-lists-heading').textContent = t('homeListsHeading');
@@ -919,8 +920,6 @@ function paintStrings(){
   $('home-lists-more').textContent = t('homeListsMore');
   $('home-lists-empty-text').textContent = t('listsEmpty');
   $('home-lists-new-label').textContent = t('newListTitle');
-  $('home-members-label').textContent = t('homeMembers');
-  $('lists-title').textContent = t('listsTitle');
   $('lists-open-title').textContent = t('listsOpenTitle');
   $('lists-closed-title').textContent = t('listsClosedTitle');
   $('lists-empty-text').textContent = t('listsEmpty');
@@ -949,7 +948,7 @@ function personColor(uid){
 function renderMembers(members, targetId){
   const html = (members||[]).slice(0,5).map(m=>
     `<span class="avatar" style="background:${personColor(m.user_id)}" title="${esc(m.display_name||m.email||'')}">${esc(initials(m.display_name||m.email))}</span>`).join('');
-  $(targetId||'members-strip').innerHTML = html;
+  $(targetId||'top-hhbar-members').innerHTML = html;
 }
 function personName(name){
   if(!name) return '';
@@ -1011,13 +1010,17 @@ function renderActivity(entries){
     ? entries.map(activityRow).join('')
     : `<li class="activity-empty">${esc(CS.t('activityEmpty'))}</li>`;
 }
-let activityOpen=false;
-function paintActivityToggle(){
-  const btn=$('activity-toggle'); if(!btn) return;
-  btn.setAttribute('aria-expanded', activityOpen?'true':'false');
-  const box=$('activity-list'); if(box) box.hidden=!activityOpen;
+/* search collapses to a single pill by default — tapping it reveals the field in its place */
+function collapseSearch(){
+  const input=$('search-input'); if(!input) return;
+  if(!input.value.trim()){ input.hidden=true; $('search-toggle').hidden=false; }
 }
-if($('activity-toggle')) $('activity-toggle').addEventListener('click',()=>{ activityOpen=!activityOpen; paintActivityToggle(); });
+if($('search-toggle')) $('search-toggle').addEventListener('click',()=>{
+  $('search-toggle').hidden=true;
+  const input=$('search-input'); input.hidden=false; input.focus();
+});
+if($('search-input')) $('search-input').addEventListener('blur',()=>setTimeout(collapseSearch,120));
+
 /* long-press an open list row to reveal a delete button, same as closed-list rows already have —
    a plain tap still navigates; only a sustained press exposes the destructive action */
 function attachLongPress(container){
@@ -1075,9 +1078,9 @@ function renderLists(lists, canManage){
 /* ---------- view mode: grouped-by-category vs flat+draggable ---------- */
 let viewMode='grouped';
 try{ viewMode = localStorage.getItem('cs-view')||'grouped'; }catch(e){}
-function paintViewToggle(){ $('view-toggle').textContent = viewMode==='flat'?'📋':'🗂️'; }
+function paintViewToggle(){ $('top-hhbar-view').textContent = viewMode==='flat'?'📋':'🗂️'; }
 function setViewMode(m){ viewMode=m; try{localStorage.setItem('cs-view',m)}catch(e){} paintViewToggle(); if(window.CS.rerenderMain) window.CS.rerenderMain(); }
-$('view-toggle').addEventListener('click',()=>setViewMode(viewMode==='flat'?'grouped':'flat'));
+$('top-hhbar-view').addEventListener('click',()=>setViewMode(viewMode==='flat'?'grouped':'flat'));
 paintViewToggle();
 
 /* ---------- item rows ---------- */
@@ -1356,14 +1359,16 @@ function openAccountSheet(){
         ${['normal','large','xlarge'].map(v=>`<button data-font-opt="${v}" class="${v===curFont?'active':''}">${esc(t('font'+v[0].toUpperCase()+v.slice(1)))}</button>`).join('')}
       </div>
       <button class="btn ghost" id="acct-profile">${esc(t('editProfile'))}</button>
+      <button class="btn ghost" id="acct-members">👥 ${esc(t('homeMembers'))}</button>
+      <button class="btn ghost" id="acct-switch">🏠 ${esc(t('switchHousehold'))}</button>
       <button class="btn ghost" id="acct-guide">📖 ${esc(t('guideOpen'))}</button>
       <button class="btn ghost" id="acct-sync">🔄 ${esc(t('syncNow'))}</button>
-      <button class="btn ghost" id="acct-switch">🏠 ${esc(t('switchHousehold'))}</button>
       <button class="btn ghost" id="acct-signout">👋 ${esc(t('signOut'))}</button>
     </div>`);
   $('theme-pick').querySelectorAll('[data-theme-opt]').forEach(b=>b.onclick=()=>{ CS.setTheme(b.dataset.themeOpt); openAccountSheet(); });
   $('font-pick').querySelectorAll('[data-font-opt]').forEach(b=>b.onclick=()=>{ CS.setFontSize(b.dataset.fontOpt); openAccountSheet(); });
   $('acct-profile').onclick=openProfileSheet;
+  $('acct-members').onclick=drawMembersSheet;
   $('acct-guide').onclick=()=>openGuideSheet();
   $('acct-sync').onclick=async()=>{ await flushQueue({resync:true}); await refreshHousehold(); toast('🔄'); };
   $('acct-switch').onclick=()=>{ closeSheet(); openHouseholdSwitcher(); };
@@ -1433,11 +1438,30 @@ function greetingText(){
   const first=full.trim().split(' ')[0];
   return CS.t(key).replace('{n}', first?(' '+first):'');
 }
+/* the hhbar (back + title + avatars + actions) lives inside .top itself now, directly continuing the
+   brand capsule's shape — this just reconfigures its content/handlers per screen instead of swapping DOM */
+function setTopHhbar(mode){
+  const bar=$('top-hhbar');
+  if(mode==='none'){ bar.hidden=true; return; }
+  bar.hidden=false;
+  const shareBtn=$('top-hhbar-share'), viewBtn=$('top-hhbar-view'), newBtn=$('top-hhbar-new');
+  if(mode==='lists'){
+    $('top-hhbar-title').textContent=CS.t('homeLists');
+    $('top-hhbar-back').onclick=goHome;
+    $('top-hhbar-members').innerHTML='';
+    shareBtn.hidden=true; viewBtn.hidden=true; newBtn.hidden=false;
+  }else if(mode==='main'){
+    $('top-hhbar-back').onclick=openListsPage;
+    shareBtn.hidden=false; viewBtn.hidden=false; newBtn.hidden=true;
+    CS.renderMembers(members);
+  }
+}
 function goHome(){
   if(!household) return;
   $('home-greeting').textContent=greetingText();
   $('home-hh-name').textContent=hhName;
   CS.renderMembers(members, 'home-members-strip');
+  setTopHhbar('none');
   CS.setScreen('home');
   fetchHomeData().catch(()=>{}); // best-effort dashboard content — the screen already works without it
 }
@@ -1480,7 +1504,16 @@ async function loadHousehold(hh, navigate){
   }
 }
 async function refreshHousehold(){ if(household) await loadHousehold(household, false); }
-$('brand-home-btn').addEventListener('click',()=>{ if(household) goHome(); });
+$('brand-home-btn').addEventListener('click',async()=>{
+  if(!household) return;
+  if(!$('view-main').hidden){ // leaving an open list mid-shopping shouldn't be one accidental tap away
+    const ok=await CS.confirmSheet({
+      title:CS.t('leaveListTitle'), body:CS.t('leaveListConfirm'), confirmLabel:CS.t('leaveListAction')
+    });
+    if(!ok) return;
+  }
+  goHome();
+});
 
 async function createHousehold(){
   const name=$('hh-name').value.trim();
@@ -1493,19 +1526,7 @@ async function createHousehold(){
   if(error){ msg.className='msg err'; msg.textContent=CS.authErr(error); msg.hidden=false; return; }
   await loadHousehold(data);
 }
-async function joinHousehold(){
-  const code=$('hh-code').value.trim();
-  const msg=$('hh-msg');
-  if(!code){ msg.className='msg err'; msg.textContent=CS.t('needCode'); msg.hidden=false; return; }
-  if($('hh-join').disabled) return;
-  $('hh-join').disabled=true;
-  const {data,error}=await sb.rpc('accept_invite',{p_code:code});
-  $('hh-join').disabled=false;
-  if(error){ msg.className='msg err'; msg.textContent=CS.t('errInvite'); msg.hidden=false; return; }
-  await loadHousehold(data);
-}
 $('hh-create').addEventListener('click',createHousehold);
-$('hh-join').addEventListener('click',joinHousehold);
 
 async function openHouseholdSwitcher(){
   const list=await listMyHouseholds();
@@ -1607,7 +1628,6 @@ function drawMembersSheet(){
     drawMembersSheet();
   });
 }
-$('home-members-btn').addEventListener('click',drawMembersSheet);
 
 async function deleteHousehold(){
   const t=CS.t;
@@ -1686,11 +1706,10 @@ async function fetchLists(){
   CS.renderLists(lists, role==='owner'||role==='editor');
 }
 async function openListsPage(){
+  setTopHhbar('lists');
   CS.setScreen('lists');
   await fetchLists();
 }
-$('lists-back').addEventListener('click',goHome);
-$('list-back').addEventListener('click',openListsPage);
 $('home-lists-more').addEventListener('click',openListsPage);
 $('home-lists-empty-btn').addEventListener('click',openNewListSheet);
 
@@ -1736,7 +1755,7 @@ function openNewListSheet(){
   $('new-list-go').onclick=go;
   $('new-list-name').addEventListener('keydown',e=>{ if(e.key==='Enter') go(); });
 }
-$('lists-new').addEventListener('click',openNewListSheet);
+$('top-hhbar-new').addEventListener('click',openNewListSheet);
 
 document.addEventListener('click',async e=>{
   const delBtn=e.target.closest('[data-del-list]');
@@ -1764,11 +1783,12 @@ async function openList(id, silent){
   if(error||!lrow){ if(!silent) toast(CS.authErr(error||'not_found')); return false; }
   listId=id;
   try{ localStorage.setItem('cs-last-list-'+household,id); }catch(e){}
-  $('list-name-lbl').textContent=lrow.name;
+  setTopHhbar('main');
+  $('top-hhbar-title').textContent=lrow.name;
   listStatus=lrow.status;
   $('trip-bar').hidden=listStatus!=='open';
   $('view-main').classList.toggle('readonly',listStatus!=='open');
-  searchQuery=''; $('search-input').value='';
+  searchQuery=''; $('search-input').value=''; $('search-input').hidden=true; $('search-toggle').hidden=false;
   items=[]; paintItems(); // clear the previous list's items so they don't flash under this list's name while loading
   activity=[]; CS.renderActivity([]);
   CS.setScreen('main');
@@ -1852,7 +1872,7 @@ function buildTripSummaryText(){
   const t=CS.t;
   const bought=items.filter(i=>i.status==='checked');
   const notBought=items.filter(i=>i.status==='active'||i.status==='pending');
-  const name=$('list-name-lbl').textContent||'';
+  const name=$('top-hhbar-title').textContent||'';
   const lines=[`🛒 ${name}`.trim(),''];
   lines.push(`✅ ${t('boughtHeader')} (${bought.length})`);
   bought.forEach(i=>lines.push('• '+i.text));
@@ -1869,7 +1889,7 @@ async function shareTripSummary(){
   }
   window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');
 }
-$('list-share').addEventListener('click',shareTripSummary);
+$('top-hhbar-share').addEventListener('click',shareTripSummary);
 
 /* ---------- invites ---------- */
 async function shareInvite(text){
@@ -1956,6 +1976,11 @@ async function fetchActivity(){
   }catch(e){ activity=[]; }
   CS.renderActivity(activity.map(decorateActivity));
 }
+function openActivitySheet(){
+  openSheet(sheetHead(CS.t('activityTitle'))+`<div class="card"><ul class="list activity-list" id="activity-list"></ul></div>`);
+  CS.renderActivity(activity.map(decorateActivity));
+}
+$('activity-open').addEventListener('click',openActivitySheet);
 
 /* best-effort background category/emoji upgrade for items the local dictionary couldn't place —
    batched (debounced) so a fast multi-add only costs one AI call, and never blocks the add itself */

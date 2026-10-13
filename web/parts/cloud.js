@@ -136,14 +136,16 @@ function openAccountSheet(){
         ${['normal','large','xlarge'].map(v=>`<button data-font-opt="${v}" class="${v===curFont?'active':''}">${esc(t('font'+v[0].toUpperCase()+v.slice(1)))}</button>`).join('')}
       </div>
       <button class="btn ghost" id="acct-profile">${esc(t('editProfile'))}</button>
+      <button class="btn ghost" id="acct-members">👥 ${esc(t('homeMembers'))}</button>
+      <button class="btn ghost" id="acct-switch">🏠 ${esc(t('switchHousehold'))}</button>
       <button class="btn ghost" id="acct-guide">📖 ${esc(t('guideOpen'))}</button>
       <button class="btn ghost" id="acct-sync">🔄 ${esc(t('syncNow'))}</button>
-      <button class="btn ghost" id="acct-switch">🏠 ${esc(t('switchHousehold'))}</button>
       <button class="btn ghost" id="acct-signout">👋 ${esc(t('signOut'))}</button>
     </div>`);
   $('theme-pick').querySelectorAll('[data-theme-opt]').forEach(b=>b.onclick=()=>{ CS.setTheme(b.dataset.themeOpt); openAccountSheet(); });
   $('font-pick').querySelectorAll('[data-font-opt]').forEach(b=>b.onclick=()=>{ CS.setFontSize(b.dataset.fontOpt); openAccountSheet(); });
   $('acct-profile').onclick=openProfileSheet;
+  $('acct-members').onclick=drawMembersSheet;
   $('acct-guide').onclick=()=>openGuideSheet();
   $('acct-sync').onclick=async()=>{ await flushQueue({resync:true}); await refreshHousehold(); toast('🔄'); };
   $('acct-switch').onclick=()=>{ closeSheet(); openHouseholdSwitcher(); };
@@ -213,11 +215,30 @@ function greetingText(){
   const first=full.trim().split(' ')[0];
   return CS.t(key).replace('{n}', first?(' '+first):'');
 }
+/* the hhbar (back + title + avatars + actions) lives inside .top itself now, directly continuing the
+   brand capsule's shape — this just reconfigures its content/handlers per screen instead of swapping DOM */
+function setTopHhbar(mode){
+  const bar=$('top-hhbar');
+  if(mode==='none'){ bar.hidden=true; return; }
+  bar.hidden=false;
+  const shareBtn=$('top-hhbar-share'), viewBtn=$('top-hhbar-view'), newBtn=$('top-hhbar-new');
+  if(mode==='lists'){
+    $('top-hhbar-title').textContent=CS.t('homeLists');
+    $('top-hhbar-back').onclick=goHome;
+    $('top-hhbar-members').innerHTML='';
+    shareBtn.hidden=true; viewBtn.hidden=true; newBtn.hidden=false;
+  }else if(mode==='main'){
+    $('top-hhbar-back').onclick=openListsPage;
+    shareBtn.hidden=false; viewBtn.hidden=false; newBtn.hidden=true;
+    CS.renderMembers(members);
+  }
+}
 function goHome(){
   if(!household) return;
   $('home-greeting').textContent=greetingText();
   $('home-hh-name').textContent=hhName;
   CS.renderMembers(members, 'home-members-strip');
+  setTopHhbar('none');
   CS.setScreen('home');
   fetchHomeData().catch(()=>{}); // best-effort dashboard content — the screen already works without it
 }
@@ -260,7 +281,16 @@ async function loadHousehold(hh, navigate){
   }
 }
 async function refreshHousehold(){ if(household) await loadHousehold(household, false); }
-$('brand-home-btn').addEventListener('click',()=>{ if(household) goHome(); });
+$('brand-home-btn').addEventListener('click',async()=>{
+  if(!household) return;
+  if(!$('view-main').hidden){ // leaving an open list mid-shopping shouldn't be one accidental tap away
+    const ok=await CS.confirmSheet({
+      title:CS.t('leaveListTitle'), body:CS.t('leaveListConfirm'), confirmLabel:CS.t('leaveListAction')
+    });
+    if(!ok) return;
+  }
+  goHome();
+});
 
 async function createHousehold(){
   const name=$('hh-name').value.trim();
@@ -273,19 +303,7 @@ async function createHousehold(){
   if(error){ msg.className='msg err'; msg.textContent=CS.authErr(error); msg.hidden=false; return; }
   await loadHousehold(data);
 }
-async function joinHousehold(){
-  const code=$('hh-code').value.trim();
-  const msg=$('hh-msg');
-  if(!code){ msg.className='msg err'; msg.textContent=CS.t('needCode'); msg.hidden=false; return; }
-  if($('hh-join').disabled) return;
-  $('hh-join').disabled=true;
-  const {data,error}=await sb.rpc('accept_invite',{p_code:code});
-  $('hh-join').disabled=false;
-  if(error){ msg.className='msg err'; msg.textContent=CS.t('errInvite'); msg.hidden=false; return; }
-  await loadHousehold(data);
-}
 $('hh-create').addEventListener('click',createHousehold);
-$('hh-join').addEventListener('click',joinHousehold);
 
 async function openHouseholdSwitcher(){
   const list=await listMyHouseholds();
@@ -387,7 +405,6 @@ function drawMembersSheet(){
     drawMembersSheet();
   });
 }
-$('home-members-btn').addEventListener('click',drawMembersSheet);
 
 async function deleteHousehold(){
   const t=CS.t;
@@ -466,11 +483,10 @@ async function fetchLists(){
   CS.renderLists(lists, role==='owner'||role==='editor');
 }
 async function openListsPage(){
+  setTopHhbar('lists');
   CS.setScreen('lists');
   await fetchLists();
 }
-$('lists-back').addEventListener('click',goHome);
-$('list-back').addEventListener('click',openListsPage);
 $('home-lists-more').addEventListener('click',openListsPage);
 $('home-lists-empty-btn').addEventListener('click',openNewListSheet);
 
@@ -516,7 +532,7 @@ function openNewListSheet(){
   $('new-list-go').onclick=go;
   $('new-list-name').addEventListener('keydown',e=>{ if(e.key==='Enter') go(); });
 }
-$('lists-new').addEventListener('click',openNewListSheet);
+$('top-hhbar-new').addEventListener('click',openNewListSheet);
 
 document.addEventListener('click',async e=>{
   const delBtn=e.target.closest('[data-del-list]');
@@ -544,11 +560,12 @@ async function openList(id, silent){
   if(error||!lrow){ if(!silent) toast(CS.authErr(error||'not_found')); return false; }
   listId=id;
   try{ localStorage.setItem('cs-last-list-'+household,id); }catch(e){}
-  $('list-name-lbl').textContent=lrow.name;
+  setTopHhbar('main');
+  $('top-hhbar-title').textContent=lrow.name;
   listStatus=lrow.status;
   $('trip-bar').hidden=listStatus!=='open';
   $('view-main').classList.toggle('readonly',listStatus!=='open');
-  searchQuery=''; $('search-input').value='';
+  searchQuery=''; $('search-input').value=''; $('search-input').hidden=true; $('search-toggle').hidden=false;
   items=[]; paintItems(); // clear the previous list's items so they don't flash under this list's name while loading
   activity=[]; CS.renderActivity([]);
   CS.setScreen('main');
@@ -632,7 +649,7 @@ function buildTripSummaryText(){
   const t=CS.t;
   const bought=items.filter(i=>i.status==='checked');
   const notBought=items.filter(i=>i.status==='active'||i.status==='pending');
-  const name=$('list-name-lbl').textContent||'';
+  const name=$('top-hhbar-title').textContent||'';
   const lines=[`🛒 ${name}`.trim(),''];
   lines.push(`✅ ${t('boughtHeader')} (${bought.length})`);
   bought.forEach(i=>lines.push('• '+i.text));
@@ -649,7 +666,7 @@ async function shareTripSummary(){
   }
   window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');
 }
-$('list-share').addEventListener('click',shareTripSummary);
+$('top-hhbar-share').addEventListener('click',shareTripSummary);
 
 /* ---------- invites ---------- */
 async function shareInvite(text){
@@ -736,6 +753,11 @@ async function fetchActivity(){
   }catch(e){ activity=[]; }
   CS.renderActivity(activity.map(decorateActivity));
 }
+function openActivitySheet(){
+  openSheet(sheetHead(CS.t('activityTitle'))+`<div class="card"><ul class="list activity-list" id="activity-list"></ul></div>`);
+  CS.renderActivity(activity.map(decorateActivity));
+}
+$('activity-open').addEventListener('click',openActivitySheet);
 
 /* best-effort background category/emoji upgrade for items the local dictionary couldn't place —
    batched (debounced) so a fast multi-add only costs one AI call, and never blocks the add itself */
