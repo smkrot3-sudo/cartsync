@@ -141,6 +141,7 @@ function paintStrings(){
   $('pending-title').textContent = t('pendingTitle');
   $('empty-text').textContent = t('emptyList');
   $('activity-title').textContent = t('activityTitle');
+  $('fab-add-label').textContent = t('addToListFab');
   const authGoMode = $('au-go').dataset.mode || 'login';
   $('au-go').textContent = authGoMode==='signup'?t('signupGo'):authGoMode==='reset'?t('resetGo'):t('loginGo');
 }

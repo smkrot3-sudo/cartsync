@@ -246,8 +246,18 @@ button:disabled{opacity:.6;cursor:default}
 .pending-actions .no-btn{background:var(--danger-soft);color:var(--danger)}
 
 /* ---------- floating add button ---------- */
-.fab{position:fixed;inset-inline-end:18px;bottom:calc(88px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);font-size:1.9rem;line-height:1;box-shadow:0 10px 24px rgba(18,26,51,.35);z-index:30;display:grid;place-items:center}
-.fab:active{transform:scale(.94)}
+.fab{
+  position:fixed;inset-inline:16px;bottom:calc(88px + env(safe-area-inset-bottom,0px));
+  height:58px;border-radius:999px;border:0;
+  background:linear-gradient(135deg,var(--accent) 0%,#4A64C9 100%);
+  color:var(--accent-ink);
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  font-family:var(--display);font-weight:400;font-size:1.05rem;
+  box-shadow:0 12px 26px rgba(18,26,51,.35);z-index:30;
+  max-width:420px;margin-inline:auto;
+}
+.fab .e{font-size:1.3rem;line-height:1}
+.fab:active{transform:scale(.97)}
 
 /* a closed list is history: no adding, checking, editing or deleting */
 #view-main.readonly .fab{display:none}
@@ -435,7 +445,7 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
       <ul class="list activity-list" id="activity-list" hidden></ul>
     </div>
 
-    <button class="fab" id="fab-add" aria-label="Add item">+</button>
+    <button class="fab" id="fab-add"><span class="e" aria-hidden="true">➕</span><span id="fab-add-label">הוסף לרשימה</span></button>
   </section>
 
   <div class="shade" id="shade" hidden></div>
@@ -461,7 +471,7 @@ he: {
   onboardTitle:'למי קונים?', onboardSub:'יוצרים משק בית, או מצטרפים לאחד קיים עם קוד הזמנה.',
   createHh:'משק בית חדש', hhNamePh:'לדוגמה: הבית שלנו', create:'ליצור',
   joinHh:'יש לי קוד הזמנה', codePh:'קוד הזמנה', join:'להצטרף',
-  itemPh:'להוסיף מוצר…', qtyPh:'כמות', add:'הוספה',
+  itemPh:'להוסיף מוצר…', qtyPh:'כמות', add:'הוספה', addToListFab:'הוסף לרשימה',
   pendingTitle:'בקשות לאישור', boughtTitle:'נקנה', emptyList:'הרשימה ריקה. מה חסר בבית?',
   activityTitle:'היסטוריית פעולות', activityEmpty:'אין עדיין פעולות ברשימה',
   actAdded:'{n} הוסיף/ה: {t}', actRequested:'{n} ביקש/ה להוסיף: {t}', actApproved:'{n} אישר/ה בקשה: {t}',
@@ -536,7 +546,7 @@ en: {
   onboardTitle:'Shopping for who?', onboardSub:'Create a household, or join one with an invite code.',
   createHh:'New household', hhNamePh:'e.g. Our home', create:'Create',
   joinHh:'I have an invite code', codePh:'Invite code', join:'Join',
-  itemPh:'Add an item…', qtyPh:'Qty', add:'Add',
+  itemPh:'Add an item…', qtyPh:'Qty', add:'Add', addToListFab:'Add to list',
   pendingTitle:'Needs approval', boughtTitle:'Bought', emptyList:'The list is empty. What are we out of?',
   activityTitle:'Activity history', activityEmpty:'No activity on this list yet',
   actAdded:'{n} added: {t}', actRequested:'{n} requested to add: {t}', actApproved:'{n} approved: {t}',
@@ -894,6 +904,7 @@ function paintStrings(){
   $('pending-title').textContent = t('pendingTitle');
   $('empty-text').textContent = t('emptyList');
   $('activity-title').textContent = t('activityTitle');
+  $('fab-add-label').textContent = t('addToListFab');
   const authGoMode = $('au-go').dataset.mode || 'login';
   $('au-go').textContent = authGoMode==='signup'?t('signupGo'):authGoMode==='reset'?t('resetGo'):t('loginGo');
 }

@@ -31,7 +31,7 @@ def page():
 <html lang="he" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
 <title>קניות ביחד · CartSync</title>
 <meta name="description" content="רשימת קניות אחת, לכל המשפחה, בזמן אמת.">
 <meta name="theme-color" content="#F2F4FB" media="(prefers-color-scheme: light)">
