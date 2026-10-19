@@ -94,38 +94,34 @@ button{cursor:pointer;touch-action:manipulation}
 button:disabled{opacity:.6;cursor:default}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:10px}
 
-/* floating dark glass capsule, inset from the screen edges, with a coral ring, a gradient wordmark
-   and an end badge — a deliberate branded moment instead of chrome blending into the page */
+/* a clear, single-purpose header: one row to identify/switch household, one row for its
+   members, one quiet row for "where am I" inside it — instead of two near-identical dark
+   capsules stacked, where the same button meant different things depending on the screen */
 .top{
-  margin:-12px -16px 0;padding:14px 10px 16px;
+  margin:-12px -16px 0;padding:14px 10px 10px;
   background:var(--bg);
+  display:flex;flex-direction:column;gap:8px;
 }
 .brand{
   display:flex;align-items:center;gap:10px;width:100%;
-  background:linear-gradient(135deg,#1C2550 0%,#11162E 100%);
-  border:1.5px solid rgba(255,94,112,.38);
-  border-radius:999px;
-  padding:7px 16px 7px 7px;
-  box-shadow:0 14px 28px rgba(10,14,30,.3);
-  position:relative;z-index:2;
 }
-/* when a list/lists context bar follows, the two segments read as one connected capsule —
-   square where they meet, rounded only at the true outer corners */
-.top:has(> .hhbar:not([hidden])) .brand{
-  border-radius:24px 24px 0 0;
-  border-bottom-width:0;
-  box-shadow:none;
+.hh-chip{
+  flex:1;min-width:0;display:flex;align-items:center;gap:7px;
+  border:0;background:var(--surface);color:var(--accent);
+  border-radius:999px;padding:9px 14px;box-shadow:var(--shadow);
+  font-family:var(--display);font-weight:400;font-size:1rem;cursor:pointer;
 }
-.brand-name-btn{flex:1;min-width:0;border:0;background:transparent;padding:0;text-align:center;font-family:var(--display);font-weight:400;font-size:1.12rem;letter-spacing:.01em;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  background-image:linear-gradient(90deg,#FF8FA0,#FFC48A);-webkit-background-clip:text;background-clip:text;color:transparent}
-.brand-name-btn b{font-weight:inherit}
+.hh-chip .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:start;font-weight:inherit}
+.hh-chip .chev{flex:none;font-size:.7rem;color:var(--muted)}
 .brand-end-badge{width:36px;height:36px;border-radius:12px;flex:none;display:grid;place-items:center;font-size:1.05rem;
   background:linear-gradient(135deg,var(--coral),var(--gold));box-shadow:0 4px 10px rgba(255,94,112,.4)}
-.top-utility{display:flex;flex-direction:column;align-items:center;gap:1px;flex:none;color:rgba(255,255,255,.8)}
-.top-utility .iconbtn{background:transparent;box-shadow:none;color:inherit;width:auto;height:auto;font-size:1.05rem}
-.top-utility-label{font-size:.56rem;color:rgba(255,255,255,.65)}
-.brand .avatarbtn{background:rgba(255,255,255,.12);color:#fff;width:34px;height:34px;font-size:.8rem;font-weight:bold;border:2px solid var(--coral);box-shadow:none;flex:none}
+.brand .avatarbtn{width:34px;height:34px;font-size:.8rem;font-weight:bold;border:2px solid var(--coral);box-shadow:none;flex:none}
+.members-row{
+  display:flex;align-items:center;gap:8px;width:100%;
+  border:0;background:var(--surface);box-shadow:var(--shadow);
+  border-radius:999px;padding:8px 14px;color:var(--muted);font-size:.85rem;cursor:pointer;text-align:start;
+}
+.members-row .chev{margin-inline-start:auto;flex:none;font-size:.78rem}
 .iconbtn{border:0;background:var(--surface);box-shadow:var(--shadow);width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:var(--muted);flex:none;font-size:1.15rem;transition:transform .1s ease}
 .iconbtn:active{transform:scale(.92)}
 
@@ -196,23 +192,15 @@ button:disabled{opacity:.6;cursor:default}
 .trip-bar #trip-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .trip-bar .btn.small{flex:none}
 
-/* the second segment of the brand capsule — same dark fill and ring, continuing directly below
-   .brand with no gap, so the two read as one connected header instead of a bold bar sitting over
-   a disconnected quiet row */
+/* a quiet "where am I" row — subordinate to the household chip above it on purpose, so the two
+   never compete for attention the way two stacked capsules used to */
 .hhbar{
-  display:flex;align-items:center;gap:10px;width:100%;
-  background:linear-gradient(135deg,#1C2550 0%,#11162E 100%);
-  border:1.5px solid rgba(255,94,112,.38);
-  border-top:1px solid rgba(255,255,255,.14);
-  border-radius:0 0 24px 24px;
-  padding:10px 16px;
-  box-shadow:0 14px 28px rgba(10,14,30,.3);
-  margin-top:-1.5px;position:relative;z-index:1;
+  display:flex;align-items:center;gap:6px;width:100%;
+  padding:2px 6px;
 }
-.hhbar .iconbtn{background:transparent;box-shadow:none;color:rgba(255,255,255,.82);width:auto;height:auto;font-size:1.1rem}
-.hhbar .iconbtn:active{opacity:.6}
-.hhbar .avatar{border-color:rgba(255,255,255,.35)}
-.list-name-lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:1.1rem;font-family:var(--display);font-weight:400;color:#fff}
+.hhbar .iconbtn-lite{border:0;background:transparent;color:var(--muted);width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:1.05rem;flex:none}
+.hhbar .iconbtn-lite:active{background:var(--soft)}
+.list-name-lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.95rem;font-family:var(--display);font-weight:400;color:var(--fg)}
 
 .list-row{display:flex;align-items:center;gap:10px;background:var(--surface);border-radius:16px;padding:12px 14px;box-shadow:var(--shadow);width:100%;border:0;text-align:start;color:inherit;cursor:pointer}
 .list-row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:1rem}
@@ -313,6 +301,8 @@ button:disabled{opacity:.6;cursor:default}
 .auth input[hidden]{display:none}
 .auth .actions-row{display:flex;justify-content:space-between;align-items:center}
 
+.grp-h{font-size:.72rem;font-weight:bold;color:var(--muted);letter-spacing:.03em;margin:8px 0 -4px}
+.grp-h:first-child{margin-top:0}
 .role-pick{display:flex;gap:6px;flex-wrap:wrap}
 .role-pick button{border:2px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 13px;font-size:.88rem}
 .role-pick button.active{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
@@ -338,20 +328,20 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
   <header class="top">
     <div class="brand">
       <span id="acct-top"></span>
-      <div class="top-utility">
-        <button class="iconbtn" id="lang-btn" aria-label="Language">🌐</button>
-        <span class="top-utility-label" id="lang-label">שפה</span>
-      </div>
-      <button class="brand-name-btn" id="brand-home-btn"><b id="brand-name">קניות ביחד</b></button>
+      <button class="hh-chip" id="brand-home-btn"><span class="e" aria-hidden="true">🏠</span><b class="nm" id="brand-name">קניות ביחד</b><span class="chev" aria-hidden="true">⌄</span></button>
       <span class="brand-end-badge" aria-hidden="true"><span class="e">🛒</span></span>
     </div>
-    <div class="hhbar" id="top-hhbar" hidden>
-      <button class="iconbtn" id="top-hhbar-back" aria-label="Back">→</button>
-      <b id="top-hhbar-title" class="list-name-lbl">…</b>
+    <button class="members-row" id="members-row" hidden>
       <div class="members" id="top-hhbar-members"></div>
-      <button class="iconbtn" id="top-hhbar-share" aria-label="Share" hidden>📤</button>
-      <button class="iconbtn" id="top-hhbar-view" aria-label="View" hidden>🗂️</button>
-      <button class="iconbtn" id="top-hhbar-new" aria-label="New list" hidden>➕</button>
+      <span id="members-count-label"></span>
+      <span class="chev" aria-hidden="true">›</span>
+    </button>
+    <div class="hhbar" id="top-hhbar" hidden>
+      <button class="iconbtn-lite" id="top-hhbar-back" aria-label="Back">→</button>
+      <b id="top-hhbar-title" class="list-name-lbl">…</b>
+      <button class="iconbtn-lite" id="top-hhbar-share" aria-label="Share" hidden>📤</button>
+      <button class="iconbtn-lite" id="top-hhbar-view" aria-label="View" hidden>🗂️</button>
+      <button class="iconbtn-lite" id="top-hhbar-new" aria-label="New list" hidden>➕</button>
     </div>
   </header>
 
@@ -404,8 +394,6 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
       <h1 id="home-greeting">…</h1>
       <p class="sub" id="home-hh-sub"><span class="e">🏠</span> <span id="home-hh-name">…</span></p>
     </div>
-    <div class="members" id="home-members-strip"></div>
-
     <div id="home-lists-section">
       <div class="group-h"><span class="e">🛒</span><span id="home-lists-heading">הרשימות הפעילות</span></div>
       <ul class="list" id="home-lists-preview"></ul>
@@ -535,6 +523,8 @@ he: {
   searchPh:'חיפוש ברשימה…', newPendingToast:'🙋 {n} ביקש/ה להוסיף: {t}',
   dupWarning:'"{n}" כבר ברשימה.', dupAddAnyway:'להוסיף בכל זאת',
   manageMembers:'👥 ניהול חברי משק הבית', membersTitle:'חברי משק הבית',
+  membersCountOne:'חבר אחד', membersCount:'{n} חברים',
+  settingsGroupHousehold:'משק הבית', settingsGroupPersonal:'אישי', settingsGroupApp:'אפליקציה',
   removeConfirm:'להסיר את {n} ממשק הבית?', leaveConfirm:'לצאת ממשק הבית?',
   removeTitle:'הסרת חבר/ת משק בית', leaveTitle:'יציאה ממשק הבית', removeAction:'להסיר', leaveAction:'לצאת',
   leaveHousehold:'יציאה ממשק הבית', memberRemoved:'✅ הוסר/ה ממשק הבית', youLeft:'👋 יצאת ממשק הבית',
@@ -613,6 +603,8 @@ en: {
   searchPh:'Search the list…', newPendingToast:'🙋 {n} requested to add: {t}',
   dupWarning:'"{n}" is already on the list.', dupAddAnyway:'Add anyway',
   manageMembers:'👥 Manage household members', membersTitle:'Household members',
+  membersCountOne:'1 member', membersCount:'{n} members',
+  settingsGroupHousehold:'Household', settingsGroupPersonal:'Personal', settingsGroupApp:'App',
   removeConfirm:'Remove {n} from the household?', leaveConfirm:'Leave this household?',
   removeTitle:'Remove member', leaveTitle:'Leave household', removeAction:'Remove', leaveAction:'Leave',
   leaveHousehold:'Leave household', memberRemoved:'✅ Removed from the household', youLeft:'👋 You left the household',
@@ -909,7 +901,6 @@ function field(id,text){ const el=$(id); if(!el) return; el.placeholder=text; el
 function paintStrings(){
   const t = CS.t;
   $('brand-name').textContent = (window.CS.currentHouseholdName && window.CS.currentHouseholdName()) || t('appName');
-  $('lang-label').textContent = t('langLabel');
   $('auth-title').textContent = t('authHero');
   $('auth-sub').textContent = t('authSub');
   $('tab-login').textContent = t('login');
@@ -956,20 +947,12 @@ function personColor(uid){
   return `hsl(${h} 62% 46%)`;
 }
 function renderMembers(members, targetId, limit){
-  // the hhbar is tight on space (back + title + avatars + actions all in one row) — cap hard there;
-  // give the Home strip room to show more since it has a whole line to itself
   const all=members||[];
-  const shown=all.slice(0,limit||2);
+  const shown=all.slice(0,limit||5);
   let html = shown.map(m=>
     `<span class="avatar" style="background:${personColor(m.user_id)}" title="${esc(m.display_name||m.email||'')}">${esc(initials(m.display_name||m.email))}</span>`).join('');
   if(all.length>shown.length) html += `<span class="avatar avatar-more">+${all.length-shown.length}</span>`;
-  const el=$(targetId||'top-hhbar-members');
-  el.innerHTML = html;
-  if(all.length){
-    el.setAttribute('role','button'); el.tabIndex=0; el.setAttribute('aria-label',CS.t('membersTitle'));
-    el.onclick = ()=>{ window.CS.on && window.CS.on.openMembers && window.CS.on.openMembers(); };
-    el.onkeydown = e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); el.onclick(); } };
-  }
+  $(targetId||'top-hhbar-members').innerHTML = html;
 }
 function personName(name){
   if(!name) return '';
@@ -1194,7 +1177,6 @@ $('tab-login').addEventListener('click',()=>setAuthMode('login'));
 $('tab-signup').addEventListener('click',()=>setAuthMode('signup'));
 $('au-forgot').addEventListener('click',()=>setAuthMode('reset'));
 
-$('lang-btn').addEventListener('click',()=>{ CS.setLang(CS.lang()==='he'?'en':'he'); });
 $('refresh-btn').addEventListener('click',()=>location.reload());
 
 Object.assign(window.CS,{
@@ -1342,10 +1324,16 @@ function renderAccount(){
 }
 function openAccountSheet(){
   const t=CS.t;
-  const curTheme=CS.theme(), curFont=CS.fontSize();
+  const curTheme=CS.theme(), curFont=CS.fontSize(), curLang=CS.lang();
   openSheet(sheetHead(t('settings'))+`
     <div class="card">
       <div style="font-size:.9rem;color:var(--muted)" dir="ltr">${esc(user.email)}</div>
+
+      <p class="grp-h">${esc(t('settingsGroupHousehold'))}</p>
+      <button class="btn ghost" id="acct-members">👥 ${esc(t('homeMembers'))}</button>
+      <button class="btn ghost" id="acct-switch">🏠 ${esc(t('switchHousehold'))}</button>
+
+      <p class="grp-h">${esc(t('settingsGroupPersonal'))}</p>
       <p style="margin:2px 0 -4px">${esc(t('themeLabel'))}</p>
       <div class="role-pick" id="theme-pick">
         ${['light','dark','system'].map(v=>`<button data-theme-opt="${v}" class="${v===curTheme?'active':''}">${esc(t('theme'+v[0].toUpperCase()+v.slice(1)))}</button>`).join('')}
@@ -1354,15 +1342,21 @@ function openAccountSheet(){
       <div class="role-pick" id="font-pick">
         ${['normal','large','xlarge'].map(v=>`<button data-font-opt="${v}" class="${v===curFont?'active':''}">${esc(t('font'+v[0].toUpperCase()+v.slice(1)))}</button>`).join('')}
       </div>
+      <p style="margin:2px 0 -4px">${esc(t('langLabel'))}</p>
+      <div class="role-pick" id="lang-pick">
+        <button data-lang-opt="he" class="${curLang==='he'?'active':''}">עברית</button>
+        <button data-lang-opt="en" class="${curLang==='en'?'active':''}">English</button>
+      </div>
       <button class="btn ghost" id="acct-profile">${esc(t('editProfile'))}</button>
-      <button class="btn ghost" id="acct-members">👥 ${esc(t('homeMembers'))}</button>
-      <button class="btn ghost" id="acct-switch">🏠 ${esc(t('switchHousehold'))}</button>
+
+      <p class="grp-h">${esc(t('settingsGroupApp'))}</p>
       <button class="btn ghost" id="acct-guide">📖 ${esc(t('guideOpen'))}</button>
       <button class="btn ghost" id="acct-sync">🔄 ${esc(t('syncNow'))}</button>
       <button class="btn ghost" id="acct-signout">👋 ${esc(t('signOut'))}</button>
     </div>`);
   $('theme-pick').querySelectorAll('[data-theme-opt]').forEach(b=>b.onclick=()=>{ CS.setTheme(b.dataset.themeOpt); openAccountSheet(); });
   $('font-pick').querySelectorAll('[data-font-opt]').forEach(b=>b.onclick=()=>{ CS.setFontSize(b.dataset.fontOpt); openAccountSheet(); });
+  $('lang-pick').querySelectorAll('[data-lang-opt]').forEach(b=>b.onclick=()=>{ CS.setLang(b.dataset.langOpt); openAccountSheet(); });
   $('acct-profile').onclick=openProfileSheet;
   $('acct-members').onclick=drawMembersSheet;
   $('acct-guide').onclick=()=>openGuideSheet();
@@ -1428,6 +1422,14 @@ async function listMyHouseholds(){
 let hhName='';
 window.CS.currentHouseholdName=()=>household?hhName:null;
 function paintBrandName(){ $('brand-name').textContent = household?hhName:CS.t('appName'); }
+function memberCountLabel(n){ return n===1 ? CS.t('membersCountOne') : CS.t('membersCount').replace('{n}',n); }
+function paintMembersRow(){
+  const row=$('members-row');
+  if(!household || !members.length){ row.hidden=true; return; }
+  row.hidden=false;
+  CS.renderMembers(members);
+  $('members-count-label').textContent = memberCountLabel(members.length);
+}
 function greetingText(){
   const h=new Date().getHours();
   const key = h>=5&&h<12 ? 'greetingMorning' : h>=12&&h<17 ? 'greetingAfternoon' : h>=17&&h<21 ? 'greetingEvening' : 'greetingNeutral';
@@ -1436,8 +1438,8 @@ function greetingText(){
   const first=full.trim().split(' ')[0];
   return CS.t(key).replace('{n}', first?(' '+first):'');
 }
-/* the hhbar (back + title + avatars + actions) lives inside .top itself now, directly continuing the
-   brand capsule's shape — this just reconfigures its content/handlers per screen instead of swapping DOM */
+/* "where am I" only — who's in the household now lives in its own always-visible members-row,
+   painted separately by paintMembersRow(), not tied to this bar's per-screen mode */
 function setTopHhbar(mode){
   const bar=$('top-hhbar');
   if(mode==='none'){ bar.hidden=true; return; }
@@ -1446,19 +1448,16 @@ function setTopHhbar(mode){
   if(mode==='lists'){
     $('top-hhbar-title').textContent=CS.t('homeLists');
     $('top-hhbar-back').onclick=goHome;
-    $('top-hhbar-members').innerHTML='';
     shareBtn.hidden=true; viewBtn.hidden=true; newBtn.hidden=false;
   }else if(mode==='main'){
     $('top-hhbar-back').onclick=openListsPage;
     shareBtn.hidden=false; viewBtn.hidden=false; newBtn.hidden=true;
-    CS.renderMembers(members);
   }
 }
 function goHome(){
   if(!household) return;
   $('home-greeting').textContent=greetingText();
   $('home-hh-name').textContent=hhName;
-  CS.renderMembers(members, 'home-members-strip', 5);
   setTopHhbar('none');
   CS.setScreen('home');
   fetchHomeData().catch(()=>{}); // best-effort dashboard content — the screen already works without it
@@ -1466,8 +1465,8 @@ function goHome(){
 function applyCachedHousehold(cache){
   household=cache.hhId; hhName=cache.hhName||''; role=cache.role; members=cache.members||[];
   membersById={}; members.forEach(m=>membersById[m.user_id]=m);
-  CS.renderMembers(members);
   paintBrandName();
+  paintMembersRow();
   goHome();
   showOfflineNote(true);
 }
@@ -1487,7 +1486,7 @@ async function loadHousehold(hh, navigate){
     hhName=hrow.name;
     paintBrandName();
     await ensureDisplayName(hh);
-    CS.renderMembers(members);
+    paintMembersRow();
     if(!$('view-lists').hidden) CS.renderLists(lists); // keep the open lists page's data fresh without navigating away from it
     showOfflineNote(false);
     subscribeHouseholdRealtime();
@@ -1515,6 +1514,7 @@ $('brand-home-btn').addEventListener('click',async()=>{
   }
   goHome();
 });
+$('members-row').addEventListener('click',()=>{ if(household) drawMembersSheet(); });
 
 async function createHousehold(){
   const name=$('hh-name').value.trim();
@@ -1644,7 +1644,7 @@ function drawMembersSheet(){
     if(isSelf){ closeSheet(); toast(t('youLeft')); await onUser(user); return; }
     members=members.filter(x=>x.user_id!==uid);
     membersById=Object.fromEntries(members.map(x=>[x.user_id,x]));
-    CS.renderMembers(members,'home-members-strip',5); CS.renderMembers(members);
+    paintMembersRow();
     toast(t('memberRemoved'));
     drawMembersSheet();
   });
@@ -1680,7 +1680,7 @@ function openEditNameSheet(){
     const {error}=await sb.from('household_members').update({display_name:name}).eq('household_id',household).eq('user_id',user.id);
     if(error){ toast(CS.authErr(error)); return; }
     if(mine) mine.display_name=name;
-    CS.renderMembers(members,'home-members-strip',5); CS.renderMembers(members);
+    paintMembersRow();
     toast(t('nameUpdated'));
     drawMembersSheet();
   };
@@ -2161,7 +2161,7 @@ async function rejectItem(id){
   const {error}=await sb.rpc('reject_pending_item',{p_item_id:id});
   if(error){ if(it) items.push(it); paintItems(); toast(CS.authErr(error)); }
 }
-window.CS.on={toggle:toggleItem, reorder:reorderItems, openMembers:drawMembersSheet};
+window.CS.on={toggle:toggleItem, reorder:reorderItems};
 
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-action]'); if(!b) return;
@@ -2232,7 +2232,7 @@ addEventListener('offline',()=>{ online=false; showOfflineNote(true); });
 async function onUser(u){
   user=u; window.CS.myId=u?u.id:null;
   renderAccount();
-  if(!u){ household=null; listId=null; items=[]; paintBrandName(); CS.setScreen('auth'); return; }
+  if(!u){ household=null; listId=null; items=[]; paintBrandName(); paintMembersRow(); CS.setScreen('auth'); return; }
   if(pendingJoin && await consumePendingJoin()){ maybeShowOnboarding(); return; }
   const list=await listMyHouseholds();
   if(!list.length){
