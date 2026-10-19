@@ -896,6 +896,15 @@ const DICT = [
   [['אבקת תינוקות','קרם החתלה','בגד גוף','כפפות תינוק','מגבת תינוקות','עגלת תינוק','כיסא אוכל'],'baby','🍼'],
   [['חול חתולים'],'pet','🐱'], [['צעצוע לכלב','קולר','מברשת לכלב','dog toy','collar'],'pet','🐶'],
   [['ויטמינים לחיות','אוכל לציפורים','pet vitamin','bird food'],'pet','🐾'],
+
+  // round 4: real gaps found while manually clearing out items already stuck as "other" in a live
+  // household's list (from before the AI-fallback fix below) — a handful of genuine misses, not
+  // just stale data
+  [['אוכמניות','blueberr'],'produce','🫐'], [['איטריות','noodle'],'pantry','🍝'],
+  [['אצות','seaweed'],'pantry','🍙'], [['טיטולים'],'baby','🍼'], [['טריאקי','teriyaki'],'pantry','🍶'],
+  [['כבד','liver'],'meat','🥩'], [['כיסא','chair'],'household','🪑'], [['מפיות','napkin'],'household','🧻'],
+  [['סמרטוט','rag'],'household','🧽'], [['עשבי תיבול','herbs'],'produce','🌿'],
+  [['קינמון','cinnamon'],'pantry','🧂'], [['קרמבו'],'snacks','🍫'], [['שוקולית'],'dairy','🥛'],
 ];
 // a few dictionary entries are written as the bare Hebrew singular ("בננה", "לימון"); a shopper
 // almost always types the plural ("בננות", "לימונים"), which a plain substring check never matches —
