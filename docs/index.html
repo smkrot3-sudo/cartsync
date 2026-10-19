@@ -816,11 +816,30 @@ const DICT = [
   [['חיתול','diaper'],'baby','🍼'], [['מטרנה','similac','תמ״ל','formula'],'baby','🍼'],
   [['מזון לכלב','dog food'],'pet','🐶'], [['מזון לחתול','cat food'],'pet','🐱'], [['חול לחתול','litter'],'pet','🐾'],
 ];
+// a few dictionary entries are written as the bare Hebrew singular ("בננה", "לימון"); a shopper
+// almost always types the plural ("בננות", "לימונים"), which a plain substring check never matches —
+// Hebrew plurals both add a suffix (-ות, -ים) AND, for -ים, swap the letter before it to its non-final
+// form (ן/ם/ך/ף/ץ -> נ/מ/כ/פ/צ), so the plural text no longer literally contains the singular word.
+// Undoing both effects (not just patching the handful of entries we've noticed) fixes every current
+// and future dictionary word the same way, instead of one word at a time.
+const FINAL_LETTERS={'נ':'ן','מ':'ם','כ':'ך','פ':'ף','צ':'ץ'};
+function hebrewSingularCandidates(n){
+  const out=[n];
+  if(n.endsWith('ות')) out.push(n.slice(0,-2)+'ה'); // עגבניות -> עגבניה
+  if(n.endsWith('ים')){
+    const stem=n.slice(0,-2); // לימונים -> לימונ
+    out.push(stem);
+    const last=stem.slice(-1);
+    if(FINAL_LETTERS[last]) out.push(stem.slice(0,-1)+FINAL_LETTERS[last]); // לימונ -> לימון
+  }
+  return out;
+}
 function guess(text){
   const n = (text||'').trim().toLowerCase();
   if(!n) return {cat:'other',emoji:CS.CATS.other.emoji};
+  const candidates = hebrewSingularCandidates(n);
   for(const [keys,cat,emoji] of DICT){
-    if(keys.some(k=>n.includes(k.toLowerCase()))) return {cat,emoji};
+    if(keys.some(k=>candidates.some(c=>c.includes(k.toLowerCase())))) return {cat,emoji};
   }
   return {cat:'other',emoji:CS.CATS.other.emoji};
 }
