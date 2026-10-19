@@ -792,11 +792,12 @@ const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&
 
 /* ---------- local item -> category/emoji guesser (works with zero network; the AI edge function can refine this later) ---------- */
 const DICT = [
-  [['חלב','milk'],'dairy','🥛'], [['גבינה','cheese'],'dairy','🧀'], [['ביצים','egg'],'dairy','🥚'],
+  [['חלב','milk'],'dairy','🥛'], [['גבינ','cheese'],'dairy','🧀'], [['ביצים','egg','ביצה'],'dairy','🥚'],
   [['יוגורט','yogurt','yoghurt'],'dairy','🥣'], [['חמאה','butter'],'dairy','🧈'], [['שמנת','cream'],'dairy','🥛'],
   [['קוטג','cottage'],'dairy','🧀'],
-  [['לחם','bread'],'bakery','🍞'], [['חלה','challah'],'bakery','🍞'], [['פיתה','pita'],'bakery','🫓'],
+  [['לחם','bread','לחמני'],'bakery','🍞'], [['חלה','challah'],'bakery','🍞'], [['פיתה','pita'],'bakery','🫓'],
   [['בורקס','croissant','קרואסון'],'bakery','🥐'], [['עוגה','cake'],'bakery','🍰'], [['בייגל','bagel'],'bakery','🥯'],
+  [['טורטיה','tortilla'],'bakery','🫓'], [['פוקצ','focaccia'],'bakery','🍞'],
   [['עגבני','tomato'],'produce','🍅'], [['מלפפון','cucumber'],'produce','🥒'], [['בננה','banana'],'produce','🍌'],
   [['תפוח אדמה','תפוחי אדמה','potato'],'produce','🥔'], [['תפוח','apple'],'produce','🍎'], [['תפוז','orange'],'produce','🍊'],
   [['תות','strawberr'],'produce','🍓'], [['אבוקדו','avocado'],'produce','🥑'], [['בצל','onion'],'produce','🧅'],
@@ -809,7 +810,7 @@ const DICT = [
   [['פסטה','pasta','ספגטי','spaghetti'],'pantry','🍝'], [['אורז','rice'],'pantry','🍚'], [['קמח','flour'],'pantry','🌾'],
   [['סוכר','sugar'],'pantry','🍬'], [['שמן','oil'],'pantry','🫒'], [['קטשופ','ketchup'],'pantry','🍅'],
   [['חומוס','hummus'],'pantry','🧆'], [['טחינה','tahini'],'pantry','🥫'], [['קורנפלקס','cereal'],'pantry','🥣'],
-  [['מלח','salt'],'pantry','🧂'], [['טונה','tuna'],'pantry','🥫'], [['שימורים','canned'],'pantry','🥫'],
+  [['מלח','salt'],'pantry','🧂'], [['טונה','tuna'],'pantry','🥫'], [['שימור','canned'],'pantry','🥫'],
   [['קפה','coffee'],'beverages','☕'], [['תה','tea'],'beverages','🍵'], [['מים','water'],'beverages','💧'],
   [['מיץ','juice'],'beverages','🧃'], [['קולה','cola','סודה','soda'],'beverages','🥤'], [['בירה','beer'],'beverages','🍺'],
   [['יין','wine'],'beverages','🍷'],
@@ -823,6 +824,43 @@ const DICT = [
   [['סבון גוף','body wash'],'care','🧴'],
   [['חיתול','diaper'],'baby','🍼'], [['מטרנה','similac','תמ״ל','formula'],'baby','🍼'],
   [['מזון לכלב','dog food'],'pet','🐶'], [['מזון לחתול','cat food'],'pet','🐱'], [['חול לחתול','litter'],'pet','🐾'],
+
+  // round 2: appended after a 288-item simulated shopping session turned up gaps — appended (not
+  // interleaved into the sections above) so none of these can ever out-rank an existing, already-
+  // correct match; they only fire when nothing above already caught the item
+  [['אקטימל','דנונה'],'dairy','🥣'], [['לבנה','לאבנה'],'dairy','🧀'], [['פודינג','pudding'],'dairy','🍮'],
+  [['כרובית','cauliflower'],'produce','🥦'], [['כרוב','cabbage'],'produce','🥬'],
+  [['פטרי','mushroom'],'produce','🍄'], [['חציל','eggplant'],'produce','🍆'], [['קישוא','zucchini'],'produce','🥒'],
+  [['תירס','corn'],'produce','🌽'], [['סלק','beet'],'produce','🍠'], [['צנונית','radish'],'produce','🥬'],
+  [['פטרוזיליה','כוסברה','נענע','שמיר','סלרי','parsley','cilantro','mint','dill','celery'],'produce','🌿'],
+  [['זית','olive'],'produce','🫒'], [['אפרסק','שזיף','משמש','peach','plum','apricot'],'produce','🍑'],
+  [['אגס','pear'],'produce','🍐'], [['רימון','pomegranate'],'produce','🍎'], [['אפרסמון','persimmon'],'produce','🍊'],
+  [['תמר','date'],'produce','🌰'], [['קיווי','kiwi'],'produce','🥝'], [['אננס','pineapple'],'produce','🍍'],
+  [['פרגי'],'meat','🍗'], [['סטייק','steak','אנטריקוט'],'meat','🥩'], [['דניס','בורי'],'meat','🐟'],
+  [['קציצ','meatball'],'meat','🍖'], [['שניצל','schnitzel'],'meat','🍗'],
+  [['מיונז','mayo'],'pantry','🥫'], [['חרדל','mustard'],'pantry','🫙'], [['גולדה'],'pantry','🧆'],
+  [['רסק','רוטב'],'pantry','🥫'], [['קינואה','quinoa'],'pantry','🌾'], [['עדש','lentil','שעועית','bean'],'pantry','🫘'],
+  [['מרק','soup'],'pantry','🥫'], [['תבלין','כורכום','פפריקה','spice','turmeric','paprika'],'pantry','🧂'],
+  [['סילאן','דבש','honey'],'pantry','🍯'], [['ריבה','jam'],'pantry','🍯'], [['נוטלה','ממרח שוקולד','nutella'],'pantry','🍫'],
+  [['בייקינג פאודר','baking powder'],'pantry','🥄'], [['וניל','vanilla'],'pantry','🫙'],
+  [['מי עדן'],'beverages','💧'], [['ספרייט','sprite'],'beverages','🥤'], [['פאנטה','fanta'],'beverages','🥤'],
+  [['משקה אנרגיה','energy drink'],'beverages','🥤'], [['שייק','shake'],'beverages','🥤'],
+  [['במבה'],'snacks','🥜'], [['ביסלי'],'snacks','🍿'], [['תפוציפס'],'snacks','🍟'],
+  [['פיצוח','nuts'],'snacks','🥜'], [['שקד','almond'],'snacks','🥜'], [['קשיו','cashew'],'snacks','🥜'],
+  [['גרעין','seed'],'snacks','🌻'], [['מרשמלו','marshmallow'],'snacks','🍬'], [['וופל','waffle'],'snacks','🧇'],
+  [['ארטיק','popsicle'],'frozen','🍦'], [['מוצרי בצק','בצק','dough'],'frozen','🥐'], [['בלינצ\'ס','blintz'],'frozen','🥞'],
+  [['מגבות נייר','paper towel'],'household','🧻'], [['מרכך כביסה','fabric softener'],'household','🧴'],
+  [['ספוג','sponge'],'household','🧽'], [['מברשת רצפה','floor brush'],'household','🧹'],
+  [['נייר אלומיניום','foil','ניילון נצמד','cling film'],'household','🧻'], [['חד פעמי','disposable'],'household','🍽️'],
+  [['מטלית','מטליות','cloth'],'household','🧽'], [['נר','candle'],'household','🕯️'], [['גפרור','match'],'household','🔥'],
+  [['סוללה','battery'],'household','🔋'], [['מגבת מטבח','kitchen towel'],'household','🧻'],
+  [['מרכך שיער','conditioner'],'care','🧴'], [['ג\'ל רחצה','shower gel'],'care','🧴'],
+  [['מברשת שיניים','toothbrush'],'care','🪥'], [['קרם הגנה','sunscreen','קרם לחות','moisturizer'],'care','🧴'],
+  [['פד','טמפון','תחבושת','תחבושות','pad','tampon'],'care','🧴'], [['סכין גילוח','סכיני גילוח','razor'],'care','🪒'],
+  [['מי פה','mouthwash'],'care','🧴'], [['חוט דנטלי','dental floss'],'care','🧵'],
+  [['מגבוני','סימילאק'],'baby','🍼'], [['בקבוק','bottle'],'baby','🍼'], [['מוצץ','pacifier'],'baby','🍼'],
+  [['דייס','פירה תינוקות','baby food'],'baby','🍼'],
+  [['אוכל לכלב','חטיפים לכלב','dog treat'],'pet','🐶'], [['אוכל לחתול'],'pet','🐱'], [['רצועה','leash'],'pet','🐾'],
 ];
 // a few dictionary entries are written as the bare Hebrew singular ("בננה", "לימון"); a shopper
 // almost always types the plural ("בננות", "לימונים"), which a plain substring check never matches —
@@ -842,12 +880,17 @@ function hebrewSingularCandidates(n){
   }
   return out;
 }
+// the dictionary spells a few words with the correct Hebrew geresh/gershayim punctuation
+// (צ׳יפס, תמ״ל) but almost nobody types those marks on a phone keyboard — they type a plain
+// ASCII ' or " instead, which is a different character and fails a literal substring match.
+// Normalizing both sides the same way fixes every such entry at once.
+function normQuotes(s){ return s.replace(/[׳']/g,"'").replace(/[״"]/g,'"'); }
 function guess(text){
-  const n = (text||'').trim().toLowerCase();
+  const n = normQuotes((text||'').trim().toLowerCase());
   if(!n) return {cat:'other',emoji:CS.CATS.other.emoji};
   const candidates = hebrewSingularCandidates(n);
   for(const [keys,cat,emoji] of DICT){
-    if(keys.some(k=>candidates.some(c=>c.includes(k.toLowerCase())))) return {cat,emoji};
+    if(keys.some(k=>candidates.some(c=>c.includes(normQuotes(k.toLowerCase()))))) return {cat,emoji};
   }
   return {cat:'other',emoji:CS.CATS.other.emoji};
 }
