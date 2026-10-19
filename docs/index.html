@@ -292,17 +292,16 @@ button:disabled{opacity:.6;cursor:default}
 
 /* ---------- floating add button ---------- */
 .fab{
-  position:fixed;inset-inline:16px;bottom:calc(88px + env(safe-area-inset-bottom,0px));
-  height:58px;border-radius:999px;border:0;
+  position:fixed;inset-inline-end:16px;bottom:calc(88px + env(safe-area-inset-bottom,0px));
+  width:54px;height:54px;border-radius:50%;border:0;
   background:var(--btn-grad);
   color:var(--accent-ink);
-  display:flex;align-items:center;justify-content:center;gap:9px;
-  font-family:var(--display);font-weight:400;font-size:1.05rem;
-  box-shadow:0 12px 26px rgba(18,26,51,.35);z-index:30;
-  max-width:420px;margin-inline:auto;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 10px 22px rgba(18,26,51,.35);z-index:30;
 }
-.fab .e{font-size:1.3rem;line-height:1}
+.fab .e{font-size:1.5rem;line-height:1}
 .fab:active{transform:scale(.97)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
 
 /* a closed list is history: no adding, checking, editing or deleting */
 #view-main.readonly .fab{display:none}
@@ -327,12 +326,6 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
 
 .offline-note{background:var(--danger-soft);color:var(--danger);border-radius:12px;padding:8px 12px;font-size:.85rem;text-align:center}
 
-.activity-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
-.activity-row{display:flex;align-items:baseline;gap:8px;padding:8px 0;border-top:1px solid var(--line);font-size:.86rem}
-.activity-row:first-child{border-top:0}
-.activity-text{flex:1;min-width:0;color:var(--muted);overflow-wrap:anywhere}
-.activity-time{flex:none;color:var(--muted);font-variant-numeric:tabular-nums;font-size:.78rem;direction:ltr}
-.activity-empty{list-style:none;color:var(--muted);text-align:center;padding:6px 0;font-size:.86rem}
 
 @media (max-width:360px){.avatar{width:26px;height:26px;font-size:.75rem}}
 </style>
@@ -421,11 +414,6 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
       </ul>
       <button class="linkbtn" id="home-lists-more" hidden>הרשימות שלי ←</button>
     </div>
-
-    <div id="home-activity-section" hidden>
-      <div class="group-h"><span class="e">📜</span><span id="home-activity-heading">פעילות אחרונה</span></div>
-      <ul class="list activity-list" id="home-activity-list"></ul>
-    </div>
   </section>
 
   <!-- ---------- lists: directory of this household's shopping lists ---------- -->
@@ -469,11 +457,7 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
       </ul>
     </div>
 
-    <button class="list-row" id="activity-open" type="button">
-      <span class="e" style="font-size:1.3rem">📜</span><span class="nm" id="activity-title">היסטוריית פעולות</span><span class="meta">‹</span>
-    </button>
-
-    <button class="fab" id="fab-add"><span class="e" aria-hidden="true">➕</span><span id="fab-add-label">הוסף לרשימה</span></button>
+    <button class="fab" id="fab-add" aria-label="הוסף לרשימה"><span class="e" aria-hidden="true">➕</span><span class="sr-only" id="fab-add-label">הוסף לרשימה</span></button>
   </section>
 
   <div class="shade" id="shade" hidden></div>
@@ -503,9 +487,6 @@ he: {
   joinHh:'יש לי קוד הזמנה', codePh:'קוד הזמנה', join:'להצטרף',
   itemPh:'שם המוצר', qtyPh:'כמות', add:'הוספה', addToListFab:'הוסף לרשימה',
   pendingTitle:'בקשות לאישור', boughtTitle:'נקנה', emptyList:'הרשימה ריקה. מה חסר בבית?',
-  activityTitle:'היסטוריית פעולות', activityEmpty:'אין עדיין פעולות ברשימה',
-  actAdded:'{n} הוסיף/ה: {t}', actRequested:'{n} ביקש/ה להוסיף: {t}', actApproved:'{n} אישר/ה בקשה: {t}',
-  actRejected:'{n} דחה/תה בקשה: {t}', actChecked:'{n} אסף/ה: {t}', actUnchecked:'{n} ביטל/ה איסוף: {t}', actDeleted:'{n} הסיר/ה: {t}',
   invite:'הזמנת חבר/ה', inviteSub:'כל מי שמקבל את הקוד או הקישור הזה יכול להצטרף תוך 7 ימים.',
   inviteRole:'הרשאה לחברים חדשים:', inviteCopy:'להעתיק קוד', inviteCopied:'📋 הועתק',
   inviteShare:'📤 שליחת קישור הזמנה', inviteShareText:'הצטרפו אלינו ב"קניות ביחד" כדי לנהל יחד את רשימת הקניות:',
@@ -515,6 +496,7 @@ he: {
   members:'חברי משק הבית', signOut:'יציאה', deleteAccount:'מחיקת חשבון', syncNow:'לסנכרן עכשיו',
   settings:'הגדרות', language:'שפה', switchHousehold:'להחליף משק בית',
   itemAdded:'✅ נוסף לרשימה', itemRequested:'🙋 הבקשה נשלחה לאישור', itemApproved:'✅ אושר',
+  itemRejectedToast:'🚫 הבקשה שלך להוספת "{t}" נדחתה',
   confirmDelete:'למחוק מהרשימה?', yes:'כן', cancel:'ביטול',
   offline:'📴 אין רשת כרגע. מה שתשנו יתעדכן כשהרשת תחזור.',
   errGeneric:'משהו לא הסתדר, אפשר לנסות שוב.',
@@ -534,7 +516,7 @@ he: {
   tripClosed:'✅ הרשימה נסגרה', boughtHeader:'נאסף', notBoughtHeader:'חסר',
   homeSub:'כל הרשימות המשותפות של משק הבית, במקום אחד.',
   homeLists:'הרשימות שלי', homeInvite:'הזמנת בן/בת משפחה', homeSwitch:'להחליף משק בית',
-  homeListsHeading:'הרשימות הפעילות', homeActivityHeading:'פעילות אחרונה', homeListsMore:'כל הרשימות ←',
+  homeListsHeading:'הרשימות הפעילות', homeListsMore:'כל הרשימות ←',
   homeMembers:'משק הבית', itemsLeft:'{n} פריטים נשארו', allCollected:'הכל נאסף ✅',
   greetingMorning:'בוקר טוב{n} ☀️', greetingAfternoon:'צהריים טובים{n} 👋', greetingEvening:'ערב טוב{n} 🌆', greetingNeutral:'היי{n} 👋',
   listsTitle:'הרשימות שלי', listsOpenTitle:'פעילות', listsClosedTitle:'היסטוריה',
@@ -579,9 +561,6 @@ en: {
   joinHh:'I have an invite code', codePh:'Invite code', join:'Join',
   itemPh:'Product name', qtyPh:'Qty', add:'Add', addToListFab:'Add to list',
   pendingTitle:'Needs approval', boughtTitle:'Bought', emptyList:'The list is empty. What are we out of?',
-  activityTitle:'Activity history', activityEmpty:'No activity on this list yet',
-  actAdded:'{n} added: {t}', actRequested:'{n} requested to add: {t}', actApproved:'{n} approved: {t}',
-  actRejected:'{n} rejected: {t}', actChecked:'{n} collected: {t}', actUnchecked:'{n} un-collected: {t}', actDeleted:'{n} removed: {t}',
   invite:'Invite someone', inviteSub:'Anyone with this code or link can join within 7 days.',
   inviteRole:'Role for new members:', inviteCopy:'Copy code', inviteCopied:'📋 Copied',
   inviteShare:'📤 Share invite link', inviteShareText:'Join us on "CartSync" to manage our shopping list together:',
@@ -591,6 +570,7 @@ en: {
   members:'Household members', signOut:'Sign out', deleteAccount:'Delete account', syncNow:'Sync now',
   settings:'Settings', language:'Language', switchHousehold:'Switch household',
   itemAdded:'✅ Added to the list', itemRequested:'🙋 Request sent for approval', itemApproved:'✅ Approved',
+  itemRejectedToast:'🚫 Your request to add "{t}" was rejected',
   confirmDelete:'Remove from the list?', yes:'Yes', cancel:'Cancel',
   offline:'📴 No connection right now. Changes will sync once you\'re back online.',
   errGeneric:'Something went wrong, try again.',
@@ -610,7 +590,7 @@ en: {
   tripClosed:'✅ List closed', boughtHeader:'Collected', notBoughtHeader:'Still needed',
   homeSub:'All of your household\'s shared lists, in one place.',
   homeLists:'My lists', homeInvite:'Invite a family member', homeSwitch:'Switch household',
-  homeListsHeading:'Active lists', homeActivityHeading:'Recent activity', homeListsMore:'All lists →',
+  homeListsHeading:'Active lists', homeListsMore:'All lists →',
   homeMembers:'Household', itemsLeft:'{n} items left', allCollected:'All collected ✅',
   greetingMorning:'Good morning{n} ☀️', greetingAfternoon:'Good afternoon{n} 👋', greetingEvening:'Good evening{n} 🌆', greetingNeutral:'Hey{n} 👋',
   listsTitle:'My lists', listsOpenTitle:'Active', listsClosedTitle:'History',
@@ -694,7 +674,7 @@ he: [
   {version:1, items:[
     'ראש האפליקציה עוצב מחדש',
     'הוספה, איסוף והסרה של מוצרים — מיידיים, בלי להמתין לרשת',
-    'התראות בזמן אמת על שינויים ברשימה, וכרטיס היסטוריית פעולות מלא בכל רשימה',
+    'התראות בזמן אמת על שינויים ברשימה',
     'התרעה עדינה כשמוסיפים מוצר שכבר קיים ברשימה',
     'שיפור הדיוק של ה-AI שבוחר קטגוריה ואימוג׳י למוצרים',
     'אפשר עכשיו למחוק ולעזוב משקי בית',
@@ -706,7 +686,7 @@ en: [
   {version:1, items:[
     'The app header was redesigned',
     'Adding, collecting and removing items is now instant, no more waiting on the network',
-    'Real-time notifications for list changes, and a full activity history card on every list',
+    'Real-time notifications for list changes',
     'A gentle warning when adding an item that’s already on the list',
     'More accurate AI category and emoji matching for items',
     'You can now delete or leave a household',
@@ -727,7 +707,6 @@ he: [
   {icon:'🙋', title:'בקשות לאישור', body:'מי שבתפקיד "בקשת מוצרים" מוסיף פריטים שממתינים לאישור בראש הרשימה. ראש משק הבית או מי שיש לו עריכה מלאה יכולים לאשר (✓) או לדחות (✕). מי שביקש יכול גם לערוך או למחוק את הבקשה שלו לפני שהיא מאושרת.'},
   {icon:'🔄', title:'סנכרון חי ואופליין', body:'כל שינוי מופיע אצל כל בני משק הבית כמעט מיידית, בלי לרענן. כשאין רשת, אפשר להמשיך להוסיף ולסמן כרגיל — הכל נשמר במכשיר ומסתנכרן אוטומטית ברגע שחוזר חיבור.'},
   {icon:'🏁', title:'סיום קניות', body:'בסיום סבב קניות לוחצים "סיום קניות". אם נשארו מוצרים שלא נאספו, האפליקציה שואלת מה לעשות איתם: להשאיר ברשימה הסגורה, להעביר לרשימה פתוחה אחרת, או לפתוח להם רשימה חדשה.'},
-  {icon:'📜', title:'היסטוריית פעולות', body:'בתחתית כל רשימה יש כרטיס מתקפל שמראה מי הוסיף, אישר, אסף או הסיר כל מוצר, ובאיזו שעה בדיוק — תיעוד מלא ושקוף של כל מה שקרה ברשימה.'},
   {icon:'📤', title:'שיתוף והזמנות', body:'אפשר להזמין בני משפחה למשק הבית עם קוד או קישור, ולבחור לכל מוזמן תפקיד מראש. בתוך רשימה אפשר גם לשלוח סיכום "נאסף/חסר" ישירות ב-WhatsApp.'},
   {icon:'⚙️', title:'הגדרות אישיות', body:'מתפריט החשבון (האווטאר למעלה) אפשר לשנות ערכת נושא (בהיר/כהה/לפי המכשיר), גודל טקסט, שם תצוגה, סיסמה, ולסנכרן ידנית.'},
   {icon:'👥', title:'ניהול משק הבית', body:'ראש משק הבית יכול להעביר את הבעלות לחבר אחר, להסיר חברים, ולמחוק משק בית לצמיתות (כולל כל הרשימות וההיסטוריה שלו). כל חבר יכול לעזוב משק בית בכל עת — חוץ מראש משק הבית, שצריך קודם להעביר בעלות אם יש עוד חברים.'},
@@ -740,7 +719,6 @@ en: [
   {icon:'🙋', title:'Pending requests', body:'Anyone with the "requester" role adds items that wait for approval at the top of the list. The owner or any editor can approve (✓) or reject (✕). The requester can also edit or delete their own request before it’s approved.'},
   {icon:'🔄', title:'Real-time sync & offline', body:'Every change appears for the whole household almost instantly, no refresh needed. With no connection, you can keep adding and checking items as usual — everything is saved on the device and syncs automatically the moment you’re back online.'},
   {icon:'🏁', title:'Finishing a shopping trip', body:'When you’re done, tap "finish shopping". If anything is still unchecked, the app asks what to do with it: leave it in the closed list, move it to another open list, or start a new list for it.'},
-  {icon:'📜', title:'Activity history', body:'A collapsible card at the bottom of every list shows who added, approved, collected or removed each item, and exactly when — a full, transparent record of everything that happened.'},
   {icon:'📤', title:'Sharing & invites', body:'Invite family members to the household with a code or link, and pick a role for them in advance. From inside a list you can also send a "collected/still needed" summary straight to WhatsApp.'},
   {icon:'⚙️', title:'Personal settings', body:'From the account menu (the avatar up top) you can change the theme (light/dark/system), text size, display name, password, and sync manually.'},
   {icon:'👥', title:'Managing the household', body:'The owner can transfer ownership to another member, remove members, and permanently delete a household (including all of its lists and history). Any member can leave at any time — except the owner, who needs to transfer ownership first if other members remain.'},
@@ -919,7 +897,6 @@ function paintStrings(){
   $('trip-label').textContent = t('tripActive');
   $('trip-close').textContent = t('tripClose');
   $('home-lists-heading').textContent = t('homeListsHeading');
-  $('home-activity-heading').textContent = t('homeActivityHeading');
   $('home-lists-more').textContent = t('homeListsMore');
   $('home-lists-empty-text').textContent = t('listsEmpty');
   $('home-lists-new-label').textContent = t('newListTitle');
@@ -932,8 +909,8 @@ function paintStrings(){
   if($('item-add')) $('item-add').textContent = t('add');
   $('pending-title').textContent = t('pendingTitle');
   $('empty-text').textContent = t('emptyList');
-  $('activity-title').textContent = t('activityTitle');
   $('fab-add-label').textContent = t('addToListFab');
+  $('fab-add').setAttribute('aria-label', t('addToListFab'));
   $('refresh-label').textContent = t('refreshLabel');
   const authGoMode = $('au-go').dataset.mode || 'login';
   $('au-go').textContent = authGoMode==='signup'?t('signupGo'):authGoMode==='reset'?t('resetGo'):t('loginGo');
@@ -969,30 +946,7 @@ function fmtDate(iso){
   if(!iso) return '';
   try{ return new Date(iso).toLocaleDateString(CS.lang()==='he'?'he-IL':'en-US',{day:'numeric',month:'short'}); }catch(e){ return ''; }
 }
-function fmtTime(iso){
-  if(!iso) return '';
-  try{ return new Date(iso).toLocaleTimeString(CS.lang()==='he'?'he-IL':'en-US',{hour:'2-digit',minute:'2-digit'}); }catch(e){ return ''; }
-}
-
-/* ---------- list activity log: who added/checked/removed what, and when ---------- */
-const ACTION_META={
-  added:{icon:'➕',key:'actAdded'}, requested:{icon:'🙋',key:'actRequested'},
-  approved:{icon:'✅',key:'actApproved'}, rejected:{icon:'🚫',key:'actRejected'},
-  checked:{icon:'🧺',key:'actChecked'}, unchecked:{icon:'↩️',key:'actUnchecked'},
-  deleted:{icon:'🗑️',key:'actDeleted'},
-};
-function formatActivity(a){
-  const meta=ACTION_META[a.action]||ACTION_META.added;
-  const text=CS.t(meta.key).replace('{n}',a.actorName||'?').replace('{t}',a.item_text||'');
-  return {icon:meta.icon, text};
-}
-function activityRow(a){
-  const {icon,text}=formatActivity(a);
-  const tag=a.listName?` · ${esc(a.listName)}`:'';
-  return `<li class="activity-row"><span class="e">${icon}</span><span class="activity-text">${esc(text)}${tag}</span><span class="activity-time">${esc(fmtTime(a.created_at))}</span></li>`;
-}
-
-/* ---------- home dashboard: list previews with remaining counts, short cross-list activity feed ---------- */
+/* ---------- home dashboard: list previews with remaining counts ---------- */
 function renderHomeLists(previewLists, counts, hasMore){
   const box=$('home-lists-preview');
   box.innerHTML=(previewLists||[]).map(l=>{
@@ -1005,19 +959,6 @@ function renderHomeLists(previewLists, counts, hasMore){
   $('home-lists-empty').hidden=!!(previewLists&&previewLists.length);
   box.hidden=!(previewLists&&previewLists.length);
   $('home-lists-more').hidden=!hasMore;
-}
-function renderHomeActivity(entries){
-  const section=$('home-activity-section');
-  if(!entries||!entries.length){ section.hidden=true; return; }
-  section.hidden=false;
-  $('home-activity-list').innerHTML=entries.map(activityRow).join('');
-}
-function renderActivity(entries){
-  const box=$('activity-list');
-  if(!box) return;
-  box.innerHTML = (entries&&entries.length)
-    ? entries.map(activityRow).join('')
-    : `<li class="activity-empty">${esc(CS.t('activityEmpty'))}</li>`;
 }
 /* search collapses to a single pill by default — tapping it reveals the field in its place */
 function collapseSearch(){
@@ -1223,7 +1164,7 @@ $('refresh-btn').addEventListener('click',()=>location.reload());
 Object.assign(window.CS,{
   $, esc, guess, openSheet, closeSheet, sheetHead, toast, toastAction, confirmSheet,
   setScreen, paintStrings, setAuthMode, renderMembers, renderGroups, renderLists, initials, personColor,
-  renderActivity, formatActivity, renderHomeLists, renderHomeActivity,
+  renderHomeLists,
   render(){ paintStrings(); if(window.CS.rerenderMain) window.CS.rerenderMain(); },
 });
 paintStrings(); // body.html's hardcoded defaults are Hebrew; an English-preferring first visit needs this to actually show English, not just flip direction
@@ -1239,7 +1180,7 @@ const $=CS.$, esc=CS.esc, toast=CS.toast, toastAction=CS.toastAction, openSheet=
 if(!window.supabase) return;
 const sb=supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'cartsync-auth'}});
 
-let user=null, household=null, role=null, members=[], membersById={}, listId=null, listStatus='open', items=[], activity=[], online=navigator.onLine, channel=null;
+let user=null, household=null, role=null, members=[], membersById={}, listId=null, listStatus='open', items=[], online=navigator.onLine, channel=null;
 let queue=[], flushing=false;
 
 /* ---------- invite links: ?join=CODE, persisted across the email-confirmation round trip ---------- */
@@ -1723,7 +1664,7 @@ async function openListsPage(){
 $('home-lists-more').addEventListener('click',openListsPage);
 $('home-lists-empty-btn').addEventListener('click',openNewListSheet);
 
-/* ---------- home dashboard: open-list previews with remaining counts + a short cross-list activity feed ---------- */
+/* ---------- home dashboard: open-list previews with remaining counts ---------- */
 async function fetchHomeData(){
   await fetchLists();
   const openLists=lists.filter(l=>l.status==='open');
@@ -1734,13 +1675,6 @@ async function fetchHomeData(){
     (data||[]).forEach(r=>{ counts[r.list_id]=(counts[r.list_id]||0)+1; });
   }
   CS.renderHomeLists(preview, counts, openLists.length>preview.length);
-  const {data:actData}=await sb.from('list_activity').select('*').eq('household_id',household).order('created_at',{ascending:false}).limit(5);
-  CS.renderHomeActivity((actData||[]).map(decorateHomeActivity));
-}
-function decorateHomeActivity(a){
-  const base=decorateActivity(a);
-  const l=lists.find(x=>x.id===a.list_id);
-  return {...base, listName:l?l.name:''};
 }
 
 function openNewListSheet(){
@@ -1800,13 +1734,11 @@ async function openList(id, silent){
   $('view-main').classList.toggle('readonly',listStatus!=='open');
   searchQuery=''; $('search-input').value=''; $('search-input').hidden=true; $('search-toggle').hidden=false;
   items=[]; paintItems(); // clear the previous list's items so they don't flash under this list's name while loading
-  activity=[]; CS.renderActivity([]);
   CS.setScreen('main');
   queue=loadQueueFor(listId);
   await fetchItems();
   cacheSnapshot();
   subscribeListRealtime();
-  fetchActivity(); // not awaited — the item list shouldn't wait on history loading
   if(queue.length) flushQueue({resync:true});
   return true;
 }
@@ -1973,24 +1905,6 @@ async function fetchItems(){
   paintItems();
 }
 
-/* ---------- activity log ---------- */
-function decorateActivity(a){
-  const name = a.actor===user.id ? CS.t('you') : (a.actor&&membersById[a.actor]?(membersById[a.actor].display_name||membersById[a.actor].email):'?');
-  return {...a, actorName:name};
-}
-async function fetchActivity(){
-  try{
-    const {data,error}=await sb.from('list_activity').select('*').eq('list_id',listId).order('created_at',{ascending:false}).limit(50);
-    if(error) throw error;
-    activity=data||[];
-  }catch(e){ activity=[]; }
-  CS.renderActivity(activity.map(decorateActivity));
-}
-function openActivitySheet(){
-  openSheet(sheetHead(CS.t('activityTitle'))+`<div class="card"><ul class="list activity-list" id="activity-list"></ul></div>`);
-  CS.renderActivity(activity.map(decorateActivity));
-}
-$('activity-open').addEventListener('click',openActivitySheet);
 
 /* best-effort background category/emoji upgrade for items the local dictionary couldn't place —
    batched (debounced) so a fast multi-add only costs one AI call, and never blocks the add itself */
@@ -2142,7 +2056,7 @@ async function rejectItem(id){
   if(!online){ toast(CS.t('offline')); return; }
   const it=items.find(i=>i.id===id);
   items=items.filter(i=>i.id!==id); paintItems();
-  const {error}=await sb.from('list_items').delete().eq('id',id);
+  const {error}=await sb.rpc('reject_pending_item',{p_item_id:id});
   if(error){ if(it) items.push(it); paintItems(); toast(CS.authErr(error)); }
 }
 window.CS.on={toggle:toggleItem, reorder:reorderItems};
@@ -2159,12 +2073,22 @@ document.addEventListener('click',e=>{
 
 /* ---------- realtime ---------- */
 let hhChannel=null;
+async function flushItemRejections(){
+  const {data}=await sb.from('item_rejections').select('*').eq('recipient_user_id',user.id);
+  (data||[]).forEach(r=>toast(CS.t('itemRejectedToast').replace('{t}',r.item_text)));
+  if(data&&data.length) await sb.from('item_rejections').delete().eq('recipient_user_id',user.id);
+}
 function subscribeHouseholdRealtime(){
   if(hhChannel){ sb.removeChannel(hhChannel); hhChannel=null; }
   if(!household) return;
+  flushItemRejections(); // catch up on rejections that arrived while we weren't connected
   hhChannel=sb.channel('household:'+household)
     .on('postgres_changes',{event:'*',schema:'public',table:'household_members',filter:'household_id=eq.'+household},()=>{
       refreshHousehold();
+    })
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'item_rejections',filter:'recipient_user_id=eq.'+user.id},payload=>{
+      toast(CS.t('itemRejectedToast').replace('{t}',payload.new.item_text));
+      sb.from('item_rejections').delete().eq('id',payload.new.id);
     })
     .on('postgres_changes',{event:'INSERT',schema:'public',table:'shopping_lists',filter:'household_id=eq.'+household},payload=>{
       const row=payload.new;
@@ -2196,14 +2120,6 @@ function subscribeListRealtime(){
       else if(payload.eventType==='UPDATE') items=items.map(i=>i.id===payload.new.id?payload.new:i);
       else if(payload.eventType==='DELETE') items=items.filter(i=>i.id!==payload.old.id);
       paintItems();
-    })
-    .on('postgres_changes',{event:'INSERT',schema:'public',table:'list_activity',filter:'list_id=eq.'+listId},payload=>{
-      activity=[payload.new, ...activity].slice(0,50);
-      CS.renderActivity(activity.map(decorateActivity));
-      if(payload.new.actor && payload.new.actor!==user.id){
-        const f=CS.formatActivity(decorateActivity(payload.new));
-        toast(f.icon+' '+f.text);
-      }
     })
     .subscribe();
 }
