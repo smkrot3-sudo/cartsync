@@ -851,8 +851,16 @@ function closeSheet(){
 }
 function sheetHead(title){ return `<div class="sheet-head"><h2>${esc(title)}</h2><button class="close" data-act="sheet-close">✕</button></div>`; }
 let toastTimer=null;
+// a toast fired while a sheet is open (e.g. "added to list" right after tapping Add, with the
+// sheet deliberately left open for fast multi-add) used to sit at the screen's fixed bottom edge,
+// landing right on top of the sheet's own submit button — float it above the whole sheet instead
+function positionToast(el){
+  const sheet=$('sheet');
+  el.style.bottom = (sheet && !sheet.hidden) ? (sheet.getBoundingClientRect().height + 16) + 'px' : '';
+}
 function toast(msg){
   const el=$('toast'); el.innerHTML=''; el.textContent=msg; el.hidden=false;
+  positionToast(el);
   clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.hidden=true,2600);
 }
 function toastAction(msg,actionLabel,onAction,ms){
@@ -861,6 +869,7 @@ function toastAction(msg,actionLabel,onAction,ms){
   el.querySelector('span').textContent=msg;
   el.querySelector('#toast-act-btn').textContent=actionLabel;
   el.hidden=false;
+  positionToast(el);
   clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.hidden=true,ms||5000);
   $('toast-act-btn').onclick=()=>{ clearTimeout(toastTimer); el.hidden=true; onAction(); };
 }
