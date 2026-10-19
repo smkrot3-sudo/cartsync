@@ -292,7 +292,7 @@ button:disabled{opacity:.6;cursor:default}
 
 /* ---------- floating add button ---------- */
 .fab{
-  position:fixed;inset-inline-end:16px;bottom:calc(88px + env(safe-area-inset-bottom,0px));
+  position:fixed;inset-inline-end:max(16px,calc((100vw - 560px) / 2 + 16px));bottom:calc(88px + env(safe-area-inset-bottom,0px));
   width:54px;height:54px;border-radius:50%;border:0;
   background:var(--btn-grad);
   color:var(--accent-ink);
@@ -311,11 +311,11 @@ button:disabled{opacity:.6;cursor:default}
 .auth input[hidden]{display:none}
 .auth .actions-row{display:flex;justify-content:space-between;align-items:center}
 
-.invite-code{font-family:var(--display);font-size:2rem;letter-spacing:.15em;text-align:center;background:var(--soft);border-radius:14px;padding:14px;direction:ltr}
 .role-pick{display:flex;gap:6px;flex-wrap:wrap}
 .role-pick button{border:2px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 13px;font-size:.88rem}
 .role-pick button.active{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
 
+.invite-link-input{font-size:.82rem;direction:ltr;text-align:start}
 .member-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
 .member-row:last-child{border-bottom:0}
 .member-row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -484,11 +484,11 @@ he: {
   resetSent:'📬 שלחנו מייל עם קישור לבחירת סיסמה חדשה.',
   onboardTitle:'למי קונים?', onboardSub:'יוצרים משק בית, ומזמינים את שאר המשפחה בקישור.',
   createHh:'משק בית חדש', hhNamePh:'לדוגמה: הבית שלנו', create:'ליצור',
-  joinHh:'יש לי קוד הזמנה', codePh:'קוד הזמנה', join:'להצטרף',
   itemPh:'שם המוצר', qtyPh:'כמות', add:'הוספה', addToListFab:'הוסף לרשימה',
   pendingTitle:'בקשות לאישור', boughtTitle:'נקנה', emptyList:'הרשימה ריקה. מה חסר בבית?',
   invite:'הזמנת חבר/ה', inviteSub:'כל מי שמקבל את הקוד או הקישור הזה יכול להצטרף תוך 7 ימים.',
-  inviteRole:'הרשאה לחברים חדשים:', inviteCopy:'להעתיק קוד', inviteCopied:'📋 הועתק',
+  inviteRole:'הרשאה לחברים חדשים:', inviteCopied:'📋 הועתק',
+  activeInvitesTitle:'הזמנות פעילות', inviteRevoke:'ביטול הזמנה', inviteRevoked:'🗑️ ההזמנה בוטלה',
   inviteShare:'📤 שליחת קישור הזמנה', inviteShareText:'הצטרפו אלינו ב"קניות ביחד" כדי לנהל יחד את רשימת הקניות:',
   inviteReadySub:'ההזמנה מוכנה. איך לשלוח אותה?',
   joinedViaLink:'✅ הצטרפת למשק הבית!',
@@ -499,9 +499,10 @@ he: {
   itemRejectedToast:'🚫 הבקשה שלך להוספת "{t}" נדחתה',
   confirmDelete:'למחוק מהרשימה?', yes:'כן', cancel:'ביטול',
   offline:'📴 אין רשת כרגע. מה שתשנו יתעדכן כשהרשת תחזור.',
+  syncOpFailed:'⚠️ שינוי אחד ברשימה לא הסתנכרן ובוטל. אפשר לבדוק ולהוסיף אותו שוב.',
   errGeneric:'משהו לא הסתדר, אפשר לנסות שוב.',
   errInvite:'קוד ההזמנה לא תקין או פג תוקף.',
-  needHhName:'צריך לתת שם למשק הבית', needCode:'צריך להזין קוד',
+  needHhName:'צריך לתת שם למשק הבית',
   versionLabel:'גרסה: {v}', updateAvailable:'יש עדכון', updateNow:'🔄 לעדכן',
   updateDownloading:'מוריד...', updateFailed:'העדכון נכשל, אפשר לנסות שוב', updateDone:'✅ מותקן',
   updateSheetBody:'גרסה חדשה של קניות ביחד מוכנה להתקנה.', updateLater:'אחר כך', refreshLabel:'לרענן',
@@ -546,6 +547,7 @@ he: {
   profileTitle:'עריכת פרופיל', profileNameSub:'השם שלך (ברירת מחדל למשקי בית חדשים שתצטרף/י אליהם):',
   profileSaved:'✅ הפרופיל נשמר', profilePassSub:'שינוי סיסמה:', newPasswordPh:'סיסמה חדשה (לפחות 6 תווים)',
   profilePassSave:'לעדכן סיסמה', passwordUpdated:'✅ הסיסמה עודכנה', editProfile:'✏️ עריכת פרופיל',
+  confirmPassTitle:'לשנות סיסמה?', confirmPassBody:'השינוי ישפיע על כל מי שמחובר/ת עם החשבון הזה. לממשיך/ה?',
   guideTitle:'מדריך שימוש', guideOpen:'מדריך שימוש', guideIntro:'כל מה שצריך לדעת כדי להשתמש באפליקציה.',
   leaveListTitle:'לצאת מהרשימה?', leaveListConfirm:'חוזרים למסך הבית. הרשימה תישמר בדיוק כמו שהיא.', leaveListAction:'כן, לצאת',
 },
@@ -558,11 +560,11 @@ en: {
   resetSent:'📬 We sent an email with a link to set a new password.',
   onboardTitle:'Shopping for who?', onboardSub:'Create a household, then invite the rest of the family with a link.',
   createHh:'New household', hhNamePh:'e.g. Our home', create:'Create',
-  joinHh:'I have an invite code', codePh:'Invite code', join:'Join',
   itemPh:'Product name', qtyPh:'Qty', add:'Add', addToListFab:'Add to list',
   pendingTitle:'Needs approval', boughtTitle:'Bought', emptyList:'The list is empty. What are we out of?',
   invite:'Invite someone', inviteSub:'Anyone with this code or link can join within 7 days.',
-  inviteRole:'Role for new members:', inviteCopy:'Copy code', inviteCopied:'📋 Copied',
+  inviteRole:'Role for new members:', inviteCopied:'📋 Copied',
+  activeInvitesTitle:'Active invites', inviteRevoke:'Revoke invite', inviteRevoked:'🗑️ Invite revoked',
   inviteShare:'📤 Share invite link', inviteShareText:'Join us on "CartSync" to manage our shopping list together:',
   inviteReadySub:'The invite is ready. How would you like to send it?',
   joinedViaLink:'✅ You joined the household!',
@@ -573,9 +575,10 @@ en: {
   itemRejectedToast:'🚫 Your request to add "{t}" was rejected',
   confirmDelete:'Remove from the list?', yes:'Yes', cancel:'Cancel',
   offline:'📴 No connection right now. Changes will sync once you\'re back online.',
+  syncOpFailed:'⚠️ One change on the list could not sync and was dropped. Check and re-add it if needed.',
   errGeneric:'Something went wrong, try again.',
   errInvite:'That invite code is invalid or expired.',
-  needHhName:'Give the household a name', needCode:'Enter a code',
+  needHhName:'Give the household a name',
   versionLabel:'Version: {v}', updateAvailable:'Update available', updateNow:'🔄 Update',
   updateDownloading:'Downloading...', updateFailed:'Update failed, try again', updateDone:'✅ Installed',
   updateSheetBody:'A new version of CartSync is ready to install.', updateLater:'Later', refreshLabel:'Refresh',
@@ -620,6 +623,7 @@ en: {
   profileTitle:'Edit profile', profileNameSub:'Your name (default for new households you join):',
   profileSaved:'✅ Profile saved', profilePassSub:'Change password:', newPasswordPh:'New password (6+ characters)',
   profilePassSave:'Update password', passwordUpdated:'✅ Password updated', editProfile:'✏️ Edit profile',
+  confirmPassTitle:'Change password?', confirmPassBody:'This changes the password for anyone signed in to this account. Continue?',
   guideTitle:'User guide', guideOpen:'User guide', guideIntro:'Everything you need to know to use the app.',
   leaveListTitle:'Leave this list?', leaveListConfirm:'You’ll go back to the home screen. The list stays exactly as it is.', leaveListAction:'Yes, leave',
 },
@@ -1151,6 +1155,7 @@ function setAuthMode(mode){
   $('tab-signup').classList.toggle('active',mode==='signup');
   $('au-name').hidden = mode!=='signup';
   $('au-pass').hidden = mode==='reset';
+  $('au-pass').autocomplete = mode==='signup' ? 'new-password' : 'current-password';
   $('au-forgot').hidden = mode!=='login';
   paintStrings();
 }
@@ -1252,7 +1257,16 @@ async function flushQueue(opts){
       }else if(op.op==='del'){
         if(!isTemp(realId)){ const {error}=await sb.from('list_items').delete().eq('id',realId); if(error) throw error; }
       }
-    }catch(e){ console.warn('flush failed, will retry later',e); break; }
+    }catch(e){
+      op.failCount=(op.failCount||0)+1;
+      if(op.failCount<3){ console.warn('flush failed, will retry later',e); break; }
+      // a permanently-failing op (permission revoked, row gone, etc.) used to jam every later queued
+      // change behind it forever with no sign anything was wrong — drop it after a few tries and say so
+      console.warn('dropping permanently-failing queued op',op,e);
+      queue.shift(); saveQueue();
+      toast(CS.t('syncOpFailed'));
+      continue;
+    }
     queue.shift(); saveQueue();
   }
   flushing=false;
@@ -1625,7 +1639,7 @@ function openProfileSheet(){
     <input id="profile-name" value="${esc(curName)}">
     <button class="btn wide" id="profile-save">${esc(t('editSave'))}</button>
     <p class="sub" style="margin-top:8px">${esc(t('profilePassSub'))}</p>
-    <input id="profile-pass" type="password" placeholder="${esc(t('newPasswordPh'))}" dir="ltr">
+    <input id="profile-pass" type="password" placeholder="${esc(t('newPasswordPh'))}" autocomplete="new-password" dir="ltr">
     <button class="btn ghost wide" id="profile-pass-save">${esc(t('profilePassSave'))}</button>
     <div id="profile-msg" class="msg" hidden></div>
   </div>`);
@@ -1641,6 +1655,10 @@ function openProfileSheet(){
   $('profile-pass-save').onclick=async()=>{
     const pass=$('profile-pass').value;
     if(!pass||pass.length<6) return;
+    const ok=await CS.confirmSheet({
+      title:t('confirmPassTitle'), body:t('confirmPassBody'), confirmLabel:t('profilePassSave')
+    });
+    if(!ok){ openProfileSheet(); return; }
     const {error}=await sb.auth.updateUser({password:pass});
     if(error){ const m=$('profile-msg'); m.className='msg err'; m.textContent=CS.authErr(error); m.hidden=false; return; }
     $('profile-pass').value='';
@@ -1845,12 +1863,31 @@ async function shareInvite(text){
   toast(CS.t('inviteCopied'));
 }
 
+function joinUrlFor(code){
+  return (window.CS_SITE||location.origin+location.pathname.replace(/[^/]*$/,''))+'?join='+code;
+}
+async function fetchActiveInvites(){
+  const {data,error}=await sb.from('household_invites').select('*').eq('household_id',household).gt('expires_at',new Date().toISOString()).order('created_at',{ascending:false});
+  if(error) return [];
+  return data||[];
+}
+function selectOnClick(){ $('sheet').querySelectorAll('.invite-link-input').forEach(el=>el.onclick=()=>el.select()); }
 let inviteRole='editor';
 function openInviteSheet(){
   const t=CS.t;
   inviteRole='editor';
-  const draw=()=>{
+  const draw=async()=>{
+    const active=await fetchActiveInvites();
+    const activeRows=active.map(inv=>`<div style="display:flex;flex-direction:column;gap:6px;padding:8px 0;border-bottom:1px solid var(--line)">
+        <input class="invite-link-input" value="${esc(joinUrlFor(inv.code))}" readonly dir="ltr" style="width:100%">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="role-chip ${esc(inv.role)}">${esc(t('role'+inv.role[0].toUpperCase()+inv.role.slice(1)))}</span>
+          <span style="flex:1"></span>
+          <button class="member-remove" data-revoke-invite="${inv.code}" aria-label="${esc(t('inviteRevoke'))}" title="${esc(t('inviteRevoke'))}">🗑️</button>
+        </div>
+      </div>`).join('');
     openSheet(sheetHead(t('invite'))+`<div class="card">
+      ${active.length?`<p class="sub">${esc(t('activeInvitesTitle'))}</p>${activeRows}`:''}
       <p class="sub">${esc(t('inviteSub'))}</p>
       <p>${esc(t('inviteRole'))}</p>
       <div class="role-pick">
@@ -1858,7 +1895,14 @@ function openInviteSheet(){
       </div>
       <button class="btn wide" id="inv-go">${esc(t('invite'))}</button>
     </div>`);
+    selectOnClick();
     $('sheet').querySelectorAll('[data-role]').forEach(rb=>rb.onclick=()=>{ inviteRole=rb.dataset.role; draw(); });
+    $('sheet').querySelectorAll('[data-revoke-invite]').forEach(b=>b.onclick=async()=>{
+      const {error}=await sb.from('household_invites').delete().eq('code',b.dataset.revokeInvite);
+      if(error){ toast(CS.authErr(error)); return; }
+      toast(t('inviteRevoked'));
+      draw();
+    });
     $('inv-go').onclick=go;
   };
   async function go(){
@@ -1867,12 +1911,14 @@ function openInviteSheet(){
     const {data,error}=await sb.rpc('create_invite',{p_household:household,p_role:inviteRole});
     btn.disabled=false;
     if(error){ toast(CS.authErr(error)); return; }
-    const joinUrl=(window.CS_SITE||location.origin+location.pathname.replace(/[^/]*$/,''))+'?join='+data;
+    const joinUrl=joinUrlFor(data);
     const shareMsg=t('inviteShareText')+'\n'+joinUrl;
     openSheet(sheetHead(t('invite'))+`<div class="card">
       <p class="sub">${esc(t('inviteReadySub'))}</p>
+      <input class="invite-link-input" value="${esc(joinUrl)}" readonly dir="ltr" style="width:100%">
       <button class="btn wide" id="inv-share">${esc(t('inviteShare'))}</button>
     </div>`);
+    selectOnClick();
     $('inv-share').onclick=()=>shareInvite(shareMsg);
   }
   draw();
@@ -2003,21 +2049,21 @@ async function toggleItem(id){
   const {error}=await sb.from('list_items').update(patch).eq('id',id);
   if(error){ Object.assign(it,prev); paintItems(); toast(CS.authErr(error)); }
 }
-let pendingDeletes={};
 async function delItem(id){
   if(listStatus!=='open') return;
   const it=items.find(i=>i.id===id); if(!it) return;
   items=items.filter(i=>i.id!==id); paintItems();
   if(!online || isTemp(id)){ queueOp('del',id); return; } // no undo window offline: it's already safely queued
-  if(pendingDeletes[id]) clearTimeout(pendingDeletes[id].timer);
-  pendingDeletes[id]={item:it, timer:setTimeout(async()=>{
-    delete pendingDeletes[id];
-    await sb.from('list_items').delete().eq('id',id);
-  },5000)};
-  toastAction(CS.t('deleted'), CS.t('undo'), ()=>{
-    const p=pendingDeletes[id]; if(!p) return;
-    clearTimeout(p.timer); delete pendingDeletes[id];
-    items.push(p.item); paintItems();
+  // deletes the row right away (so it actually leaves the shared list for everyone, not just this
+  // screen) — "undo" re-inserts a copy rather than relying on a client-side timer, which mobile OSes
+  // can suspend the moment the tab backgrounds or the phone locks, silently losing the delete forever
+  const {error}=await sb.from('list_items').delete().eq('id',id);
+  if(error){ items.push(it); paintItems(); toast(CS.authErr(error)); return; }
+  toastAction(CS.t('deleted'), CS.t('undo'), async()=>{
+    const {id:_id, created_at:_ca, updated_at:_ua, ...rest}=it;
+    const {data,error:e2}=await sb.from('list_items').insert(rest).select().single();
+    if(e2){ toast(CS.authErr(e2)); return; }
+    items.push(data); paintItems();
   });
 }
 function openEditSheet(id){

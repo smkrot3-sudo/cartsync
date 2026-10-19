@@ -1,0 +1,54 @@
+name: Web build version
+
+on:
+  push:
+    paths: ["docs/**"]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bump app-version.json's build + the page's CS_BUILD
+        # the "update available" banner compares these against each other; without this they stay
+        # frozen at whatever they were last set to by hand, and the banner never fires again
+        run: |
+          set -e
+          BUILD=$(date +%s%3N)
+          python3 - "$BUILD" <<'PY'
+          import json, re, sys
+          build = int(sys.argv[1])
+
+          path = "docs/app-version.json"
+          data = {}
+          try:
+              data = json.load(open(path, encoding="utf8"))
+          except Exception:
+              pass
+          data["build"] = build
+          json.dump(data, open(path, "w", encoding="utf8"), ensure_ascii=False, indent=2)
+
+          html_path = "docs/index.html"
+          html = open(html_path, encoding="utf8").read()
+          new_html = re.sub(r"window\.CS_BUILD=\d+", f"window.CS_BUILD={build}", html)
+          if new_html != html:
+              open(html_path, "w", encoding="utf8").write(new_html)
+          PY
+
+      - name: Commit updated build version
+        # [skip ci]: this commit still touches docs/**, which would otherwise re-trigger this same
+        # workflow forever. The Android workflow's own docs/ commit is NOT skipped, so it still lands
+        # here and bumps the build too — exactly what should happen on an APK publish as well.
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/app-version.json docs/index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "ci: bump web build version [skip ci]"
+          git push
