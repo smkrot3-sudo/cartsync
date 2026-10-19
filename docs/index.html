@@ -736,9 +736,19 @@ en: [
   }catch(e){}
   if(lang!=='he'&&lang!=='en') lang='he';
 
-  let theme = 'system';
-  try{ theme = localStorage.getItem('cs-theme') || 'system'; }catch(e){}
-  if(theme!=='light'&&theme!=='dark'&&theme!=='system') theme='system';
+  // dark is the default now (it was "system" before) — and everyone who already has a saved
+  // preference (light/dark/system, from before this change) gets switched to dark once; after
+  // that one-time nudge, their own choice (including switching back) sticks as usual
+  let theme = 'dark';
+  try{
+    if(localStorage.getItem('cs-dark-default-migrated')){
+      theme = localStorage.getItem('cs-theme') || 'dark';
+    }else{
+      localStorage.setItem('cs-theme','dark');
+      localStorage.setItem('cs-dark-default-migrated','1');
+    }
+  }catch(e){}
+  if(theme!=='light'&&theme!=='dark'&&theme!=='system') theme='dark';
 
   let fontSize = 'normal';
   try{ fontSize = localStorage.getItem('cs-fontsize') || 'normal'; }catch(e){}
