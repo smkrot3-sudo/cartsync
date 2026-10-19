@@ -117,6 +117,7 @@ button:disabled{opacity:.6;cursor:default}
   box-shadow:none;
 }
 .brand-name-btn{flex:1;min-width:0;border:0;background:transparent;padding:0;text-align:center;font-family:var(--display);font-weight:400;font-size:1.12rem;letter-spacing:.01em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   background-image:linear-gradient(90deg,#FF8FA0,#FFC48A);-webkit-background-clip:text;background-clip:text;color:transparent}
 .brand-name-btn b{font-weight:inherit}
 .brand-end-badge{width:36px;height:36px;border-radius:12px;flex:none;display:grid;place-items:center;font-size:1.05rem;
@@ -220,7 +221,8 @@ button:disabled{opacity:.6;cursor:default}
 .list-row-wrap{display:flex;align-items:center;gap:6px}
 .list-row-wrap .list-row{flex:1}
 .list-del{border:0;background:var(--danger-soft);color:var(--danger);width:40px;height:40px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:1rem}
-.members{display:flex}
+.list-pin{border:0;background:var(--gold-soft);color:var(--gold);width:40px;height:40px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:1.05rem}
+.members{display:flex;cursor:pointer}
 .avatar{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:.85rem;font-weight:bold;color:#fff;border:2px solid var(--surface);margin-inline-start:-8px;flex:none}
 .avatar:first-child{margin-inline-start:0}
 .avatar.big{width:44px;height:44px;font-size:1.05rem;margin:0}
@@ -517,6 +519,8 @@ he: {
   tripClosed:'✅ הרשימה נסגרה', boughtHeader:'נאסף', notBoughtHeader:'חסר',
   homeSub:'כל הרשימות המשותפות של משק הבית, במקום אחד.',
   homeLists:'הרשימות שלי', homeInvite:'הזמנת בן/בת משפחה', homeSwitch:'להחליף משק בית',
+  primaryHhSet:'לסמן כמשק בית ראשי', primaryHhUnset:'להסיר סימון ראשי',
+  primaryHhSetToast:'⭐ סומן כמשק בית ראשי — ייפתח ראשון תמיד', primaryHhUnsetToast:'סימון הראשי הוסר',
   homeListsHeading:'הרשימות הפעילות', homeListsMore:'כל הרשימות ←',
   homeMembers:'משק הבית', itemsLeft:'{n} פריטים נשארו', allCollected:'הכל נאסף ✅',
   greetingMorning:'בוקר טוב{n} ☀️', greetingAfternoon:'צהריים טובים{n} 👋', greetingEvening:'ערב טוב{n} 🌆', greetingNeutral:'היי{n} 👋',
@@ -593,6 +597,8 @@ en: {
   tripClosed:'✅ List closed', boughtHeader:'Collected', notBoughtHeader:'Still needed',
   homeSub:'All of your household\'s shared lists, in one place.',
   homeLists:'My lists', homeInvite:'Invite a family member', homeSwitch:'Switch household',
+  primaryHhSet:'Set as primary household', primaryHhUnset:'Remove as primary',
+  primaryHhSetToast:'⭐ Set as primary household — opens first every time', primaryHhUnsetToast:'No longer primary',
   homeListsHeading:'Active lists', homeListsMore:'All lists →',
   homeMembers:'Household', itemsLeft:'{n} items left', allCollected:'All collected ✅',
   greetingMorning:'Good morning{n} ☀️', greetingAfternoon:'Good afternoon{n} 👋', greetingEvening:'Good evening{n} 🌆', greetingNeutral:'Hey{n} 👋',
@@ -902,7 +908,7 @@ function setScreen(name){
 function field(id,text){ const el=$(id); if(!el) return; el.placeholder=text; el.setAttribute('aria-label',text); }
 function paintStrings(){
   const t = CS.t;
-  $('brand-name').textContent = t('appName');
+  $('brand-name').textContent = (window.CS.currentHouseholdName && window.CS.currentHouseholdName()) || t('appName');
   $('lang-label').textContent = t('langLabel');
   $('auth-title').textContent = t('authHero');
   $('auth-sub').textContent = t('authSub');
@@ -957,7 +963,13 @@ function renderMembers(members, targetId, limit){
   let html = shown.map(m=>
     `<span class="avatar" style="background:${personColor(m.user_id)}" title="${esc(m.display_name||m.email||'')}">${esc(initials(m.display_name||m.email))}</span>`).join('');
   if(all.length>shown.length) html += `<span class="avatar avatar-more">+${all.length-shown.length}</span>`;
-  $(targetId||'top-hhbar-members').innerHTML = html;
+  const el=$(targetId||'top-hhbar-members');
+  el.innerHTML = html;
+  if(all.length){
+    el.setAttribute('role','button'); el.tabIndex=0; el.setAttribute('aria-label',CS.t('membersTitle'));
+    el.onclick = ()=>{ window.CS.on && window.CS.on.openMembers && window.CS.on.openMembers(); };
+    el.onkeydown = e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); el.onclick(); } };
+  }
 }
 function personName(name){
   if(!name) return '';
@@ -1414,6 +1426,8 @@ async function listMyHouseholds(){
   return (data||[]).map(r=>({id:r.household_id,name:r.households&&r.households.name,role:r.role}));
 }
 let hhName='';
+window.CS.currentHouseholdName=()=>household?hhName:null;
+function paintBrandName(){ $('brand-name').textContent = household?hhName:CS.t('appName'); }
 function greetingText(){
   const h=new Date().getHours();
   const key = h>=5&&h<12 ? 'greetingMorning' : h>=12&&h<17 ? 'greetingAfternoon' : h>=17&&h<21 ? 'greetingEvening' : 'greetingNeutral';
@@ -1453,6 +1467,7 @@ function applyCachedHousehold(cache){
   household=cache.hhId; hhName=cache.hhName||''; role=cache.role; members=cache.members||[];
   membersById={}; members.forEach(m=>membersById[m.user_id]=m);
   CS.renderMembers(members);
+  paintBrandName();
   goHome();
   showOfflineNote(true);
 }
@@ -1470,6 +1485,7 @@ async function loadHousehold(hh, navigate){
     members=mrows||[]; membersById={}; members.forEach(m=>membersById[m.user_id]=m);
     role=(membersById[user.id]||{}).role||null;
     hhName=hrow.name;
+    paintBrandName();
     await ensureDisplayName(hh);
     CS.renderMembers(members);
     if(!$('view-lists').hidden) CS.renderLists(lists); // keep the open lists page's data fresh without navigating away from it
@@ -1490,6 +1506,7 @@ async function loadHousehold(hh, navigate){
 async function refreshHousehold(){ if(household) await loadHousehold(household, false); }
 $('brand-home-btn').addEventListener('click',async()=>{
   if(!household) return;
+  if(!$('view-home').hidden){ openHouseholdSwitcher(); return; } // already home — "go home" would be a no-op, so this doubles as the household switcher
   if(!$('view-main').hidden){ // leaving an open list mid-shopping shouldn't be one accidental tap away
     const ok=await CS.confirmSheet({
       title:CS.t('leaveListTitle'), body:CS.t('leaveListConfirm'), confirmLabel:CS.t('leaveListAction')
@@ -1515,12 +1532,32 @@ $('hh-create').addEventListener('click',createHousehold);
 async function openHouseholdSwitcher(){
   const list=await listMyHouseholds();
   const t=CS.t;
-  openSheet(sheetHead(t('switchHousehold'))+`<div class="card">
-    ${list.map(h=>`<button class="btn ghost wide" data-hh="${h.id}">🏠 ${esc(h.name)}</button>`).join('')}
-    <button class="btn wide" id="hh-new">➕ ${esc(t('createHh'))}</button>
-  </div>`);
-  $('sheet').querySelectorAll('[data-hh]').forEach(b=>b.onclick=async()=>{ closeSheet(); await loadHousehold(b.dataset.hh); });
-  $('hh-new').onclick=()=>{ closeSheet(); CS.setScreen('onboard'); };
+  let primary=null; try{ primary=localStorage.getItem('cs-primary-hh'); }catch(e){}
+  const draw=()=>{
+    const rows=list.map(h=>{
+      const isPrimary=h.id===primary;
+      const pinLabel=isPrimary?t('primaryHhUnset'):t('primaryHhSet');
+      return `<div class="list-row-wrap">
+        <button class="list-row" data-hh="${h.id}"><span class="e" style="font-size:1.3rem">🏠</span><span class="nm">${esc(h.name)}</span></button>
+        <button class="list-pin" data-pin-hh="${h.id}" aria-label="${esc(pinLabel)}" title="${esc(pinLabel)}">${isPrimary?'⭐':'☆'}</button>
+      </div>`;
+    }).join('');
+    openSheet(sheetHead(t('switchHousehold'))+`<div class="card">
+      ${rows}
+      <button class="btn wide" id="hh-new">➕ ${esc(t('createHh'))}</button>
+    </div>`);
+    $('sheet').querySelectorAll('[data-hh]').forEach(b=>b.onclick=async()=>{ closeSheet(); await loadHousehold(b.dataset.hh); });
+    $('sheet').querySelectorAll('[data-pin-hh]').forEach(b=>b.onclick=()=>{
+      const id=b.dataset.pinHh;
+      const wasPrimary=primary===id;
+      primary=wasPrimary?null:id;
+      try{ if(primary) localStorage.setItem('cs-primary-hh',primary); else localStorage.removeItem('cs-primary-hh'); }catch(e){}
+      toast(wasPrimary?t('primaryHhUnsetToast'):t('primaryHhSetToast'));
+      draw();
+    });
+    $('hh-new').onclick=()=>{ closeSheet(); CS.setScreen('onboard'); };
+  };
+  draw();
 }
 
 /* ---------- household members management ---------- */
@@ -2124,7 +2161,7 @@ async function rejectItem(id){
   const {error}=await sb.rpc('reject_pending_item',{p_item_id:id});
   if(error){ if(it) items.push(it); paintItems(); toast(CS.authErr(error)); }
 }
-window.CS.on={toggle:toggleItem, reorder:reorderItems};
+window.CS.on={toggle:toggleItem, reorder:reorderItems, openMembers:drawMembersSheet};
 
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-action]'); if(!b) return;
@@ -2195,7 +2232,7 @@ addEventListener('offline',()=>{ online=false; showOfflineNote(true); });
 async function onUser(u){
   user=u; window.CS.myId=u?u.id:null;
   renderAccount();
-  if(!u){ household=null; listId=null; items=[]; CS.setScreen('auth'); return; }
+  if(!u){ household=null; listId=null; items=[]; paintBrandName(); CS.setScreen('auth'); return; }
   if(pendingJoin && await consumePendingJoin()){ maybeShowOnboarding(); return; }
   const list=await listMyHouseholds();
   if(!list.length){
@@ -2203,8 +2240,10 @@ async function onUser(u){
     if(cache && cache.hhId){ await loadHousehold(cache.hhId); maybeShowOnboarding(); return; } // offline cold start: fall back to last-known household
     CS.setScreen('onboard'); maybeShowOnboarding(); return;
   }
+  let primary=null; try{ primary=localStorage.getItem('cs-primary-hh'); }catch(e){}
   let last=null; try{ last=localStorage.getItem('cs-last-hh'); }catch(e){}
-  const pick=(last&&list.find(h=>h.id===last))||list[0];
+  // a pinned primary household always wins over whichever was merely last used elsewhere
+  const pick=(primary&&list.find(h=>h.id===primary))||(last&&list.find(h=>h.id===last))||list[0];
   await loadHousehold(pick.id);
   maybeShowOnboarding();
 }
