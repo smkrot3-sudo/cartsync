@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>ניהול · קניות ביחד</title>
+<link rel="icon" href="icons/icon-192.png">
+<style>
+@font-face{font-family:"Varela Round";src:url(fonts/varela-round-hebrew-400-normal.woff2) format("woff2");unicode-range:U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F;font-display:swap}
+@font-face{font-family:"Varela Round";src:url(fonts/varela-round-latin-400-normal.woff2) format("woff2");font-display:swap}
+@font-face{font-family:"Suez One";src:url(fonts/suez-one-hebrew-400-normal.woff2) format("woff2");unicode-range:U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F;font-display:swap}
+@font-face{font-family:"Suez One";src:url(fonts/suez-one-latin-400-normal.woff2) format("woff2");font-display:swap}
+:root{
+  --bg:#F2F4FB; --surface:#FFFFFF; --soft:#E8ECF9; --fg:#121A33; --muted:#656D90; --line:#DCE2F2;
+  --accent:#2E4A9E; --accent-soft:#DCE4FA; --ok:#2BA868; --ok-soft:#DCF3E7; --gold:#B4890F; --gold-soft:#FBEFD2;
+  --danger:#E0394F; --danger-soft:#FADCE1; --shadow:0 8px 20px rgba(18,26,51,.10),0 1px 3px rgba(18,26,51,.06);
+  --display:"Suez One","Varela Round",system-ui,sans-serif; --body:"Varela Round",system-ui,"Segoe UI",Arial,sans-serif;
+  --emoji:"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif; --r:18px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0A1026; --surface:#131C3C; --soft:#1A2449; --fg:#E9ECFB; --muted:#8C94C2; --line:#283264;
+  --accent:#6B8CF5; --accent-soft:#213269; --ok:#4FCB8C; --ok-soft:#133828; --gold:#E4C260; --gold-soft:#4A3C1A;
+  --danger:#F28A96; --danger-soft:#481C24; --shadow:0 8px 20px rgba(0,0,0,.4); color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0A1026; --surface:#131C3C; --soft:#1A2449; --fg:#E9ECFB; --muted:#8C94C2; --line:#283264;
+  --accent:#6B8CF5; --accent-soft:#213269; --ok:#4FCB8C; --ok-soft:#133828; --gold:#E4C260; --gold-soft:#4A3C1A;
+  --danger:#F28A96; --danger-soft:#481C24; --shadow:0 8px 20px rgba(0,0,0,.4); color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.5}
+.e{font-family:var(--emoji);font-style:normal}
+.wrap{max-width:980px;margin:0 auto;padding:14px 16px calc(40px + env(safe-area-inset-bottom,0px))}
+h1,h2{font-family:var(--display);font-weight:400;margin:0}
+h1{font-size:1.35rem}
+h2{font-size:1.08rem;margin:26px 0 10px;display:flex;align-items:center;gap:8px}
+h2 .count{font-family:var(--body);font-size:.8rem;color:var(--muted)}
+.top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.top .sp{flex:1}
+.muted{color:var(--muted)}
+.small{font-size:.82rem}
+button,select,input{font:inherit;color:inherit}
+.btn{border:0;background:var(--accent);color:#fff;border-radius:999px;padding:8px 16px;cursor:pointer}
+.btn.ghost{background:var(--soft);color:var(--fg)}
+.btn:disabled{opacity:.6}
+a{color:var(--accent)}
+.card{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:14px}
+.kpi{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:12px 14px}
+.kpi .v{font-family:var(--display);font-size:1.6rem;line-height:1.2}
+.kpi .l{color:var(--muted);font-size:.82rem}
+.chart{display:flex;align-items:flex-end;gap:4px;height:130px;padding-top:8px}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
+.bar .b{width:100%;max-width:34px;background:var(--accent);border-radius:6px 6px 2px 2px;min-height:2px}
+.bar .n{font-size:.7rem;color:var(--muted);height:16px}
+.bar .d{font-size:.62rem;line-height:1.3;color:var(--muted);margin-top:3px;white-space:nowrap}
+.bar.today .b{background:var(--ok)}
+.legend{font-size:.8rem;color:var(--muted);margin-top:6px}
+.search{width:100%;border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:9px 14px;margin-bottom:10px}
+.rows{display:flex;flex-direction:column;gap:8px}
+.row{background:var(--surface);border-radius:14px;box-shadow:var(--shadow);padding:11px 14px;display:grid;grid-template-columns:1fr auto;gap:2px 10px}
+.row .nm{font-weight:bold}
+.row .meta{grid-column:1/-1;font-size:.82rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 14px}
+.chip{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:1px 9px;font-size:.75rem;background:var(--soft)}
+.chip.ok{background:var(--ok-soft);color:var(--ok)} .chip.gold{background:var(--gold-soft);color:var(--gold)} .chip.bad{background:var(--danger-soft);color:var(--danger)}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;background:var(--line)}
+.dot.on{background:var(--ok)} .dot.mid{background:var(--gold)}
+.hh{margin-bottom:10px}
+.hh .head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.hh .head .nm{font-family:var(--display);font-size:1.05rem}
+.mem{display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--line);flex-wrap:wrap}
+.mem .who{flex:1;min-width:120px}
+.mem select{border:1px solid var(--line);background:var(--soft);border-radius:10px;padding:4px 8px}
+.lists{display:flex;flex-direction:column;gap:4px;margin-top:6px}
+.li{font-size:.85rem;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.feed{display:flex;flex-direction:column}
+.ev{display:flex;gap:10px;padding:7px 2px;border-bottom:1px solid var(--line);font-size:.88rem;align-items:baseline}
+.ev .t{color:var(--muted);font-size:.78rem;white-space:nowrap;min-width:78px}
+.ev .x{flex:1;min-width:0}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.filters button{border:0;background:var(--soft);border-radius:999px;padding:4px 12px;cursor:pointer;font-size:.82rem}
+.filters button.on{background:var(--accent);color:#fff}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.catbar{display:flex;align-items:center;gap:8px;font-size:.85rem;margin:4px 0}
+.catbar .lbl{width:130px;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.catbar .track{flex:1;background:var(--soft);border-radius:6px;height:12px;overflow:hidden}
+.catbar .fill{height:100%;background:var(--accent);border-radius:6px}
+.catbar .n{width:34px;text-align:start;color:var(--muted)}
+.center{min-height:70vh;display:flex;align-items:center;justify-content:center;text-align:center}
+.login{max-width:340px;width:100%;display:flex;flex-direction:column;gap:10px}
+.login input{border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:10px 14px}
+.toast{position:fixed;bottom:16px;inset-inline:16px;max-width:420px;margin:0 auto;background:var(--fg);color:var(--bg);border-radius:14px;padding:10px 16px;text-align:center;z-index:9}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin-top:14px;padding-bottom:2px}
+.tabs a{white-space:nowrap;text-decoration:none;background:var(--surface);box-shadow:var(--shadow);border-radius:999px;padding:6px 14px;color:var(--fg);font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"><div class="center"><p class="muted">טוען…</p></div></div>
+<div class="toast" id="toast" hidden></div>
+<script src="vendor/supabase.js"></script>
+<script>
+(function(){
+const SB_URL='https://pzrzwilkloksfxsvcwji.supabase.co';
+const SB_KEY='sb_publishable_kTKMU6nUUWtGAgb-SJvYyQ_QweS_o60';
+// same storageKey as the app, so being signed in there means being signed in here
+const sb=supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'cartsync-auth'}});
+try{ const th=localStorage.getItem('cs-theme'); if(th==='light'||th==='dark') document.documentElement.dataset.theme=th; }catch(e){}
+
+const CATS={dairy:['חלבי','🥛'],produce:['ירקות ופירות','🥦'],bakery:['מאפים','🍞'],meat:['בשר ודגים','🍗'],frozen:['קפואים','🧊'],pantry:['מזווה','🥫'],beverages:['משקאות','🥤'],snacks:['חטיפים וממתקים','🍬'],household:['ניקיון ובית','🧽'],care:['טיפוח','🧴'],baby:['תינוקות','🍼'],pet:['חיות מחמד','🐾'],other:['אחר','🛒']};
+const ROLES={owner:'בעלים',editor:'עריכה מלאה',requester:'בקשת מוצרים',viewer:'צפייה בלבד'};
+const ACTIONS={added:['➕','הוסיף/ה'],requested:['🙋','ביקש/ה'],checked:['✅','סימן/ה שנלקח'],unchecked:['↩️','ביטל/ה סימון'],deleted:['🗑️','מחק/ה'],approved:['👍','אישר/ה'],rejected:['👎','דחה/תה']};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let data=null, userFilter='', actFilter='all', timer=null;
+
+function toast(m){ const t=$('toast'); t.textContent=m; t.hidden=false; clearTimeout(toast.h); toast.h=setTimeout(()=>t.hidden=true,2600); }
+function ago(ts){
+  if(!ts) return '—';
+  const s=(Date.now()-new Date(ts))/1000;
+  if(s<60) return 'עכשיו';
+  if(s<3600) return 'לפני '+Math.round(s/60)+' דק׳';
+  if(s<86400) return 'לפני '+Math.round(s/3600)+' שע׳';
+  if(s<86400*7) return 'לפני '+Math.round(s/86400)+' ימים';
+  return fmt(ts);
+}
+function fmt(ts){ return ts? new Date(ts).toLocaleString('he-IL',{day:'numeric',month:'numeric',hour:'2-digit',minute:'2-digit'}) : '—'; }
+function fresh(ts){ if(!ts) return ''; const h=(Date.now()-new Date(ts))/36e5; return h<1?'on':h<48?'mid':''; }
+
+function login(msg){
+  $('app').innerHTML=`<div class="center"><div class="login card">
+    <h1>🛠️ ניהול · קניות ביחד</h1>
+    <p class="muted small">${esc(msg||'כניסה עם החשבון שלך באפליקציה')}</p>
+    <input id="em" type="email" placeholder="מייל" dir="ltr" autocomplete="email">
+    <input id="pw" type="password" placeholder="סיסמה" dir="ltr" autocomplete="current-password">
+    <button class="btn" id="go">כניסה</button>
+    <a class="small" href="./">← חזרה לאפליקציה</a>
+  </div></div>`;
+  $('go').onclick=async()=>{
+    const {error}=await sb.auth.signInWithPassword({email:$('em').value.trim(),password:$('pw').value});
+    if(error) toast('הכניסה נכשלה'); else load();
+  };
+}
+
+async function load(){
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session) return login();
+  const {data:d,error}=await sb.rpc('cart_admin_dashboard');
+  if(error){
+    if(/not admin/.test(error.message)) return denied(session.user.email);
+    if(!data) $('app').innerHTML=`<div class="center"><p>שגיאה בטעינה: ${esc(error.message)}</p></div>`;
+    else toast('הרענון נכשל');
+    return;
+  }
+  data=d; render();
+  clearTimeout(timer); timer=setTimeout(load,60000);
+}
+function denied(email){
+  $('app').innerHTML=`<div class="center"><div class="card login"><h1>⛔ אין גישה</h1>
+    <p class="muted">העמוד הזה פתוח רק למנהל. אתה מחובר בתור <span dir="ltr">${esc(email)}</span>.</p>
+    <a href="./">← חזרה לאפליקציה</a></div></div>`;
+}
+
+function render(){
+  const d=data, T=d.totals;
+  const scrollY=window.scrollY;
+  $('app').innerHTML=`
+  <div class="top">
+    <a href="./" class="btn ghost" style="text-decoration:none">→ לאפליקציה</a>
+    <h1>🛠️ מאחורי הקלעים</h1>
+    <span class="sp"></span>
+    <span class="muted small">עודכן ${esc(fmt(d.generated_at))}</span>
+    <button class="btn ghost" id="refresh">🔄 רענון</button>
+  </div>
+  <nav class="tabs">
+    <a href="#s-users">👤 משתמשים</a><a href="#s-hh">🏠 משקי בית</a><a href="#s-feed">📜 פעילות</a><a href="#s-cats">🏷️ קטגוריות</a>
+  </nav>
+  <div class="kpis">
+    ${kpi(T.users,'משתמשים')}${kpi(T.new_users_7d,'הצטרפו השבוע')}${kpi(T.active_today,'פעילים היום')}${kpi(T.active_7d,'פעילים השבוע')}
+    ${kpi(T.households,'משקי בית')}${kpi(T.lists_open,'רשימות פתוחות')}${kpi(T.items,'מוצרים בסה״כ')}${kpi(T.items_pending,'ממתינים לאישור')}
+  </div>
+
+  <h2>📈 14 הימים האחרונים</h2>
+  <div class="card">${chart(d.daily)}
+    <div class="legend">פעולות ביום (הוספה, סימון, מחיקה…). מתחת: 👤 אנשים פעילים · ✨ נרשמים חדשים. הירוק הוא היום.</div></div>
+
+  <h2 id="s-users">👤 משתמשים <span class="count">${d.users.length}</span></h2>
+  <input class="search" id="usearch" placeholder="חיפוש לפי שם או מייל…" value="${esc(userFilter)}">
+  <div class="rows" id="ulist">${users()}</div>
+  <p class="muted small">🟢 נראה בשעה האחרונה · 🟡 ביומיים האחרונים. "נראה לאחרונה" נאסף מרגע העדכון הזה, אז למשתמשים ותיקים הוא יתמלא כשיפתחו את האפליקציה בפעם הבאה.</p>
+
+  <h2 id="s-hh">🏠 משקי בית <span class="count">${d.households.length}</span></h2>
+  ${d.households.map(hh).join('')}
+
+  <h2 id="s-feed">📜 פעילות אחרונה</h2>
+  <div class="filters" id="afilt">
+    ${[['all','הכל'],['added','הוספות'],['checked','סימונים'],['deleted','מחיקות'],['requested','בקשות']].map(([k,l])=>`<button data-f="${k}" class="${actFilter===k?'on':''}">${l}</button>`).join('')}
+  </div>
+  <div class="card feed" id="feed">${feed()}</div>
+
+  <h2 id="s-cats">🏷️ קטגוריות</h2>
+  <div class="card">${cats(d.categories)}</div>
+  <h2>❓ מוצרים שלא זוהו (נכנסו ל"אחר") <span class="count">${d.uncategorized.length}</span></h2>
+  <div class="card">
+    ${d.uncategorized.length?`<div class="tags">${d.uncategorized.map(u=>`<span class="chip">${esc(u.text)}${u.n>1?' ×'+u.n:''}</span>`).join('')}</div>
+    <p class="muted small" style="margin:10px 0 0">אלה מוצרים שהמילון וה-AI לא ידעו לסווג. אפשר לבקש ממני להוסיף אותם למילון.</p>`:'<p class="muted">הכל מסווג 🎉</p>'}
+  </div>`;
+  $('refresh').onclick=()=>{ $('refresh').disabled=true; load(); };
+  $('usearch').oninput=e=>{ userFilter=e.target.value; $('ulist').innerHTML=users(); };
+  $('afilt').querySelectorAll('button').forEach(b=>b.onclick=()=>{ actFilter=b.dataset.f; $('afilt').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b)); $('feed').innerHTML=feed(); });
+  document.querySelectorAll('select[data-role]').forEach(s=>s.onchange=()=>setRole(s));
+  window.scrollTo(0,scrollY);
+}
+const kpi=(v,l)=>`<div class="kpi"><div class="v">${esc(v)}</div><div class="l">${esc(l)}</div></div>`;
+function chart(days){
+  const max=Math.max(1,...days.map(x=>x.actions));
+  const today=days.length-1;
+  return `<div class="chart">${days.map((x,i)=>{
+    const dt=new Date(x.day+'T12:00:00');
+    return `<div class="bar ${i===today?'today':''}" title="${esc(x.day)}: ${x.actions} פעולות, ${x.people} אנשים, ${x.signups} נרשמו">
+      <span class="n">${x.actions||''}</span>
+      <div class="b" style="height:${Math.round(x.actions/max*100)}%"></div>
+      <span class="d">${(today-i)%2===0?dt.getDate()+'/'+(dt.getMonth()+1):'&nbsp;'}</span>
+      <span class="d">${x.people?'👤'+x.people:'&nbsp;'}</span>
+      <span class="d">${x.signups?'✨'+x.signups:'&nbsp;'}</span>
+    </div>`;}).join('')}</div>`;
+}
+function users(){
+  const q=userFilter.trim().toLowerCase();
+  const list=data.users.filter(u=>!q||(u.name+' '+u.email).toLowerCase().includes(q));
+  if(!list.length) return '<p class="muted">אין תוצאות</p>';
+  return list.map(u=>{
+    const hhs=u.households.map(h=>`<span class="chip">🏠 ${esc(h.name)} · ${esc(ROLES[h.role]||h.role)}</span>`).join(' ')||'<span class="chip bad">בלי משק בית</span>';
+    const plat=u.platform?`<span>📱 ${esc(u.platform==='android'?'אנדרואיד':u.platform==='pwa'?'אפליקציית אתר':'דפדפן')}${u.version?' '+esc(u.version):''}</span>`:'';
+    return `<div class="row">
+      <div><span class="dot ${fresh(u.last_seen||u.last_activity)}"></span> <span class="nm">${esc(u.name||'(בלי שם)')}</span>
+        ${u.is_admin?'<span class="chip gold">מנהל</span>':''}${u.confirmed?'':'<span class="chip bad">מייל לא אומת</span>'}</div>
+      <div class="muted small" dir="ltr">${esc(u.email)}</div>
+      <div class="meta">${hhs}</div>
+      <div class="meta">
+        <span>✨ נרשם/ה ${esc(fmt(u.created_at))}</span>
+        <span>🔑 התחברות ${esc(ago(u.last_sign_in_at))}</span>
+        <span>👀 נראה/תה ${esc(ago(u.last_seen))}${u.opens?' · '+u.opens+' פתיחות':''}</span>
+        <span>⚡ פעולה אחרונה ${esc(ago(u.last_activity))}</span>
+        <span>➕ ${u.items_added} · ✅ ${u.items_checked}</span>
+        ${plat}
+      </div>
+    </div>`;}).join('');
+}
+function hh(h){
+  const open=h.lists.filter(l=>l.status==='open'), closed=h.lists.filter(l=>l.status!=='open');
+  const mem=h.members.map(m=>`<div class="mem"><span class="who">${esc(m.name)} <span class="muted small">· הצטרף/ה ${esc(fmt(m.joined_at))}</span></span>
+    ${m.role==='owner'?'<span class="chip gold">👑 בעלים</span>':`<select data-role data-hh="${h.id}" data-user="${m.user_id}" data-was="${m.role}">
+      ${['editor','requester','viewer'].map(r=>`<option value="${r}" ${r===m.role?'selected':''}>${ROLES[r]}</option>`).join('')}</select>`}
+  </div>`).join('');
+  const li=l=>`<div class="li"><span>${l.status==='open'?'🟢':'⚪'} ${esc(l.name)}</span>
+    <span class="muted small">${l.active} פתוחים · ${l.checked} נלקחו${l.pending?' · '+l.pending+' ממתינים':''} · נפתחה ${esc(fmt(l.created_at))}${l.closed_at?' · נסגרה '+esc(fmt(l.closed_at)):''}</span></div>`;
+  return `<div class="card hh">
+    <div class="head"><span class="nm">🏠 ${esc(h.name)}</span><span class="muted small">נוצר ${esc(fmt(h.created_at))} · פעילות אחרונה ${esc(ago(h.last_activity))}</span></div>
+    ${mem}
+    <div class="lists">${open.map(li).join('')}${closed.length?`<details><summary class="muted small">${closed.length} רשימות סגורות</summary>${closed.map(li).join('')}</details>`:''}</div>
+    ${h.invites.length?`<div class="muted small" style="margin-top:6px">🔗 הזמנות פעילות: ${h.invites.map(v=>`<span dir="ltr">${esc(v.code)}</span> (${esc(ROLES[v.role]||v.role)}, נוצלה ${v.uses}${v.max_uses?'/'+v.max_uses:''})`).join(' · ')}</div>`:''}
+  </div>`;
+}
+function feed(){
+  const list=data.activity.filter(a=>actFilter==='all'||a.action===actFilter||(actFilter==='checked'&&a.action==='unchecked'));
+  if(!list.length) return '<p class="muted">אין פעילות</p>';
+  return list.map(a=>{
+    const [ic,verb]=ACTIONS[a.action]||['•',a.action];
+    return `<div class="ev"><span class="t">${esc(fmt(a.at))}</span><span class="e">${ic}</span>
+      <span class="x"><b>${esc(a.who||'?')}</b> ${esc(verb)} <b>${esc(a.item||'')}</b> <span class="muted small">· ${esc(a.list||'')} · ${esc(a.household||'')}</span></span></div>`;
+  }).join('');
+}
+function cats(c){
+  const entries=Object.entries(c).sort((a,b)=>b[1]-a[1]);
+  const max=Math.max(1,...entries.map(e=>e[1]));
+  return entries.map(([k,n])=>{ const m=CATS[k]||[k,'🛒'];
+    return `<div class="catbar"><span class="lbl"><span class="e">${m[1]}</span> ${esc(m[0])}</span><span class="track"><span class="fill" style="display:block;width:${n/max*100}%"></span></span><span class="n">${n}</span></div>`;}).join('');
+}
+async function setRole(s){
+  const role=s.value, was=s.dataset.was;
+  s.disabled=true;
+  const {error}=await sb.rpc('cart_admin_set_role',{p_household:s.dataset.hh,p_user:s.dataset.user,p_role:role});
+  s.disabled=false;
+  if(error){ s.value=was; toast('השינוי נכשל: '+error.message); return; }
+  s.dataset.was=role; toast('התפקיד עודכן ל"'+ROLES[role]+'"');
+}
+
+sb.auth.onAuthStateChange((ev)=>{ if(ev==='SIGNED_OUT') login(); });
+load();
+})();
+</script>
+</body>
+</html>

@@ -524,7 +524,7 @@ he: {
   dupWarning:'"{n}" כבר ברשימה.', dupAddAnyway:'להוסיף בכל זאת',
   manageMembers:'👥 ניהול חברי משק הבית', membersTitle:'חברי משק הבית',
   membersCountOne:'חבר אחד', membersCount:'{n} חברים',
-  settingsGroupHousehold:'משק הבית', settingsGroupPersonal:'אישי', settingsGroupApp:'אפליקציה',
+  settingsGroupHousehold:'משק הבית', adminPage:'ניהול (רק למנהל)', settingsGroupPersonal:'אישי', settingsGroupApp:'אפליקציה',
   removeConfirm:'להסיר את {n} ממשק הבית?', leaveConfirm:'לצאת ממשק הבית?',
   removeTitle:'הסרת חבר/ת משק בית', leaveTitle:'יציאה ממשק הבית', removeAction:'להסיר', leaveAction:'לצאת',
   leaveHousehold:'יציאה ממשק הבית', memberRemoved:'✅ הוסר/ה ממשק הבית', youLeft:'👋 יצאת ממשק הבית',
@@ -604,7 +604,7 @@ en: {
   dupWarning:'"{n}" is already on the list.', dupAddAnyway:'Add anyway',
   manageMembers:'👥 Manage household members', membersTitle:'Household members',
   membersCountOne:'1 member', membersCount:'{n} members',
-  settingsGroupHousehold:'Household', settingsGroupPersonal:'Personal', settingsGroupApp:'App',
+  settingsGroupHousehold:'Household', adminPage:'Admin (owner only)', settingsGroupPersonal:'Personal', settingsGroupApp:'App',
   removeConfirm:'Remove {n} from the household?', leaveConfirm:'Leave this household?',
   removeTitle:'Remove member', leaveTitle:'Leave household', removeAction:'Remove', leaveAction:'Leave',
   leaveHousehold:'Leave household', memberRemoved:'✅ Removed from the household', youLeft:'👋 You left the household',
@@ -1471,8 +1471,10 @@ function openAccountSheet(){
       <p class="grp-h">${esc(t('settingsGroupApp'))}</p>
       <button class="btn ghost" id="acct-guide">📖 ${esc(t('guideOpen'))}</button>
       <button class="btn ghost" id="acct-sync">🔄 ${esc(t('syncNow'))}</button>
+      ${isAdmin?`<button class="btn ghost" id="acct-admin">🛠️ ${esc(t('adminPage'))}</button>`:''}
       <button class="btn ghost" id="acct-signout">👋 ${esc(t('signOut'))}</button>
     </div>`);
+  if($('acct-admin')) $('acct-admin').onclick=()=>{ location.href='admin.html'; };
   $('theme-pick').querySelectorAll('[data-theme-opt]').forEach(b=>b.onclick=()=>{ CS.setTheme(b.dataset.themeOpt); openAccountSheet(); });
   $('font-pick').querySelectorAll('[data-font-opt]').forEach(b=>b.onclick=()=>{ CS.setFontSize(b.dataset.fontOpt); openAccountSheet(); });
   $('lang-pick').querySelectorAll('[data-lang-opt]').forEach(b=>b.onclick=()=>{ CS.setLang(b.dataset.langOpt); openAccountSheet(); });
@@ -2348,9 +2350,27 @@ addEventListener('online',()=>{ online=true; showOfflineNote(false); flushQueue(
 addEventListener('offline',()=>{ online=false; showOfflineNote(true); });
 
 /* ---------- boot ---------- */
+/* "last seen in the app" for the admin page — the server only counts a new "open" every 30 min */
+let isAdmin=false, lastPing=0;
+function pingSeen(){
+  if(!user || !online || Date.now()-lastPing<5*60*1000) return;
+  lastPing=Date.now();
+  let platform='web', version=String(window.CS_BUILD||'');
+  try{
+    if(window.CartApp){ platform='android'; version=window.CartApp.versionName()+' ('+window.CartApp.versionCode()+')'; }
+    else if(matchMedia('(display-mode: standalone)').matches) platform='pwa';
+  }catch(e){}
+  sb.rpc('cart_ping',{p_platform:platform,p_version:version}).then(()=>{},()=>{});
+}
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') pingSeen(); });
 async function onUser(u){
   user=u; window.CS.myId=u?u.id:null;
   renderAccount();
+  isAdmin=false;
+  if(u){
+    lastPing=0; pingSeen();
+    sb.rpc('is_admin').then(({data})=>{ isAdmin=data===true; },()=>{});
+  }
   if(!u){ household=null; listId=null; items=[]; paintBrandName(); paintMembersRow(); CS.setScreen('auth'); return; }
   if(pendingJoin && await consumePendingJoin()){ maybeShowOnboarding(); return; }
   const list=await listMyHouseholds();
