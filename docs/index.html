@@ -946,6 +946,14 @@ function closeSheet(){
   $('sheet').hidden=true; $('shade').hidden=true; $('sheet').innerHTML='';
   if(pendingConfirmCancel){ const c=pendingConfirmCancel; pendingConfirmCancel=null; c(); }
 }
+// Android WebView: calling focus() in the same tick that un-hides a field (a freshly opened sheet,
+// the search pill) can raise the keyboard without wiring it to that field, so nothing typed
+// shows up until the field is closed and opened again. Let it lay out first, then focus.
+function focusField(el){
+  if(typeof el==='string') el=$(el);
+  if(!el) return;
+  requestAnimationFrame(()=>setTimeout(()=>{ if(el.isConnected && !el.hidden) el.focus(); },60));
+}
 function sheetHead(title){ return `<div class="sheet-head"><h2>${esc(title)}</h2><button class="close" data-act="sheet-close">✕</button></div>`; }
 let toastTimer=null;
 // a toast fired while a sheet is open (e.g. "added to list" right after tapping Add, with the
@@ -1091,7 +1099,7 @@ function collapseSearch(){
 }
 if($('search-toggle')) $('search-toggle').addEventListener('click',()=>{
   $('search-toggle').hidden=true;
-  const input=$('search-input'); input.hidden=false; input.focus();
+  const input=$('search-input'); input.hidden=false; focusField(input);
 });
 if($('search-input')) $('search-input').addEventListener('blur',()=>setTimeout(collapseSearch,120));
 
@@ -1286,7 +1294,7 @@ $('au-forgot').addEventListener('click',()=>setAuthMode('reset'));
 $('refresh-btn').addEventListener('click',()=>location.reload());
 
 Object.assign(window.CS,{
-  $, esc, guess, openSheet, closeSheet, sheetHead, toast, toastAction, confirmSheet,
+  $, esc, guess, openSheet, closeSheet, sheetHead, focusField, toast, toastAction, confirmSheet,
   setScreen, paintStrings, setAuthMode, renderMembers, renderGroups, renderLists, initials, personColor,
   renderHomeLists,
   render(){ paintStrings(); if(window.CS.rerenderMain) window.CS.rerenderMain(); },
@@ -1779,7 +1787,7 @@ function openEditNameSheet(){
     <input id="edit-name-input" value="${esc(mine?mine.display_name||'':'')}">
     <button class="btn wide" id="edit-name-save">${esc(t('editSave'))}</button>
   </div>`);
-  $('edit-name-input').focus();
+  CS.focusField('edit-name-input');
   $('edit-name-save').onclick=async()=>{
     const name=$('edit-name-input').value.trim();
     if(!name) return;
@@ -1805,7 +1813,7 @@ function openProfileSheet(){
     <button class="btn ghost wide" id="profile-pass-save">${esc(t('profilePassSave'))}</button>
     <div id="profile-msg" class="msg" hidden></div>
   </div>`);
-  $('profile-name').focus();
+  CS.focusField('profile-name');
   $('profile-save').onclick=async()=>{
     const name=$('profile-name').value.trim();
     if(!name) return;
@@ -1864,7 +1872,7 @@ function openNewListSheet(){
     <div id="new-list-msg" class="msg err" hidden></div>
     <button class="btn wide" id="new-list-go">${esc(t('newListGo'))}</button>
   </div>`);
-  $('new-list-name').focus();
+  CS.focusField('new-list-name');
   const go=async()=>{
     const name=$('new-list-name').value.trim();
     if(!name){ const m=$('new-list-msg'); m.textContent=t('needListName'); m.hidden=false; return; }
@@ -2190,7 +2198,7 @@ function openAddSheet(){
   $('item-input').addEventListener('keydown',e=>{ if(e.key==='Enter') addItem(); });
   $('item-input').addEventListener('input',()=>{ forceAddDup=false; const m=$('item-dup-msg'); if(m) m.hidden=true; });
   $('item-qty').addEventListener('keydown',e=>{ if(e.key==='Enter') addItem(); });
-  $('item-input').focus();
+  CS.focusField('item-input');
 }
 $('fab-add').addEventListener('click',openAddSheet);
 
@@ -2237,7 +2245,7 @@ function openEditSheet(id){
     <input id="edit-qty" class="qty-input" placeholder="${esc(t('qtyPh'))}" value="${esc(it.qty||'')}" inputmode="numeric">
     <button class="btn wide" id="edit-save">${esc(t('editSave'))}</button>
   </div>`);
-  $('edit-text').focus();
+  CS.focusField('edit-text');
   const save=async()=>{
     const text=$('edit-text').value.trim(), qty=$('edit-qty').value.trim();
     if(!text) return;

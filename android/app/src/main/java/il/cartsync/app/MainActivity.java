@@ -3,6 +3,8 @@ package il.cartsync.app;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -22,6 +24,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         webView = new WebView(this);
         setContentView(webView);
+        // the WebView must hold Android focus for the keyboard to deliver keystrokes to a page field;
+        // without it the keyboard can open over an input yet typing goes nowhere
+        webView.setFocusable(true);
+        webView.setFocusableInTouchMode(true);
+        webView.requestFocus();
+        webView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent e) {
+                if (e.getAction() == MotionEvent.ACTION_DOWN && !v.hasFocus()) v.requestFocus();
+                return false;
+            }
+        });
 
         WebSettings s = webView.getSettings();
         s.setJavaScriptEnabled(true);
@@ -63,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        webView.requestFocus(); // coming back from the share sheet or the installer can leave it unfocused
         if (pausedAt > 0 && System.currentTimeMillis() - pausedAt > STALE_AFTER_MS) {
             webView.reload();
         }
