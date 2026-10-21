@@ -23,54 +23,58 @@
 @font-face{font-family:"Rubik Wet Paint";src:url(fonts/rubik-wetpaint-latin.woff2) format("woff2");font-display:swap}
 </style>
 <style>
-/* Layout: one navy-anchored, colorful column, phone first — same system as tsaad-katan (CSS vars, .wrap/.card/.btn). */
+/* Layout: a fresh green grocery look (soft green app bar, tinted category cards), phone first —
+   same building blocks as tsaad-katan (CSS vars, .wrap/.card/.btn). */
 :root{
-  --bg:#F2F4FB; --surface:#FFFFFF; --soft:#E8ECF9; --fg:#121A33; --muted:#656D90; --line:#DCE2F2;
-  --accent:#2E4A9E; --accent-ink:#FFFFFF; --accent-soft:#DCE4FA;
+  --bg:#F6F8F5; --surface:#FFFFFF; --soft:#EAF1E9; --fg:#1C2A21; --muted:#66756B; --line:#DFE7DD;
+  --accent:#1F6B3F; --accent-ink:#FFFFFF; --accent-soft:#DDF0E0;
+  --bar:#A6DBAE; --bar-ink:#14281B; --done-bg:#E3F3E3;
   --coral:#FF5E70; --coral-ink:#FFFFFF; --coral-soft:#FFE0E4;
   --gold:#B4890F; --gold-soft:#FBEFD2;
-  --ok:#2BA868; --ok-soft:#DCF3E7;
+  --ok:#1F6B3F; --ok-soft:#DDF0E0;
   --warn:var(--coral); --warn-soft:var(--coral-soft);
   --danger:#E0394F; --danger-soft:#FADCE1;
-  --shadow:0 8px 20px rgba(18,26,51,.12),0 1px 3px rgba(18,26,51,.07);
+  --shadow:0 4px 14px rgba(30,60,40,.09),0 1px 2px rgba(30,60,40,.06);
   --shade:rgba(10,14,30,.46);
-  --display:"Suez One","Varela Round",system-ui,sans-serif;
-  --body:"Varela Round",system-ui,"Segoe UI",Arial,sans-serif;
+  --display:system-ui,"Noto Sans Hebrew","Segoe UI",Arial,sans-serif;
+  --body:system-ui,"Noto Sans Hebrew","Segoe UI",Arial,sans-serif;
   --marker:"Rubik Wet Paint",var(--display);
   --emoji:"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif;
   --r:18px;
-  --rule:rgba(46,74,158,.08);
-  --header-grad:linear-gradient(135deg,#233B86 0%,#2E4A9E 48%,#4262C2 100%);
-  --header-ink:#FFFFFF;
-  --btn-grad:linear-gradient(135deg,#2E4A9E 0%,#4A64C9 100%);
+  --rule:rgba(31,107,63,.08);
+  --header-grad:var(--bar);
+  --header-ink:var(--bar-ink);
+  --btn-grad:linear-gradient(135deg,#1F6B3F 0%,#2F8A55 100%);
   --btn-danger-grad:linear-gradient(135deg,#D43450 0%,#FF5E70 100%);
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0A1026; --surface:#131C3C; --soft:#1A2449; --fg:#E9ECFB; --muted:#8C94C2; --line:#283264;
-  --accent:#6B8CF5; --accent-ink:#081021; --accent-soft:#213269;
+  --bg:#0E1511; --surface:#17211B; --soft:#1F2C24; --fg:#E5EEE7; --muted:#90A096; --line:#27362D;
+  --accent:#5CC383; --accent-ink:#06150C; --accent-soft:#1F3A2A;
+  --bar:#24533A; --bar-ink:#E5EEE7; --done-bg:#1D3528;
   --coral:#FF8294; --coral-ink:#380A12; --coral-soft:#48202A;
   --gold:#E4C260; --gold-soft:#4A3C1A;
-  --ok:#4FCB8C; --ok-soft:#133828;
+  --ok:#5CC383; --ok-soft:#1D3528;
   --warn:var(--coral); --warn-soft:var(--coral-soft);
   --danger:#F28A96; --danger-soft:#481C24;
   --rule:rgba(255,255,255,.055);
   --shadow:0 8px 20px rgba(0,0,0,.4); --shade:rgba(0,0,0,.6); color-scheme:dark;
-  --header-grad:linear-gradient(135deg,#0B1230 0%,#162048 50%,#223170 100%);
-  --btn-grad:linear-gradient(135deg,#6B8CF5 0%,#8AA3FF 100%);
+  --header-grad:var(--bar);
+  --btn-grad:linear-gradient(135deg,#3FA868 0%,#5CC383 100%);
   --btn-danger-grad:linear-gradient(135deg,#E26575 0%,#FF8294 100%);
 }}
 :root[data-theme="dark"]{
-  --bg:#0A1026; --surface:#131C3C; --soft:#1A2449; --fg:#E9ECFB; --muted:#8C94C2; --line:#283264;
-  --accent:#6B8CF5; --accent-ink:#081021; --accent-soft:#213269;
+  --bg:#0E1511; --surface:#17211B; --soft:#1F2C24; --fg:#E5EEE7; --muted:#90A096; --line:#27362D;
+  --accent:#5CC383; --accent-ink:#06150C; --accent-soft:#1F3A2A;
+  --bar:#24533A; --bar-ink:#E5EEE7; --done-bg:#1D3528;
   --coral:#FF8294; --coral-ink:#380A12; --coral-soft:#48202A;
   --gold:#E4C260; --gold-soft:#4A3C1A;
-  --ok:#4FCB8C; --ok-soft:#133828;
+  --ok:#5CC383; --ok-soft:#1D3528;
   --warn:var(--coral); --warn-soft:var(--coral-soft);
   --danger:#F28A96; --danger-soft:#481C24;
   --rule:rgba(255,255,255,.055);
   --shadow:0 8px 20px rgba(0,0,0,.4); --shade:rgba(0,0,0,.6); color-scheme:dark;
-  --header-grad:linear-gradient(135deg,#0B1230 0%,#162048 50%,#223170 100%);
-  --btn-grad:linear-gradient(135deg,#6B8CF5 0%,#8AA3FF 100%);
+  --header-grad:var(--bar);
+  --btn-grad:linear-gradient(135deg,#3FA868 0%,#5CC383 100%);
   --btn-danger-grad:linear-gradient(135deg,#E26575 0%,#FF8294 100%);
 }
 
@@ -83,7 +87,7 @@ body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px
 :root[data-fontsize="xlarge"]{font-size:137.5%}
 html[dir="ltr"] body,body[dir="ltr"]{direction:ltr}
 .wrap{max-width:560px;margin:0 auto;padding:12px 16px calc(90px + env(safe-area-inset-bottom,0px))}
-h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;text-wrap:balance;line-height:1.25}
+h1,h2,h3{font-family:var(--display);font-weight:800;margin:0;text-wrap:balance;line-height:1.25}
 h1{font-size:1.5rem}
 h2{font-size:1.25rem}
 h3{font-size:1.05rem}
@@ -98,28 +102,28 @@ button:disabled{opacity:.6;cursor:default}
    members, one quiet row for "where am I" inside it — instead of two near-identical dark
    capsules stacked, where the same button meant different things depending on the screen */
 .top{
-  margin:-12px -16px 0;padding:14px 10px 10px;
-  background:var(--bg);
-  display:flex;flex-direction:column;gap:8px;
+  margin:-12px -16px 0;padding:12px 12px 10px;
+  background:var(--bar);color:var(--bar-ink);
+  display:flex;flex-direction:column;gap:6px;
 }
 .brand{
   display:flex;align-items:center;gap:10px;width:100%;
 }
 .hh-chip{
   flex:1;min-width:0;display:flex;align-items:center;gap:7px;
-  border:0;background:var(--surface);color:var(--accent);
-  border-radius:999px;padding:9px 14px;box-shadow:var(--shadow);
-  font-family:var(--display);font-weight:400;font-size:1rem;cursor:pointer;
+  border:0;background:transparent;color:var(--bar-ink);
+  border-radius:12px;padding:6px 4px;box-shadow:none;
+  font-family:var(--display);font-weight:700;font-size:1.12rem;cursor:pointer;
 }
 .hh-chip .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:start;font-weight:inherit}
-.hh-chip .chev{flex:none;font-size:.7rem;color:var(--muted)}
-.brand-end-badge{width:36px;height:36px;border-radius:12px;flex:none;display:grid;place-items:center;font-size:1.05rem;
-  background:linear-gradient(135deg,var(--coral),var(--gold));box-shadow:0 4px 10px rgba(255,94,112,.4)}
-.brand .avatarbtn{width:34px;height:34px;font-size:.8rem;font-weight:bold;border:2px solid var(--coral);box-shadow:none;flex:none}
+.hh-chip .chev{flex:none;font-size:.75rem;opacity:.7}
+.brand-end-badge{width:34px;height:34px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:1.05rem;
+  background:rgba(255,255,255,.45)}
+.brand .avatarbtn{width:34px;height:34px;font-size:.8rem;font-weight:bold;background:rgba(255,255,255,.55);color:var(--bar-ink);border:0;box-shadow:none;flex:none}
 .members-row{
   display:flex;align-items:center;gap:8px;width:100%;
-  border:0;background:var(--surface);box-shadow:var(--shadow);
-  border-radius:999px;padding:8px 14px;color:var(--muted);font-size:.85rem;cursor:pointer;text-align:start;
+  border:0;background:rgba(255,255,255,.35);box-shadow:none;
+  border-radius:999px;padding:6px 12px;color:var(--bar-ink);font-size:.85rem;cursor:pointer;text-align:start;
 }
 .members-row .chev{margin-inline-start:auto;flex:none;font-size:.78rem}
 .iconbtn{border:0;background:var(--surface);box-shadow:var(--shadow);width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:var(--muted);flex:none;font-size:1.15rem;transition:transform .1s ease}
@@ -147,7 +151,7 @@ button:disabled{opacity:.6;cursor:default}
 .msg.ok{background:var(--ok-soft);color:var(--ok)}
 .msg.warn{background:var(--gold-soft);color:var(--gold)}
 
-.btn{border:0;background:var(--btn-grad);color:var(--accent-ink);border-radius:999px;padding:11px 18px;font-size:.96rem;white-space:nowrap;box-shadow:0 6px 16px rgba(46,74,158,.32);transition:transform .1s ease}
+.btn{border:0;background:var(--btn-grad);color:var(--accent-ink);border-radius:999px;padding:11px 18px;font-size:.96rem;font-weight:600;white-space:nowrap;box-shadow:0 6px 16px rgba(31,107,63,.28);transition:transform .1s ease}
 .btn.ghost{background:var(--surface);color:var(--accent);border:2px solid var(--accent-soft);box-shadow:none}
 .btn.small{padding:7px 13px;font-size:.86rem}
 .btn.wide{width:100%}
@@ -198,9 +202,11 @@ button:disabled{opacity:.6;cursor:default}
   display:flex;align-items:center;gap:6px;width:100%;
   padding:2px 6px;
 }
-.hhbar .iconbtn-lite{border:0;background:transparent;color:var(--muted);width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:1.05rem;flex:none}
-.hhbar .iconbtn-lite:active{background:var(--soft)}
-.list-name-lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.95rem;font-family:var(--display);font-weight:400;color:var(--fg)}
+.hhbar .iconbtn-lite{border:0;background:transparent;color:var(--bar-ink);width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:1.05rem;flex:none}
+.hhbar .iconbtn-lite:active{background:rgba(255,255,255,.35)}
+.list-name-lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:1rem;font-family:var(--display);font-weight:700;color:var(--bar-ink)}
+:root[data-theme="dark"] .members-row,:root[data-theme="dark"] .brand .avatarbtn,:root[data-theme="dark"] .brand-end-badge{background:rgba(255,255,255,.12)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .members-row,:root:not([data-theme="light"]) .brand .avatarbtn,:root:not([data-theme="light"]) .brand-end-badge{background:rgba(255,255,255,.12)}}
 
 .list-row{display:flex;align-items:center;gap:10px;background:var(--surface);border-radius:16px;padding:12px 14px;box-shadow:var(--shadow);width:100%;border:0;text-align:start;color:inherit;cursor:pointer}
 .list-row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:1rem}
@@ -228,13 +234,34 @@ button:disabled{opacity:.6;cursor:default}
 .note-sticky{background:var(--coral-soft);border-radius:var(--r);padding:16px}
 .note-small{opacity:.85}
 
-.group{margin-top:2px}
-.group+.group{margin-top:16px}
-.group-h{display:flex;align-items:center;gap:7px;font-family:var(--display);font-size:.95rem;letter-spacing:.02em;color:var(--fg);padding:2px 2px 8px;font-weight:400}
 .list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.group-h{display:flex;align-items:center;gap:7px;font-family:var(--display);font-size:.95rem;color:var(--fg);padding:2px 2px 8px;font-weight:700}
+
+/* each category is one card: a tinted header strip (its own hue) over compact checklist rows */
+.list-hero{padding:6px 4px 0}
+/* inside a list the big title below carries its name, so the bar keeps just back + actions */
+body.in-list .hhbar .list-name-lbl{visibility:hidden}
+.list-hero h1{font-size:1.75rem;line-height:1.2}
+.list-hero p{color:var(--muted);font-size:.93rem;margin-top:2px}
+.group{--h:220;background:var(--surface);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+.group+.group{margin-top:14px}
+.group .group-h{width:100%;border:0;cursor:pointer;background:hsl(var(--h) 52% 89%);padding:10px 14px;font-size:1.06rem;gap:10px;text-align:start}
+:root[data-theme="dark"] .group .group-h{background:hsl(var(--h) 28% 21%)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .group .group-h{background:hsl(var(--h) 28% 21%)}}
+.group .group-h .e{font-size:1.55rem}
+.group .group-h .gname{flex:1}
+.group .group-h .gcount{font-size:.8rem;font-weight:400;color:var(--muted)}
+.group .group-h .chev{font-size:.8rem;opacity:.65;transition:transform .2s ease}
+.group.collapsed .group-h .chev{transform:rotate(180deg)}
+.group.collapsed > .list{display:none}
+.group > .list{gap:0}
+.group[data-cat="dairy"]{--h:208} .group[data-cat="produce"]{--h:118} .group[data-cat="bakery"]{--h:32}
+.group[data-cat="meat"]{--h:2} .group[data-cat="frozen"]{--h:192} .group[data-cat="pantry"]{--h:42}
+.group[data-cat="beverages"]{--h:262} .group[data-cat="snacks"]{--h:330} .group[data-cat="household"]{--h:172}
+.group[data-cat="care"]{--h:285} .group[data-cat="baby"]{--h:215} .group[data-cat="pet"]{--h:20} .group[data-cat="other"]{--h:150}
 
 /* colorful circular badge per category, one hue each, light tint in light mode / deep tint in dark mode */
-.item .emo{--h:220;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:1.3rem;flex:none;font-family:var(--emoji);background:hsl(var(--h) 75% 92%);color:hsl(var(--h) 60% 38%)}
+.item .emo{--h:220;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:1.1rem;flex:none;font-family:var(--emoji);background:hsl(var(--h) 75% 92%);color:hsl(var(--h) 60% 38%)}
 :root[data-theme="dark"] .item .emo{background:hsl(var(--h) 45% 24%);color:hsl(var(--h) 85% 80%)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .item .emo{background:hsl(var(--h) 45% 24%);color:hsl(var(--h) 85% 80%)}}
 .item .emo[data-cat="dairy"]{--h:205}
@@ -256,10 +283,11 @@ button:disabled{opacity:.6;cursor:default}
 .item.swipe-ok{background:var(--ok-soft)}
 .item .handle{flex:none;color:var(--muted);cursor:grab;font-size:1.1rem;padding:0 2px;touch-action:none}
 .item.dragging{opacity:.5}
-.item .qty-tag{flex:none;font-size:.76rem;color:var(--muted);background:var(--soft);border-radius:8px;padding:2px 8px;font-variant-numeric:tabular-nums}
-.item .check{width:24px;height:24px;border:2.5px solid var(--line);background:transparent;border-radius:50%;flex:none;display:grid;place-items:center;padding:0;transition:all .15s ease}
+.item .qty-tag{font-size:.95em;color:var(--muted);font-variant-numeric:tabular-nums;margin-inline-start:4px}
+.item .check{width:22px;height:22px;border:2px solid var(--muted);background:transparent;border-radius:5px;flex:none;display:grid;place-items:center;padding:0;transition:all .15s ease;position:relative}
+.item .check::after{content:"";position:absolute;inset:-11px}
 .item .check svg{opacity:0;transform:scale(.5);transition:all .2s cubic-bezier(.3,1.6,.5,1);width:14px;height:14px;stroke:#fff;stroke-width:4}
-.item.done .check{border-color:var(--ok);background:var(--ok)}
+.item.done .check{border-color:var(--accent);background:var(--accent)}
 .item.done .check svg{opacity:1;transform:scale(1)}
 .item .t{flex:1;min-width:0;overflow-wrap:anywhere;font-size:1rem;cursor:pointer;border:0;background:transparent;color:inherit;text-align:start;padding:0;font-family:inherit}
 .item .t:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
@@ -267,11 +295,23 @@ button:disabled{opacity:.6;cursor:default}
 .search-toggle{display:flex;align-items:center;gap:8px;width:100%;border:0;background:var(--surface);box-shadow:var(--shadow);border-radius:var(--r);padding:12px 14px;color:var(--muted);font-size:.95rem;text-align:start}
 .search-input{width:100%;border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:10px 14px}
 .search-input:focus-visible{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
-.item.done .t{color:var(--muted)}
-.item.done .t-text{text-decoration:line-through;text-decoration-style:wavy;text-decoration-color:var(--ok);text-decoration-thickness:1.3px}
-.item .del{border:0;background:transparent;color:var(--muted);width:28px;height:28px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:.95rem}
+.item.done{background:var(--done-bg)}
+.item .del{border:0;background:transparent;color:var(--muted);width:32px;height:32px;border-radius:50%;flex:none;display:grid;place-items:center}
+.item .del svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.item .done-mark{display:none;color:var(--accent);flex:none}
+.item .done-mark svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.item.done .done-mark{display:block}
+/* inside a category card the rows are flat checklist lines, not floating cards */
+.group .item{border-radius:0;box-shadow:none;padding:7px 12px;gap:10px;border-top:1px solid var(--line)}
+.group .item:first-child{border-top:0}
+.group .item.done{border-top-color:transparent}
+/* one compact line per item, like a paper checklist: who added it sits small after the name, and a
+   bought item swaps that (and its bin) for who collected it plus a tick */
+.group .item .who-name{display:inline;margin-inline-start:7px}
+.group .item.done .who-name:not(.checked-label){display:none}
+.group .item.done .del{display:none}
 
-.who-name{display:block;font-size:.74rem;color:var(--muted);font-weight:normal;text-decoration:none}
+.who-name{display:block;font-size:.72rem;color:var(--muted);font-weight:normal;text-decoration:none;line-height:1.3}
 .who-name.checked-label{color:var(--ok)}
 
 .pending-h{display:flex;align-items:center;gap:6px;font-family:var(--display);font-size:1.02rem;font-weight:400;margin:0 0 8px}
@@ -287,7 +327,7 @@ button:disabled{opacity:.6;cursor:default}
   background:var(--btn-grad);
   color:var(--accent-ink);
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 10px 22px rgba(18,26,51,.35);z-index:30;
+  box-shadow:0 8px 18px rgba(31,107,63,.35);z-index:30;
 }
 .fab .e{font-size:1.5rem;line-height:1}
 .fab:active{transform:scale(.97)}
@@ -425,6 +465,8 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
   <section class="view" id="view-main" hidden>
     <div id="offline-note" class="offline-note" hidden></div>
 
+    <div class="list-hero" id="list-hero"><h1 id="list-hero-name"></h1><p id="list-hero-count"></p></div>
+
     <div class="trip-bar" id="trip-bar">
       <span class="e">🛒</span> <span id="trip-label">סבב קניות פעיל</span>
       <button class="btn small ghost" id="trip-close">✅ סיום קניות</button>
@@ -524,7 +566,7 @@ he: {
   dupWarning:'"{n}" כבר ברשימה.', dupAddAnyway:'להוסיף בכל זאת',
   manageMembers:'👥 ניהול חברי משק הבית', membersTitle:'חברי משק הבית',
   membersCountOne:'חבר אחד', membersCount:'{n} חברים',
-  settingsGroupHousehold:'משק הבית', adminPage:'ניהול (רק למנהל)', settingsGroupPersonal:'אישי', settingsGroupApp:'אפליקציה',
+  settingsGroupHousehold:'משק הבית', listCount:'סה״כ: {n} פריטים ({d} נרכשו)', adminPage:'ניהול (רק למנהל)', settingsGroupPersonal:'אישי', settingsGroupApp:'אפליקציה',
   removeConfirm:'להסיר את {n} ממשק הבית?', leaveConfirm:'לצאת ממשק הבית?',
   removeTitle:'הסרת חבר/ת משק בית', leaveTitle:'יציאה ממשק הבית', removeAction:'להסיר', leaveAction:'לצאת',
   leaveHousehold:'יציאה ממשק הבית', memberRemoved:'✅ הוסר/ה ממשק הבית', youLeft:'👋 יצאת ממשק הבית',
@@ -604,7 +646,7 @@ en: {
   dupWarning:'"{n}" is already on the list.', dupAddAnyway:'Add anyway',
   manageMembers:'👥 Manage household members', membersTitle:'Household members',
   membersCountOne:'1 member', membersCount:'{n} members',
-  settingsGroupHousehold:'Household', adminPage:'Admin (owner only)', settingsGroupPersonal:'Personal', settingsGroupApp:'App',
+  settingsGroupHousehold:'Household', listCount:'Total: {n} items ({d} bought)', adminPage:'Admin (owner only)', settingsGroupPersonal:'Personal', settingsGroupApp:'App',
   removeConfirm:'Remove {n} from the household?', leaveConfirm:'Leave this household?',
   removeTitle:'Remove member', leaveTitle:'Leave household', removeAction:'Remove', leaveAction:'Leave',
   leaveHousehold:'Leave household', memberRemoved:'✅ Removed from the household', youLeft:'👋 You left the household',
@@ -650,8 +692,8 @@ en: {
 
 const CATS = {
   dairy:{he:'חלבי',en:'Dairy',emoji:'🥛'},
-  produce:{he:'ירקות ופירות',en:'Produce',emoji:'🥦'},
-  bakery:{he:'מאפים',en:'Bakery',emoji:'🍞'},
+  produce:{he:'ירקות ופירות',en:'Produce',emoji:'🧺'},
+  bakery:{he:'מאפים',en:'Bakery',emoji:'🥖'},
   meat:{he:'בשר ודגים',en:'Meat & Fish',emoji:'🍗'},
   frozen:{he:'קפואים',en:'Frozen',emoji:'🧊'},
   pantry:{he:'מזווה',en:'Pantry',emoji:'🥫'},
@@ -670,7 +712,7 @@ const CAT_ORDER = ['produce','bakery','pantry','beverages','snacks','household',
 /* "what's new" — bump WHATS_NEW_VERSION and add one new entry at the END of each array whenever
    there's something worth announcing to EXISTING users (not every build, just real features).
    A brand-new user never sees this — they get the full guide instead, and are marked caught-up. */
-const WHATS_NEW_VERSION = 1;
+const WHATS_NEW_VERSION = 2;
 const WHATS_NEW = {
 he: [
   {version:1, items:[
@@ -683,6 +725,11 @@ he: [
     'שיתוף סיכום קניות ישירות ל-WhatsApp',
     'מדריך שימוש מלא לאפליקציה, נגיש מתפריט החשבון',
   ]},
+  {version:2, items:[
+    'עיצוב חדש וירוק לכל האפליקציה, במצב בהיר וכהה',
+    'כל קטגוריה ברשימה היא כרטיס צבעוני, ואפשר לקפל אותה בלחיצה על הכותרת',
+    'שורות מוצר צפופות יותר: רואים יותר מהרשימה בלי לגלול',
+  ]},
 ],
 en: [
   {version:1, items:[
@@ -694,6 +741,11 @@ en: [
     'You can now delete or leave a household',
     'Share a shopping summary straight to WhatsApp',
     'A full in-app user guide, reachable from the account menu',
+  ]},
+  {version:2, items:[
+    'A fresh green look across the app, in light and dark mode',
+    'Each category is a colored card you can collapse by tapping its header',
+    'Denser item rows: see more of the list without scrolling',
   ]},
 ],
 };
@@ -1011,6 +1063,7 @@ function confirmSheet(opts){
 function setScreen(name){
   $('splash').hidden = true;
   ['auth','onboard','home','lists','main'].forEach(s=>{ $('view-'+s).hidden = s!==name; });
+  document.body.classList.toggle('in-list', name==='main');
 }
 
 /* ---------- i18n paint ---------- */
@@ -1171,9 +1224,11 @@ $('top-hhbar-view').addEventListener('click',()=>setViewMode(viewMode==='flat'?'
 paintViewToggle();
 
 /* ---------- item rows ---------- */
+const ICON_TRASH='<svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg>';
+const ICON_TICK='<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>';
 function itemRow(item, mode, draggable){
   const cat = CS.CATS[item.category]||CS.CATS.other;
-  const qty = item.qty ? `<span class="qty-tag">${esc(item.qty)}</span>` : '';
+  const qty = item.qty ? `<span class="qty-tag">(${esc(item.qty)})</span>` : '';
   const addedWho = personName(item.added_by_name);
   if(mode==='pending'){
     const mine = item.created_by && CS.myId && item.created_by===CS.myId;
@@ -1203,9 +1258,9 @@ function itemRow(item, mode, draggable){
       <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
     <span class="emo e" data-cat="${esc(item.category||'other')}">${esc(item.emoji||cat.emoji)}</span>
-    <button class="t" data-action="edit" data-id="${item.id}" aria-label="${esc(CS.t('editItem'))}"><span class="t-text">${esc(item.text)}</span>${addedWho}${checkedWho}</button>
-    ${qty}
-    <button class="del" data-action="del" data-id="${item.id}" aria-label="delete">🗑️</button>
+    <button class="t" data-action="edit" data-id="${item.id}" aria-label="${esc(CS.t('editItem'))}"><span class="t-text">${esc(item.text)}</span>${qty}${addedWho}${checkedWho}</button>
+    <span class="done-mark" aria-hidden="true">${ICON_TICK}</span>
+    <button class="del" data-action="del" data-id="${item.id}" aria-label="delete">${ICON_TRASH}</button>
   </li>`;
 }
 
@@ -1256,6 +1311,8 @@ function attachDrag(listEl){
   });
 }
 
+let collapsedCats=new Set();
+try{ collapsedCats=new Set(JSON.parse(localStorage.getItem('cs-collapsed')||'[]')); }catch(e){}
 function renderGroups(items){
   // checked items stay put among the active ones (same category, same position) — just marked done in place
   const visible = items.filter(i=>i.status!=='pending').sort((a,b)=>(a.position||0)-(b.position||0));
@@ -1268,12 +1325,22 @@ function renderGroups(items){
     const byCat = {};
     visible.forEach(i=>{ (byCat[i.category||'other'] = byCat[i.category||'other']||[]).push(i); });
     box.innerHTML = CS.CAT_ORDER.filter(c=>byCat[c]&&byCat[c].length).map(c=>{
-      const meta = CS.CATS[c];
-      return `<div class="group"><div class="group-h"><span class="e">${meta.emoji}</span><span>${CS.lang()==='he'?meta.he:meta.en}</span></div>
+      const meta = CS.CATS[c], open = byCat[c].filter(i=>i.status!=='checked').length;
+      return `<div class="group ${collapsedCats.has(c)?'collapsed':''}" data-cat="${c}">
+        <button class="group-h" data-toggle-cat="${c}" aria-expanded="${!collapsedCats.has(c)}"><span class="e">${meta.emoji}</span><span class="gname">${CS.lang()==='he'?meta.he:meta.en}</span><span class="gcount">${open}/${byCat[c].length}</span><span class="chev" aria-hidden="true">⌃</span></button>
         <ul class="list">${byCat[c].map(i=>itemRow(i,'active')).join('')}</ul></div>`;
     }).join('');
+    box.querySelectorAll('[data-toggle-cat]').forEach(b=>b.onclick=()=>{
+      const c=b.dataset.toggleCat, g=b.parentElement;
+      if(collapsedCats.has(c)) collapsedCats.delete(c); else collapsedCats.add(c);
+      g.classList.toggle('collapsed',collapsedCats.has(c)); b.setAttribute('aria-expanded',String(!collapsedCats.has(c)));
+      try{ localStorage.setItem('cs-collapsed',JSON.stringify([...collapsedCats])); }catch(e){}
+    });
   }
   $('empty-state').hidden = !!visible.length;
+  const nameEl=$('top-hhbar-title');
+  $('list-hero-name').textContent = nameEl ? nameEl.textContent : '';
+  $('list-hero-count').textContent = CS.t('listCount').replace('{n}',visible.length).replace('{d}',visible.filter(i=>i.status==='checked').length);
   attachSwipe(box);
 
   const pending = items.filter(i=>i.status==='pending');
