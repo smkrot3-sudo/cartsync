@@ -195,6 +195,10 @@ button:disabled{opacity:.6;cursor:default}
 .trip-bar{display:flex;align-items:center;gap:8px;background:var(--accent-soft);color:var(--fg);border-radius:var(--r);padding:12px 14px;font-size:.9rem}
 .trip-bar #trip-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .trip-bar .btn.small{flex:none}
+.all-done{text-align:center}
+.all-done .big{font-size:3.4rem;line-height:1;margin:4px 0 10px;animation:pop .45s ease-out}
+.all-done p{margin:6px 0}
+@keyframes pop{0%{transform:scale(.3);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
 
 /* a quiet "where am I" row — subordinate to the household chip above it on purpose, so the two
    never compete for attention the way two stacked capsules used to */
@@ -546,6 +550,7 @@ he: {
   tripCloseBodyEmpty:'כל הפריטים ברשימה נאספו. הרשימה תיסגר ותישמר בהיסטוריה.',
   tripCloseBodyUnchecked:'יש {n} פריטים שלא נאספו. מה לעשות איתם?',
   tripLeave:'להשאיר ברשימה הסגורה', tripMoveExisting:'להעביר לרשימה פתוחה אחרת', tripMoveNew:'להעביר לרשימה חדשה',
+  allDoneTitle:'הכל נאסף!', allDoneBody:'סימנתם את כל {n} המוצרים ברשימה. כל הכבוד, הסבב הושלם.', allDoneAsk:'לסיים את הקניות ולשמור את הרשימה בהיסטוריה?', allDoneClose:'✅ סיום קניות וסגירת הרשימה', allDoneKeep:'עוד לא, אולי נוסיף משהו', allDoneOk:'מעולה',
   tripClosed:'✅ הרשימה נסגרה', boughtHeader:'נאסף', notBoughtHeader:'חסר',
   homeSub:'כל הרשימות המשותפות של משק הבית, במקום אחד.',
   homeLists:'הרשימות שלי', homeInvite:'הזמנת בן/בת משפחה', homeSwitch:'להחליף משק בית',
@@ -626,6 +631,7 @@ en: {
   tripCloseBodyEmpty:'Everything on the list was collected. The list will close and move to history.',
   tripCloseBodyUnchecked:'{n} items were not collected. What should happen to them?',
   tripLeave:'Leave them in the closed list', tripMoveExisting:'Move to another open list', tripMoveNew:'Move to a new list',
+  allDoneTitle:'Everything’s collected!', allDoneBody:'All {n} items on the list are checked off. Nice work, the trip is done.', allDoneAsk:'Finish shopping and save the list to history?', allDoneClose:'✅ Finish shopping and close the list', allDoneKeep:'Not yet, we may add something', allDoneOk:'Great',
   tripClosed:'✅ List closed', boughtHeader:'Collected', notBoughtHeader:'Still needed',
   homeSub:'All of your household\'s shared lists, in one place.',
   homeLists:'My lists', homeInvite:'Invite a family member', homeSwitch:'Switch household',
@@ -2289,9 +2295,24 @@ async function toggleItem(id){
     ? {status:'active',checked_by:null,checked_at:null}
     : {status:'checked',checked_by:user.id,checked_at:new Date().toISOString()};
   Object.assign(it,patch); paintItems(); // instant feedback — a checkbox tap shouldn't wait on a round trip
+  if(patch.status==='checked') maybeAllDone();
   if(!online || isTemp(id)){ queueOp('toggle',id,patch); return; }
   const {error}=await sb.from('list_items').update(patch).eq('id',id);
-  if(error){ Object.assign(it,prev); paintItems(); toast(CS.authErr(error)); }
+  if(error){ Object.assign(it,prev); paintItems(); toast(CS.authErr(error)); return; }
+}
+// pops once when the last open item on the list gets checked by this user
+function maybeAllDone(){
+  if(listStatus!=='open' || !items.length || items.some(i=>i.status!=='checked')) return;
+  const t=CS.t, canClose=role==='owner'||role==='editor';
+  openSheet(sheetHead(t('allDoneTitle'))+`<div class="card all-done">
+    <div class="big">🛒🎉</div>
+    <p>${esc(t('allDoneBody').replace('{n}',items.length))}</p>
+    ${canClose?`<p style="color:var(--muted)">${esc(t('allDoneAsk'))}</p>
+    <button class="btn wide" id="all-done-close">${esc(t('allDoneClose'))}</button>
+    <button class="btn ghost wide" data-act="sheet-close">${esc(t('allDoneKeep'))}</button>`
+    :`<button class="btn wide" data-act="sheet-close">${esc(t('allDoneOk'))}</button>`}
+  </div>`);
+  if(canClose) $('all-done-close').onclick=()=>doCloseTrip({p_list_id:listId,p_action:'leave'});
 }
 async function delItem(id){
   if(listStatus!=='open') return;
