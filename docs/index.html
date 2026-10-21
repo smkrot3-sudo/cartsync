@@ -10,6 +10,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="קניות ביחד">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -36,8 +39,8 @@
   --danger:#E0394F; --danger-soft:#FADCE1;
   --shadow:0 4px 14px rgba(30,60,40,.09),0 1px 2px rgba(30,60,40,.06);
   --shade:rgba(10,14,30,.46);
-  --display:system-ui,"Noto Sans Hebrew","Segoe UI",Arial,sans-serif;
-  --body:system-ui,"Noto Sans Hebrew","Segoe UI",Arial,sans-serif;
+  --display:"Assistant",system-ui,"Noto Sans Hebrew","Segoe UI",Arial,sans-serif;
+  --body:"Assistant",system-ui,"Noto Sans Hebrew","Segoe UI",Arial,sans-serif;
   --marker:"Rubik Wet Paint",var(--display);
   --emoji:"Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif;
   --r:18px;
@@ -192,7 +195,9 @@ button:disabled{opacity:.6;cursor:default}
 .whats-new-list li{position:relative;padding-inline-start:20px;font-size:.92rem;color:var(--fg);line-height:1.5}
 .whats-new-list li::before{content:"✨";position:absolute;inset-inline-start:0;top:0;font-size:.8rem}
 
-.trip-bar{display:flex;align-items:center;gap:8px;background:var(--accent-soft);color:var(--fg);border-radius:var(--r);padding:12px 14px;font-size:.9rem}
+.trip-bar{display:flex;align-items:center;gap:10px;background:var(--accent-soft);color:var(--fg);border:1px solid color-mix(in srgb,var(--accent) 22%,transparent);border-radius:16px;padding:10px 12px 10px 10px;font-size:.95rem;font-weight:600}
+.trip-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);flex:none;box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 22%,transparent)}
+.trip-bar #trip-close{background:var(--accent);color:var(--accent-ink,#fff);border:0;box-shadow:0 3px 10px rgba(31,107,63,.25);font-weight:700}
 .trip-bar #trip-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .trip-bar .btn.small{flex:none}
 .all-done{text-align:center}
@@ -242,11 +247,32 @@ button:disabled{opacity:.6;cursor:default}
 .group-h{display:flex;align-items:center;gap:7px;font-family:var(--display);font-size:.95rem;color:var(--fg);padding:2px 2px 8px;font-weight:700}
 
 /* each category is one card: a tinted header strip (its own hue) over compact checklist rows */
-.list-hero{padding:6px 4px 0}
-/* inside a list the big title below carries its name, so the bar keeps just back + actions */
-body.in-list .hhbar .list-name-lbl{visibility:hidden}
-.list-hero h1{font-size:1.75rem;line-height:1.2}
-.list-hero p{color:var(--muted);font-size:.93rem;margin-top:2px}
+/* inside a list the header is one calm bar (account + share | household | back to lists), and the
+   list's own name, progress and people sit together in one white card under it */
+.listbar{display:none;align-items:center;gap:8px;min-height:44px}
+body.in-list .top .brand,body.in-list .top .members-row,body.in-list .top .hhbar{display:none!important}
+body.in-list .listbar{display:flex}
+body.in-list .top{padding:10px 12px}
+.listbar-start{display:flex;align-items:center;gap:8px;flex:none;width:92px}
+.listbar-title{flex:1;min-width:0;text-align:center;font-family:var(--display);font-weight:800;font-size:1.08rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-btn{width:38px;height:38px;border-radius:50%;border:0;flex:none;display:grid;place-items:center;background:rgba(255,255,255,.5);color:var(--bar-ink);padding:0}
+.lb-cart .e{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.5);font-size:1.1rem}
+.lb-btn.lb-cart{background:transparent;width:92px;height:38px;border-radius:0;display:flex;justify-content:flex-end}
+.lb-btn svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.listbar .avatarbtn{width:38px;height:38px;font-size:.85rem;font-weight:800;background:rgba(255,255,255,.65);color:var(--bar-ink);border:0;box-shadow:none}
+.list-hero{margin-top:14px;background:var(--surface);border-radius:20px;box-shadow:0 4px 18px rgba(20,40,27,.08);padding:16px 18px 12px;display:flex;flex-direction:column;gap:4px}
+.lh-top{display:flex;align-items:flex-start;gap:10px}
+.lh-top h1{flex:1;min-width:0;font-size:1.65rem;line-height:1.2;overflow-wrap:anywhere}
+.lh-view{background:var(--soft);color:var(--muted);width:36px;height:36px}
+.lh-view svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.list-hero p{color:var(--muted);font-size:.95rem}
+.lh-progress{height:6px;border-radius:999px;background:var(--soft);overflow:hidden;margin:6px 0 4px}
+.lh-progress span{display:block;height:100%;width:0;background:var(--accent);border-radius:inherit;transition:width .3s ease}
+.lh-members{display:flex;align-items:center;gap:8px;border:0;border-top:1px solid var(--line);background:transparent;padding:10px 0 2px;margin-top:4px;color:var(--muted);font-size:.88rem;text-align:start;width:100%}
+.lh-members .chev{margin-inline-start:auto}
+.lh-members[hidden]{display:none}
+:root[data-theme="dark"] .lb-btn:not(.lb-cart),:root[data-theme="dark"] .lb-cart .e,:root[data-theme="dark"] .listbar .avatarbtn{background:rgba(255,255,255,.12);color:var(--bar-ink)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .lb-btn:not(.lb-cart),:root:not([data-theme="light"]) .lb-cart .e,:root:not([data-theme="light"]) .listbar .avatarbtn{background:rgba(255,255,255,.12);color:var(--bar-ink)}}
 .group{--h:220;background:var(--surface);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
 .group+.group{margin-top:14px}
 .group .group-h{width:100%;border:0;cursor:pointer;background:hsl(var(--h) 52% 89%);padding:10px 14px;font-size:1.06rem;gap:10px;text-align:start}
@@ -296,8 +322,9 @@ body.in-list .hhbar .list-name-lbl{visibility:hidden}
 .item .t{flex:1;min-width:0;overflow-wrap:anywhere;font-size:1rem;cursor:pointer;border:0;background:transparent;color:inherit;text-align:start;padding:0;font-family:inherit}
 .item .t:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
 .search-row{display:block}
-.search-toggle{display:flex;align-items:center;gap:8px;width:100%;border:0;background:var(--surface);box-shadow:var(--shadow);border-radius:var(--r);padding:12px 14px;color:var(--muted);font-size:.95rem;text-align:start}
-.search-input{width:100%;border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:10px 14px}
+.search-toggle{display:flex;align-items:center;gap:10px;width:100%;border:1px solid var(--line);background:var(--surface);box-shadow:none;border-radius:999px;padding:12px 16px;color:var(--muted);font-size:.95rem;text-align:start}
+.search-ico{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;flex:none}
+.search-input{width:100%;border:2px solid var(--line);background:var(--surface);border-radius:999px;padding:11px 16px}
 .search-input:focus-visible{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 .item.done{background:var(--done-bg)}
 .item .del{border:0;background:transparent;color:var(--muted);width:32px;height:32px;border-radius:50%;flex:none;display:grid;place-items:center}
@@ -390,6 +417,11 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
       <button class="iconbtn-lite" id="top-hhbar-view" aria-label="View" hidden>🗂️</button>
       <button class="iconbtn-lite" id="top-hhbar-new" aria-label="New list" hidden>➕</button>
     </div>
+    <div class="listbar" id="listbar">
+      <span class="listbar-start"><span id="listbar-acct"></span><button class="lb-btn" id="listbar-share" aria-label="Share"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.8l7.4-4.4M8.3 13.2l7.4 4.4"/></svg></button></span>
+      <b class="listbar-title" id="listbar-title"></b>
+      <button class="lb-btn lb-cart" id="listbar-lists" aria-label="Lists"><span class="e">🛒</span></button>
+    </div>
   </header>
 
   <!-- ---------- splash: shown until we know whether a session already exists ---------- -->
@@ -472,15 +504,20 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
   <section class="view" id="view-main" hidden>
     <div id="offline-note" class="offline-note" hidden></div>
 
-    <div class="list-hero" id="list-hero"><h1 id="list-hero-name"></h1><p id="list-hero-count"></p></div>
+    <div class="list-hero" id="list-hero">
+      <div class="lh-top"><h1 id="list-hero-name"></h1><button class="lb-btn lh-view" id="list-hero-view" aria-label="View"></button></div>
+      <p id="list-hero-count"></p>
+      <div class="lh-progress"><span id="list-hero-bar"></span></div>
+      <button class="lh-members" id="list-hero-members" type="button"><span class="members" id="list-hero-avatars"></span><span id="list-hero-mlabel"></span><span class="chev" aria-hidden="true">‹</span></button>
+    </div>
 
     <div class="trip-bar" id="trip-bar">
-      <span class="e">🛒</span> <span id="trip-label">סבב קניות פעיל</span>
+      <span class="trip-dot" aria-hidden="true"></span><span id="trip-label">סבב קניות פעיל</span>
       <button class="btn small ghost" id="trip-close">✅ סיום קניות</button>
     </div>
 
     <div class="search-row" id="search-row">
-      <button class="search-toggle" id="search-toggle" type="button"><span class="e">🔍</span><span id="search-toggle-label">חיפוש ברשימה</span></button>
+      <button class="search-toggle" id="search-toggle" type="button"><svg class="search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><span id="search-toggle-label">חיפוש ברשימה</span></button>
       <input id="search-input" class="search-input" placeholder="חיפוש ברשימה…" autocomplete="off" hidden>
     </div>
 
@@ -1227,9 +1264,16 @@ function renderLists(lists, canManage){
 /* ---------- view mode: grouped-by-category vs flat+draggable ---------- */
 let viewMode='grouped';
 try{ viewMode = localStorage.getItem('cs-view')||'grouped'; }catch(e){}
-function paintViewToggle(){ $('top-hhbar-view').textContent = viewMode==='flat'?'📋':'🗂️'; }
+function paintViewToggle(){
+  $('top-hhbar-view').textContent = viewMode==='flat'?'📋':'🗂️';
+  // shows what a tap switches to: category cards, or one flat reorderable list
+  $('list-hero-view').innerHTML = viewMode==='flat'
+    ? '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="6" rx="2"/><rect x="4" y="14" width="16" height="6" rx="2"/></svg>'
+    : '<svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h14M5 18h14"/></svg>';
+}
 function setViewMode(m){ viewMode=m; try{localStorage.setItem('cs-view',m)}catch(e){} paintViewToggle(); if(window.CS.rerenderMain) window.CS.rerenderMain(); }
 $('top-hhbar-view').addEventListener('click',()=>setViewMode(viewMode==='flat'?'grouped':'flat'));
+$('list-hero-view').addEventListener('click',()=>setViewMode(viewMode==='flat'?'grouped':'flat'));
 paintViewToggle();
 
 /* ---------- item rows ---------- */
@@ -1349,7 +1393,9 @@ function renderGroups(items){
   $('empty-state').hidden = !!visible.length;
   const nameEl=$('top-hhbar-title');
   $('list-hero-name').textContent = nameEl ? nameEl.textContent : '';
-  $('list-hero-count').textContent = CS.t('listCount').replace('{n}',visible.length).replace('{d}',visible.filter(i=>i.status==='checked').length);
+  const nDone=visible.filter(i=>i.status==='checked').length;
+  $('list-hero-count').textContent = CS.t('listCount').replace('{n}',visible.length).replace('{d}',nDone);
+  $('list-hero-bar').style.width = visible.length ? (100*nDone/visible.length)+'%' : '0';
   attachSwipe(box);
 
   const pending = items.filter(i=>i.status==='pending');
@@ -1513,9 +1559,12 @@ $('au-go').addEventListener('click',doAuth);
 
 function renderAccount(){
   const box=$('acct-top');
-  if(!user){ box.innerHTML=''; return; }
-  box.innerHTML=`<button class="iconbtn avatarbtn" id="acct-btn" aria-label="account">${esc(CS.initials(user.user_metadata&&user.user_metadata.full_name||user.email))}</button>`;
+  if(!user){ box.innerHTML=''; $('listbar-acct').innerHTML=''; return; }
+  const ini=esc(CS.initials(user.user_metadata&&user.user_metadata.full_name||user.email));
+  box.innerHTML=`<button class="iconbtn avatarbtn" id="acct-btn" aria-label="account">${ini}</button>`;
   $('acct-btn').onclick=openAccountSheet;
+  $('listbar-acct').innerHTML=`<button class="iconbtn avatarbtn" id="acct-btn2" aria-label="account">${ini}</button>`;
+  $('acct-btn2').onclick=openAccountSheet;
 }
 function openAccountSheet(){
   const t=CS.t;
@@ -1618,14 +1667,15 @@ async function listMyHouseholds(){
 }
 let hhName='';
 window.CS.currentHouseholdName=()=>household?hhName:null;
-function paintBrandName(){ $('brand-name').textContent = household?hhName:CS.t('appName'); }
+function paintBrandName(){ $('brand-name').textContent = $('listbar-title').textContent = household?hhName:CS.t('appName'); }
 function memberCountLabel(n){ return n===1 ? CS.t('membersCountOne') : CS.t('membersCount').replace('{n}',n); }
 function paintMembersRow(){
-  const row=$('members-row');
-  if(!household || !members.length){ row.hidden=true; return; }
-  row.hidden=false;
+  const row=$('members-row'), heroRow=$('list-hero-members');
+  if(!household || !members.length){ row.hidden=heroRow.hidden=true; return; }
+  row.hidden=heroRow.hidden=false;
   CS.renderMembers(members);
-  $('members-count-label').textContent = memberCountLabel(members.length);
+  CS.renderMembers(members,'list-hero-avatars',4);
+  $('members-count-label').textContent = $('list-hero-mlabel').textContent = memberCountLabel(members.length);
 }
 function greetingText(){
   const h=new Date().getHours();
@@ -1712,6 +1762,8 @@ $('brand-home-btn').addEventListener('click',async()=>{
   goHome();
 });
 $('members-row').addEventListener('click',()=>{ if(household) drawMembersSheet(); });
+$('list-hero-members').addEventListener('click',()=>{ if(household) drawMembersSheet(); });
+$('listbar-lists').addEventListener('click',()=>openListsPage());
 
 async function createHousehold(){
   const name=$('hh-name').value.trim();
@@ -2103,6 +2155,7 @@ async function shareTripSummary(){
   window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');
 }
 $('top-hhbar-share').addEventListener('click',shareTripSummary);
+$('listbar-share').addEventListener('click',shareTripSummary);
 
 /* ---------- invites ---------- */
 async function shareInvite(text){
