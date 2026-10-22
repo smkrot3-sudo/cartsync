@@ -901,19 +901,19 @@ en: [
   }catch(e){}
   if(lang!=='he'&&lang!=='en') lang='he';
 
-  // dark is the default now (it was "system" before) — and everyone who already has a saved
-  // preference (light/dark/system, from before this change) gets switched to dark once; after
-  // that one-time nudge, their own choice (including switching back) sticks as usual
-  let theme = 'dark';
+  // light is the default (the owner's call, 2026-10-22: the green/notepad design reads best in it).
+  // Everyone gets switched to light once, whatever they had saved; after that one-time nudge their
+  // own choice in Settings (including going back to dark) sticks as usual
+  let theme = 'light';
   try{
-    if(localStorage.getItem('cs-dark-default-migrated')){
-      theme = localStorage.getItem('cs-theme') || 'dark';
+    if(localStorage.getItem('cs-light-default-migrated')){
+      theme = localStorage.getItem('cs-theme') || 'light';
     }else{
-      localStorage.setItem('cs-theme','dark');
-      localStorage.setItem('cs-dark-default-migrated','1');
+      localStorage.setItem('cs-theme','light');
+      localStorage.setItem('cs-light-default-migrated','1');
     }
   }catch(e){}
-  if(theme!=='light'&&theme!=='dark'&&theme!=='system') theme='dark';
+  if(theme!=='light'&&theme!=='dark'&&theme!=='system') theme='light';
 
   let fontSize = 'normal';
   try{ fontSize = localStorage.getItem('cs-fontsize') || 'normal'; }catch(e){}
