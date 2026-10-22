@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-title" content="קניות ביחד">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Playpen+Sans+Hebrew:wght@400;600&display=swap">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -330,6 +330,41 @@ body.in-list .top{padding:10px 12px}
 .hide-done-btn[aria-pressed="true"] .slash{display:inline}
 /* "hide collected": bought rows (and categories with nothing left) drop out; counts stay true */
 #groups.hide-done .item.done,#groups.hide-done .group.all-done{display:none}
+/* ---------- notepad: the list itself is a spiral-bound ruled page, written by hand ---------- */
+.pad{--paper:#FCF8EA;--rule:#BFD6EA;--margin:#E58C8C;--ink:#1E3A6E;--pencil:#6B7480;--pen-ok:#2E8B57;--hand:"Playpen Sans Hebrew","Assistant",system-ui,sans-serif;
+  position:relative;background:var(--paper);border-radius:6px 6px 14px 14px;box-shadow:0 1px 0 rgba(0,0,0,.04),0 10px 24px rgba(40,30,10,.14);padding:34px 0 18px;margin-top:10px}
+.pad:has(#groups:empty){display:none}
+.pad::before{content:"";position:absolute;top:-10px;left:14px;right:14px;height:26px;
+  background:radial-gradient(circle at 50% 70%,var(--bg) 0 5px,transparent 5.5px) 0 0/26px 26px repeat-x,
+             radial-gradient(ellipse 4px 11px at 50% 40%,#9AA3AD 0 3px,transparent 3.5px) 0 0/26px 26px repeat-x}
+.pad::after{content:"";position:absolute;top:0;bottom:0;right:44px;width:2px;background:var(--margin);opacity:.7;pointer-events:none}
+[dir="ltr"] .pad::after{right:auto;left:44px}
+.pad .group{background:transparent;box-shadow:none;border-radius:0;overflow:visible}
+.pad .group+.group{margin-top:6px}
+.pad .group .group-h{background:transparent!important;padding:10px 16px 4px;padding-inline-start:54px;font-family:var(--hand);font-size:1.3rem;font-weight:600;color:var(--ink)}
+.pad .group .group-h .gname{flex:0 1 auto;padding:0 4px;background:linear-gradient(transparent 55%,hsl(var(--h) 80% 75% / .55) 55% 90%,transparent 90%)}
+.pad .group .group-h .gcount{margin-inline-start:auto;font-family:var(--hand);color:var(--pencil);font-size:.95rem}
+.pad .group .group-h .chev{color:var(--pencil)}
+.pad .group-h .e{font-size:1.3rem}
+.pad .list{gap:0}
+.pad .item,.pad .group .item{background:transparent!important;box-shadow:none;border:0;border-bottom:1.5px solid var(--rule);border-radius:0;padding:4px 16px 2px 12px;min-height:46px;gap:10px}
+.pad .item.swipe-ok{background:color-mix(in srgb,var(--pen-ok) 15%,transparent)!important}
+.pad .item .check{width:24px;height:24px;border:2px solid var(--ink);border-radius:4px 6px 3px 5px;background:transparent;transform:rotate(-2deg);margin-inline-end:16px}
+.pad .item.done .check{background:transparent;border-color:var(--ink)}
+.pad .item.done .check svg{stroke:var(--pen-ok);width:22px;height:22px;stroke-width:3.4;transform:translate(2px,-3px) rotate(-6deg)}
+.pad .item .emo{background:transparent!important;width:auto;height:auto;font-size:1.35rem}
+.pad .item .t,.pad .item .t-text{font-family:var(--hand);font-size:1.12rem;color:var(--ink);line-height:1.25}
+.pad .item.done .t-text{color:var(--pencil);text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--ink)}
+.pad .item .qty-tag{background:transparent;font-family:var(--hand);font-size:.9em;color:var(--ink);border:1.5px solid var(--ink);border-radius:50% 45% 55% 50%;padding:0 8px;font-weight:400}
+.pad .who-name{font-family:var(--hand);font-size:.8rem;color:var(--pencil)}
+.pad .who-name.checked-label{color:var(--pen-ok)}
+.pad .item .del,.pad .item .done-mark{color:var(--pencil)}
+.list-hero{--ink:#1E3A6E}
+.list-hero h1{font-family:"Playpen Sans Hebrew","Assistant",sans-serif;font-weight:600;font-size:1.7rem;color:var(--ink)}
+.list-hero p{font-family:"Playpen Sans Hebrew","Assistant",sans-serif;font-size:1rem}
+:root[data-theme="dark"] .pad{--paper:#22272B;--rule:#34414D;--margin:#8A4B4B;--ink:#DCE6F5;--pencil:#93A0AE;--pen-ok:#7CCB98;box-shadow:0 10px 24px rgba(0,0,0,.45)} :root[data-theme="dark"] .list-hero{--ink:#DCE6F5} :root[data-theme="dark"] .pad .group .group-h .gname{background:linear-gradient(transparent 55%,hsl(var(--h) 60% 45% / .5) 55% 90%,transparent 90%)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pad{--paper:#22272B;--rule:#34414D;--margin:#8A4B4B;--ink:#DCE6F5;--pencil:#93A0AE;--pen-ok:#7CCB98;box-shadow:0 10px 24px rgba(0,0,0,.45)} :root:not([data-theme="light"]) .list-hero{--ink:#DCE6F5} :root:not([data-theme="light"]) .pad .group .group-h .gname{background:linear-gradient(transparent 55%,hsl(var(--h) 60% 45% / .5) 55% 90%,transparent 90%)}}
+
 .search-toggle{display:flex;align-items:center;gap:10px;width:100%;border:1px solid var(--line);background:var(--surface);box-shadow:none;border-radius:999px;padding:12px 16px;color:var(--muted);font-size:.95rem;text-align:start}
 .search-ico{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;flex:none}
 .search-input{width:100%;border:2px solid var(--line);background:var(--surface);border-radius:999px;padding:11px 16px}
@@ -543,7 +578,7 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
     </div>
 
     <div class="note note-main">
-      <div id="groups"></div>
+      <div class="pad"><div id="groups"></div></div>
       <ul class="empty" id="empty-state" hidden>
         <li><span class="e" style="font-size:2.4rem">🧺</span><span id="empty-text">הרשימה ריקה. מה חסר בבית?</span></li>
       </ul>
