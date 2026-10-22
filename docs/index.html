@@ -409,6 +409,13 @@ body.in-list .top{padding:10px 12px}
   box-shadow:0 8px 18px rgba(31,107,63,.35);z-index:30;
 }
 .fab .e{font-size:1.5rem;line-height:1}
+/* in a browser (not the Android app itself): an always-there pill to get the APK */
+.get-app{position:fixed;z-index:29;inset-inline-start:max(16px,calc((100vw - 560px) / 2 + 16px));bottom:calc(16px + env(safe-area-inset-bottom,0px));
+  display:flex;align-items:center;gap:7px;padding:9px 15px;border-radius:999px;background:var(--surface);color:var(--accent);
+  border:1.5px solid color-mix(in srgb,var(--accent) 35%,transparent);box-shadow:0 6px 16px rgba(20,40,27,.18);font-weight:700;font-size:.88rem;text-decoration:none}
+.get-app[hidden]{display:none}
+.get-app .e{font-size:1.05rem}
+body.has-get-app{padding-bottom:72px}
 .fab:active{transform:scale(.97)}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
 
@@ -473,6 +480,8 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
       <button class="lb-btn lb-cart" id="listbar-lists" aria-label="Lists"><span class="e">🛒</span></button>
     </div>
   </header>
+
+  <a class="get-app" id="get-app" href="apk/cartsync-debug.apk" download hidden><span class="e" aria-hidden="true">📲</span><span id="get-app-label">הורדת האפליקציה לאנדרואיד</span></a>
 
   <!-- ---------- splash: shown until we know whether a session already exists ---------- -->
   <div class="splash" id="splash">
@@ -636,7 +645,7 @@ he: {
   needHhName:'צריך לתת שם למשק הבית',
   versionLabel:'גרסה: {v}', updateAvailable:'יש עדכון', updateNow:'🔄 לעדכן',
   updateDownloading:'מוריד...', updateFailed:'העדכון נכשל, אפשר לנסות שוב', updateDone:'✅ מותקן',
-  updateSheetBody:'גרסה חדשה של קניות ביחד מוכנה להתקנה.', updateLater:'אחר כך', refreshLabel:'לרענן',
+  updateSheetBody:'גרסה חדשה של קניות ביחד מוכנה להתקנה.', updateLater:'אחר כך', refreshLabel:'לרענן', getAndroidApp:'הורדת האפליקציה לאנדרואיד',
   whatsNewTitle:'מה חדש', whatsNewIntro:'כמה שיפורים שהתווספו מאז הפעם האחרונה שנכנסת:', whatsNewClose:'הבנתי',
   themeLabel:'מצב תצוגה', themeLight:'☀️ בהיר', themeDark:'🌙 כהה', themeSystem:'⚙️ אוטומטי',
   addedBy:'הוספה ע״י {n}', checkedBy:'נאסף ע״י {n}',
@@ -719,7 +728,7 @@ en: {
   needHhName:'Give the household a name',
   versionLabel:'Version: {v}', updateAvailable:'Update available', updateNow:'🔄 Update',
   updateDownloading:'Downloading...', updateFailed:'Update failed, try again', updateDone:'✅ Installed',
-  updateSheetBody:'A new version of CartSync is ready to install.', updateLater:'Later', refreshLabel:'Refresh',
+  updateSheetBody:'A new version of CartSync is ready to install.', updateLater:'Later', refreshLabel:'Refresh', getAndroidApp:'Get the Android app',
   whatsNewTitle:'What’s new', whatsNewIntro:'A few improvements since you were last here:', whatsNewClose:'Got it',
   themeLabel:'Appearance', themeLight:'☀️ Light', themeDark:'🌙 Dark', themeSystem:'⚙️ Auto',
   addedBy:'Added by {n}', checkedBy:'Collected by {n}',
@@ -1208,6 +1217,7 @@ function paintStrings(){
   $('fab-add-label').textContent = t('addToListFab');
   $('fab-add').setAttribute('aria-label', t('addToListFab'));
   $('refresh-label').textContent = t('refreshLabel');
+  $('get-app-label').textContent = t('getAndroidApp');
   $('au-google-label').textContent = t('googleGo');
   $('au-or-label').textContent = t('orEmail');
   const authGoMode = $('au-go').dataset.mode || 'login';
@@ -2673,6 +2683,10 @@ if(!$('version-label')) return;
 const SITE = window.CS_SITE || './';
 const WEB_BUILD = window.CS_BUILD || 0;
 const inApp = !!window.CartApp;
+// browsers get a permanent "download the Android app" pill (not iPhone/iPad, where an APK can't install)
+if(!inApp && !/iPhone|iPad|iPod/i.test(navigator.userAgent) && !(navigator.platform==='MacIntel' && navigator.maxTouchPoints>1)){
+  const g=$('get-app'); if(g){ g.href=SITE+'apk/cartsync-debug.apk'; g.hidden=false; document.body.classList.add('has-get-app'); }
+}
 
 function showBtn(show, label, onClick){
   const b=$('update-btn');
