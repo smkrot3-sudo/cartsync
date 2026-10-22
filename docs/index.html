@@ -2175,6 +2175,9 @@ function buildTripSummaryText(){
 }
 async function shareTripSummary(){
   const text=buildTripSummaryText();
+  if(window.CartApp && window.CartApp.shareText){
+    try{ window.CartApp.shareText(text); return; }catch(e){} // native share chooser in the Android app — wa.me inside the WebView dead-ends on whatsapp://
+  }
   if(navigator.share){
     try{ await navigator.share({title:CS.t('appName'),text}); }catch(e){}
     return;

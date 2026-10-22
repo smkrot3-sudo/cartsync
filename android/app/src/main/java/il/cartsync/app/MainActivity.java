@@ -8,6 +8,8 @@ import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.net.Uri;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebViewClient;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,7 +45,29 @@ public class MainActivity extends AppCompatActivity {
         s.setDatabaseEnabled(true);
         s.setMediaPlaybackRequiresUserGesture(false);
         webView.addJavascriptInterface(new Bridge(), "CartApp");
-        webView.setWebViewClient(new WebViewClient());
+        webView.setWebViewClient(new WebViewClient() {
+            // the app's own site stays in the WebView; anything else (whatsapp:, tel:, mailto:, intent:,
+            // wa.me and other outside links) goes to Android, instead of a net::ERR_UNKNOWN_URL_SCHEME page
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest req) {
+                Uri uri = req.getUrl();
+                String scheme = uri.getScheme() == null ? "" : uri.getScheme();
+                if ((scheme.equals("http") || scheme.equals("https")) && SITE.startsWith(scheme + "://" + uri.getHost())) return false;
+                if (scheme.equals("http") || scheme.equals("https")) {
+                    if (uri.getHost() != null && uri.getHost().endsWith("supabase.co")) return false; // auth redirects
+                }
+                try {
+                    Intent i = scheme.equals("intent") ? Intent.parseUri(uri.toString(), Intent.URI_INTENT_SCHEME) : new Intent(Intent.ACTION_VIEW, uri);
+                    i.addCategory(Intent.CATEGORY_BROWSABLE);
+                    i.setComponent(null);
+                    i.setSelector(null);
+                    startActivity(i);
+                } catch (Exception e) {
+                    // no app can open it (e.g. WhatsApp not installed): stay on the current page
+                }
+                return true;
+            }
+        });
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
