@@ -645,7 +645,7 @@ he: {
   needHhName:'צריך לתת שם למשק הבית',
   versionLabel:'גרסה: {v}', updateAvailable:'יש עדכון', updateNow:'🔄 לעדכן',
   updateDownloading:'מוריד...', updateFailed:'העדכון נכשל, אפשר לנסות שוב', updateDone:'✅ מותקן',
-  updateSheetBody:'גרסה חדשה של קניות ביחד מוכנה להתקנה.', updateLater:'אחר כך', refreshLabel:'לרענן', getAndroidApp:'הורדת האפליקציה לאנדרואיד',
+  updateSheetBody:'גרסה חדשה של קניות ביחד מוכנה להתקנה.', updateLater:'אחר כך', refreshLabel:'לרענן', viewFlatToast:'תצוגת רשימה אחת, בלי קטגוריות (אפשר לגרור לסידור). לחיצה נוספת מחזירה קטגוריות', viewGroupedToast:'תצוגה לפי קטגוריות', getAndroidApp:'הורדת האפליקציה לאנדרואיד',
   whatsNewTitle:'מה חדש', whatsNewIntro:'כמה שיפורים שהתווספו מאז הפעם האחרונה שנכנסת:', whatsNewClose:'הבנתי',
   themeLabel:'מצב תצוגה', themeLight:'☀️ בהיר', themeDark:'🌙 כהה', themeSystem:'⚙️ אוטומטי',
   addedBy:'הוספה ע״י {n}', checkedBy:'נאסף ע״י {n}',
@@ -728,7 +728,7 @@ en: {
   needHhName:'Give the household a name',
   versionLabel:'Version: {v}', updateAvailable:'Update available', updateNow:'🔄 Update',
   updateDownloading:'Downloading...', updateFailed:'Update failed, try again', updateDone:'✅ Installed',
-  updateSheetBody:'A new version of CartSync is ready to install.', updateLater:'Later', refreshLabel:'Refresh', getAndroidApp:'Get the Android app',
+  updateSheetBody:'A new version of CartSync is ready to install.', updateLater:'Later', refreshLabel:'Refresh', viewFlatToast:'Single list, no categories (drag to reorder). Tap again for categories', viewGroupedToast:'Grouped by category', getAndroidApp:'Get the Android app',
   whatsNewTitle:'What’s new', whatsNewIntro:'A few improvements since you were last here:', whatsNewClose:'Got it',
   themeLabel:'Appearance', themeLight:'☀️ Light', themeDark:'🌙 Dark', themeSystem:'⚙️ Auto',
   addedBy:'Added by {n}', checkedBy:'Collected by {n}',
@@ -1343,7 +1343,7 @@ function paintViewToggle(){
 }
 function setViewMode(m){ viewMode=m; try{localStorage.setItem('cs-view',m)}catch(e){} paintViewToggle(); if(window.CS.rerenderMain) window.CS.rerenderMain(); }
 $('top-hhbar-view').addEventListener('click',()=>setViewMode(viewMode==='flat'?'grouped':'flat'));
-$('list-hero-view').addEventListener('click',()=>setViewMode(viewMode==='flat'?'grouped':'flat'));
+$('list-hero-view').addEventListener('click',()=>{ setViewMode(viewMode==='flat'?'grouped':'flat'); CS.toast(CS.t(viewMode==='flat'?'viewFlatToast':'viewGroupedToast')); });
 paintViewToggle();
 
 /* ---------- item rows ---------- */
