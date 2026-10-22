@@ -381,6 +381,11 @@ body.in-list .top{padding:10px 12px}
 #view-main.readonly .item .handle{display:none}
 
 .auth input[hidden]{display:none}
+.gbtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:1px solid #dadce0;background:#fff;color:#3c4043;border-radius:999px;padding:11px 18px;font-size:.96rem;font-weight:600}
+.gbtn[hidden],.or[hidden]{display:none}
+.gbtn:active{transform:scale(.97)}
+.or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.85rem}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line,rgba(127,127,127,.3))}
 .auth .actions-row{display:flex;justify-content:space-between;align-items:center}
 
 .grp-h{font-size:.72rem;font-weight:bold;color:var(--muted);letter-spacing:.03em;margin:8px 0 -4px}
@@ -449,6 +454,8 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
         <button class="tab active" data-authtab="login" id="tab-login">התחברות</button>
         <button class="tab" data-authtab="signup" id="tab-signup">הרשמה</button>
       </div>
+      <button class="gbtn" id="au-google" hidden><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg><span id="au-google-label">המשך עם Google</span></button>
+      <div class="or" id="au-or" hidden><span id="au-or-label">או עם מייל וסיסמה</span></div>
       <input id="au-name" placeholder="השם שלך" autocomplete="given-name" hidden>
       <input id="au-email" type="email" placeholder="מייל" autocomplete="email" dir="ltr">
       <input id="au-pass" type="password" placeholder="סיסמה (לפחות 6 תווים)" autocomplete="current-password" dir="ltr">
@@ -565,6 +572,7 @@ he: {
   authHero:'רשימת קניות אחת, לכל המשפחה',
   authSub:'מוסיפים, מסמנים, ורואים את זה חי אצל כולם — גם כשכל אחד בחלק אחר של הסופר.',
   login:'התחברות', signup:'הרשמה', name:'השם שלך', email:'מייל', password:'סיסמה (לפחות 6 תווים)',
+  googleGo:'המשך עם Google', orEmail:'או עם מייל וסיסמה', googleInBrowser:'ממשיכים בדפדפן, ובסוף חוזרים לאפליקציה', googleUpdateApp:'כדי להתחבר עם Google צריך לעדכן את האפליקציה לגרסה החדשה', googleDone:'התחברת עם Google',
   loginGo:'להתחבר', signupGo:'ליצור חשבון', forgot:'שכחתי סיסמה', resetGo:'לשלוח קישור לאיפוס',
   resetSent:'📬 שלחנו מייל עם קישור לבחירת סיסמה חדשה.',
   onboardTitle:'למי קונים?', onboardSub:'יוצרים משק בית, ומזמינים את שאר המשפחה בקישור.',
@@ -647,6 +655,7 @@ en: {
   authHero:'One shopping list, for the whole family',
   authSub:'Add, check off, and see it live for everyone — even when you split up around the store.',
   login:'Log in', signup:'Sign up', name:'Your name', email:'Email', password:'Password (6+ characters)',
+  googleGo:'Continue with Google', orEmail:'or with email and password', googleInBrowser:'Continuing in the browser, then back to the app', googleUpdateApp:'Update the app to the latest version to sign in with Google', googleDone:'Signed in with Google',
   loginGo:'Log in', signupGo:'Create account', forgot:'Forgot password', resetGo:'Send reset link',
   resetSent:'📬 We sent an email with a link to set a new password.',
   onboardTitle:'Shopping for who?', onboardSub:'Create a household, then invite the rest of the family with a link.',
@@ -1161,6 +1170,8 @@ function paintStrings(){
   $('fab-add-label').textContent = t('addToListFab');
   $('fab-add').setAttribute('aria-label', t('addToListFab'));
   $('refresh-label').textContent = t('refreshLabel');
+  $('au-google-label').textContent = t('googleGo');
+  $('au-or-label').textContent = t('orEmail');
   const authGoMode = $('au-go').dataset.mode || 'login';
   $('au-go').textContent = authGoMode==='signup'?t('signupGo'):authGoMode==='reset'?t('resetGo'):t('loginGo');
 }
@@ -1439,8 +1450,16 @@ function setAuthMode(mode){
   $('au-pass').hidden = mode==='reset';
   $('au-pass').autocomplete = mode==='signup' ? 'new-password' : 'current-password';
   $('au-forgot').hidden = mode!=='login';
+  paintGoogle();
   paintStrings();
 }
+/* the Google button only shows once the Google provider is switched on in Supabase */
+let googleOn=false;
+function paintGoogle(){
+  const show = googleOn && ($('au-go').dataset.mode||'login')!=='reset';
+  $('au-google').hidden = !show; $('au-or').hidden = !show;
+}
+CS.setGoogleOn = on=>{ googleOn=on; paintGoogle(); };
 $('tab-login').addEventListener('click',()=>setAuthMode('login'));
 $('tab-signup').addEventListener('click',()=>setAuthMode('signup'));
 $('au-forgot').addEventListener('click',()=>setAuthMode('reset'));
@@ -1582,6 +1601,28 @@ async function doAuth(){
   $('au-go').disabled=false;
 }
 $('au-go').addEventListener('click',doAuth);
+fetch(SB_URL+'/auth/v1/settings',{headers:{apikey:SB_KEY}}).then(r=>r.json()).then(s=>CS.setGoogleOn(!!(s.external&&s.external.google))).catch(()=>{});
+const SITE=location.origin+location.pathname.replace(/[^/]*$/,'');
+async function googleAuth(){
+  const msg=$('au-msg'); msg.hidden=true;
+  if(window.CartApp){
+    // Google refuses sign-in inside an app's WebView: do it in the browser, and auth-return.html
+    // hands the session back through a cartsync:// link (MainActivity -> window.onAndroidAuth)
+    if(!window.CartApp.openExternal){ msg.className='msg err'; msg.textContent=CS.t('googleUpdateApp'); msg.hidden=false; return; }
+    const {data,error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:SITE+'auth-return.html',skipBrowserRedirect:true}});
+    if(error){ msg.className='msg err'; msg.textContent=CS.authErr(error); msg.hidden=false; return; }
+    window.CartApp.openExternal(data.url);
+    toast('🌐 '+CS.t('googleInBrowser'));
+  }else{
+    const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:SITE}});
+    if(error){ msg.className='msg err'; msg.textContent=CS.authErr(error); msg.hidden=false; }
+  }
+}
+$('au-google').addEventListener('click',googleAuth);
+window.onAndroidAuth=async(access_token,refresh_token)=>{
+  const {error}=await sb.auth.setSession({access_token,refresh_token});
+  toast(error?CS.authErr(error):'✅ '+CS.t('googleDone'));
+};
 ['au-email','au-pass'].forEach(id=>$(id).addEventListener('keydown',e=>{ if(e.key==='Enter') doAuth(); }));
 
 function renderAccount(){

@@ -13,12 +13,14 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebViewClient;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
     private static final String SITE = "https://smkrot3-sudo.github.io/cartsync/";
     private static final long STALE_AFTER_MS = 45 * 1000; // reload if the app sat in the background longer than this
     private WebView webView;
     private long pausedAt = 0;
+    private String pendingAuth = null; // window.onAndroidAuth(...) call waiting for the page to be ready
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -67,6 +69,11 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return true;
             }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                if (pendingAuth != null) { view.evaluateJavascript(pendingAuth, null); pendingAuth = null; }
+            }
         });
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -77,8 +84,29 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        handleAuthLink(getIntent());
         if (savedInstanceState != null) webView.restoreState(savedInstanceState);
         else webView.loadUrl(SITE);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (handleAuthLink(intent)) {
+            pausedAt = 0; // the trip to the browser must not trigger the stale-page reload, which would drop the session hand-off
+            webView.evaluateJavascript(pendingAuth, null);
+            pendingAuth = null;
+        }
+    }
+
+    /** cartsync://auth?at=..&rt=.. from auth-return.html after Google sign-in in the browser */
+    private boolean handleAuthLink(Intent intent) {
+        Uri u = intent == null ? null : intent.getData();
+        if (u == null || !"cartsync".equals(u.getScheme())) return false;
+        String at = u.getQueryParameter("at"), rt = u.getQueryParameter("rt");
+        if (at == null || rt == null || at.isEmpty() || rt.isEmpty()) return false;
+        pendingAuth = "window.onAndroidAuth&&window.onAndroidAuth(" + JSONObject.quote(at) + "," + JSONObject.quote(rt) + ")";
+        return true;
     }
 
     @Override
@@ -123,6 +151,13 @@ public class MainActivity extends AppCompatActivity {
             Updater.install(MainActivity.this, url, new Updater.Progress() {
                 public void on(final int pct) { js("window.onUpdateProgress&&window.onUpdateProgress(" + pct + ")"); }
                 public void fail(String why) { js("window.onUpdateProgress&&window.onUpdateProgress(-2)"); }
+            });
+        }
+        @JavascriptInterface public void openExternal(final String url) {
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url))); } catch (Exception e) { }
+                }
             });
         }
         @JavascriptInterface public void shareText(final String text) {
