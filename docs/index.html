@@ -1692,6 +1692,7 @@ function openAccountSheet(){
       <p class="grp-h">${esc(t('settingsGroupHousehold'))}</p>
       <button class="btn ghost" id="acct-members">👥 ${esc(t('homeMembers'))}</button>
       <button class="btn ghost" id="acct-switch">🏠 ${esc(t('switchHousehold'))}</button>
+      ${household&&role==='owner'?`<button class="btn danger" id="acct-delete-hh">${esc(t('deleteHousehold'))}</button>`:''}
 
       <p class="grp-h">${esc(t('settingsGroupPersonal'))}</p>
       <p style="margin:2px 0 -4px">${esc(t('themeLabel'))}</p>
@@ -1724,6 +1725,7 @@ function openAccountSheet(){
   $('acct-guide').onclick=()=>openGuideSheet();
   $('acct-sync').onclick=async()=>{ await flushQueue({resync:true}); await refreshHousehold(); toast('🔄'); };
   $('acct-switch').onclick=()=>{ closeSheet(); openHouseholdSwitcher(); };
+  if($('acct-delete-hh')) $('acct-delete-hh').onclick=()=>deleteHousehold(openAccountSheet);
   $('acct-signout').onclick=async()=>{ await sb.auth.signOut(); closeSheet(); };
 }
 
@@ -1958,7 +1960,7 @@ function drawMembersSheet(){
   const deleteHhRow = isOwner ? `<button class="btn danger wide" id="delete-household-btn">${esc(t('deleteHousehold'))}</button>` : '';
   openSheet(sheetHead(t('membersTitle'))+`<div class="card">${inviteRow}${rows}${deleteHhRow}</div>`);
   if(inviteRow) $('members-invite-btn').onclick=()=>{ closeSheet(); openInviteSheet(); };
-  if(isOwner) $('delete-household-btn').onclick=deleteHousehold;
+  if(isOwner) $('delete-household-btn').onclick=()=>deleteHousehold();
   $('sheet').querySelectorAll('[data-transfer-owner]').forEach(b=>b.onclick=async()=>{
     const uid=b.dataset.transferOwner;
     const m=members.find(x=>x.user_id===uid);
@@ -2015,14 +2017,14 @@ function drawMembersSheet(){
   });
 }
 
-async function deleteHousehold(){
+async function deleteHousehold(onCancel){
   const t=CS.t;
   const ok=await CS.confirmSheet({
     title:t('deleteHouseholdTitle'),
     body:t('deleteHouseholdConfirm').replace('{n}',hhName||''),
     confirmLabel:t('deleteHousehold'), danger:true
   });
-  if(!ok){ drawMembersSheet(); return; }
+  if(!ok){ (onCancel||drawMembersSheet)(); return; }
   const {error}=await sb.from('households').delete().eq('id',household);
   if(error){ toast(CS.authErr(error)); return; }
   closeSheet();
