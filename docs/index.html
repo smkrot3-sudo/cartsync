@@ -321,7 +321,15 @@ body.in-list .top{padding:10px 12px}
 .item.done .check svg{opacity:1;transform:scale(1)}
 .item .t{flex:1;min-width:0;overflow-wrap:anywhere;font-size:1rem;cursor:pointer;border:0;background:transparent;color:inherit;text-align:start;padding:0;font-family:inherit}
 .item .t:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
-.search-row{display:block}
+.search-row{display:flex;align-items:center;gap:8px}
+.search-row>.search-toggle,.search-row>.search-input{flex:1;min-width:0}
+.hide-done-btn{flex:none;display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:11px 14px;font-size:.88rem;font-weight:600;white-space:nowrap}
+.hide-done-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hide-done-btn .slash{display:none}
+.hide-done-btn[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);border-color:color-mix(in srgb,var(--accent) 35%,transparent)}
+.hide-done-btn[aria-pressed="true"] .slash{display:inline}
+/* "hide collected": bought rows (and categories with nothing left) drop out; counts stay true */
+#groups.hide-done .item.done,#groups.hide-done .group.all-done{display:none}
 .search-toggle{display:flex;align-items:center;gap:10px;width:100%;border:1px solid var(--line);background:var(--surface);box-shadow:none;border-radius:999px;padding:12px 16px;color:var(--muted);font-size:.95rem;text-align:start}
 .search-ico{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;flex:none}
 .search-input{width:100%;border:2px solid var(--line);background:var(--surface);border-radius:999px;padding:11px 16px}
@@ -518,6 +526,7 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
 
     <div class="search-row" id="search-row">
       <button class="search-toggle" id="search-toggle" type="button"><svg class="search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><span id="search-toggle-label">חיפוש ברשימה</span></button>
+      <button class="hide-done-btn" id="hide-done-btn" type="button" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path class="slash" d="M4 4l16 16"/></svg><span id="hide-done-label"></span></button>
       <input id="search-input" class="search-input" placeholder="חיפוש ברשימה…" autocomplete="off" hidden>
     </div>
 
@@ -607,6 +616,7 @@ he: {
   notifyListOpened:'🛒 {n} פתח/ה רשימה חדשה: {l}', notifyListClosed:'✅ {n} סיים/ה קניות ב-{l}',
   undo:'↩️ בטל', deleted:'🗑️ נמחק', editItem:'עריכת מוצר', editSave:'לשמור',
   fontSizeLabel:'גודל טקסט', fontNormal:'רגיל', fontLarge:'גדול', fontXlarge:'גדול מאוד',
+  hideDone:'הסתר נאספו', showDone:'הצג נאספו ({n})',
   searchPh:'חיפוש ברשימה…', newPendingToast:'🙋 {n} ביקש/ה להוסיף: {t}',
   dupWarning:'"{n}" כבר ברשימה.', dupAddAnyway:'להוסיף בכל זאת',
   manageMembers:'👥 ניהול חברי משק הבית', membersTitle:'חברי משק הבית',
@@ -688,6 +698,7 @@ en: {
   notifyListOpened:'🛒 {n} opened a new list: {l}', notifyListClosed:'✅ {n} finished shopping in {l}',
   undo:'↩️ Undo', deleted:'🗑️ Deleted', editItem:'Edit item', editSave:'Save',
   fontSizeLabel:'Text size', fontNormal:'Normal', fontLarge:'Large', fontXlarge:'Extra large',
+  hideDone:'Hide collected', showDone:'Show collected ({n})',
   searchPh:'Search the list…', newPendingToast:'🙋 {n} requested to add: {t}',
   dupWarning:'"{n}" is already on the list.', dupAddAnyway:'Add anyway',
   manageMembers:'👥 Manage household members', membersTitle:'Household members',
@@ -1366,6 +1377,21 @@ function attachDrag(listEl){
 
 let collapsedCats=new Set();
 try{ collapsedCats=new Set(JSON.parse(localStorage.getItem('cs-collapsed')||'[]')); }catch(e){}
+/* "hide collected" toggle next to search — remembered per device */
+let hideDone=false;
+try{ hideDone=localStorage.getItem('cs-hide-done')==='1'; }catch(e){}
+function paintHideDone(nDone){
+  const btn=$('hide-done-btn'); if(!btn) return;
+  if(nDone===undefined) nDone=$('groups').querySelectorAll('.item.done').length;
+  $('groups').classList.toggle('hide-done',hideDone);
+  btn.setAttribute('aria-pressed',String(hideDone));
+  $('hide-done-label').textContent = hideDone ? CS.t('showDone').replace('{n}',nDone) : CS.t('hideDone');
+}
+$('hide-done-btn').addEventListener('click',()=>{
+  hideDone=!hideDone;
+  try{ localStorage.setItem('cs-hide-done',hideDone?'1':'0'); }catch(e){}
+  paintHideDone();
+});
 function renderGroups(items){
   // checked items stay put among the active ones (same category, same position) — just marked done in place
   const visible = items.filter(i=>i.status!=='pending').sort((a,b)=>(a.position||0)-(b.position||0));
@@ -1379,7 +1405,7 @@ function renderGroups(items){
     visible.forEach(i=>{ (byCat[i.category||'other'] = byCat[i.category||'other']||[]).push(i); });
     box.innerHTML = CS.CAT_ORDER.filter(c=>byCat[c]&&byCat[c].length).map(c=>{
       const meta = CS.CATS[c], open = byCat[c].filter(i=>i.status!=='checked').length;
-      return `<div class="group ${collapsedCats.has(c)?'collapsed':''}" data-cat="${c}">
+      return `<div class="group ${collapsedCats.has(c)?'collapsed':''} ${open?'':'all-done'}" data-cat="${c}">
         <button class="group-h" data-toggle-cat="${c}" aria-expanded="${!collapsedCats.has(c)}"><span class="e">${meta.emoji}</span><span class="gname">${CS.lang()==='he'?meta.he:meta.en}</span><span class="gcount">${open}/${byCat[c].length}</span><span class="chev" aria-hidden="true">⌃</span></button>
         <ul class="list">${byCat[c].map(i=>itemRow(i,'active')).join('')}</ul></div>`;
     }).join('');
@@ -1396,6 +1422,7 @@ function renderGroups(items){
   const nDone=visible.filter(i=>i.status==='checked').length;
   $('list-hero-count').textContent = CS.t('listCount').replace('{n}',visible.length).replace('{d}',nDone);
   $('list-hero-bar').style.width = visible.length ? (100*nDone/visible.length)+'%' : '0';
+  paintHideDone(nDone);
   attachSwipe(box);
 
   const pending = items.filter(i=>i.status==='pending');
