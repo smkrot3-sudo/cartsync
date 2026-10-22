@@ -277,7 +277,7 @@ body.in-list .top{padding:10px 12px}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .lb-btn:not(.lb-cart),:root:not([data-theme="light"]) .lb-cart .e,:root:not([data-theme="light"]) .listbar .avatarbtn{background:rgba(255,255,255,.12);color:var(--bar-ink)}}
 .group{--h:220;background:var(--surface);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
 .group+.group{margin-top:14px}
-.group .group-h{width:100%;border:0;cursor:pointer;background:hsl(var(--h) 52% 89%);padding:10px 14px;font-size:1.06rem;gap:10px;text-align:start}
+.group .group-h{width:100%;border:0;cursor:default;background:hsl(var(--h) 52% 89%);padding:10px 14px;font-size:1.06rem;gap:10px;text-align:start}
 :root[data-theme="dark"] .group .group-h{background:hsl(var(--h) 28% 21%)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .group .group-h{background:hsl(var(--h) 28% 21%)}}
 .group .group-h .e{font-size:1.55rem}
@@ -1434,8 +1434,8 @@ function attachDrag(listEl){
   });
 }
 
-let collapsedCats=new Set();
-try{ collapsedCats=new Set(JSON.parse(localStorage.getItem('cs-collapsed')||'[]')); }catch(e){}
+// categories are always open (owner's call 2026-10-22): no collapsing, and any old saved state is dropped
+try{ localStorage.removeItem('cs-collapsed'); }catch(e){}
 /* "hide collected" toggle next to search — remembered per device */
 let hideDone=false;
 try{ hideDone=localStorage.getItem('cs-hide-done')==='1'; }catch(e){}
@@ -1464,16 +1464,10 @@ function renderGroups(items){
     visible.forEach(i=>{ (byCat[i.category||'other'] = byCat[i.category||'other']||[]).push(i); });
     box.innerHTML = CS.CAT_ORDER.filter(c=>byCat[c]&&byCat[c].length).map(c=>{
       const meta = CS.CATS[c], open = byCat[c].filter(i=>i.status!=='checked').length;
-      return `<div class="group ${collapsedCats.has(c)?'collapsed':''} ${open?'':'all-done'}" data-cat="${c}">
-        <button class="group-h" data-toggle-cat="${c}" aria-expanded="${!collapsedCats.has(c)}"><span class="e">${meta.emoji}</span><span class="gname">${CS.lang()==='he'?meta.he:meta.en}</span><span class="gcount">${open}/${byCat[c].length}</span><span class="chev" aria-hidden="true">⌃</span></button>
+      return `<div class="group ${open?'':'all-done'}" data-cat="${c}">
+        <div class="group-h"><span class="e">${meta.emoji}</span><span class="gname">${CS.lang()==='he'?meta.he:meta.en}</span><span class="gcount">${open}/${byCat[c].length}</span></div>
         <ul class="list">${byCat[c].map(i=>itemRow(i,'active')).join('')}</ul></div>`;
     }).join('');
-    box.querySelectorAll('[data-toggle-cat]').forEach(b=>b.onclick=()=>{
-      const c=b.dataset.toggleCat, g=b.parentElement;
-      if(collapsedCats.has(c)) collapsedCats.delete(c); else collapsedCats.add(c);
-      g.classList.toggle('collapsed',collapsedCats.has(c)); b.setAttribute('aria-expanded',String(!collapsedCats.has(c)));
-      try{ localStorage.setItem('cs-collapsed',JSON.stringify([...collapsedCats])); }catch(e){}
-    });
   }
   $('empty-state').hidden = !!visible.length;
   const nameEl=$('top-hhbar-title');
