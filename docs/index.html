@@ -31,7 +31,7 @@
 :root{
   --bg:#F6F8F5; --surface:#FFFFFF; --soft:#EAF1E9; --fg:#1C2A21; --muted:#66756B; --line:#DFE7DD;
   --accent:#1F6B3F; --accent-ink:#FFFFFF; --accent-soft:#DDF0E0;
-  --bar:#A6DBAE; --bar-ink:#14281B; --done-bg:#E3F3E3;
+  --bar:#C3DFC9; --bar-ink:#14281B; --done-bg:#E3F3E3;
   --coral:#FF5E70; --coral-ink:#FFFFFF; --coral-soft:#FFE0E4;
   --gold:#B4890F; --gold-soft:#FBEFD2;
   --ok:#1F6B3F; --ok-soft:#DDF0E0;
@@ -128,16 +128,35 @@ button:disabled{opacity:.6;cursor:default}
   border:0;background:rgba(255,255,255,.35);box-shadow:none;
   border-radius:999px;padding:6px 12px;color:var(--bar-ink);font-size:.85rem;cursor:pointer;text-align:start;
 }
-.members-row .chev{margin-inline-start:auto;flex:none;font-size:.78rem}
+.members-row .chev{margin-inline-start:auto;flex:none;width:16px;height:16px;opacity:.6}
+#members-count-label{font-size:.8rem;opacity:.7;font-weight:500}
+.hh-chip .lc{width:20px;height:20px}
+.hh-chip .lc.chev{width:16px;height:16px;opacity:.6}
+.brand-end-badge .lc{width:18px;height:18px}
+.lb-cart .e .lc{width:19px;height:19px}
 .iconbtn{border:0;background:var(--surface);box-shadow:var(--shadow);width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:var(--muted);flex:none;font-size:1.15rem;transition:transform .1s ease}
 .iconbtn:active{transform:scale(.92)}
 
 .view{display:flex;flex-direction:column;gap:14px}
 .view[hidden]{display:none!important}
 .hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:18px 8px 4px}
-.home-greeting{display:flex;flex-direction:column;gap:3px;padding:4px 2px 0}
-.home-greeting h1{font-size:1.4rem}
-.home-greeting .sub{display:flex;align-items:center;gap:5px}
+.home-greeting{display:flex;flex-direction:column;gap:6px;padding:22px 4px 4px}
+.home-greeting h1{font-size:2rem;font-weight:800;line-height:1.15;letter-spacing:-.01em}
+.home-greeting .sub{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:.95rem}
+/* Lucide-style line icons (24-grid, stroked, no fill) */
+.lc{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.home-greeting .sub .lc{width:16px;height:16px}
+.home-h{font-size:1.05rem;padding:14px 4px 10px}
+.home-h .lc{width:19px;height:19px;color:var(--accent)}
+ul.empty.home-empty{border:0!important;background:var(--surface);border-radius:20px;box-shadow:0 1px 2px rgba(20,40,27,.06),0 6px 20px rgba(20,40,27,.07);padding:36px 24px 30px;gap:14px;color:var(--fg)}
+.home-empty li{display:flex;flex-direction:column;align-items:center;gap:14px}
+ul.empty.home-empty #home-lists-empty-text{color:var(--fg);font-size:1.08rem;font-weight:600;max-width:32ch;line-height:1.4}
+.empty-ico{width:64px;height:64px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
+.empty-ico .lc{width:30px;height:30px;stroke-width:1.75}
+.btn.efab{display:inline-flex;align-items:center;gap:8px;background:#2F5D3A;color:#fff;border-radius:18px;padding:14px 22px;font-size:1rem;font-weight:700;box-shadow:0 3px 8px rgba(47,93,58,.3),0 8px 18px rgba(47,93,58,.18)}
+.btn.efab .lc{width:20px;height:20px;stroke-width:2.4}
+:root[data-theme="dark"] .btn.efab{background:#5CC383;color:#06150C}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.efab{background:#5CC383;color:#06150C}}
 .hero-emoji{font-size:2.6rem}
 .sub{color:var(--muted);font-size:.95rem}
 
@@ -178,7 +197,9 @@ button:disabled{opacity:.6;cursor:default}
 .toast{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));inset-inline:16px;background:var(--fg);color:var(--bg);border-radius:14px;padding:11px 16px;text-align:center;z-index:50;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;gap:12px}
 .toast-action{border:0;background:transparent;color:inherit;font-weight:bold;font-size:.95rem;flex:none;text-decoration:underline}
 
-.version-bar{display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 8px calc(14px + env(safe-area-inset-bottom,0px));color:var(--muted);font-size:.78rem;flex-wrap:wrap}
+.version-bar{display:flex;align-items:center;justify-content:center;gap:14px;padding:18px 8px calc(16px + env(safe-area-inset-bottom,0px));color:var(--muted);font-size:.74rem;flex-wrap:wrap;opacity:.85}
+.refresh-btn{display:inline-flex;align-items:center;gap:5px;color:var(--muted);text-decoration:none;font-size:.74rem;padding:4px 6px}
+.refresh-btn .lc{width:14px;height:14px}
 
 .splash{display:flex;align-items:center;justify-content:center;min-height:70vh}
 .splash .hero-emoji{font-size:3rem;animation:splash-pulse 1.1s ease-in-out infinite}
@@ -226,7 +247,7 @@ button:disabled{opacity:.6;cursor:default}
 .list-del{border:0;background:var(--danger-soft);color:var(--danger);width:40px;height:40px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:1rem}
 .list-pin{border:0;background:var(--gold-soft);color:var(--gold);width:40px;height:40px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:1.05rem}
 .members{display:flex;cursor:pointer}
-.avatar{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:.85rem;font-weight:bold;color:#fff;border:2px solid var(--surface);margin-inline-start:-8px;flex:none}
+.avatar{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:.82rem;font-weight:700;color:#fff;border:2.5px solid #fff;margin-inline-start:-9px;flex:none;box-shadow:0 1px 3px rgba(0,0,0,.12)}
 .avatar:first-child{margin-inline-start:0}
 .avatar.big{width:44px;height:44px;font-size:1.05rem;margin:0}
 .avatar-more{background:var(--muted);font-size:.72rem}
@@ -459,13 +480,13 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
   <header class="top">
     <div class="brand">
       <span id="acct-top"></span>
-      <button class="hh-chip" id="brand-home-btn"><span class="e" aria-hidden="true">🏠</span><b class="nm" id="brand-name">קניות ביחד</b><span class="chev" aria-hidden="true">⌄</span></button>
-      <span class="brand-end-badge" aria-hidden="true"><span class="e">🛒</span></span>
+      <button class="hh-chip" id="brand-home-btn"><svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><b class="nm" id="brand-name">קניות ביחד</b><svg class="lc chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+      <span class="brand-end-badge" aria-hidden="true"><svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></span>
     </div>
     <button class="members-row" id="members-row" hidden>
       <div class="members" id="top-hhbar-members"></div>
       <span id="members-count-label"></span>
-      <span class="chev" aria-hidden="true">›</span>
+      <svg class="lc chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
     </button>
     <div class="hhbar" id="top-hhbar" hidden>
       <button class="iconbtn-lite" id="top-hhbar-back" aria-label="Back">→</button>
@@ -477,7 +498,7 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
     <div class="listbar" id="listbar">
       <span class="listbar-start"><span id="listbar-acct"></span><button class="lb-btn" id="listbar-share" aria-label="Share"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.8l7.4-4.4M8.3 13.2l7.4 4.4"/></svg></button></span>
       <b class="listbar-title" id="listbar-title"></b>
-      <button class="lb-btn lb-cart" id="listbar-lists" aria-label="Lists"><span class="e">🛒</span></button>
+      <button class="lb-btn lb-cart" id="listbar-lists" aria-label="Lists"><span class="e"><svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></span></button>
     </div>
   </header>
 
@@ -532,14 +553,14 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
   <section class="view" id="view-home" hidden>
     <div class="home-greeting">
       <h1 id="home-greeting">…</h1>
-      <p class="sub" id="home-hh-sub"><span class="e">🏠</span> <span id="home-hh-name">…</span></p>
+      <p class="sub" id="home-hh-sub"><svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span id="home-hh-name">…</span></p>
     </div>
     <div id="home-lists-section">
-      <div class="group-h"><span class="e">🛒</span><span id="home-lists-heading">הרשימות הפעילות</span></div>
+      <div class="group-h home-h"><svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg><span id="home-lists-heading">הרשימות הפעילות</span></div>
       <ul class="list" id="home-lists-preview"></ul>
-      <ul class="empty" id="home-lists-empty" hidden>
-        <li><span class="e" style="font-size:2.2rem">📋</span><span id="home-lists-empty-text">אין רשימות פעילות. ליצור אחת?</span>
-          <button class="btn small" id="home-lists-empty-btn">➕ <span id="home-lists-new-label">רשימה חדשה</span></button>
+      <ul class="empty home-empty" id="home-lists-empty" hidden>
+        <li><span class="empty-ico"><svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></span><span id="home-lists-empty-text">אין רשימות פעילות. ליצור אחת?</span>
+          <button class="btn efab" id="home-lists-empty-btn"><svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg> <span id="home-lists-new-label">רשימה חדשה</span></button>
         </li>
       </ul>
       <button class="linkbtn" id="home-lists-more" hidden>הרשימות שלי ←</button>
@@ -605,7 +626,7 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
 
   <footer class="version-bar">
     <span id="version-label">…</span>
-    <button class="linkbtn" id="refresh-btn">🔄 <span id="refresh-label">לרענן</span></button>
+    <button class="linkbtn refresh-btn" id="refresh-btn"><svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg><span id="refresh-label">לרענן</span></button>
     <button class="btn small" id="update-btn" hidden>🔄 לעדכן</button>
   </footer>
 
@@ -1232,7 +1253,7 @@ function initials(nameOrEmail){
 function personColor(uid){
   let h=0; const s=String(uid||'');
   for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))%360;
-  return `hsl(${h} 62% 46%)`;
+  return `hsl(${h} 40% 48%)`;
 }
 function renderMembers(members, targetId, limit){
   const all=members||[];
