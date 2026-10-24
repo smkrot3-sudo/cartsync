@@ -3,7 +3,7 @@
 // "coach" function (same project secrets) — never exposed to the app.
 import { createClient } from "npm:@supabase/supabase-js@2.45.4";
 
-const CATS = ["dairy","produce","bakery","meat","frozen","pantry","beverages","snacks","household","care","baby","pet","other"];
+const CATS = ["dairy","eggs","deli","produce","bakery","ready","meat","fish","frozen","pantry","canned","grains","oils","spices","baking","breakfast","coffee","nuts","beverages","alcohol","snacks","holiday","household","paper","laundry","disposable","kitchen","electric","care","pharmacy","baby","pet","clothing","stationery","toys","garden","other"];
 const PREFERRED = ["gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash"];
 let cached: { at: number; list: string[] } | null = null;
 async function models(key: string): Promise<string[]> {

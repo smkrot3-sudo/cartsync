@@ -312,6 +312,7 @@ body.in-list .top{padding:10px 12px}
 .group[data-cat="meat"]{--h:2} .group[data-cat="frozen"]{--h:192} .group[data-cat="pantry"]{--h:42}
 .group[data-cat="beverages"]{--h:262} .group[data-cat="snacks"]{--h:330} .group[data-cat="household"]{--h:172}
 .group[data-cat="care"]{--h:285} .group[data-cat="baby"]{--h:215} .group[data-cat="pet"]{--h:20} .group[data-cat="other"]{--h:150}
+.group[data-cat="eggs"]{--h:45} .group[data-cat="deli"]{--h:50} .group[data-cat="ready"]{--h:95} .group[data-cat="fish"]{--h:200} .group[data-cat="canned"]{--h:15} .group[data-cat="grains"]{--h:38} .group[data-cat="oils"]{--h:70} .group[data-cat="spices"]{--h:10} .group[data-cat="baking"]{--h:340} .group[data-cat="breakfast"]{--h:28} .group[data-cat="coffee"]{--h:25} .group[data-cat="nuts"]{--h:33} .group[data-cat="alcohol"]{--h:345} .group[data-cat="holiday"]{--h:48} .group[data-cat="paper"]{--h:180} .group[data-cat="laundry"]{--h:195} .group[data-cat="disposable"]{--h:160} .group[data-cat="kitchen"]{--h:20} .group[data-cat="electric"]{--h:55} .group[data-cat="pharmacy"]{--h:355} .group[data-cat="clothing"]{--h:230} .group[data-cat="stationery"]{--h:240} .group[data-cat="toys"]{--h:300} .group[data-cat="garden"]{--h:130}
 
 /* colorful circular badge per category, one hue each, light tint in light mode / deep tint in dark mode */
 .item .emo{--h:220;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:1.1rem;flex:none;font-family:var(--emoji);background:hsl(var(--h) 75% 92%);color:hsl(var(--h) 60% 38%)}
@@ -330,6 +331,7 @@ body.in-list .top{padding:10px 12px}
 .item .emo[data-cat="baby"]{--h:215}
 .item .emo[data-cat="pet"]{--h:20}
 .item .emo[data-cat="other"]{--h:220}
+.item .emo[data-cat="eggs"]{--h:45} .item .emo[data-cat="deli"]{--h:50} .item .emo[data-cat="ready"]{--h:95} .item .emo[data-cat="fish"]{--h:200} .item .emo[data-cat="canned"]{--h:15} .item .emo[data-cat="grains"]{--h:38} .item .emo[data-cat="oils"]{--h:70} .item .emo[data-cat="spices"]{--h:10} .item .emo[data-cat="baking"]{--h:340} .item .emo[data-cat="breakfast"]{--h:28} .item .emo[data-cat="coffee"]{--h:25} .item .emo[data-cat="nuts"]{--h:33} .item .emo[data-cat="alcohol"]{--h:345} .item .emo[data-cat="holiday"]{--h:48} .item .emo[data-cat="paper"]{--h:180} .item .emo[data-cat="laundry"]{--h:195} .item .emo[data-cat="disposable"]{--h:160} .item .emo[data-cat="kitchen"]{--h:20} .item .emo[data-cat="electric"]{--h:55} .item .emo[data-cat="pharmacy"]{--h:355} .item .emo[data-cat="clothing"]{--h:230} .item .emo[data-cat="stationery"]{--h:240} .item .emo[data-cat="toys"]{--h:300} .item .emo[data-cat="garden"]{--h:130}
 
 .item{display:flex;align-items:center;gap:10px;background:var(--surface);border-radius:16px;padding:10px 12px;box-shadow:var(--shadow);position:relative;touch-action:pan-y;transition:transform .18s ease,background-color .18s ease}
 .item.swiping{transition:none}
@@ -828,25 +830,51 @@ const CATS = {
   dairy:{he:'חלבי',en:'Dairy',emoji:'🥛'},
   produce:{he:'ירקות ופירות',en:'Produce',emoji:'🥦'},
   bakery:{he:'מאפים',en:'Bakery',emoji:'🥖'},
-  meat:{he:'בשר ודגים',en:'Meat & Fish',emoji:'🍗'},
+  meat:{he:'בשר ועוף',en:'Meat & Poultry',emoji:'🍗'},
   frozen:{he:'קפואים',en:'Frozen',emoji:'🧊'},
-  pantry:{he:'מזווה',en:'Pantry',emoji:'🥫'},
+  pantry:{he:'מזווה',en:'Pantry',emoji:'🫙'},
   beverages:{he:'משקאות',en:'Beverages',emoji:'🥤'},
   snacks:{he:'חטיפים וממתקים',en:'Snacks & Sweets',emoji:'🍬'},
   household:{he:'ניקיון ובית',en:'Household',emoji:'🧽'},
   care:{he:'טיפוח',en:'Personal Care',emoji:'🧴'},
   baby:{he:'תינוקות',en:'Baby',emoji:'🍼'},
   pet:{he:'חיות מחמד',en:'Pet',emoji:'🐾'},
+  eggs:{he:'ביצים',en:'Eggs',emoji:'🥚'},
+  deli:{he:'גבינות ומעדנייה',en:'Deli & Cheese',emoji:'🧀'},
+  ready:{he:'סלטים ומוכן',en:'Salads & Ready Meals',emoji:'🥗'},
+  fish:{he:'דגים',en:'Fish',emoji:'🐟'},
+  canned:{he:'שימורים',en:'Canned Goods',emoji:'🥫'},
+  grains:{he:'אורז, פסטה וקטניות',en:'Rice, Pasta & Legumes',emoji:'🍝'},
+  oils:{he:'שמנים וחומץ',en:'Oils & Vinegar',emoji:'🫒'},
+  spices:{he:'תבלינים ורטבים',en:'Spices & Sauces',emoji:'🧂'},
+  baking:{he:'אפייה',en:'Baking',emoji:'🧁'},
+  breakfast:{he:'דגני בוקר וממרחים',en:'Breakfast & Spreads',emoji:'🥣'},
+  coffee:{he:'קפה ותה',en:'Coffee & Tea',emoji:'☕'},
+  nuts:{he:'פיצוחים ופירות יבשים',en:'Nuts & Dried Fruit',emoji:'🥜'},
+  alcohol:{he:'יין ואלכוהול',en:'Wine & Alcohol',emoji:'🍷'},
+  holiday:{he:'שבת וחג',en:'Shabbat & Holidays',emoji:'🕯️'},
+  paper:{he:'נייר וטישו',en:'Paper & Tissues',emoji:'🧻'},
+  laundry:{he:'כביסה',en:'Laundry',emoji:'🫧'},
+  disposable:{he:'חד־פעמי ואירוח',en:'Disposables & Hosting',emoji:'🍽️'},
+  kitchen:{he:'כלי מטבח',en:'Kitchenware',emoji:'🍳'},
+  electric:{he:'סוללות וחשמל',en:'Batteries & Electrical',emoji:'🔋'},
+  pharmacy:{he:'פארם ותרופות',en:'Pharmacy',emoji:'💊'},
+  clothing:{he:'ביגוד',en:'Clothing',emoji:'🧦'},
+  stationery:{he:'כלי כתיבה',en:'Stationery',emoji:'✏️'},
+  toys:{he:'צעצועים ומשחקים',en:'Toys & Games',emoji:'🧸'},
+  garden:{he:'גינה ופרחים',en:'Garden & Flowers',emoji:'🌷'},
   other:{he:'אחר',en:'Other',emoji:'🛒'},
 };
 /* ordered for an actual shopping trip, not alphabetically: produce/bakery/dry-goods/non-food first,
    then the categories you want in the cart last so they spend the least time out of the fridge/freezer */
-const CAT_ORDER = ['produce','bakery','pantry','beverages','snacks','household','care','baby','pet','dairy','meat','frozen','other'];
+const CAT_ORDER = ['produce','nuts','bakery','ready','pantry','canned','grains','oils','spices','baking','breakfast','coffee','snacks','beverages','alcohol','holiday',
+  'household','paper','laundry','disposable','kitchen','electric','care','pharmacy','baby','pet','clothing','stationery','toys','garden',
+  'eggs','deli','dairy','meat','fish','frozen','other'];
 
 /* "what's new" — bump WHATS_NEW_VERSION and add one new entry at the END of each array whenever
    there's something worth announcing to EXISTING users (not every build, just real features).
    A brand-new user never sees this — they get the full guide instead, and are marked caught-up. */
-const WHATS_NEW_VERSION = 2;
+const WHATS_NEW_VERSION = 3;
 const WHATS_NEW = {
 he: [
   {version:1, items:[
@@ -864,6 +892,12 @@ he: [
     'כל קטגוריה ברשימה היא כרטיס צבעוני, ואפשר לקפל אותה בלחיצה על הכותרת',
     'שורות מוצר צפופות יותר: רואים יותר מהרשימה בלי לגלול',
   ]},
+  {version:3, items:[
+    'הרשימה נראית כמו דף בפנקס, בכתב יד',
+    '24 קטגוריות חדשות, ביניהן שימורים, ביצים, מעדנייה, דגים, אפייה, קפה ותה, פארם, כביסה וחד־פעמי',
+    'מוצרים שה-AI זיהה כבר לא חוזרים ל"אחר" אחרי שמסמנים אותם',
+    'כפתור להסתרת מוצרים שכבר נאספו, וחלון חגיגי כשהכל נאסף',
+  ]},
 ],
 en: [
   {version:1, items:[
@@ -880,6 +914,12 @@ en: [
     'A fresh green look across the app, in light and dark mode',
     'Each category is a colored card you can collapse by tapping its header',
     'Denser item rows: see more of the list without scrolling',
+  ]},
+  {version:3, items:[
+    'The list now looks like a handwritten notepad page',
+    '24 new categories, including canned goods, eggs, deli, fish, baking, coffee & tea, pharmacy, laundry and disposables',
+    'Items the AI recognised no longer fall back to "Other" after you check them off',
+    'A button to hide collected items, and a little celebration when everything is collected',
   ]},
 ],
 };
@@ -978,6 +1018,41 @@ const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&
 
 /* ---------- local item -> category/emoji guesser (works with zero network; the AI edge function can refine this later) ---------- */
 const DICT = [
+  // ---- 2026-10-24: finer categories. Sits first so it wins over the broad keys below; order inside
+  // matters too (substring match): e.g. "חטיף גרנולה" before "גרנולה", "שמנת" before "שמן", "סוכריות" before "סוכר"
+  [['חטיף','snack bar'],'snacks','🍫'], [['סוכריה','סוכריות','candy'],'snacks','🍬'],
+  [['שמנת'],'dairy','🥛'], [['שוקולית','שוקו '],'dairy','🥛'],
+  [['מרכך שיער','שמפו','shampoo','conditioner'],'care','🧴'],
+  [['קידוש','נרות','נר שבת','הבדלה','מצות','מצה','חנוכיה','שופר','candles'],'holiday','🕯️'],
+  [['ביצים','ביצה','eggs'],'eggs','🥚'],
+  [['טונה','סרדינים','sardine','שימור','בשימורים','קופסת שימורים','canned','תירס בקופסה','זיתים','olives','חמוצ','כבוש','pickle','רסק עגבניות','פטריות בקופסה','אפונה וגזר','שעועית בקופסה','חומוס בקופסה','מנגו בקופסה','אננס בקופסה','אפרסק בקופסה'],'canned','🥫'],
+  [['צהובה','בולגרית','פטה','feta','מוצרלה','mozzarella','פרמזן','parmesan','צפתית','גבינה מלוחה','גאודה','gouda','חלומי','halloumi','פסטרמה','סלמי','salami','pastrami','נקניק','sausage','hotdog','חזה הודו','פסטרמה'],'deli','🧀'],
+  [['סלט','salad','חומוס','hummus','מטבוחה','טחינה','tahini','באבא גנוש','אוכל מוכן','ממרח חצילים','כבד קצוץ'],'ready','🥗'],
+  [['קורנפלקס','cereal','דגני בוקר','גרנולה','granola','שיבולת שועל','oats','oatmeal','ריבה','jam','נוטלה','nutella','ממרח','חמאת בוטנים','peanut butter','דבש','honey','סילאן','סירופ','syrup','מייפל'],'breakfast','🥣'],
+  [['קפה','coffee','נס קפה','קפסולות','capsule','שקיות תה','תה ירוק','תה שחור','תה צמחים','תיונים','tea bag','green tea','חליטה','ויסוצקי'],'coffee','☕'],
+  [['פלפל שחור','תבלין','spice','מלח','salt','פפריקה','paprika','כורכום','turmeric','כמון','cumin','קינמון','cinnamon','זעתר','אורגנו','oregano','בהרט','קטשופ','ketchup','מיונז','mayo','חרדל','mustard','רוטב','sauce','סויה','soy','טריאקי','teriyaki','שקדי מרק','אבקת מרק'],'spices','🧂'],
+  [['קמח','flour','סוכר','sugar','שמרים','yeast','אבקת אפייה','בייקינג','baking','וניל','vanilla','קקאו','cocoa','שוקולד מריר','ג\'לטין','gelatin','קורנפלור','cornstarch','סוכר חום','ממתיק','סוכרזית','קוקוס טחון','פודינג'],'baking','🧁'],
+  [['שמן','olive oil','canola','חומץ','vinegar'],'oils','🫒'],
+  [['פסטה','pasta','ספגטי','spaghetti','אורז','rice','קוסקוס','couscous','בורגול','פתיתים','אטריות','איטריות','נודלס','noodle','קינואה','quinoa','עדשים','עדש','lentil','שעועית','bean','גריסים','חומוס יבש','לזניה','lasagna','פנקו'],'grains','🍝'],
+  [['פיצוחים','גרעינים','בוטנים','peanut','שקדים','almond','אגוז','walnut','nuts','קשיו','cashew','פיסטוק','pistachio','צימוקים','raisin','תמרים','dates','פירות יבשים','מיובש','חמוציות','cranberr'],'nuts','🥜'],
+  [['יין','wine','בירה','beer','וודקה','vodka','וויסקי','ויסקי','whisky','whiskey','ערק','arak','ליקר','liqueur','שמפניה','champagne','קאווה','ג\'ין'],'alcohol','🍷'],
+  [['לבבות','קורקבנים','כבד עוף','כנפיים','שוקיים','פרגי','שניצל','schnitzel','עוף','chicken','הודו','turkey'],'meat','🍗'],
+  [['סלמון','salmon','אמנון','tilapia','דניס','בורי','לברק','פורל','trout','הרינג','herring','מושט','שרימפס','shrimp','קלמארי','calamari','דגים','דג ','fish'],'fish','🐟'],
+  [['נייר טואלט','toilet paper','טישו','tissue','מגבות נייר','paper towel','מגבונים','wipes','מפיות','napkin'],'paper','🧻'],
+  [['כביסה','laundry','מרכך','detergent','מסיר כתמים','stain remover','אבקת כביסה','מבשם כביסה'],'laundry','🫧'],
+  [['חד פעמי','חד-פעמי','חד־פעמי','disposable','צלחות','plates','כוסות','cups','סכו"ם','cutlery','מפות','tablecloth','נייר כסף','foil','נייר אפייה','ניילון נצמד','cling','שקיות אוכל','שיפודים','קשים','straw'],'disposable','🍽️'],
+  [['מחבת','frying pan','סיר ','סירים','cooking pot','קערה','קערות','bowl','סכין','סכינים','knife','קרש חיתוך','cutting board','קולפן','peeler','מצקת','ladle','תבנית','מגבת מטבח','קופסאות אחסון','קופסת אוכל'],'kitchen','🍳'],
+  [['סוללות','סוללה','battery','batteries','נורה','נורות','bulb','מטען','charger','כבל','cable','מפצל','מאריך','extension cord','פנס','flashlight'],'electric','🔋'],
+  [['אקמול','נורופן','אדוויל','אדויל','תרופ','medicine','ויטמין','vitamin','פלסטר','plaster','band-aid','מדחום','thermometer','סירופ לשיעול','טיפות','משחה','תחבושת','bandage','מסכות','אלכוג\'ל','אלכוגל','קרם הגנה','sunscreen','דוחה יתושים','עדשות מגע'],'pharmacy','💊'],
+  [['גרביים','גרב','socks','חולצה','חולצות','shirt','מכנסיים','pants','תחתונים','underwear','גופיה','פיג\'מה','pajama','נעליים','shoes','כפכפים','סנדלים','כובע','כפפות','gloves','צעיף'],'clothing','🧦'],
+  [['עטים','עט כדורי','עיפרון','עפרונות','pencil','מחברת','מחברות','notebook','דבק','glue','מספריים','scissors','מחדד','מחק','eraser','טוש','טושים','marker','סלוטייפ','נייר a4','דפים','קלסר','binder','צבעים','מדבקות'],'stationery','✏️'],
+  [['צעצוע','toy','משחק','game','בובה','doll','פאזל','puzzle','לגו','lego','בלונים','בלון','balloon','פלסטלינה','קלפים','כדורגל','כדורסל'],'toys','🧸'],
+  [['פרחים','flowers','זר פרחים','עציץ','עציצים','אדמה לעציצים','דשן','fertilizer','זרעים','seeds','צמח','plant','שתיל'],'garden','🌷'],
+  [['אננס','pineapple'],'produce','🍍'], [['תירס'],'produce','🌽'], [['חציל','eggplant'],'produce','🍆'], [['פטריות','mushroom'],'produce','🍄'],
+  [['קיווי','kiwi'],'produce','🥝'], [['אגס','pear'],'produce','🍐'], [['אפרסק','peach'],'produce','🍑'], [['מלון','melon'],'produce','🍈'],
+  [['בטטה','sweet potato'],'produce','🍠'], [['קוקוס','coconut'],'produce','🥥'], [['ליים','lime'],'produce','🍋'], [['נבטים','sprouts'],'produce','🌱'],
+  [['נבטים','sprouts','מלון','melon','אגס','pear','קישוא','zucchini','חציל','eggplant','בטטה','sweet potato','דלעת','pumpkin','כרובית','cauliflower','כרוב','cabbage','תרד','spinach','פטרוזיליה','parsley','כוסברה','cilantro','שמיר','dill','נענע','mint','סלרי','celery','רימון','pomegranate','אפרסק','peach','שזיף','plum','קיווי','kiwi','אננס','pineapple','תאנה','תאנים','fig','פטריות','mushroom','קולורבי','צנון','סלק','beet','תירס','ארטישוק','אספרגוס','אשכולית','קלמנטינה','פומלה','ליים','lime'],'produce','🥬'],
+  [['מגב','mop','מטאטא','broom','יעה','דלי','bucket','ספוג','sponge','סמרטוט','שקיות זבל','trash bag','אקונומיקה','bleach','נוזל כלים','dish soap','מנקה','cleaner','מטהר אוויר','מסיר שומנים','סקוטש','כפפות ניקוי','טבליות למדיח'],'household','🧽'],
   // first match wins, so these sit ahead of the broad produce/snacks keys they'd otherwise hit
   // (מלפפון → produce, גרנולה → snacks): pickles, instant meals and granola are shelf-stable pantry goods
   [['מנה חמה','מנות חמות','cup noodle','instant noodle'],'pantry','🍜'],
@@ -2389,11 +2464,23 @@ async function fetchItems(){
     const {data,error}=await sb.from('list_items').select('*').eq('list_id',listId).order('position');
     if(error) throw error;
     items=data||[];
+    reclassifyOther();
   }catch(e){
     const cache=loadCache();
     if(cache && cache.listId===listId) items=cache.items||[];
   }
   paintItems();
+}
+// items stuck in "other" (added before the dictionary knew them, or whose AI upgrade never got saved)
+// get re-guessed against the current dictionary each time the list loads, and the fix is saved
+function reclassifyOther(){
+  if(listStatus!=='open' || role==='requester') return;
+  items.forEach(it=>{
+    if(it.category && it.category!=='other') return;
+    const g=CS.guess(it.text); if(g.cat==='other') return;
+    it.category=g.cat; it.emoji=g.emoji;
+    if(!isTemp(it.id)) sb.from('list_items').update({category:g.cat,emoji:g.emoji}).eq('id',it.id).then(()=>{},()=>{});
+  });
 }
 
 
@@ -2413,7 +2500,7 @@ function applyAiUpgrade(text,r,retried){
   }
   matches.forEach(it=>{
     it.category=r.category; it.emoji=r.emoji;
-    sb.from('list_items').update({category:r.category,emoji:r.emoji}).eq('id',it.id);
+    sb.from('list_items').update({category:r.category,emoji:r.emoji}).eq('id',it.id).then(()=>{},()=>{}); // supabase-js builders are lazy: without then() the request is never sent, and the upgrade silently reverted on the next refetch
   });
   paintItems();
 }
@@ -2594,7 +2681,7 @@ function subscribeHouseholdRealtime(){
     })
     .on('postgres_changes',{event:'INSERT',schema:'public',table:'item_rejections',filter:'recipient_user_id=eq.'+user.id},payload=>{
       toast(CS.t('itemRejectedToast').replace('{t}',payload.new.item_text));
-      sb.from('item_rejections').delete().eq('id',payload.new.id);
+      sb.from('item_rejections').delete().eq('id',payload.new.id).then(()=>{},()=>{});
     })
     .on('postgres_changes',{event:'INSERT',schema:'public',table:'shopping_lists',filter:'household_id=eq.'+household},payload=>{
       const row=payload.new;
