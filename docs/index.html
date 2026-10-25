@@ -1686,8 +1686,11 @@ async function flushQueue(opts){
         const {data,error}=await sb.from('list_items').insert(op.row).select().single();
         if(error) throw error;
         idMap[op.id]=data.id;
-        const idx=items.findIndex(i=>i.id===op.id);
-        if(idx>-1) items[idx]=data; // swap the temp id for the real row locally — no refetch needed for this
+        // the realtime echo of this insert can land before this response does and already have added
+        // the real row — then just drop the temp copy, or the same item shows twice (and deleting
+        // either one, both sharing one id, removes both)
+        if(items.some(i=>i.id===data.id)) items=items.filter(i=>i.id!==op.id);
+        else { const idx=items.findIndex(i=>i.id===op.id); if(idx>-1) items[idx]=data; } // swap the temp id for the real row locally
       }else if(op.op==='toggle'||op.op==='update'){
         if(isTemp(realId)) throw new Error('unresolved temp id');
         const {error}=await sb.from('list_items').update(op.patch).eq('id',realId);
@@ -2453,6 +2456,7 @@ function decorate(list){
 }
 let searchQuery='';
 function paintItems(){
+  const seen=new Set(); items=items.filter(i=>!seen.has(i.id) && seen.add(i.id));
   let list=decorate(items);
   if(searchQuery) list=list.filter(i=>i.text.toLowerCase().includes(searchQuery));
   CS.renderGroups(list);
@@ -2708,7 +2712,13 @@ function subscribeListRealtime(){
     .on('postgres_changes',{event:'*',schema:'public',table:'list_items',filter:'list_id=eq.'+listId},payload=>{
       if(payload.eventType==='INSERT'){
         const idx=items.findIndex(i=>i.id===payload.new.id);
-        if(idx>-1) items[idx]=payload.new; else items.push(payload.new); // our own optimistic adds echo back here too — upsert, don't duplicate
+        if(idx>-1){ items[idx]=payload.new; }
+        else{
+          // our own add may still be showing under its temp id (the insert response hasn't come back
+          // yet): take that slot over instead of adding a second copy
+          const tmp=items.findIndex(i=>isTemp(i.id) && i.created_by===payload.new.created_by && i.text===payload.new.text && i.position===payload.new.position);
+          if(tmp>-1) items[tmp]=payload.new; else items.push(payload.new);
+        }
       }
       else if(payload.eventType==='UPDATE') items=items.map(i=>i.id===payload.new.id?payload.new:i);
       else if(payload.eventType==='DELETE') items=items.filter(i=>i.id!==payload.old.id);
