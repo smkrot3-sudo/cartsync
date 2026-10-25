@@ -292,6 +292,30 @@ body.in-list .top{padding:10px 12px}
 .lh-members{display:flex;align-items:center;gap:8px;border:0;border-top:1px solid var(--line);background:transparent;padding:10px 0 2px;margin-top:4px;color:var(--muted);font-size:.88rem;text-align:start;width:100%}
 .lh-members .chev{margin-inline-start:auto}
 .lh-members[hidden]{display:none}
+.pay-panel{background:var(--surface);border-radius:18px;box-shadow:var(--shadow);padding:14px 16px;margin:10px 0;display:flex;flex-direction:column;gap:10px}
+.pay-panel .pp-total{font-weight:700;font-size:1.05rem}
+.pay-panel .pp-share{font-size:1.25rem;font-weight:700;color:var(--accent)}
+.pay-panel .pp-btns{display:flex;gap:8px;flex-wrap:wrap}
+.pay-panel .pp-btns .btn{flex:1;min-width:120px;margin:0}
+.btn.bit{background:#00A9B5;color:#fff;border:0}
+.pay-rows{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.pay-rows li{display:flex;align-items:center;gap:8px;padding:7px 4px;border-bottom:1px solid var(--line);font-size:.92rem}
+.pay-rows li:last-child{border-bottom:0}
+.pay-rows .nm{flex:1;min-width:0}
+.pay-rows .amt{font-variant-numeric:tabular-nums;color:var(--muted)}
+.pay-rows .st{font-weight:600;font-size:.85rem;color:var(--muted)}
+.pay-rows .st.ok{color:var(--accent)}
+.pay-rows button.rowbtn{all:unset;display:flex;align-items:center;gap:8px;flex:1;cursor:pointer}
+.split-row{display:flex;align-items:center;gap:8px;margin:6px 0}
+.split-row label{flex:1;display:flex;align-items:center;gap:8px;font-size:.95rem}
+.split-row label{justify-content:flex-start}
+.split-row input[type=checkbox]{width:20px;height:20px;flex:none;margin:0;padding:0;accent-color:var(--accent)}
+.split-row input[type=text]{width:96px;flex:none;margin:0;text-align:center}
+#lists-month{margin-inline-start:auto;color:var(--muted);font-size:.85rem;font-weight:600}
+.pay-help{font-size:.82rem;color:var(--muted);margin:2px 0 6px}
+#home-pay .pay-home{display:flex;flex-direction:column;gap:8px;background:var(--surface);border-radius:16px;box-shadow:var(--shadow);padding:12px 14px}
+#home-pay .pay-home .pp-btns{display:flex;gap:8px}
+#home-pay .pay-home .pp-btns .btn{flex:1;margin:0;padding-block:9px}
 .lh-closed{margin-top:6px;background:var(--soft);color:var(--fg);border-radius:12px;padding:8px 12px;font-size:.88rem}
 .lh-closed[hidden]{display:none}
 :root[data-theme="dark"] .lb-btn:not(.lb-cart),:root[data-theme="dark"] .lb-cart .e,:root[data-theme="dark"] .listbar .avatarbtn{background:rgba(255,255,255,.12);color:var(--bar-ink)}
@@ -573,6 +597,10 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
       <h1 id="home-greeting">…</h1>
       <p class="sub" id="home-hh-sub"><svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span id="home-hh-name">…</span></p>
     </div>
+    <div id="home-pay-section" hidden>
+      <div class="group-h home-h"><span class="e">💰</span><span id="home-pay-h">תשלומים פתוחים</span></div>
+      <ul class="list" id="home-pay"></ul>
+    </div>
     <div id="home-lists-section">
       <div class="group-h home-h"><svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg><span id="home-lists-heading">הרשימות הפעילות</span></div>
       <ul class="list" id="home-lists-preview"></ul>
@@ -595,7 +623,7 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
       </ul>
     </div>
     <div id="lists-closed-box" hidden>
-      <div class="group-h"><span class="e">🗂️</span><span id="lists-closed-title">היסטוריה</span></div>
+      <div class="group-h"><span class="e">🗂️</span><span id="lists-closed-title">היסטוריה</span><span class="gcount" id="lists-month"></span></div>
       <ul class="list" id="lists-closed"></ul>
     </div>
   </section>
@@ -611,6 +639,8 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
       <div class="lh-progress"><span id="list-hero-bar"></span></div>
       <button class="lh-members" id="list-hero-members" type="button"><span class="members" id="list-hero-avatars"></span><span id="list-hero-mlabel"></span><span class="chev" aria-hidden="true">‹</span></button>
     </div>
+
+    <div class="pay-panel" id="pay-panel" hidden></div>
 
     <div class="trip-bar" id="trip-bar">
       <span class="trip-dot" aria-hidden="true"></span><span id="trip-label">סבב קניות פעיל</span>
@@ -694,6 +724,14 @@ he: {
   tripCloseBodyUnchecked:'יש {n} פריטים שלא נאספו. מה לעשות איתם?',
   tripLeave:'להשאיר ברשימה הסגורה', tripMoveExisting:'להעביר לרשימה פתוחה אחרת', tripMoveNew:'להעביר לרשימה חדשה',
   allDoneTitle:'הכל נאסף!', allDoneBody:'סימנתם את כל {n} המוצרים ברשימה. כל הכבוד, הסבב הושלם.', allDoneAsk:'לסיים את הקניות ולשמור את הרשימה בהיסטוריה?', allDoneClose:'✅ סיום קניות וסגירת הרשימה', allDoneKeep:'עוד לא, אולי נוסיף משהו', allDoneOk:'מעולה',
+  payTitle:'💰 כמה יצא בסוף?', payTotalPh:'הסכום הכולל בקבלה (₪)', paySplitH:'חלוקה בין החברים', payEqual:'חלוקה שווה', payYou:'(אני)',
+  payLinkLabel:'קישור הביט האישי שלך', payLinkHelp:'באפליקציית ביט פותחים את קוד ה-QR האישי ובוחרים לשתף אותו כקישור. מדביקים כאן פעם אחת, והוא נשמר.', payLinkPh:'https://…',
+  paySend:'שליחת בקשת תשלום', paySkip:'אחר כך', payNeedTotal:'צריך להזין סכום', payNeedLink:'צריך להדביק קישור ביט שמתחיל ב-https://', paySent:'💰 בקשת התשלום נשלחה לכולם',
+  payPanelTotal:'💰 הקנייה יצאה {t}', payYourShare:'החלק שלך: {a}', payBit:'לתשלום בביט', payMarkPaid:'שילמתי ✓', payYouPaid:'✓ שילמת {a}', payUndo:'ביטול',
+  payHowMuch:'כמה שילמת?', payMarkedOk:'✓ סומן ששילמת', payWaiting:'ממתין', payPaidAmt:'✓ {a}', payPayer:'שילם בקופה', payLeft:'נשאר לגבות: {a}', payAllIn:'🎉 כולם שילמו',
+  payEdit:'עריכת סכום', payShare:'שיתוף בוואטסאפ', payStart:'💰 הזנת סכום הקנייה ובקשת תשלום', payOwnerMark:'לסמן ש{n} שילם/ה?', payOwnerUnmark:'לבטל את הסימון של {n}?',
+  payHomeH:'תשלומים פתוחים', payHomeRow:'{n} ביקש/ה {a} על "{l}"', payNotify:'💰 {n} ביקש/ה תשלום על "{l}"', payNotifyPaid:'💰 {n} סימן/ה ששילם/ה {a}',
+  payShareText:'🛒 {l}\nהקנייה יצאה {t}.\n{rows}\nלתשלום בביט: {link}', payMonth:'החודש: {a}', payNoLink:'אין עדיין קישור ביט. ראש משק הבית צריך להוסיף אותו.',
   tripClosed:'✅ הרשימה נסגרה', boughtHeader:'נאסף', notBoughtHeader:'חסר',
   homeSub:'כל הרשימות המשותפות של משק הבית, במקום אחד.',
   homeLists:'הרשימות שלי', homeInvite:'הזמנת בן/בת משפחה', homeSwitch:'להחליף משק בית',
@@ -777,6 +815,14 @@ en: {
   tripCloseBodyUnchecked:'{n} items were not collected. What should happen to them?',
   tripLeave:'Leave them in the closed list', tripMoveExisting:'Move to another open list', tripMoveNew:'Move to a new list',
   allDoneTitle:'Everything’s collected!', allDoneBody:'All {n} items on the list are checked off. Nice work, the trip is done.', allDoneAsk:'Finish shopping and save the list to history?', allDoneClose:'✅ Finish shopping and close the list', allDoneKeep:'Not yet, we may add something', allDoneOk:'Great',
+  payTitle:'💰 What did it come to?', payTotalPh:'Receipt total (₪)', paySplitH:'Split between members', payEqual:'Split equally', payYou:'(me)',
+  payLinkLabel:'Your personal Bit link', payLinkHelp:'In the Bit app, open your personal QR code and share it as a link. Paste it here once; it is saved.', payLinkPh:'https://…',
+  paySend:'Send payment request', paySkip:'Later', payNeedTotal:'Enter the total', payNeedLink:'Paste a Bit link starting with https://', paySent:'💰 Payment request sent to everyone',
+  payPanelTotal:'💰 The shop came to {t}', payYourShare:'Your share: {a}', payBit:'Pay with Bit', payMarkPaid:'I paid ✓', payYouPaid:'✓ You paid {a}', payUndo:'Undo',
+  payHowMuch:'How much did you pay?', payMarkedOk:'✓ Marked as paid', payWaiting:'Waiting', payPaidAmt:'✓ {a}', payPayer:'Paid at the till', payLeft:'Still to collect: {a}', payAllIn:'🎉 Everyone paid',
+  payEdit:'Edit amount', payShare:'Share on WhatsApp', payStart:'💰 Enter the total and request payment', payOwnerMark:'Mark {n} as paid?', payOwnerUnmark:'Unmark {n}?',
+  payHomeH:'Open payments', payHomeRow:'{n} asked {a} for "{l}"', payNotify:'💰 {n} requested payment for "{l}"', payNotifyPaid:'💰 {n} marked {a} as paid',
+  payShareText:'🛒 {l}\nThe shop came to {t}.\n{rows}\nPay with Bit: {link}', payMonth:'This month: {a}', payNoLink:'No Bit link yet. The household owner needs to add it.',
   tripClosed:'✅ List closed', boughtHeader:'Collected', notBoughtHeader:'Still needed',
   homeSub:'All of your household\'s shared lists, in one place.',
   homeLists:'My lists', homeInvite:'Invite a family member', homeSwitch:'Switch household',
@@ -1434,6 +1480,7 @@ function attachLongPress(container){
     });
   });
 }
+const fmtMoney=a=>'₪'+Number(a||0).toLocaleString('he-IL',{maximumFractionDigits:2});
 function renderLists(lists, canManage){
   const open=(lists||[]).filter(l=>l.status==='open');
   const closed=(lists||[]).filter(l=>l.status==='closed');
@@ -1443,9 +1490,12 @@ function renderLists(lists, canManage){
   $('lists-empty').hidden = !!open.length;
   if(canManage) attachLongPress($('lists-open'));
   $('lists-closed-box').hidden = !closed.length;
+  // what this month's trips came to, from the totals owners entered
+  const now=new Date(), month=closed.filter(l=>l.total&&l.closed_at&&new Date(l.closed_at).getMonth()===now.getMonth()&&new Date(l.closed_at).getFullYear()===now.getFullYear());
+  $('lists-month').textContent = month.length ? CS.t('payMonth').replace('{a}',fmtMoney(month.reduce((s,l)=>s+(+l.total||0),0))) : '';
   $('lists-closed').innerHTML = closed.map(l=>`<li class="list-row-wrap">
     <button class="list-row closed" data-list="${l.id}">
-      <span class="e" style="font-size:1.3rem">✅</span><span class="nm">${esc(l.name)}</span><span class="meta">${esc(CS.t('closedOn').replace('{d}',fmtDate(l.closed_at)))}</span>
+      <span class="e" style="font-size:1.3rem">✅</span><span class="nm">${esc(l.name)}</span><span class="meta">${l.total?esc(fmtMoney(l.total))+' · ':''}${esc(CS.t('closedOn').replace('{d}',fmtDate(l.closed_at)))}</span>
     </button>
     ${canManage?`<button class="list-del" data-del-list="${l.id}" aria-label="${esc(CS.t('deleteList'))}">🗑️</button>`:''}
   </li>`).join('');
@@ -1981,7 +2031,7 @@ async function listMyHouseholds(){
   if(error){ console.warn(error); return []; }
   return (data||[]).map(r=>({id:r.household_id,name:r.households&&r.households.name,role:r.role}));
 }
-let hhName='';
+let hhName='', hhBitLink='';
 window.CS.currentHouseholdName=()=>household?hhName:null;
 function paintBrandName(){ $('brand-name').textContent = $('listbar-title').textContent = household?hhName:CS.t('appName'); }
 function memberCountLabel(n){ return n===1 ? CS.t('membersCountOne') : CS.t('membersCount').replace('{n}',n); }
@@ -2046,7 +2096,7 @@ async function loadHousehold(hh, navigate){
     if(!hrow){ if(navigate) CS.setScreen('onboard'); return; }
     members=mrows||[]; membersById={}; members.forEach(m=>membersById[m.user_id]=m);
     role=(membersById[user.id]||{}).role||null;
-    hhName=hrow.name;
+    hhName=hrow.name; hhBitLink=hrow.bit_link||'';
     paintBrandName();
     await ensureDisplayName(hh);
     paintMembersRow();
@@ -2314,6 +2364,7 @@ async function fetchHomeData(){
     (data||[]).forEach(r=>{ counts[r.list_id]=(counts[r.list_id]||0)+1; });
   }
   CS.renderHomeLists(preview, counts, openLists.length>preview.length);
+  fetchHomePay().catch(()=>{});
 }
 
 function openNewListSheet(){
@@ -2374,6 +2425,7 @@ async function openList(id, silent){
   $('view-main').classList.toggle('readonly',listStatus!=='open');
   $('list-hero-closed').hidden=listStatus==='open';
   if(listStatus!=='open') $('list-hero-closed').textContent=CS.t('listClosedNote').replace('{d}',fmtDate(lrow.closed_at));
+  curList=lrow; renderPayPanel();
   searchQuery=''; $('search-input').value=''; $('search-input').hidden=true; $('search-toggle').hidden=false;
   items=[]; paintItems(); // clear the previous list's items so they don't flash under this list's name while loading
   CS.setScreen('main');
@@ -2391,6 +2443,7 @@ async function doCloseTrip(payload){
   if(error){ toast(CS.authErr(error)); return; }
   toast(CS.t('tripClosed'));
   await openListsPage();
+  if(role==='owner') openTripTotalSheet(payload.p_list_id); // straight to "what did it come to?"
 }
 async function openCloseTripSheet(){
   const t=CS.t;
@@ -2475,6 +2528,171 @@ async function shareTripSummary(){
     return;
   }
   window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');
+}
+
+/* ---------- splitting the bill (owner's request 2026-10-25) ----------
+   After a trip the owner enters the receipt total and a share per member. Everyone gets a card with
+   their share and a button to the owner's personal Bit link (a Bit "personal QR" link: the payer picks
+   the amount there). Bit has no API, so "I paid" is self-reported; the owner sees who marked it. */
+let curList=null, curPayments=[];
+const money=a=>'₪'+Number(a||0).toLocaleString('he-IL',{minimumFractionDigits:0,maximumFractionDigits:2});
+const nameOf=uid=>(membersById[uid]&&membersById[uid].display_name)||'?';
+const parseAmt=v=>{ const n=parseFloat(String(v||'').replace(/[^\d.,]/g,'').replace(',','.')); return isFinite(n)?Math.round(n*100)/100:NaN; };
+function openLink(url){
+  if(window.CartApp && window.CartApp.openExternal){ try{ window.CartApp.openExternal(url); return; }catch(e){} }
+  window.open(url,'_blank');
+}
+async function shareText(text){
+  if(window.CartApp && window.CartApp.shareText){ try{ window.CartApp.shareText(text); return; }catch(e){} }
+  if(navigator.share){ try{ await navigator.share({title:CS.t('appName'),text}); }catch(e){} return; }
+  window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');
+}
+function payShareTextFor(l){
+  const rows=Object.entries(l.split||{}).filter(([u])=>u!==l.total_by).map(([u,a])=>`• ${nameOf(u)}: ${money(a)}`).join('\n');
+  return CS.t('payShareText').replace('{l}',l.name).replace('{t}',money(l.total)).replace('{rows}',rows).replace('{link}',l.pay_link||'');
+}
+function openTripTotalSheet(lid){
+  const t=CS.t;
+  const l=(lists.find(x=>x.id===lid)) || (curList&&curList.id===lid?curList:null) || {id:lid};
+  const prevSplit=l.split||{};
+  const ms=members.slice().sort((a,b)=>(a.user_id===user.id?-1:b.user_id===user.id?1:0));
+  openSheet(sheetHead(t('payTitle'))+`<div class="card">
+    <input id="tt-total" inputmode="decimal" placeholder="${esc(t('payTotalPh'))}" value="${l.total?esc(String(l.total)):''}">
+    <p class="grp-h" style="margin-top:6px">${esc(t('paySplitH'))} <button class="linkbtn" id="tt-equal" type="button">${esc(t('payEqual'))}</button></p>
+    ${ms.map(m=>`<div class="split-row"><label><input type="checkbox" data-inc="${m.user_id}" ${(!l.split||m.user_id in prevSplit)?'checked':''}> ${esc(m.display_name||'?')} ${m.user_id===user.id?esc(t('payYou')):''}</label>
+      <input type="text" inputmode="decimal" data-amt="${m.user_id}" value="${m.user_id in prevSplit?esc(String(prevSplit[m.user_id])):''}"></div>`).join('')}
+    <p class="grp-h" style="margin-top:8px">${esc(t('payLinkLabel'))}</p>
+    <input id="tt-link" dir="ltr" placeholder="${esc(t('payLinkPh'))}" value="${esc(hhBitLink||'')}">
+    <p class="pay-help">${esc(t('payLinkHelp'))}</p>
+    <div id="tt-msg" class="msg err" hidden></div>
+    <button class="btn wide" id="tt-send">${esc(t('paySend'))}</button>
+    <button class="btn ghost wide" data-act="sheet-close">${esc(t('paySkip'))}</button>
+  </div>`);
+  const touched=new Set();
+  const amtEl=u=>document.querySelector(`[data-amt="${u}"]`);
+  const incs=()=>[...document.querySelectorAll('[data-inc]')].filter(c=>c.checked).map(c=>c.dataset.inc);
+  function equalSplit(force){
+    const total=parseAmt($('tt-total').value), inc=incs();
+    if(force) touched.clear();
+    document.querySelectorAll('[data-amt]').forEach(el=>{ if(!inc.includes(el.dataset.amt)){ el.value=''; } });
+    if(!isFinite(total)||!inc.length) return;
+    const fixed=inc.filter(u=>touched.has(u)).reduce((s,u)=>s+(parseAmt(amtEl(u).value)||0),0);
+    const free=inc.filter(u=>!touched.has(u));
+    if(!free.length) return;
+    const each=Math.round((total-fixed)/free.length*100)/100;
+    free.forEach(u=>amtEl(u).value=each>0?String(each):'0');
+  }
+  $('tt-total').addEventListener('input',()=>equalSplit(false));
+  $('tt-equal').onclick=()=>equalSplit(true);
+  document.querySelectorAll('[data-inc]').forEach(c=>c.onchange=()=>equalSplit(false));
+  document.querySelectorAll('[data-amt]').forEach(el=>el.addEventListener('input',()=>{ touched.add(el.dataset.amt); const c=document.querySelector(`[data-inc="${el.dataset.amt}"]`); if(c) c.checked=true; }));
+  if(!l.split) equalSplit(true);
+  CS.focusField('tt-total');
+  $('tt-send').onclick=async()=>{
+    const msg=$('tt-msg'); msg.hidden=true;
+    const total=parseAmt($('tt-total').value), link=$('tt-link').value.trim();
+    if(!isFinite(total)||total<=0){ msg.textContent=t('payNeedTotal'); msg.hidden=false; return; }
+    if(!/^https:\/\//i.test(link)){ msg.textContent=t('payNeedLink'); msg.hidden=false; return; }
+    const split={}; incs().forEach(u=>{ const a=parseAmt(amtEl(u).value); if(isFinite(a)) split[u]=a; });
+    const btn=$('tt-send'); btn.disabled=true;
+    const {error}=await sb.rpc('set_trip_total',{p_list_id:lid,p_total:total,p_split:split,p_pay_link:link});
+    btn.disabled=false;
+    if(error){ msg.textContent=CS.authErr(error); msg.hidden=false; return; }
+    hhBitLink=link;
+    const upd={total,split,pay_link:link,total_by:user.id,total_at:new Date().toISOString()};
+    const li=lists.find(x=>x.id===lid); if(li) Object.assign(li,upd);
+    if(curList&&curList.id===lid){ Object.assign(curList,upd); }
+    closeSheet(); toast(t('paySent'));
+    CS.renderLists(lists, role==='owner'||role==='editor');
+    await renderPayPanel();
+    shareText(payShareTextFor(Object.assign({name:l.name||($('top-hhbar-title').textContent||'')},li||l,upd)));
+  };
+}
+async function markPaid(lid, amount, uid){
+  const {error}=await sb.rpc('mark_trip_paid',{p_list_id:lid,p_amount:amount,p_user:uid||null});
+  if(error){ toast(CS.authErr(error)); return false; }
+  return true;
+}
+function askAmount(title, def){
+  return new Promise(res=>{
+    openSheet(sheetHead(title)+`<div class="card">
+      <input id="pa-amt" inputmode="decimal" value="${esc(def!=null?String(def):'')}">
+      <button class="btn wide" id="pa-ok">${esc(CS.t('payMarkPaid'))}</button>
+      <button class="btn ghost wide" data-act="sheet-close">${esc(CS.t('cancel'))}</button></div>`);
+    CS.focusField('pa-amt');
+    $('pa-ok').onclick=()=>{ const a=parseAmt($('pa-amt').value); if(!isFinite(a)) return; closeSheet(); res(a); };
+    const obs=new MutationObserver(()=>{ if(!document.getElementById('pa-amt')){ obs.disconnect(); res(null); } });
+    obs.observe(document.body,{childList:true,subtree:true});
+  });
+}
+async function renderPayPanel(){
+  const box=$('pay-panel'); const l=curList;
+  if(!l || l.status==='open'){ box.hidden=true; box.innerHTML=''; return; }
+  const t=CS.t, isOwner=role==='owner';
+  if(!l.total){
+    box.hidden=!isOwner;
+    box.innerHTML=isOwner?`<button class="btn wide" id="pp-start" style="margin:0">${esc(t('payStart'))}</button>`:'';
+    if(isOwner) $('pp-start').onclick=()=>openTripTotalSheet(l.id);
+    return;
+  }
+  const {data}=await sb.from('trip_payments').select('*').eq('list_id',l.id);
+  if(!curList||curList.id!==l.id) return;
+  curPayments=data||[];
+  const paidBy={}; curPayments.forEach(p=>paidBy[p.user_id]=p);
+  const split=l.split||{}, me=user.id, mine=split[me], iAmPayer=l.total_by===me;
+  const others=Object.keys(split).filter(u=>u!==l.total_by);
+  const left=others.reduce((s,u)=>s+(paidBy[u]?0:(+split[u]||0)),0);
+  let html=`<div class="pp-total">${esc(t('payPanelTotal').replace('{t}',money(l.total)))}</div>`;
+  if(!iAmPayer && mine!=null){
+    html+= paidBy[me]
+      ? `<div class="pp-btns"><span class="pp-share" style="flex:1">${esc(t('payYouPaid').replace('{a}',money(paidBy[me].amount)))}</span><button class="btn ghost small" id="pp-undo" style="flex:none;min-width:0">${esc(t('payUndo'))}</button></div>`
+      : `<div class="pp-share">${esc(t('payYourShare').replace('{a}',money(mine)))}</div>
+         <div class="pp-btns">${l.pay_link?`<button class="btn bit" id="pp-bit">${esc(t('payBit'))}</button>`:''}<button class="btn" id="pp-paid">${esc(t('payMarkPaid'))}</button></div>
+         ${l.pay_link?'':`<p class="pay-help">${esc(t('payNoLink'))}</p>`}`;
+  }
+  html+=`<ul class="pay-rows">${Object.keys(split).map(u=>{
+    const p=paidBy[u], payer=u===l.total_by;
+    const st=payer?`<span class="st ok">${esc(t('payPayer'))}</span>`:p?`<span class="st ok">${esc(t('payPaidAmt').replace('{a}',money(p.amount)))}</span>`:`<span class="st">${esc(t('payWaiting'))}</span>`;
+    const inner=`<span class="nm">${esc(nameOf(u))}</span><span class="amt">${money(split[u])}</span>${st}`;
+    return `<li>${isOwner&&!payer?`<button class="rowbtn" data-pay-user="${u}">${inner}</button>`:inner}</li>`;
+  }).join('')}</ul>`;
+  if(others.length) html+=`<div class="pay-help">${esc(left>0?t('payLeft').replace('{a}',money(left)):t('payAllIn'))}</div>`;
+  if(isOwner) html+=`<div class="pp-btns"><button class="btn ghost" id="pp-edit">${esc(t('payEdit'))}</button><button class="btn ghost" id="pp-share">${esc(t('payShare'))}</button></div>`;
+  box.innerHTML=html; box.hidden=false;
+  if($('pp-bit')) $('pp-bit').onclick=()=>openLink(l.pay_link);
+  if($('pp-paid')) $('pp-paid').onclick=async()=>{ const a=await askAmount(t('payHowMuch'),mine); if(a==null) return; if(await markPaid(l.id,a)){ toast(t('payMarkedOk')); renderPayPanel(); fetchHomePay(); } };
+  if($('pp-undo')) $('pp-undo').onclick=async()=>{ if(await markPaid(l.id,null)){ renderPayPanel(); fetchHomePay(); } };
+  if($('pp-edit')) $('pp-edit').onclick=()=>openTripTotalSheet(l.id);
+  if($('pp-share')) $('pp-share').onclick=()=>shareText(payShareTextFor(l));
+  box.querySelectorAll('[data-pay-user]').forEach(b=>b.onclick=async()=>{
+    const u=b.dataset.payUser, n=nameOf(u);
+    if(paidBy[u]){ if(await CS.confirmSheet({title:t('payOwnerUnmark').replace('{n}',n),confirmLabel:t('payUndo')}) && await markPaid(l.id,null,u)) renderPayPanel(); return; }
+    const a=await askAmount(t('payOwnerMark').replace('{n}',n),split[u]); if(a==null) return;
+    if(await markPaid(l.id,a,u)) renderPayPanel();
+  });
+}
+// Home: anything I still owe, newest first
+async function fetchHomePay(){
+  const sec=$('home-pay-section'); if(!sec||!household||!user) return;
+  const since=new Date(Date.now()-60*864e5).toISOString();
+  const [{data:ls},{data:ps}]=await Promise.all([
+    sb.from('shopping_lists').select('id,name,total,split,pay_link,total_by,total_at').eq('household_id',household).not('total','is',null).gt('total_at',since).order('total_at',{ascending:false}),
+    sb.from('trip_payments').select('list_id').eq('household_id',household).eq('user_id',user.id),
+  ]);
+  const paid=new Set((ps||[]).map(p=>p.list_id));
+  const owe=(ls||[]).filter(l=>l.total_by!==user.id && l.split && l.split[user.id]>0 && !paid.has(l.id));
+  $('home-pay-h').textContent=CS.t('payHomeH');
+  sec.hidden=!owe.length;
+  $('home-pay').innerHTML=owe.map(l=>`<li class="pay-home">
+    <div>${esc(CS.t('payHomeRow').replace('{n}',nameOf(l.total_by)).replace('{a}',money(l.split[user.id])).replace('{l}',l.name))}</div>
+    <div class="pp-btns">${l.pay_link?`<button class="btn bit" data-home-bit="${l.id}">${esc(CS.t('payBit'))}</button>`:''}<button class="btn" data-home-paid="${l.id}">${esc(CS.t('payMarkPaid'))}</button></div>
+  </li>`).join('');
+  $('home-pay').querySelectorAll('[data-home-bit]').forEach(b=>b.onclick=()=>{ const l=owe.find(x=>x.id===b.dataset.homeBit); openLink(l.pay_link); });
+  $('home-pay').querySelectorAll('[data-home-paid]').forEach(b=>b.onclick=async()=>{
+    const l=owe.find(x=>x.id===b.dataset.homePaid);
+    const a=await askAmount(CS.t('payHowMuch'),l.split[user.id]); if(a==null) return;
+    if(await markPaid(l.id,a)){ toast(CS.t('payMarkedOk')); fetchHomePay(); }
+  });
 }
 $('top-hhbar-share').addEventListener('click',shareTripSummary);
 $('listbar-share').addEventListener('click',shareTripSummary);
@@ -2859,7 +3077,18 @@ function subscribeHouseholdRealtime(){
         const name=membersById[row.closed_by]?membersById[row.closed_by].display_name:'';
         toast(CS.t('notifyListClosed').replace('{n}',name||'?').replace('{l}',row.name));
       }
+      if(row.total_at && row.total_at!==payload.old.total_at){
+        if(row.total_by!==user.id && row.split && row.split[user.id]>0) toast(CS.t('payNotify').replace('{n}',nameOf(row.total_by)).replace('{l}',row.name));
+        if(curList && curList.id===row.id){ Object.assign(curList,row); renderPayPanel(); }
+        fetchHomePay().catch(()=>{});
+      }
       if(!$('view-lists').hidden) fetchLists();
+    })
+    .on('postgres_changes',{event:'*',schema:'public',table:'trip_payments',filter:'household_id=eq.'+household},payload=>{
+      const row=payload.new&&payload.new.list_id?payload.new:payload.old;
+      if(payload.eventType==='INSERT' && row.user_id!==user.id && row.marked_by!==user.id && role==='owner') toast(CS.t('payNotifyPaid').replace('{n}',nameOf(row.user_id)).replace('{a}',money(row.amount)));
+      if(curList && row && curList.id===row.list_id) renderPayPanel();
+      fetchHomePay().catch(()=>{});
     })
     .subscribe();
 }
