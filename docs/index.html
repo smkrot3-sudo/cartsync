@@ -1796,6 +1796,10 @@ async function flushQueue(opts){
         if(isTemp(realId)) throw new Error('unresolved temp id');
         const {error}=await sb.from('list_items').update(op.patch).eq('id',realId);
         if(error) throw error;
+      }else if(op.op==='move'){
+        if(isTemp(realId)) throw new Error('unresolved temp id');
+        const {error}=await sb.rpc('move_list_item',moveArgs(realId,op.patch));
+        if(error) throw error;
       }else if(op.op==='del'){
         if(!isTemp(realId)){ const {error}=await sb.from('list_items').delete().eq('id',realId); if(error) throw error; }
       }
@@ -2682,7 +2686,15 @@ function catPatch(it,cat){
   else if(generic) patch.emoji = CS.CATS[cat].emoji;
   return patch;
 }
-const canArrange=()=>listStatus==='open' && (role==='owner'||role==='editor');
+// every member may move items, whatever their role (owner's call 2026-10-25) — saved through the
+// move_list_item RPC, which only touches position/category/emoji
+const canArrange=()=>listStatus==='open' && !!role;
+const moveArgs=(id,patch)=>({p_item_id:id, p_position:patch.position??null, p_category:patch.category??null, p_emoji:patch.emoji??null});
+async function saveMove(id,patch,prev){
+  if(!online || isTemp(id)){ queueOp('move',id,patch); return; }
+  const {error}=await sb.rpc('move_list_item',moveArgs(id,patch));
+  if(error){ const it=items.find(i=>i.id===id); if(it&&prev) Object.assign(it,prev); paintItems(); toast(CS.authErr(error)); }
+}
 window.CS.canArrange=canArrange;
 async function saveItemPatch(id,patch,prev){
   if(!online || isTemp(id)){ queueOp('update',id,patch); return; }
@@ -2704,7 +2716,7 @@ function moveItem(id,{cat,prevId,nextId,order}){
     order.forEach((oid,i)=>{
       const o=items.find(x=>x.id===oid); if(!o || oid===id) return;
       const np=(i+1)*1000; if(Number(o.position)===np) return;
-      o.position=np; saveItemPatch(oid,{position:np});
+      o.position=np; saveMove(oid,{position:np});
     });
     p=(order.indexOf(id)+1)*1000;
   }
@@ -2712,7 +2724,7 @@ function moveItem(id,{cat,prevId,nextId,order}){
   if(!Object.keys(patch).length){ paintItems(); return; }
   Object.assign(it,patch); paintItems();
   if(patch.category) toast(CS.t('movedToCat').replace('{c}',CS.lang()==='he'?CS.CATS[patch.category].he:CS.CATS[patch.category].en));
-  saveItemPatch(id,patch,prev);
+  saveMove(id,patch,prev);
 }
 
 async function toggleItem(id){
@@ -2943,6 +2955,7 @@ if(!$('version-label')) return;
 const SITE = window.CS_SITE || './';
 const WEB_BUILD = window.CS_BUILD || 0;
 const inApp = !!window.CartApp;
+try{ const u=new URL(location.href); if(u.searchParams.has('v')){ u.searchParams.delete('v'); history.replaceState(history.state,'',u.toString()); } }catch(e){} // tidy the cache-busting ?v= away
 // browsers get a permanent "download the Android app" pill (not iPhone/iPad, where an APK can't install)
 if(!inApp && !/iPhone|iPad|iPod/i.test(navigator.userAgent) && !(navigator.platform==='MacIntel' && navigator.maxTouchPoints>1)){
   const g=$('get-app'); if(g){ g.href=SITE+'apk/cartsync-debug.apk'; g.hidden=false; document.body.classList.add('has-get-app'); }
@@ -2988,26 +3001,45 @@ function paintCurrentLabel(){
   }
 }
 
+/* GitHub Pages lets phones keep the page for 10 minutes, and the app's WebView happily keeps it even
+   longer — a plain reload can just hand back the same old copy. A ?v=<build> address is one no cache
+   has seen, so it always fetches the new page. Silent when nothing is in progress; otherwise asks. */
+function freshReload(build){
+  let tried=''; try{ tried=sessionStorage.getItem('cs-fresh-tried')||''; }catch(e){}
+  if(tried===String(build)) return; // already tried this build once; the CDN may still be catching up — don't loop
+  const go=()=>{
+    try{ sessionStorage.setItem('cs-fresh-tried',String(build)); }catch(e){}
+    const u=new URL(location.href); u.searchParams.set('v',build);
+    location.replace(u.toString());
+  };
+  const busy = !!document.querySelector('.sheet') || (document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName));
+  if(!busy) go();
+  else { showBtn(true, CS.t('updateNow'), go); showUpdateSheet(go); }
+}
 async function check(){
   paintCurrentLabel(); // always show what we know locally, even before (or instead of) the version-check fetch
   try{
     const r=await fetch(SITE+'app-version.json?t='+Date.now(),{cache:'no-store'});
     if(!r.ok) return;
     const v=await r.json();
+    let apkUpdate=false;
     if(inApp && v.android){
       let current=0; try{ current=window.CartApp.versionCode(); }catch(e){}
       if(v.android.versionCode>current){
+        apkUpdate=true;
         showBtn(true, CS.t('updateNow'), ()=>startAndroidUpdate(v.android.url));
         showUpdateSheet(()=>startAndroidUpdate(v.android.url));
       }
-    }else if(!inApp && v.build && v.build>WEB_BUILD+5000){
-      showBtn(true, CS.t('updateNow'), ()=>location.reload());
-      showUpdateSheet(()=>location.reload());
     }
+    // a newer web build is out (in the app too — the app is just a window onto this page): load it
+    // ourselves, so nobody has to clear the app's cache to see a change
+    if(!apkUpdate && v.build && v.build>WEB_BUILD+5000) freshReload(v.build);
   }catch(e){ /* offline or missing file: stay quiet, not worth an error toast */ }
 }
 check();
 window.CS.checkUpdate=check;
+// the app often comes back from the background without reloading at all — look again then
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') check(); });
 })();
 </script>
 <script>
