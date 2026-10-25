@@ -4,7 +4,10 @@
 import { createClient } from "npm:@supabase/supabase-js@2.45.4";
 
 const CATS = ["dairy","eggs","deli","produce","bakery","ready","meat","fish","frozen","pantry","canned","grains","oils","spices","baking","breakfast","coffee","nuts","beverages","alcohol","snacks","holiday","household","paper","laundry","disposable","kitchen","electric","care","pharmacy","baby","pet","clothing","stationery","toys","garden","other"];
-const PREFERRED = ["gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash"];
+// gemini-2.5-* was retired ("no longer available to new users") and gemini-3.8-flash's free-tier
+// quota (20 req/day) is shared with tsaad-katan's own AI feature and gets exhausted fast — lead
+// with the lite variant, which carries its own separate daily quota, before the heavier/busier ones
+const PREFERRED = ["gemini-3.5-flash-lite", "gemini-3.5-flash", "gemini-3.8-flash"];
 let cached: { at: number; list: string[] } | null = null;
 async function models(key: string): Promise<string[]> {
   if (cached && Date.now() - cached.at < 6 * 3600 * 1000) return cached.list;
@@ -16,7 +19,7 @@ async function models(key: string): Promise<string[]> {
       .filter((n: string) => /^gemini-[\d.]+-flash(-lite)?$/.test(n));
     const ver = (n: string) => parseFloat(n.split("-")[1]) - (n.endsWith("lite") ? 0.01 : 0);
     all.sort((a: string, b: string) => ver(b) - ver(a));
-    const list = [...PREFERRED.filter((p) => all.includes(p)), ...all.filter((n: string) => !PREFERRED.includes(n))].slice(0, 3);
+    const list = [...PREFERRED.filter((p) => all.includes(p)), ...all.filter((n: string) => !PREFERRED.includes(n))].slice(0, 4);
     if (list.length) { cached = { at: Date.now(), list }; return list; }
   } catch { /* fall through */ }
   return PREFERRED;
@@ -28,7 +31,10 @@ const cors = {
 };
 const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { ...cors, "Content-Type": "application/json" } });
 
+const CAT_HE = "dairy = חלבי, eggs = ביצים, deli = גבינות ומעדנייה, produce = ירקות ופירות, bakery = מאפים, ready = סלטים ומוכן, meat = בשר ועוף, fish = דגים, frozen = קפואים, pantry = מזווה, canned = שימורים, grains = אורז, פסטה וקטניות, oils = שמנים וחומץ, spices = תבלינים ורטבים, baking = אפייה, breakfast = דגני בוקר וממרחים, coffee = קפה ותה, nuts = פיצוחים ופירות יבשים, beverages = משקאות, alcohol = יין ואלכוהול, snacks = חטיפים וממתקים, holiday = שבת וחג, household = ניקיון ובית, paper = נייר וטישו, laundry = כביסה, disposable = חד־פעמי ואירוח, kitchen = כלי מטבח, electric = סוללות וחשמל, care = טיפוח, pharmacy = פארם ותרופות, baby = תינוקות, pet = חיות מחמד, clothing = ביגוד, stationery = כלי כתיבה, toys = צעצועים ומשחקים, garden = גינה ופרחים, other = אחר";
 const SYSTEM = `את/ה מסווג/ת פריטי קניות לסופרמרקט ישראלי לרשימת הקטגוריות הקבועה הזו בלבד: ${CATS.join(", ")}.
+משמעות כל קטגוריה: ${CAT_HE}.
+- בחר/י את הקטגוריה הכי ספציפית שמתאימה (למשל טונה בקופסה היא canned ולא pantry, ביצים הן eggs ולא dairy, אורז הוא grains).
 כללים:
 - התעלם ממילות כמות/אריזה/מידה (כמו "2 יחידות", "חבילה", "ליטר", "ק\"ג", "בקבוק", "מארז") והתמקד במוצר עצמו.
 - אם מופיע שם מותג (למשל תנובה, עלית, טרה, שטראוס), השתמש בו כדי להבין איזה מוצר זה, אבל סווג לפי סוג המוצר ולא לפי המותג.
