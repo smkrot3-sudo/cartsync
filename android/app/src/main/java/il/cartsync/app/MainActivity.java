@@ -6,12 +6,18 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.net.Uri;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebViewClient;
 import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import org.json.JSONObject;
 
@@ -21,6 +27,19 @@ public class MainActivity extends AppCompatActivity {
     private WebView webView;
     private long pausedAt = 0;
     private String pendingAuth = null; // window.onAndroidAuth(...) call waiting for the page to be ready
+    // <input type="file"> in the page (e.g. uploading a screenshot of a Bit QR code): a plain WebView
+    // ignores it unless the app opens Android's picker and hands the chosen file back
+    private ValueCallback<Uri[]> fileCallback;
+    private final ActivityResultLauncher<Intent> filePicker = registerForActivityResult(
+        new ActivityResultContracts.StartActivityForResult(),
+        new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult r) {
+                if (fileCallback == null) return;
+                fileCallback.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(r.getResultCode(), r.getData()));
+                fileCallback = null;
+            }
+        });
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -73,6 +92,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 if (pendingAuth != null) { view.evaluateJavascript(pendingAuth, null); pendingAuth = null; }
+            }
+        });
+
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> cb, FileChooserParams params) {
+                if (fileCallback != null) fileCallback.onReceiveValue(null);
+                fileCallback = cb;
+                try { filePicker.launch(params.createIntent()); }
+                catch (Exception e) { fileCallback = null; return false; }
+                return true;
             }
         });
 

@@ -725,7 +725,7 @@ he: {
   tripLeave:'להשאיר ברשימה הסגורה', tripMoveExisting:'להעביר לרשימה פתוחה אחרת', tripMoveNew:'להעביר לרשימה חדשה',
   allDoneTitle:'הכל נאסף!', allDoneBody:'סימנתם את כל {n} המוצרים ברשימה. כל הכבוד, הסבב הושלם.', allDoneAsk:'לסיים את הקניות ולשמור את הרשימה בהיסטוריה?', allDoneClose:'✅ סיום קניות וסגירת הרשימה', allDoneKeep:'עוד לא, אולי נוסיף משהו', allDoneOk:'מעולה',
   payTitle:'💰 כמה יצא בסוף?', payTotalPh:'הסכום הכולל בקבלה (₪)', paySplitH:'חלוקה בין החברים', payEqual:'חלוקה שווה', payYou:'(אני)',
-  payLinkLabel:'קישור הביט האישי שלך', payLinkHelp:'באפליקציית ביט פותחים את קוד ה-QR האישי ובוחרים לשתף אותו כקישור. מדביקים כאן פעם אחת, והוא נשמר.', payLinkPh:'https://…',
+  payLinkLabel:'קישור הביט האישי שלך', payLinkHelp:'באפליקציית ביט פותחים את קוד ה-QR האישי, מצלמים מסך, ומעלים כאן את הצילום. האפליקציה תקרא ממנו את הקישור. עושים את זה פעם אחת, והוא נשמר.', payQrBtn:'📷 העלאת צילום של קוד ה-QR', payQrOk:'✓ הקישור נקרא מהקוד', payQrFail:'לא הצלחתי לקרוא קוד QR מהתמונה. נסו צילום מסך חד יותר', payQrNotBit:'הקוד שנקרא הוא לא קישור תשלום:', payLinkPh:'https://…',
   paySend:'שליחת בקשת תשלום', paySkip:'אחר כך', payNeedTotal:'צריך להזין סכום', payNeedLink:'צריך להדביק קישור ביט שמתחיל ב-https://', paySent:'💰 בקשת התשלום נשלחה לכולם',
   payPanelTotal:'💰 הקנייה יצאה {t}', payYourShare:'החלק שלך: {a}', payBit:'לתשלום בביט', payMarkPaid:'שילמתי ✓', payYouPaid:'✓ שילמת {a}', payUndo:'ביטול',
   payHowMuch:'כמה שילמת?', payMarkedOk:'✓ סומן ששילמת', payWaiting:'ממתין', payPaidAmt:'✓ {a}', payPayer:'שילם בקופה', payLeft:'נשאר לגבות: {a}', payAllIn:'🎉 כולם שילמו',
@@ -816,7 +816,7 @@ en: {
   tripLeave:'Leave them in the closed list', tripMoveExisting:'Move to another open list', tripMoveNew:'Move to a new list',
   allDoneTitle:'Everything’s collected!', allDoneBody:'All {n} items on the list are checked off. Nice work, the trip is done.', allDoneAsk:'Finish shopping and save the list to history?', allDoneClose:'✅ Finish shopping and close the list', allDoneKeep:'Not yet, we may add something', allDoneOk:'Great',
   payTitle:'💰 What did it come to?', payTotalPh:'Receipt total (₪)', paySplitH:'Split between members', payEqual:'Split equally', payYou:'(me)',
-  payLinkLabel:'Your personal Bit link', payLinkHelp:'In the Bit app, open your personal QR code and share it as a link. Paste it here once; it is saved.', payLinkPh:'https://…',
+  payLinkLabel:'Your personal Bit link', payLinkHelp:'In the Bit app, open your personal QR code, take a screenshot, and upload it here; the app reads the link from it. Once is enough; it is saved.', payQrBtn:'📷 Upload a picture of the QR code', payQrOk:'✓ Link read from the code', payQrFail:'Could not read a QR code from that picture. Try a sharper screenshot', payQrNotBit:'That code is not a payment link:', payLinkPh:'https://…',
   paySend:'Send payment request', paySkip:'Later', payNeedTotal:'Enter the total', payNeedLink:'Paste a Bit link starting with https://', paySent:'💰 Payment request sent to everyone',
   payPanelTotal:'💰 The shop came to {t}', payYourShare:'Your share: {a}', payBit:'Pay with Bit', payMarkPaid:'I paid ✓', payYouPaid:'✓ You paid {a}', payUndo:'Undo',
   payHowMuch:'How much did you pay?', payMarkedOk:'✓ Marked as paid', payWaiting:'Waiting', payPaidAmt:'✓ {a}', payPayer:'Paid at the till', payLeft:'Still to collect: {a}', payAllIn:'🎉 Everyone paid',
@@ -2563,6 +2563,7 @@ function openTripTotalSheet(lid){
       <input type="text" inputmode="decimal" data-amt="${m.user_id}" value="${m.user_id in prevSplit?esc(String(prevSplit[m.user_id])):''}"></div>`).join('')}
     <p class="grp-h" style="margin-top:8px">${esc(t('payLinkLabel'))}</p>
     <input id="tt-link" dir="ltr" placeholder="${esc(t('payLinkPh'))}" value="${esc(hhBitLink||'')}">
+    <label class="btn ghost wide" style="margin-top:6px">${esc(t('payQrBtn'))}<input type="file" accept="image/*" id="tt-qr" hidden></label>
     <p class="pay-help">${esc(t('payLinkHelp'))}</p>
     <div id="tt-msg" class="msg err" hidden></div>
     <button class="btn wide" id="tt-send">${esc(t('paySend'))}</button>
@@ -2582,6 +2583,14 @@ function openTripTotalSheet(lid){
     const each=Math.round((total-fixed)/free.length*100)/100;
     free.forEach(u=>amtEl(u).value=each>0?String(each):'0');
   }
+  $('tt-qr').onchange=async e=>{
+    const f=e.target.files&&e.target.files[0]; if(!f) return;
+    const msg=$('tt-msg'); msg.hidden=true;
+    const txt=await readQrFromImage(f);
+    if(!txt){ msg.textContent=t('payQrFail'); msg.hidden=false; return; }
+    if(!/^https:\/\//i.test(txt)){ msg.textContent=t('payQrNotBit')+' '+txt.slice(0,60); msg.hidden=false; return; }
+    $('tt-link').value=txt; toast(t('payQrOk'));
+  };
   $('tt-total').addEventListener('input',()=>equalSplit(false));
   $('tt-equal').onclick=()=>equalSplit(true);
   document.querySelectorAll('[data-inc]').forEach(c=>c.onchange=()=>equalSplit(false));
@@ -2607,6 +2616,27 @@ function openTripTotalSheet(lid){
     await renderPayPanel();
     shareText(payShareTextFor(Object.assign({name:l.name||($('top-hhbar-title').textContent||'')},li||l,upd)));
   };
+}
+// a Bit "personal QR" screenshot → the payment URL inside it (jsQR, loaded only when needed)
+function loadJsQR(){
+  if(window.jsQR) return Promise.resolve();
+  return new Promise((res,rej)=>{ const sc=document.createElement('script'); sc.src='vendor/jsQR.js'; sc.onload=res; sc.onerror=rej; document.head.appendChild(sc); });
+}
+async function readQrFromImage(file){
+  try{
+    await loadJsQR();
+    const url=URL.createObjectURL(file);
+    const img=await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=url; });
+    URL.revokeObjectURL(url);
+    for(const max of [1400,900,2200]){ // phone screenshots are big; try a couple of scales
+      const k=Math.min(1,max/Math.max(img.width,img.height));
+      const c=document.createElement('canvas'); c.width=Math.round(img.width*k); c.height=Math.round(img.height*k);
+      const g=c.getContext('2d'); g.drawImage(img,0,0,c.width,c.height);
+      const r=window.jsQR(g.getImageData(0,0,c.width,c.height).data,c.width,c.height);
+      if(r&&r.data) return r.data.trim();
+    }
+  }catch(e){ console.warn('qr read failed',e); }
+  return null;
 }
 async function markPaid(lid, amount, uid){
   const {error}=await sb.rpc('mark_trip_paid',{p_list_id:lid,p_amount:amount,p_user:uid||null});
