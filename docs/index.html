@@ -101,53 +101,14 @@ button{cursor:pointer;touch-action:manipulation}
 button:disabled{opacity:.6;cursor:default}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:10px}
 
-/* a clear, single-purpose header: one row to identify/switch household, one row for its
-   members, one quiet row for "where am I" inside it — instead of two near-identical dark
-   capsules stacked, where the same button meant different things depending on the screen */
-.top{
-  margin:-12px -16px 0;padding:12px 12px 10px;
-  background:var(--bar);color:var(--bar-ink);
-  display:flex;flex-direction:column;gap:6px;
-}
-.brand{
-  display:flex;align-items:center;gap:10px;width:100%;
-}
-.hh-chip{
-  flex:1;min-width:0;display:flex;align-items:center;gap:7px;
-  border:0;background:transparent;color:var(--bar-ink);
-  border-radius:12px;padding:6px 4px;box-shadow:none;
-  font-family:var(--display);font-weight:700;font-size:1.12rem;cursor:pointer;
-}
-.hh-chip .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:start;font-weight:inherit}
-.hh-chip .chev{flex:none;font-size:.75rem;opacity:.7}
-.brand-end-badge{width:34px;height:34px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:1.05rem;
-  background:rgba(255,255,255,.45)}
-.brand .avatarbtn{width:34px;height:34px;font-size:.8rem;font-weight:bold;background:rgba(255,255,255,.55);color:var(--bar-ink);border:0;box-shadow:none;flex:none}
-.members-row{
-  display:flex;align-items:center;gap:8px;width:100%;
-  border:0;background:rgba(255,255,255,.35);box-shadow:none;
-  border-radius:999px;padding:6px 12px;color:var(--bar-ink);font-size:.85rem;cursor:pointer;text-align:start;
-}
-.members-row .chev{margin-inline-start:auto;flex:none;width:16px;height:16px;opacity:.6}
-#members-count-label{font-size:.8rem;opacity:.7;font-weight:500}
-.hh-chip .lc{width:20px;height:20px}
-.hh-chip .lc.chev{width:16px;height:16px;opacity:.6}
-.brand-end-badge .lc{width:18px;height:18px}
-.lb-cart .e .lc{width:19px;height:19px}
 .iconbtn{border:0;background:var(--surface);box-shadow:var(--shadow);width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:var(--muted);flex:none;font-size:1.15rem;transition:transform .1s ease}
 .iconbtn:active{transform:scale(.92)}
 
 .view{display:flex;flex-direction:column;gap:14px}
 .view[hidden]{display:none!important}
 .hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:18px 8px 4px}
-.home-greeting{display:flex;flex-direction:column;gap:6px;padding:22px 4px 4px}
-.home-greeting h1{font-size:2rem;font-weight:800;line-height:1.15;letter-spacing:-.01em}
-.home-greeting .sub{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:.95rem}
 /* Lucide-style line icons (24-grid, stroked, no fill) */
 .lc{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.home-greeting .sub .lc{width:16px;height:16px}
-.home-h{font-size:1.05rem;padding:14px 4px 10px}
-.home-h .lc{width:19px;height:19px;color:var(--accent)}
 ul.empty.home-empty{border:0!important;background:var(--surface);border-radius:20px;box-shadow:0 1px 2px rgba(20,40,27,.06),0 6px 20px rgba(20,40,27,.07);padding:36px 24px 30px;gap:14px;color:var(--fg)}
 .home-empty li{display:flex;flex-direction:column;align-items:center;gap:14px}
 ul.empty.home-empty #home-lists-empty-text{color:var(--fg);font-size:1.08rem;font-weight:600;max-width:32ch;line-height:1.4}
@@ -216,27 +177,11 @@ ul.empty.home-empty #home-lists-empty-text{color:var(--fg);font-size:1.08rem;fon
 .whats-new-list li{position:relative;padding-inline-start:20px;font-size:.92rem;color:var(--fg);line-height:1.5}
 .whats-new-list li::before{content:"✨";position:absolute;inset-inline-start:0;top:0;font-size:.8rem}
 
-.trip-bar{display:flex;align-items:center;gap:10px;background:var(--accent-soft);color:var(--fg);border:1px solid color-mix(in srgb,var(--accent) 22%,transparent);border-radius:16px;padding:10px 12px 10px 10px;font-size:.95rem;font-weight:600}
-.trip-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);flex:none;box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 22%,transparent)}
-.trip-bar #trip-close{background:var(--accent);color:var(--accent-ink,#fff);border:0;box-shadow:0 3px 10px rgba(31,107,63,.25);font-weight:700}
-.trip-bar #trip-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.trip-bar .btn.small{flex:none}
 .all-done{text-align:center}
 .all-done .big{font-size:3.4rem;line-height:1;margin:4px 0 10px;animation:pop .45s ease-out}
 .all-done p{margin:6px 0}
 @keyframes pop{0%{transform:scale(.3);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
 
-/* a quiet "where am I" row — subordinate to the household chip above it on purpose, so the two
-   never compete for attention the way two stacked capsules used to */
-.hhbar{
-  display:flex;align-items:center;gap:6px;width:100%;
-  padding:2px 6px;
-}
-.hhbar .iconbtn-lite{border:0;background:transparent;color:var(--bar-ink);width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:1.05rem;flex:none}
-.hhbar .iconbtn-lite:active{background:rgba(255,255,255,.35)}
-.list-name-lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:1rem;font-family:var(--display);font-weight:700;color:var(--bar-ink)}
-:root[data-theme="dark"] .members-row,:root[data-theme="dark"] .brand .avatarbtn,:root[data-theme="dark"] .brand-end-badge{background:rgba(255,255,255,.12)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .members-row,:root:not([data-theme="light"]) .brand .avatarbtn,:root:not([data-theme="light"]) .brand-end-badge{background:rgba(255,255,255,.12)}}
 
 .list-row{display:flex;align-items:center;gap:10px;background:var(--surface);border-radius:16px;padding:12px 14px;box-shadow:var(--shadow);width:100%;border:0;text-align:start;color:inherit;cursor:pointer}
 .list-row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:1rem}
@@ -251,7 +196,6 @@ ul.empty.home-empty #home-lists-empty-text{color:var(--fg);font-size:1.08rem;fon
 .avatar:first-child{margin-inline-start:0}
 .avatar.big{width:44px;height:44px;font-size:1.05rem;margin:0}
 .avatar-more{background:var(--muted);font-size:.72rem}
-.hhbar .avatar-more{background:rgba(255,255,255,.22)}
 .role-chip{font-size:.75rem;padding:2px 9px;border-radius:999px;background:var(--soft);color:var(--muted)}
 .role-chip.owner{background:var(--gold-soft);color:var(--gold)}
 .role-chip.editor{background:var(--ok-soft);color:var(--ok)}
@@ -268,30 +212,6 @@ ul.empty.home-empty #home-lists-empty-text{color:var(--fg);font-size:1.08rem;fon
 .group-h{display:flex;align-items:center;gap:7px;font-family:var(--display);font-size:.95rem;color:var(--fg);padding:2px 2px 8px;font-weight:700}
 
 /* each category is one card: a tinted header strip (its own hue) over compact checklist rows */
-/* inside a list the header is one calm bar (account + share | household | back to lists), and the
-   list's own name, progress and people sit together in one white card under it */
-.listbar{display:none;align-items:center;gap:8px;min-height:44px}
-body.in-list .top .brand,body.in-list .top .members-row,body.in-list .top .hhbar{display:none!important}
-body.in-list .listbar{display:flex}
-body.in-list .top{padding:10px 12px}
-.listbar-start{display:flex;align-items:center;gap:8px;flex:none;width:92px}
-.listbar-title{flex:1;min-width:0;text-align:center;font-family:var(--display);font-weight:800;font-size:1.08rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.lb-btn{width:38px;height:38px;border-radius:50%;border:0;flex:none;display:grid;place-items:center;background:rgba(255,255,255,.5);color:var(--bar-ink);padding:0}
-.lb-cart .e{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.5);font-size:1.1rem}
-.lb-btn.lb-cart{background:transparent;width:92px;height:38px;border-radius:0;display:flex;justify-content:flex-end}
-.lb-btn svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.listbar .avatarbtn{width:38px;height:38px;font-size:.85rem;font-weight:800;background:rgba(255,255,255,.65);color:var(--bar-ink);border:0;box-shadow:none}
-.list-hero{margin-top:14px;background:var(--surface);border-radius:20px;box-shadow:0 4px 18px rgba(20,40,27,.08);padding:16px 18px 12px;display:flex;flex-direction:column;gap:4px}
-.lh-top{display:flex;align-items:flex-start;gap:10px}
-.lh-top h1{flex:1;min-width:0;font-size:1.65rem;line-height:1.2;overflow-wrap:anywhere}
-.lh-view{background:var(--soft);color:var(--muted);width:36px;height:36px}
-.lh-view svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.list-hero p{color:var(--muted);font-size:.95rem}
-.lh-progress{height:6px;border-radius:999px;background:var(--soft);overflow:hidden;margin:6px 0 4px}
-.lh-progress span{display:block;height:100%;width:0;background:var(--accent);border-radius:inherit;transition:width .3s ease}
-.lh-members{display:flex;align-items:center;gap:8px;border:0;border-top:1px solid var(--line);background:transparent;padding:10px 0 2px;margin-top:4px;color:var(--muted);font-size:.88rem;text-align:start;width:100%}
-.lh-members .chev{margin-inline-start:auto}
-.lh-members[hidden]{display:none}
 .pay-panel{background:var(--surface);border-radius:18px;box-shadow:var(--shadow);padding:14px 16px;margin:10px 0;display:flex;flex-direction:column;gap:10px}
 .pay-panel .pp-total{font-weight:700;font-size:1.05rem}
 .pay-panel .pp-share{font-size:1.25rem;font-weight:700;color:var(--accent)}
@@ -318,8 +238,6 @@ body.in-list .top{padding:10px 12px}
 #home-pay .pay-home .pp-btns .btn{flex:1;margin:0;padding-block:9px}
 .lh-closed{margin-top:6px;background:var(--soft);color:var(--fg);border-radius:12px;padding:8px 12px;font-size:.88rem}
 .lh-closed[hidden]{display:none}
-:root[data-theme="dark"] .lb-btn:not(.lb-cart),:root[data-theme="dark"] .lb-cart .e,:root[data-theme="dark"] .listbar .avatarbtn{background:rgba(255,255,255,.12);color:var(--bar-ink)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .lb-btn:not(.lb-cart),:root:not([data-theme="light"]) .lb-cart .e,:root:not([data-theme="light"]) .listbar .avatarbtn{background:rgba(255,255,255,.12);color:var(--bar-ink)}}
 .group{--h:220;background:var(--surface);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
 .group+.group{margin-top:14px}
 .group .group-h{width:100%;border:0;cursor:default;background:hsl(var(--h) 52% 89%);padding:10px 14px;font-size:1.06rem;gap:10px;text-align:start}
@@ -385,12 +303,6 @@ body.item-dragging #fab-add,body.item-dragging .get-app{opacity:0;pointer-events
 .item .t{flex:1;min-width:0;overflow-wrap:anywhere;font-size:1rem;cursor:pointer;border:0;background:transparent;color:inherit;text-align:start;padding:0;font-family:inherit}
 .item .t:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
 .search-row{display:flex;align-items:center;gap:8px}
-.search-row>.search-toggle,.search-row>.search-input{flex:1;min-width:0}
-.hide-done-btn{flex:none;display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:11px 14px;font-size:.88rem;font-weight:600;white-space:nowrap}
-.hide-done-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.hide-done-btn .slash{display:none}
-.hide-done-btn[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);border-color:color-mix(in srgb,var(--accent) 35%,transparent)}
-.hide-done-btn[aria-pressed="true"] .slash{display:inline}
 /* "hide collected": bought rows (and categories with nothing left) drop out; counts stay true */
 #groups.hide-done .item.done,#groups.hide-done .group.all-done{display:none}
 /* ---------- notepad: the list itself is a spiral-bound ruled page, written by hand ---------- */
@@ -422,14 +334,9 @@ body.item-dragging #fab-add,body.item-dragging .get-app{opacity:0;pointer-events
 .pad .who-name{font-family:var(--hand);font-size:.8rem;color:var(--pencil)}
 .pad .who-name.checked-label{color:var(--pen-ok)}
 .pad .item .del,.pad .item .done-mark{color:var(--pencil)}
-.list-hero{--ink:#1E3A6E}
-.list-hero h1{font-family:"Playpen Sans Hebrew","Assistant",sans-serif;font-weight:600;font-size:1.7rem;color:var(--ink)}
-.list-hero p{font-family:"Playpen Sans Hebrew","Assistant",sans-serif;font-size:1rem}
-:root[data-theme="dark"] .pad{--paper:#22272B;--rule:#34414D;--margin:#8A4B4B;--ink:#DCE6F5;--pencil:#93A0AE;--pen-ok:#7CCB98;box-shadow:0 10px 24px rgba(0,0,0,.45)} :root[data-theme="dark"] .list-hero{--ink:#DCE6F5} :root[data-theme="dark"] .pad .group .group-h .gname{background:linear-gradient(transparent 62%,hsl(var(--h) 45% 42% / .4) 62% 92%,transparent 92%)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pad{--paper:#22272B;--rule:#34414D;--margin:#8A4B4B;--ink:#DCE6F5;--pencil:#93A0AE;--pen-ok:#7CCB98;box-shadow:0 10px 24px rgba(0,0,0,.45)} :root:not([data-theme="light"]) .list-hero{--ink:#DCE6F5} :root:not([data-theme="light"]) .pad .group .group-h .gname{background:linear-gradient(transparent 62%,hsl(var(--h) 45% 42% / .4) 62% 92%,transparent 92%)}}
+:root[data-theme="dark"] .pad{--paper:#22272B;--rule:#34414D;--margin:#8A4B4B;--ink:#DCE6F5;--pencil:#93A0AE;--pen-ok:#7CCB98;box-shadow:0 10px 24px rgba(0,0,0,.45)} :root[data-theme="dark"] .pad .group .group-h .gname{background:linear-gradient(transparent 62%,hsl(var(--h) 45% 42% / .4) 62% 92%,transparent 92%)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pad{--paper:#22272B;--rule:#34414D;--margin:#8A4B4B;--ink:#DCE6F5;--pencil:#93A0AE;--pen-ok:#7CCB98;box-shadow:0 10px 24px rgba(0,0,0,.45)} :root:not([data-theme="light"]) .pad .group .group-h .gname{background:linear-gradient(transparent 62%,hsl(var(--h) 45% 42% / .4) 62% 92%,transparent 92%)}}
 
-.search-toggle{display:flex;align-items:center;gap:10px;width:100%;border:1px solid var(--line);background:var(--surface);box-shadow:none;border-radius:999px;padding:12px 16px;color:var(--muted);font-size:.95rem;text-align:start}
-.search-ico{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;flex:none}
 .search-input{width:100%;border:2px solid var(--line);background:var(--surface);border-radius:999px;padding:11px 16px}
 .search-input:focus-visible{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 .item.done{background:var(--done-bg)}
@@ -454,34 +361,11 @@ body.item-dragging #fab-add,body.item-dragging .get-app{opacity:0;pointer-events
 .who-name{display:block;font-size:.72rem;color:var(--muted);font-weight:normal;text-decoration:none;line-height:1.3}
 .who-name.checked-label{color:var(--ok)}
 
-.pending-h{display:flex;align-items:center;gap:6px;font-family:var(--display);font-size:1.02rem;font-weight:400;margin:0 0 8px}
-.pending-actions{display:flex;gap:6px;flex:none}
-.pending-actions button{border:0;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:.95rem}
-.pending-actions .ok-btn{background:var(--ok-soft);color:var(--ok)}
-.pending-actions .no-btn{background:var(--danger-soft);color:var(--danger)}
 
-/* ---------- floating add button ---------- */
-.fab{
-  position:fixed;inset-inline-end:max(16px,calc((100vw - 560px) / 2 + 16px));bottom:calc(88px + env(safe-area-inset-bottom,0px));
-  width:54px;height:54px;border-radius:50%;border:0;
-  background:var(--btn-grad);
-  color:var(--accent-ink);
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 8px 18px rgba(31,107,63,.35);z-index:30;
-}
-.fab .e{font-size:1.5rem;line-height:1}
-/* in a browser (not the Android app itself): an always-there pill to get the APK */
-.get-app{position:fixed;z-index:29;inset-inline-start:max(16px,calc((100vw - 560px) / 2 + 16px));bottom:calc(16px + env(safe-area-inset-bottom,0px));
-  display:flex;align-items:center;gap:7px;padding:9px 15px;border-radius:999px;background:var(--surface);color:var(--accent);
-  border:1.5px solid color-mix(in srgb,var(--accent) 35%,transparent);box-shadow:0 6px 16px rgba(20,40,27,.18);font-weight:700;font-size:.88rem;text-decoration:none}
-.get-app[hidden]{display:none}
-.get-app .e{font-size:1.05rem}
-body.has-get-app{padding-bottom:72px}
-.fab:active{transform:scale(.97)}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
 
 /* a closed list is history: no adding, checking, editing or deleting */
-#view-main.readonly .fab{display:none}
+#view-main.readonly .fab,#view-main.readonly #list-finish{display:none}
 #view-main.readonly .item .check,#view-main.readonly .item .del,#view-main.readonly .item .t[data-action="edit"]{pointer-events:none;opacity:.55}
 #view-main.readonly .item .handle{display:none}
 
@@ -513,38 +397,150 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
 .offline-note{background:var(--danger-soft);color:var(--danger);border-radius:12px;padding:8px 12px;font-size:.85rem;text-align:center}
 
 
+/* ---------- 2026-10-26 structure: one header, three tabs, a full-screen list ---------- */
+.top{position:sticky;top:0;z-index:20;margin:-12px -16px 0;padding:calc(10px + env(safe-area-inset-top,0px)) 12px 10px;background:var(--bar);color:var(--bar-ink)}
+.tb-row{display:flex;align-items:center;gap:8px;min-height:44px}
+.tb-title{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.tb-title b{font-family:var(--display);font-weight:800;font-size:1.15rem;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tb-title small{font-size:.8rem;opacity:.8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tb-hh{flex:1;min-width:0;display:flex;align-items:center;gap:6px;border:0;background:transparent;color:inherit;padding:6px 2px;font-family:var(--display);font-weight:800;font-size:1.15rem;text-align:start}
+.tb-hh .nm{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tb-hh .lc{width:16px;height:16px;opacity:.7}
+.tb-btn{width:44px;height:44px;border-radius:50%;border:0;flex:none;display:grid;place-items:center;background:rgba(255,255,255,.5);color:var(--bar-ink);padding:0;font-weight:800;font-size:.9rem}
+.tb-btn .lc{width:20px;height:20px}
+.tb-btn.plain{background:transparent}
+:root[data-theme="dark"] .tb-btn:not(.plain){background:rgba(255,255,255,.12)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .tb-btn:not(.plain){background:rgba(255,255,255,.12)}}
+.tb-progress{height:4px;margin:8px -12px -10px;background:rgba(255,255,255,.35)}
+.tb-progress span{display:block;height:100%;width:0;background:var(--accent);transition:width .3s ease}
+body[data-screen="main"] .top{background:var(--surface);color:var(--fg);box-shadow:0 1px 0 var(--line)}
+body[data-screen="main"] .tb-btn{background:var(--soft);color:var(--fg)}
+body[data-screen="main"] .tb-progress{background:var(--soft)}
+
+.tabbar{position:fixed;inset-inline:0;bottom:0;z-index:30;display:flex;background:var(--surface);border-top:1px solid var(--line);padding:6px max(8px,calc((100vw - 560px) / 2)) calc(6px + env(safe-area-inset-bottom,0px))}
+.tabbar button{flex:1;border:0;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;font-size:.78rem;font-weight:600;min-height:52px}
+.tabbar button .lc{width:24px;height:24px;padding:3px 18px;box-sizing:content-box;border-radius:14px}
+.tabbar button[aria-current="page"]{color:var(--accent)}
+.tabbar button[aria-current="page"] .lc{background:var(--accent-soft)}
+body:not([data-screen="main"]) .wrap{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+.version-bar{display:none}
+body[data-screen="household"] .version-bar{display:flex}
+
+.sec{display:flex;flex-direction:column;gap:8px}
+.sec-h{font-size:.92rem;font-weight:700;color:var(--muted);margin:6px 2px 0}
+.home-greeting{font-size:1.7rem;font-weight:800;padding:14px 2px 0}
+.home-hero{background:var(--accent);color:var(--accent-ink);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:0 8px 20px rgba(31,107,63,.25)}
+.home-hero .hh-top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.home-hero h2{flex:1;min-width:0;font-size:1.35rem;overflow-wrap:anywhere}
+.home-hero .here{font-size:.85rem;opacity:.9}
+.home-hero .bar{height:7px;border-radius:999px;background:rgba(255,255,255,.3);overflow:hidden}
+.home-hero .bar span{display:block;height:100%;background:var(--accent-ink);border-radius:inherit}
+.home-hero .meta{font-size:.9rem;opacity:.9}
+.home-hero .go{border:0;background:var(--accent-ink);color:var(--accent);border-radius:999px;padding:12px;font-weight:800;font-size:1rem;min-height:48px}
+.home-hero.empty{background:var(--surface);color:var(--fg);box-shadow:var(--shadow);align-items:center;text-align:center;padding:26px 18px}
+.home-hero.empty .go{background:var(--btn-grad);color:var(--accent-ink)}
+.quick-add{display:flex;gap:8px;align-items:center;background:var(--surface);border:2px solid var(--line);border-radius:999px;padding:4px 4px 4px 4px;padding-inline-start:16px}
+.quick-add:focus-within{border-color:var(--accent)}
+.quick-add input{flex:1;min-width:0;border:0;background:transparent;padding:10px 0;outline:none}
+.quick-go{width:44px;height:44px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;flex:none}
+.wait-row{display:flex;flex-direction:column;gap:10px;background:var(--surface);border-radius:16px;box-shadow:var(--shadow);padding:12px 14px}
+.wait-row .wr-top{display:flex;align-items:center;gap:10px}
+.wait-row .wr-top .tx{flex:1;min-width:0}
+.wait-row .btn{margin:0}
+.wait-row .pp-btns{display:flex;gap:8px}
+.wait-row .pp-btns .btn{flex:1;padding-block:10px}
+.feed{list-style:none;margin:0;padding:6px 14px;gap:0}
+.feed li{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:.92rem}
+.feed li:last-child{border-bottom:0}
+.feed .tx{flex:1;min-width:0}
+.feed .when{font-size:.78rem;color:var(--muted);white-space:nowrap}
+.feed .avatar{margin:0;width:30px;height:30px;border-width:0}
+.list-row{min-height:56px}
+.list-row .txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.list-row .nm-row{display:flex;align-items:center;gap:8px;min-width:0}
+.list-row .star{color:var(--gold);font-size:.8rem;font-weight:700;background:var(--gold-soft);border-radius:999px;padding:1px 8px;flex:none}
+.row-more{border:0;background:var(--soft);color:var(--muted);width:44px;height:44px;border-radius:50%;flex:none;display:grid;place-items:center}
+.row-more .lc{width:20px;height:20px}
+.month-h{display:flex;align-items:baseline;gap:8px;font-size:.88rem;font-weight:700;color:var(--muted);margin:10px 2px 6px}
+.month-h .sum{margin-inline-start:auto;font-variant-numeric:tabular-nums}
+.empty-line{color:var(--muted);text-align:center;padding:18px 8px;border:2px dashed var(--line);border-radius:16px;margin:0}
+
+.role-banner{background:var(--accent-soft);color:var(--fg);border-radius:14px;padding:10px 14px;font-size:.92rem;margin:0}
+.role-banner b{color:var(--accent)}
+.hh-summary h2{font-size:1.4rem}
+.members-card{gap:0;padding:4px 14px}
+.member-btn{display:flex;align-items:center;gap:12px;width:100%;border:0;background:transparent;color:inherit;text-align:start;padding:10px 0;border-bottom:1px solid var(--line);min-height:60px}
+.members-card > :last-child{border-bottom:0}
+.member-btn .avatar{margin:0;border-width:0;width:38px;height:38px;font-size:.95rem}
+.member-btn .who{flex:1;min-width:0;display:flex;flex-direction:column}
+.member-btn .who b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.member-btn .who small{color:var(--muted);font-size:.82rem}
+.role-chip{white-space:nowrap;font-weight:700}
+.menu-card{gap:0;padding:2px 14px}
+.row-btn{display:flex;align-items:center;gap:10px;width:100%;border:0;background:transparent;color:inherit;text-align:start;padding:12px 0;min-height:52px;font-size:1rem;border-bottom:1px solid var(--line)}
+.menu-card > .row-btn:last-child,.menu-card > :not([hidden]):last-of-type{border-bottom:0}
+.card.row-btn{padding:14px 16px;border-bottom:0}
+.row-btn .tx{flex:1;min-width:0}
+.row-btn small{display:block;color:var(--muted);font-size:.82rem}
+.row-btn .chev{width:18px;height:18px;color:var(--muted)}
+.danger-zone{gap:4px;align-items:center;padding:10px 0}
+.danger-zone .linkbtn{color:var(--danger);font-weight:600;text-decoration:none;padding:10px}
+.invite-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.invite-row:last-child{border-bottom:0}
+.invite-row .tx{flex:1;min-width:0;font-size:.9rem}
+.invite-row small{color:var(--muted)}
+.sheet-actions{display:flex;flex-direction:column;gap:0}
+.sheet-actions .row-btn:last-child{border-bottom:0}
+.sheet-actions .row-btn.danger{color:var(--danger)}
+.role-opt{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:start;border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:10px 14px;width:100%}
+.role-opt small{color:var(--muted)}
+.role-opt.active{border-color:var(--accent);background:var(--accent-soft)}
+
+.search-input{width:100%;border:2px solid var(--line);background:var(--surface);border-radius:999px;padding:11px 16px}
+.search-input:focus-visible{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.pending-box{background:var(--coral-soft);border-radius:16px;padding:4px 12px}
+.pending-toggle{display:flex;align-items:center;gap:8px;width:100%;border:0;background:transparent;color:inherit;padding:10px 0;font-weight:700;min-height:44px;text-align:start}
+.pending-toggle #pending-title{flex:1}
+.pending-toggle .chev{width:18px;height:18px;transition:transform .2s}
+.pending-toggle[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.pending-box #pending-list{padding-bottom:10px}
+.pending-actions{display:flex;gap:8px;flex:none}
+.pending-actions button{border:0;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:1rem}
+.pending-actions .ok-btn{background:var(--ok-soft);color:var(--ok)}
+.pending-actions .no-btn{background:var(--danger-soft);color:var(--danger)}
+.pending-state{font-size:.8rem;color:var(--muted);flex:none}
+.item .del{width:40px;height:40px}
+#list-finish{margin-top:4px}
+
+.fab{position:fixed;inset-inline-end:max(16px,calc((100vw - 560px) / 2 + 16px));bottom:calc(20px + env(safe-area-inset-bottom,0px));min-width:56px;height:56px;border-radius:999px;border:0;padding:0 16px;background:var(--btn-grad);color:var(--accent-ink);display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 8px 18px rgba(31,107,63,.35);z-index:30;font-weight:700;font-size:1rem}
+.fab .lc{width:26px;height:26px;stroke-width:2.4}
+.fab-label:empty{display:none}
+.fab:active{transform:scale(.97)}
+body[data-screen="main"] .wrap{padding-bottom:calc(110px + env(safe-area-inset-bottom,0px))}
+.get-app{display:flex;align-items:center;gap:8px;margin-top:12px;background:var(--surface);border:1.5px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:14px;padding:6px 6px 6px 6px;padding-inline-start:12px;font-weight:700;font-size:.9rem}
+.get-app a{flex:1;color:var(--accent);text-decoration:none}
+.get-app-x{border:0;background:transparent;color:var(--muted);width:40px;height:40px;border-radius:50%}
+body:not([data-screen="home"]) .get-app{display:none}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+/* the plain item font, for anyone who finds the handwriting hard to read */
+:root[data-itemfont="plain"] .pad{--hand:"Assistant",system-ui,sans-serif}
+.who-name{font-size:.8rem}
+
+[dir="ltr"] .flip-rtl{transform:scaleX(-1)}
+.pad .item.ro{padding-inline-start:60px}
 @media (max-width:360px){.avatar{width:26px;height:26px;font-size:.75rem}}
 </style>
 </head>
 <body>
 <div class="wrap" id="app">
 
-  <header class="top">
-    <div class="brand">
-      <span id="acct-top"></span>
-      <button class="hh-chip" id="brand-home-btn"><svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><b class="nm" id="brand-name">קניות ביחד</b><svg class="lc chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
-      <span class="brand-end-badge" aria-hidden="true"><svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></span>
-    </div>
-    <button class="members-row" id="members-row" hidden>
-      <div class="members" id="top-hhbar-members"></div>
-      <span id="members-count-label"></span>
-      <svg class="lc chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
-    </button>
-    <div class="hhbar" id="top-hhbar" hidden>
-      <button class="iconbtn-lite" id="top-hhbar-back" aria-label="Back">→</button>
-      <b id="top-hhbar-title" class="list-name-lbl">…</b>
-      <button class="iconbtn-lite" id="top-hhbar-share" aria-label="Share" hidden>📤</button>
-      <button class="iconbtn-lite" id="top-hhbar-view" aria-label="View" hidden>🗂️</button>
-      <button class="iconbtn-lite" id="top-hhbar-new" aria-label="New list" hidden>➕</button>
-    </div>
-    <div class="listbar" id="listbar">
-      <span class="listbar-start"><span id="listbar-acct"></span><button class="lb-btn" id="listbar-share" aria-label="Share"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.8l7.4-4.4M8.3 13.2l7.4 4.4"/></svg></button></span>
-      <b class="listbar-title" id="listbar-title"></b>
-      <button class="lb-btn lb-cart" id="listbar-lists" aria-label="Lists"><span class="e"><svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></span></button>
-    </div>
+  <!-- one header for every screen, painted by paintTop(): what this screen is, plus its one or two actions -->
+  <header class="top" id="topbar">
+    <div class="tb-row" id="tb-row"></div>
+    <div class="tb-progress" id="tb-progress" hidden><span id="tb-progress-bar"></span></div>
   </header>
 
-  <a class="get-app" id="get-app" href="apk/cartsync-debug.apk" download hidden><span class="e" aria-hidden="true">📲</span><span id="get-app-label">הורדת האפליקציה לאנדרואיד</span></a>
+  <div class="get-app" id="get-app" hidden><span class="e" aria-hidden="true">📲</span><a id="get-app-link" href="apk/cartsync-debug.apk" download><span id="get-app-label">הורדת האפליקציה לאנדרואיד</span></a><button class="get-app-x" id="get-app-close" aria-label="סגירה">✕</button></div>
 
   <!-- ---------- splash: shown until we know whether a session already exists ---------- -->
   <div class="splash" id="splash">
@@ -556,7 +552,7 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
     <div class="hero">
       <div class="hero-emoji e">🛒🥦🧺</div>
       <h1 id="auth-title">רשימת קניות אחת, לכל המשפחה</h1>
-      <p class="sub" id="auth-sub">מוסיפים, מסמנים, ורואים את זה חי אצל כולם — גם כשכל אחד בחלק אחר של הסופר.</p>
+      <p class="sub" id="auth-sub">מוסיפים, מסמנים, ורואים את זה חי אצל כולם, גם כשכל אחד בחלק אחר של הסופר.</p>
     </div>
     <div class="card auth">
       <div class="tabs">
@@ -574,12 +570,21 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
     </div>
   </section>
 
-  <!-- ---------- onboarding: create a household (joining only happens via a shared invite link) ---------- -->
+  <!-- ---------- onboarding: join with an invite, or create a household ---------- -->
   <section class="view" id="view-onboard" hidden>
     <div class="hero">
       <div class="hero-emoji e">🏠</div>
       <h1 id="onboard-title">למי קונים?</h1>
-      <p class="sub" id="onboard-sub">יוצרים משק בית, ומזמינים את שאר המשפחה בקישור.</p>
+      <p class="sub" id="onboard-sub">מצטרפים למשק בית קיים עם קישור הזמנה, או פותחים משק בית חדש.</p>
+    </div>
+    <div class="card">
+      <h3 id="join-h">יש לי הזמנה</h3>
+      <p class="sub" id="join-sub">מדביקים את הקישור או הקוד שקיבלתם.</p>
+      <div class="add">
+        <input id="join-code" placeholder="קישור או קוד הזמנה" dir="ltr" autocomplete="off">
+        <button class="btn" id="join-go">להצטרף</button>
+      </div>
+      <div id="join-msg" class="msg" hidden></div>
     </div>
     <div class="card">
       <h3 id="create-h">משק בית חדש</h3>
@@ -591,71 +596,87 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
     </div>
   </section>
 
-  <!-- ---------- home: a real dashboard, not just a menu ---------- -->
+  <!-- ---------- home: "what now" — the list to continue, what waits for me, what just happened ---------- -->
   <section class="view" id="view-home" hidden>
-    <div class="home-greeting">
-      <h1 id="home-greeting">…</h1>
-      <p class="sub" id="home-hh-sub"><svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span id="home-hh-name">…</span></p>
-    </div>
-    <div id="home-pay-section" hidden>
-      <div class="group-h home-h"><span class="e">💰</span><span id="home-pay-h">תשלומים פתוחים</span></div>
+    <h1 class="home-greeting" id="home-greeting">…</h1>
+    <div id="home-hero"></div>
+    <form class="quick-add" id="home-quick" hidden>
+      <input id="home-quick-input" placeholder="מה חסר בבית?" autocomplete="off">
+      <button class="quick-go" id="home-quick-go" type="submit" aria-label="הוספה"><svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
+    </form>
+    <section class="sec" id="home-waiting-section" hidden>
+      <h2 class="sec-h" id="home-waiting-h">מחכה לך</h2>
+      <ul class="list" id="home-requests"></ul>
       <ul class="list" id="home-pay"></ul>
-    </div>
-    <div id="home-lists-section">
-      <div class="group-h home-h"><svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg><span id="home-lists-heading">הרשימות הפעילות</span></div>
+    </section>
+    <section class="sec" id="home-others-section" hidden>
+      <h2 class="sec-h" id="home-others-h">רשימות נוספות</h2>
       <ul class="list" id="home-lists-preview"></ul>
-      <ul class="empty home-empty" id="home-lists-empty" hidden>
-        <li><span class="empty-ico"><svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></span><span id="home-lists-empty-text">אין רשימות פעילות. ליצור אחת?</span>
-          <button class="btn efab" id="home-lists-empty-btn"><svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg> <span id="home-lists-new-label">רשימה חדשה</span></button>
-        </li>
-      </ul>
-      <button class="linkbtn" id="home-lists-more" hidden>הרשימות שלי ←</button>
-    </div>
+    </section>
+    <section class="sec" id="home-feed-section" hidden>
+      <h2 class="sec-h" id="home-feed-h">לאחרונה</h2>
+      <ul class="feed card" id="home-feed"></ul>
+    </section>
   </section>
 
-  <!-- ---------- lists: directory of this household's shopping lists ---------- -->
+  <!-- ---------- lists: active lists, then past shopping by month ---------- -->
   <section class="view" id="view-lists" hidden>
-    <div>
-      <div class="group-h"><span class="e">🛒</span><span id="lists-open-title">פעילות</span></div>
+    <button class="btn wide" id="lists-new" hidden>＋ <span id="lists-new-label">רשימה חדשה</span></button>
+    <section class="sec">
+      <h2 class="sec-h" id="lists-open-title">פעילות</h2>
       <ul class="list" id="lists-open"></ul>
-      <ul class="empty" id="lists-empty" hidden>
-        <li><span class="e" style="font-size:2.2rem">📋</span><span id="lists-empty-text">אין עדיין רשימות פעילות. ליצור אחת?</span></li>
-      </ul>
+      <p class="empty-line" id="lists-empty" hidden><span id="lists-empty-text">אין עדיין רשימות פעילות.</span></p>
+    </section>
+    <section class="sec" id="lists-closed-box" hidden>
+      <h2 class="sec-h" id="lists-closed-title">קניות קודמות</h2>
+      <div id="lists-closed"></div>
+    </section>
+  </section>
+
+  <!-- ---------- household: who's who, invites, Bit, switching, and the dangerous stuff last ---------- -->
+  <section class="view" id="view-household" hidden>
+    <div class="card hh-summary">
+      <h2 id="hh-title">…</h2>
+      <p class="sub" id="hh-stats"></p>
     </div>
-    <div id="lists-closed-box" hidden>
-      <div class="group-h"><span class="e">🗂️</span><span id="lists-closed-title">היסטוריה</span><span class="gcount" id="lists-month"></span></div>
-      <ul class="list" id="lists-closed"></ul>
-    </div>
+    <p class="role-banner" id="hh-role-banner"></p>
+    <section class="sec">
+      <h2 class="sec-h" id="hh-members-h">מי בבית</h2>
+      <div class="card members-card" id="hh-members"></div>
+    </section>
+    <button class="btn wide" id="hh-invite" hidden>להזמין מישהו</button>
+    <section class="sec" id="hh-invites-section" hidden>
+      <h2 class="sec-h" id="hh-invites-h">הזמנות פתוחות</h2>
+      <div class="card" id="hh-invites"></div>
+    </section>
+    <section class="sec" id="hh-bit-section" hidden>
+      <h2 class="sec-h" id="hh-bit-h">תשלומים</h2>
+      <button class="card row-btn" id="hh-bit"></button>
+    </section>
+    <section class="sec">
+      <h2 class="sec-h" id="hh-more-h">משקי בית</h2>
+      <div class="card menu-card">
+        <button class="row-btn" id="hh-switch"></button>
+        <button class="row-btn" id="hh-rename" hidden></button>
+        <button class="row-btn" id="hh-new"></button>
+      </div>
+    </section>
+    <section class="sec danger-zone" id="hh-danger"></section>
   </section>
 
   <!-- ---------- main: a single shared list ---------- -->
   <section class="view" id="view-main" hidden>
     <div id="offline-note" class="offline-note" hidden></div>
-
-    <div class="list-hero" id="list-hero">
-      <div class="lh-top"><h1 id="list-hero-name"></h1><button class="lb-btn lh-view" id="list-hero-view" aria-label="View"></button></div>
-      <p id="list-hero-count"></p>
-      <p class="lh-closed" id="list-hero-closed" hidden></p>
-      <div class="lh-progress"><span id="list-hero-bar"></span></div>
-      <button class="lh-members" id="list-hero-members" type="button"><span class="members" id="list-hero-avatars"></span><span id="list-hero-mlabel"></span><span class="chev" aria-hidden="true">‹</span></button>
+    <p class="lh-closed" id="list-hero-closed" hidden></p>
+    <p class="role-banner" id="list-role-banner" hidden></p>
+    <div class="search-row" id="search-row" hidden>
+      <input id="search-input" class="search-input" placeholder="חיפוש ברשימה…" autocomplete="off">
     </div>
-
     <div class="pay-panel" id="pay-panel" hidden></div>
 
-    <div class="trip-bar" id="trip-bar">
-      <span class="trip-dot" aria-hidden="true"></span><span id="trip-label">סבב קניות פעיל</span>
-      <button class="btn small ghost" id="trip-close">✅ סיום קניות</button>
-    </div>
-
-    <div class="search-row" id="search-row">
-      <button class="search-toggle" id="search-toggle" type="button"><svg class="search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><span id="search-toggle-label">חיפוש ברשימה</span></button>
-      <button class="hide-done-btn" id="hide-done-btn" type="button" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path class="slash" d="M4 4l16 16"/></svg><span id="hide-done-label"></span></button>
-      <input id="search-input" class="search-input" placeholder="חיפוש ברשימה…" autocomplete="off" hidden>
-    </div>
-
-    <div id="pending-box" class="note note-sticky" hidden>
-      <h3 class="pending-h"><span class="e">🙋</span> <span id="pending-title">בקשות לאישור</span></h3>
-      <ul class="list" id="pending-list"></ul>
+    <div id="pending-box" class="pending-box" hidden>
+      <button class="pending-toggle" id="pending-toggle" type="button" aria-expanded="false"><span class="e" aria-hidden="true">🙋</span><span id="pending-title">בקשות לאישור</span><svg class="lc chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+      <ul class="list" id="pending-list" hidden></ul>
     </div>
 
     <div class="note note-main">
@@ -664,15 +685,22 @@ html[dir="ltr"] .role-select{padding:5px 8px 5px 26px;background-position:right 
         <li><span class="e" style="font-size:2.4rem">🧺</span><span id="empty-text">הרשימה ריקה. מה חסר בבית?</span></li>
       </ul>
     </div>
+    <button class="btn ghost wide" id="list-finish" hidden>✅ סיום קניות</button>
 
-    <button class="fab" id="fab-add" aria-label="הוסף לרשימה"><span class="e" aria-hidden="true">➕</span><span class="sr-only" id="fab-add-label">הוסף לרשימה</span></button>
+    <button class="fab" id="fab-add" aria-label="הוסף לרשימה"><svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg><span class="fab-label" id="fab-add-label"></span></button>
   </section>
+
+  <nav class="tabbar" id="tabbar" hidden>
+    <button data-tab="home" id="tab-home"><svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span id="tab-home-label">בית</span></button>
+    <button data-tab="lists" id="tab-lists"><svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg><span id="tab-lists-label">רשימות</span></button>
+    <button data-tab="household" id="tab-household"><svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span id="tab-household-label">משק הבית</span></button>
+  </nav>
 
   <div class="shade" id="shade" hidden></div>
   <div class="sheet" id="sheet" hidden></div>
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
-  <footer class="version-bar">
+  <footer class="version-bar" id="version-bar">
     <span id="version-label">…</span>
     <button class="linkbtn refresh-btn" id="refresh-btn"><svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg><span id="refresh-label">לרענן</span></button>
     <button class="btn small" id="update-btn" hidden>🔄 לעדכן</button>
@@ -691,17 +719,23 @@ he: {
   googleGo:'המשך עם Google', orEmail:'או עם מייל וסיסמה', googleInBrowser:'ממשיכים בדפדפן, ובסוף חוזרים לאפליקציה', googleUpdateApp:'כדי להתחבר עם Google צריך לעדכן את האפליקציה לגרסה החדשה', googleDone:'התחברת עם Google',
   loginGo:'להתחבר', signupGo:'ליצור חשבון', forgot:'שכחתי סיסמה', resetGo:'לשלוח קישור לאיפוס',
   resetSent:'📬 שלחנו מייל עם קישור לבחירת סיסמה חדשה.',
-  onboardTitle:'למי קונים?', onboardSub:'יוצרים משק בית, ומזמינים את שאר המשפחה בקישור.',
+  onboardTitle:'למי קונים?', onboardSub:'מצטרפים למשק בית קיים עם קישור הזמנה, או פותחים משק בית חדש.',
+  joinH:'יש לי הזמנה', joinSub:'מדביקים את הקישור או הקוד שקיבלתם.', joinPh:'קישור או קוד הזמנה', joinGo:'להצטרף', needJoinCode:'צריך להדביק קישור או קוד',
   createHh:'משק בית חדש', hhNamePh:'לדוגמה: הבית שלנו', create:'ליצור',
   itemPh:'שם המוצר', qtyPh:'כמות', add:'הוספה', addToListFab:'הוסף לרשימה',
   pendingTitle:'בקשות לאישור', boughtTitle:'נקנה', emptyList:'הרשימה ריקה. מה חסר בבית?',
-  invite:'הזמנת חבר/ה', inviteSub:'כל מי שמקבל את הקוד או הקישור הזה יכול להצטרף תוך 7 ימים.',
-  inviteRole:'הרשאה לחברים חדשים:', inviteCopied:'📋 הועתק',
+  invite:'הזמנה למשק הבית', inviteSub:'כל מי שמקבל את הקוד או הקישור הזה יכול להצטרף תוך 7 ימים.',
+  inviteRole:'התפקיד של מי שיצטרף:', inviteCopied:'📋 הועתק',
   activeInvitesTitle:'הזמנות פעילות', inviteRevoke:'ביטול הזמנה', inviteRevoked:'🗑️ ההזמנה בוטלה',
   inviteShare:'📤 שליחת קישור הזמנה', inviteShareText:'הצטרפו אלינו ב"קניות ביחד" כדי לנהל יחד את רשימת הקניות:',
   inviteReadySub:'ההזמנה מוכנה. איך לשלוח אותה?',
   joinedViaLink:'✅ הצטרפת למשק הבית!',
-  roleOwner:'ראש/ת משק בית', roleEditor:'עריכה מלאה', roleRequester:'בקשת מוצרים', roleViewer:'צפייה בלבד',
+  roleOwner:'מנהל', roleEditor:'שותף', roleRequester:'מבקש', roleViewer:'מבקש',
+  roleDescOwner:'מנהל את משק הבית: הזמנות, תפקידים ותשלומים', roleDescEditor:'מוסיף, אוסף ומאשר בקשות', roleDescRequester:'מבקש מוצרים, והם מחכים לאישור',
+  myRoleOwner:'התפקיד שלך: <b>מנהל</b>. אפשר לעשות הכל, כולל להזמין אנשים ולשנות תפקידים.',
+  myRoleEditor:'התפקיד שלך: <b>שותף</b>. אפשר להוסיף, לאסוף, לאשר בקשות ולסיים קניות.',
+  myRoleRequester:'התפקיד שלך: <b>מבקש</b>. מה שתוסיף יחכה לאישור של {n}.',
+  listRoleRequester:'מה שתוסיף יופיע אצל {n} לאישור.',
   members:'חברי משק הבית', signOut:'יציאה', deleteAccount:'מחיקת חשבון', syncNow:'לסנכרן עכשיו',
   settings:'הגדרות', language:'שפה', switchHousehold:'להחליף משק בית',
   itemAdded:'✅ נוסף לרשימה', itemRequested:'🙋 הבקשה נשלחה לאישור', itemApproved:'✅ אושר',
@@ -729,49 +763,65 @@ he: {
   paySend:'שליחת בקשת תשלום', paySkip:'אחר כך', payNeedTotal:'צריך להזין סכום', payNeedLink:'צריך להדביק קישור ביט שמתחיל ב-https://', paySent:'💰 בקשת התשלום נשלחה לכולם',
   payPanelTotal:'💰 הקנייה יצאה {t}', payYourShare:'החלק שלך: {a}', payBit:'לתשלום בביט', payMarkPaid:'שילמתי ✓', payYouPaid:'✓ שילמת {a}', payUndo:'ביטול',
   payHowMuch:'כמה שילמת?', payMarkedOk:'✓ סומן ששילמת', payWaiting:'ממתין', payPaidAmt:'✓ {a}', payPayer:'שילם בקופה', payLeft:'נשאר לגבות: {a}', payAllIn:'🎉 כולם שילמו',
-  payEdit:'עריכת סכום', payShare:'שיתוף בוואטסאפ', payStart:'💰 הזנת סכום הקנייה ובקשת תשלום', payOwnerMark:'לסמן ש{n} שילם/ה?', payOwnerUnmark:'לבטל את הסימון של {n}?',
-  payHomeH:'תשלומים פתוחים', payHomeRow:'{n} ביקש/ה {a} על "{l}"', payNotify:'💰 {n} ביקש/ה תשלום על "{l}"', payNotifyPaid:'💰 {n} סימן/ה ששילם/ה {a}',
-  payShareText:'🛒 {l}\nהקנייה יצאה {t}.\n{rows}\nלתשלום בביט: {link}', payMonth:'החודש: {a}', payNoLink:'אין עדיין קישור ביט. ראש משק הבית צריך להוסיף אותו.',
+  payEdit:'עריכת סכום', payShare:'שיתוף בוואטסאפ', payStart:'💰 הזנת סכום הקנייה ובקשת תשלום', payOwnerMark:'לסמן תשלום של {n}?', payOwnerUnmark:'לבטל את הסימון של {n}?',
+  payHomeH:'תשלומים פתוחים', payHomeRow:'החלק שלך ב"{l}": {a}, ל{n}', payNotify:'💰 בקשת תשלום מ{n} על "{l}"', payNotifyPaid:'💰 תשלום מ{n}: {a}',
+  payShareText:'🛒 {l}\nהקנייה יצאה {t}.\n{rows}\nלתשלום בביט: {link}', payMonth:'החודש: {a}', payNoLink:'עוד אין קישור ביט. מי שאסף את הכסף יכול להוסיף אותו.',
   tripClosed:'✅ הרשימה נסגרה', boughtHeader:'נאסף', notBoughtHeader:'חסר',
   homeSub:'כל הרשימות המשותפות של משק הבית, במקום אחד.',
-  homeLists:'הרשימות שלי', homeInvite:'הזמנת בן/בת משפחה', homeSwitch:'להחליף משק בית',
+  homeLists:'הרשימות שלי', homeInvite:'להזמין מישהו', homeSwitch:'להחליף משק בית',
   primaryHhSet:'לסמן כמשק בית ראשי', primaryHhUnset:'להסיר סימון ראשי',
   primaryHhSetToast:'⭐ סומן כמשק בית ראשי — ייפתח ראשון תמיד', primaryHhUnsetToast:'סימון הראשי הוסר',
   homeListsHeading:'הרשימות הפעילות', homeListsMore:'כל הרשימות ←',
   homeMembers:'משק הבית', itemsLeft:'{n} פריטים נשארו', allCollected:'הכל נאסף ✅',
   greetingMorning:'בוקר טוב{n} ☀️', greetingAfternoon:'צהריים טובים{n} 👋', greetingEvening:'ערב טוב{n} 🌆', greetingNeutral:'היי{n} 👋',
-  listsTitle:'הרשימות שלי', listsOpenTitle:'פעילות', listsClosedTitle:'היסטוריה',
-  listsEmpty:'אין עדיין רשימות פעילות. ליצור אחת?', newListTitle:'רשימה חדשה', newListName:'שם הרשימה (לדוגמה: קניות לשבת)',
+  listsTitle:'רשימות', listsOpenTitle:'פעילות', listsClosedTitle:'קניות קודמות',
+  listsEmpty:'אין עדיין רשימות פעילות.', newListTitle:'רשימה חדשה', newListName:'שם הרשימה (לדוגמה: קניות לשבת)',
   newListGo:'ליצור ולפתוח', needListName:'צריך לתת שם לרשימה',
-  itemsCount:'{n} פריטים', closedOn:'נסגרה ב-{d}', listClosedNote:'🔒 הרשימה נסגרה ב-{d}, אפשר רק לצפות בה. לרשימה חדשה חזרו לדף הרשימות (העגלה למעלה).',
+  itemsCount:'{n} פריטים', closedOn:'נסגרה ב-{d}', listClosedNote:'🔒 הרשימה נסגרה ב-{d}. אפשר רק לצפות בה.',
   deleteList:'🗑️ מחיקה', deleteListTitle:'מחיקת רשימה', deleteListConfirm:'למחוק לצמיתות את הרשימה "{n}"? לא ניתן לשחזר.', listDeleted:'🗑️ הרשימה נמחקה',
-  notifyListOpened:'🛒 {n} פתח/ה רשימה חדשה: {l}', notifyListClosed:'✅ {n} סיים/ה קניות ב-{l}',
+  notifyListOpened:'🛒 רשימה חדשה מ{n}: {l}', notifyListClosed:'✅ הקניות ב"{l}" הסתיימו ({n})',
   undo:'↩️ בטל', deleted:'🗑️ נמחק', editItem:'עריכת מוצר', editSave:'לשמור',
   fontSizeLabel:'גודל טקסט', fontNormal:'רגיל', fontLarge:'גדול', fontXlarge:'גדול מאוד',
   hideDone:'הסתר נאספו', showDone:'הצג נאספו ({n})',
-  searchPh:'חיפוש ברשימה…', newPendingToast:'🙋 {n} ביקש/ה להוסיף: {t}',
+  searchPh:'חיפוש ברשימה…', newPendingToast:'🙋 בקשה חדשה מ{n}: {t}',
   dupWarning:'"{n}" כבר ברשימה.', dupAddAnyway:'להוסיף בכל זאת',
   manageMembers:'👥 ניהול חברי משק הבית', membersTitle:'חברי משק הבית',
   membersCountOne:'חבר אחד', membersCount:'{n} חברים',
   settingsGroupHousehold:'משק הבית', listCount:'סה״כ: {n} פריטים ({d} נאספו לעגלה)', adminPage:'ניהול (רק למנהל)', settingsGroupPersonal:'אישי', settingsGroupApp:'אפליקציה',
   removeConfirm:'להסיר את {n} ממשק הבית?', leaveConfirm:'לצאת ממשק הבית?',
-  removeTitle:'הסרת חבר/ת משק בית', leaveTitle:'יציאה ממשק הבית', removeAction:'להסיר', leaveAction:'לצאת',
-  leaveHousehold:'יציאה ממשק הבית', memberRemoved:'✅ הוסר/ה ממשק הבית', youLeft:'👋 יצאת ממשק הבית',
-  transferOwnerAction:'העברת בעלות', transferOwnerTitle:'העברת בעלות על משק הבית',
-  transferOwnerConfirm:'להעביר את הבעלות על משק הבית ל{n}? את/ה תהפכו לעורך/ת, ול{n} תהיה שליטה מלאה כבעלים.',
-  ownerTransferred:'👑 הבעלות הועברה',
+  removeTitle:'הסרה ממשק הבית', leaveTitle:'יציאה ממשק הבית', removeAction:'להסיר', leaveAction:'לצאת',
+  leaveHousehold:'יציאה ממשק הבית', memberRemoved:'✅ ההסרה בוצעה', youLeft:'👋 יצאת ממשק הבית',
+  transferOwnerAction:'העברת הניהול', transferOwnerTitle:'העברת הניהול של משק הבית',
+  transferOwnerConfirm:'להעביר את הניהול ל{n}? התפקיד שלך יהפוך ל"שותף", ול{n} תהיה שליטה מלאה.',
+  ownerTransferred:'✅ הניהול הועבר',
   deleteHousehold:'🗑️ מחיקת משק הבית', deleteHouseholdTitle:'מחיקת משק הבית',
   deleteHouseholdConfirm:'למחוק לצמיתות את משק הבית "{n}"? כל הרשימות, המוצרים וההיסטוריה של כל החברים יימחקו ולא ניתן יהיה לשחזר. פעולה זו משפיעה על כולם, לא רק עליך.',
   householdDeleted:'🗑️ משק הבית נמחק',
-  ownerMustTransferFirst:'את/ה ראש/ת משק הבית — צריך להעביר בעלות למישהו אחר לפני שעוזבים, או למחוק את משק הבית.',
-  roleUpdated:'✅ ההרשאה עודכנה', you:'(את/ה)',
+  ownerMustTransferFirst:'מנהל משק הבית צריך להעביר את הניהול למישהו אחר לפני שיוצאים, או למחוק את משק הבית.',
+  roleUpdated:'✅ התפקיד עודכן', you:'(אני)',
   editNameTitle:'שם במשק הבית הזה', editNameSub:'איך שמך יוצג לשאר חברי משק הבית הזה. אפשר לקבוע שם שונה בכל משק בית.',
   nameUpdated:'✅ השם עודכן',
-  profileTitle:'עריכת פרופיל', profileNameSub:'השם שלך (ברירת מחדל למשקי בית חדשים שתצטרף/י אליהם):',
+  profileTitle:'עריכת פרופיל', profileNameSub:'השם שלך (ייכנס אוטומטית למשקי בית חדשים):',
   profileSaved:'✅ הפרופיל נשמר', profilePassSub:'שינוי סיסמה:', newPasswordPh:'סיסמה חדשה (לפחות 6 תווים)',
   profilePassSave:'לעדכן סיסמה', passwordUpdated:'✅ הסיסמה עודכנה', editProfile:'✏️ עריכת פרופיל',
-  confirmPassTitle:'לשנות סיסמה?', confirmPassBody:'השינוי ישפיע על כל מי שמחובר/ת עם החשבון הזה. לממשיך/ה?',
+  confirmPassTitle:'לשנות סיסמה?', confirmPassBody:'השינוי ישפיע על כל מכשיר שמחובר לחשבון הזה. להמשיך?',
   guideTitle:'מדריך שימוש', guideOpen:'מדריך שימוש', guideIntro:'כל מה שצריך לדעת כדי להשתמש באפליקציה.',
+  tabHome:'בית', tabLists:'רשימות', tabHousehold:'משק הבית', ariaBack:'חזרה', ariaMenu:'אפשרויות', ariaSearch:'חיפוש ברשימה', ariaSettings:'הגדרות', ariaClose:'סגירה',
+  ariaCheck:'סימון "{t}" כנאסף', ariaDelete:'מחיקת "{t}"', ariaApprove:'אישור "{t}"', ariaReject:'דחיית "{t}"', ariaMore:'אפשרויות עבור "{t}"', ariaQuickAdd:'הוספה לרשימה',
+  heroContinue:'להמשיך לקנות', heroOpen:'לפתוח את הרשימה', heroLeft:'נשארו {n} מתוך {t}', heroAllDone:'הכל נאסף ✓', heroEmptyItems:'הרשימה עוד ריקה', heroNoList:'אין רשימה פעילה כרגע', heroNoListReq:'כשמישהו יפתח רשימה, היא תופיע כאן.', heroHere:'{n} ברשימה עכשיו', listHere:'{n} כאן עכשיו',
+  quickPh:'מה חסר בבית?', quickTo:'נוסף ל"{l}"', quickReqTo:'🙋 הבקשה נשלחה ל"{l}"',
+  waitingH:'מחכה לך', othersH:'רשימות נוספות', feedH:'לאחרונה', reqWaiting:'{n} בקשות מחכות לאישור ב"{l}"', reqWaitingOne:'בקשה אחת מחכה לאישור ב"{l}"', approveGo:'לאשר', collectRow:'נשאר לגבות {a} על "{l}"', collectGo:'לפתוח',
+  actAdded:'הוספה', actRequested:'בקשה', actApproved:'אישור', actChecked:'נאסף', actUnchecked:'הוחזר לרשימה', actDeleted:'נמחק', actRejected:'נדחה',
+  agoNow:'עכשיו', agoMin:'לפני {n} דק׳', agoHour:'לפני {n} שע׳', agoDay:'לפני {n} ימים',
+  mainList:'ראשית', setMainList:'⭐ לסמן כרשימה ראשית', unsetMainList:'להסיר סימון ראשית', mainListSet:'⭐ זו הרשימה הראשית עכשיו. הוספה מהירה מהבית נכנסת אליה.', mainListUnset:'הסימון הוסר',
+  listMenuShare:'📤 שליחת סיכום', listMenuView:'תצוגה: רשימה אחת בלי קטגוריות', listMenuViewGrouped:'תצוגה: לפי קטגוריות', listMenuHide:'הסתרת מה שנאסף', listMenuShow:'הצגת מה שנאסף ({n})', listMenuDelete:'🗑️ מחיקת הרשימה', listDeletedUndo:'🗑️ הרשימה נמחקה',
+  pendingCount:'{n} בקשות לאישור', pendingCountOne:'בקשה אחת לאישור', myRequests:'בקשות שמחכות לאישור', pendingWaiting:'ממתין',
+  hhStats:'{p} · {l} רשימות פעילות', hhStatsMonth:' · החודש {a}', peopleCount:'{n} אנשים', peopleOne:'אדם אחד',
+  hhMembersH:'מי בבית', hhInvitesH:'הזמנות פתוחות', hhBitH:'תשלומים', hhMoreH:'משקי בית', hhSwitchRow:'החלפת משק בית', hhSwitchSub:'{n} משקי בית בחשבון', hhNewRow:'פתיחת משק בית חדש', hhRenameRow:'שינוי שם משק הבית', hhRenameTitle:'שם משק הבית', hhRenamed:'✅ השם עודכן',
+  myBitRow:'קישור הביט שלי', myBitSet:'מחובר ✓. לשם יגיע הכסף כשגובים אחרי קנייה', myBitNone:'עוד לא הוגדר. צריך אותו כדי לגבות כסף אחרי קנייה', myBitTitle:'קישור הביט שלי', myBitSave:'לשמור', myBitSaved:'✅ הקישור נשמר', myBitClear:'להסיר את הקישור',
+  inviteExpires:'פג בעוד {n} ימים', inviteExpiresToday:'פג היום', meLabel:'(אני)', memberSheetChangeRole:'שינוי תפקיד', memberSheetEditName:'✏️ שינוי השם שלי במשק הבית', memberSheetRemove:'הסרה ממשק הבית', memberSheetLeave:'🚪 יציאה ממשק הבית', memberSheetTransfer:'העברת הניהול ל{n}', transferPick:'למי להעביר את הניהול?', dangerTransfer:'העברת הניהול למישהו אחר', dangerDelete:'מחיקת משק הבית', dangerLeave:'יציאה ממשק הבית',
+  itemFontLabel:'גופן המוצרים', itemFontHand:'כתב יד', itemFontPlain:'רגיל', versionRow:'גרסה',
+  fabAdd:'להוסיף מוצר', listProgress:'{d} מתוך {n} נאספו', fabRequest:'לבקש מוצר', requestTitle:'בקשת מוצר', requestGo:'לשלוח לאישור', collected:'נאסף',
   leaveListTitle:'לצאת מהרשימה?', leaveListConfirm:'חוזרים למסך הבית. הרשימה תישמר בדיוק כמו שהיא.', leaveListAction:'כן, לצאת',
 },
 en: {
@@ -782,17 +832,23 @@ en: {
   googleGo:'Continue with Google', orEmail:'or with email and password', googleInBrowser:'Continuing in the browser, then back to the app', googleUpdateApp:'Update the app to the latest version to sign in with Google', googleDone:'Signed in with Google',
   loginGo:'Log in', signupGo:'Create account', forgot:'Forgot password', resetGo:'Send reset link',
   resetSent:'📬 We sent an email with a link to set a new password.',
-  onboardTitle:'Shopping for who?', onboardSub:'Create a household, then invite the rest of the family with a link.',
+  onboardTitle:'Shopping for who?', onboardSub:'Join an existing household with an invite link, or start a new one.',
+  joinH:'I have an invite', joinSub:'Paste the link or code you received.', joinPh:'Invite link or code', joinGo:'Join', needJoinCode:'Paste a link or code',
   createHh:'New household', hhNamePh:'e.g. Our home', create:'Create',
   itemPh:'Product name', qtyPh:'Qty', add:'Add', addToListFab:'Add to list',
   pendingTitle:'Needs approval', boughtTitle:'Bought', emptyList:'The list is empty. What are we out of?',
-  invite:'Invite someone', inviteSub:'Anyone with this code or link can join within 7 days.',
-  inviteRole:'Role for new members:', inviteCopied:'📋 Copied',
+  invite:'Invite to the household', inviteSub:'Anyone with this code or link can join within 7 days.',
+  inviteRole:'Role for whoever joins:', inviteCopied:'📋 Copied',
   activeInvitesTitle:'Active invites', inviteRevoke:'Revoke invite', inviteRevoked:'🗑️ Invite revoked',
   inviteShare:'📤 Share invite link', inviteShareText:'Join us on "CartSync" to manage our shopping list together:',
   inviteReadySub:'The invite is ready. How would you like to send it?',
   joinedViaLink:'✅ You joined the household!',
-  roleOwner:'Household head', roleEditor:'Full editor', roleRequester:'Can request items', roleViewer:'View only',
+  roleOwner:'Manager', roleEditor:'Partner', roleRequester:'Requester', roleViewer:'Requester',
+  roleDescOwner:'Runs the household: invites, roles and payments', roleDescEditor:'Adds, collects and approves requests', roleDescRequester:'Requests items, which wait for approval',
+  myRoleOwner:'Your role: <b>Manager</b>. You can do everything, including inviting people and changing roles.',
+  myRoleEditor:'Your role: <b>Partner</b>. You can add, collect, approve requests and finish shopping.',
+  myRoleRequester:'Your role: <b>Requester</b>. What you add waits for approval from {n}.',
+  listRoleRequester:'What you add goes to {n} for approval.',
   members:'Household members', signOut:'Sign out', deleteAccount:'Delete account', syncNow:'Sync now',
   settings:'Settings', language:'Language', switchHousehold:'Switch household',
   itemAdded:'✅ Added to the list', itemRequested:'🙋 Request sent for approval', itemApproved:'✅ Approved',
@@ -821,20 +877,20 @@ en: {
   payPanelTotal:'💰 The shop came to {t}', payYourShare:'Your share: {a}', payBit:'Pay with Bit', payMarkPaid:'I paid ✓', payYouPaid:'✓ You paid {a}', payUndo:'Undo',
   payHowMuch:'How much did you pay?', payMarkedOk:'✓ Marked as paid', payWaiting:'Waiting', payPaidAmt:'✓ {a}', payPayer:'Paid at the till', payLeft:'Still to collect: {a}', payAllIn:'🎉 Everyone paid',
   payEdit:'Edit amount', payShare:'Share on WhatsApp', payStart:'💰 Enter the total and request payment', payOwnerMark:'Mark {n} as paid?', payOwnerUnmark:'Unmark {n}?',
-  payHomeH:'Open payments', payHomeRow:'{n} asked {a} for "{l}"', payNotify:'💰 {n} requested payment for "{l}"', payNotifyPaid:'💰 {n} marked {a} as paid',
-  payShareText:'🛒 {l}\nThe shop came to {t}.\n{rows}\nPay with Bit: {link}', payMonth:'This month: {a}', payNoLink:'No Bit link yet. The household owner needs to add it.',
+  payHomeH:'Open payments', payHomeRow:'Your share of "{l}": {a}, to {n}', payNotify:'💰 {n} requested payment for "{l}"', payNotifyPaid:'💰 {n} marked {a} as paid',
+  payShareText:'🛒 {l}\nThe shop came to {t}.\n{rows}\nPay with Bit: {link}', payMonth:'This month: {a}', payNoLink:'No Bit link yet. Whoever collected can add one.',
   tripClosed:'✅ List closed', boughtHeader:'Collected', notBoughtHeader:'Still needed',
   homeSub:'All of your household\'s shared lists, in one place.',
-  homeLists:'My lists', homeInvite:'Invite a family member', homeSwitch:'Switch household',
+  homeLists:'My lists', homeInvite:'Invite someone', homeSwitch:'Switch household',
   primaryHhSet:'Set as primary household', primaryHhUnset:'Remove as primary',
   primaryHhSetToast:'⭐ Set as primary household — opens first every time', primaryHhUnsetToast:'No longer primary',
   homeListsHeading:'Active lists', homeListsMore:'All lists →',
   homeMembers:'Household', itemsLeft:'{n} items left', allCollected:'All collected ✅',
   greetingMorning:'Good morning{n} ☀️', greetingAfternoon:'Good afternoon{n} 👋', greetingEvening:'Good evening{n} 🌆', greetingNeutral:'Hey{n} 👋',
-  listsTitle:'My lists', listsOpenTitle:'Active', listsClosedTitle:'History',
-  listsEmpty:'No active lists yet. Create one?', newListTitle:'New list', newListName:'List name (e.g. Saturday shopping)',
+  listsTitle:'Lists', listsOpenTitle:'Active', listsClosedTitle:'Past shopping',
+  listsEmpty:'No active lists yet.', newListTitle:'New list', newListName:'List name (e.g. Saturday shopping)',
   newListGo:'Create and open', needListName:'Give the list a name',
-  itemsCount:'{n} items', closedOn:'Closed {d}', listClosedNote:'🔒 This list was closed {d} and is view-only. For a new list, go back to the lists (cart icon above).',
+  itemsCount:'{n} items', closedOn:'Closed {d}', listClosedNote:'🔒 This list was closed {d}. It is view-only.',
   deleteList:'🗑️ Delete', deleteListTitle:'Delete list', deleteListConfirm:'Permanently delete the list "{n}"? This cannot be undone.', listDeleted:'🗑️ List deleted',
   notifyListOpened:'🛒 {n} opened a new list: {l}', notifyListClosed:'✅ {n} finished shopping in {l}',
   undo:'↩️ Undo', deleted:'🗑️ Deleted', editItem:'Edit item', editSave:'Save',
@@ -848,9 +904,9 @@ en: {
   removeConfirm:'Remove {n} from the household?', leaveConfirm:'Leave this household?',
   removeTitle:'Remove member', leaveTitle:'Leave household', removeAction:'Remove', leaveAction:'Leave',
   leaveHousehold:'Leave household', memberRemoved:'✅ Removed from the household', youLeft:'👋 You left the household',
-  transferOwnerAction:'Transfer ownership', transferOwnerTitle:'Transfer household ownership',
-  transferOwnerConfirm:'Transfer ownership of the household to {n}? You will become an editor, and {n} will have full owner control.',
-  ownerTransferred:'👑 Ownership transferred',
+  transferOwnerAction:'Hand over management', transferOwnerTitle:'Hand over management',
+  transferOwnerConfirm:'Hand over management to {n}? You will become a Partner, and {n} will have full control.',
+  ownerTransferred:'✅ Management handed over',
   deleteHousehold:'🗑️ Delete household', deleteHouseholdTitle:'Delete household',
   deleteHouseholdConfirm:'Permanently delete the household "{n}"? All lists, items and history for every member will be deleted and cannot be recovered. This affects everyone, not just you.',
   householdDeleted:'🗑️ Household deleted',
@@ -863,6 +919,22 @@ en: {
   profilePassSave:'Update password', passwordUpdated:'✅ Password updated', editProfile:'✏️ Edit profile',
   confirmPassTitle:'Change password?', confirmPassBody:'This changes the password for anyone signed in to this account. Continue?',
   guideTitle:'User guide', guideOpen:'User guide', guideIntro:'Everything you need to know to use the app.',
+  tabHome:'Home', tabLists:'Lists', tabHousehold:'Household', ariaBack:'Back', ariaMenu:'Options', ariaSearch:'Search the list', ariaSettings:'Settings', ariaClose:'Close',
+  ariaCheck:'Mark "{t}" collected', ariaDelete:'Delete "{t}"', ariaApprove:'Approve "{t}"', ariaReject:'Reject "{t}"', ariaMore:'Options for "{t}"', ariaQuickAdd:'Add to list',
+  heroContinue:'Continue shopping', heroOpen:'Open the list', heroLeft:'{n} of {t} left', heroAllDone:'All collected ✓', heroEmptyItems:'The list is still empty', heroNoList:'No active list right now', heroNoListReq:'When someone opens a list, it shows up here.', heroHere:'{n} on the list now', listHere:'{n} here now',
+  quickPh:'What are we out of?', quickTo:'Added to "{l}"', quickReqTo:'🙋 Request sent to "{l}"',
+  waitingH:'Waiting for you', othersH:'Other lists', feedH:'Recently', reqWaiting:'{n} requests waiting in "{l}"', reqWaitingOne:'1 request waiting in "{l}"', approveGo:'Review', collectRow:'{a} still to collect for "{l}"', collectGo:'Open',
+  actAdded:'added', actRequested:'requested', actApproved:'approved', actChecked:'collected', actUnchecked:'put back', actDeleted:'deleted', actRejected:'rejected',
+  agoNow:'now', agoMin:'{n} min ago', agoHour:'{n} h ago', agoDay:'{n} days ago',
+  mainList:'Main', setMainList:'⭐ Make this the main list', unsetMainList:'Unmark as main', mainListSet:'⭐ This is the main list now. Quick add on Home goes here.', mainListUnset:'Unmarked',
+  listMenuShare:'📤 Share a summary', listMenuView:'View: one list, no categories', listMenuViewGrouped:'View: by category', listMenuHide:'Hide collected', listMenuShow:'Show collected ({n})', listMenuDelete:'🗑️ Delete the list', listDeletedUndo:'🗑️ List deleted',
+  pendingCount:'{n} requests to approve', pendingCountOne:'1 request to approve', myRequests:'Requests waiting for approval', pendingWaiting:'Waiting',
+  hhStats:'{p} · {l} active lists', hhStatsMonth:' · {a} this month', peopleCount:'{n} people', peopleOne:'1 person',
+  hhMembersH:'Who\'s here', hhInvitesH:'Open invites', hhBitH:'Payments', hhMoreH:'Households', hhSwitchRow:'Switch household', hhSwitchSub:'{n} households on this account', hhNewRow:'Start a new household', hhRenameRow:'Rename the household', hhRenameTitle:'Household name', hhRenamed:'✅ Name updated',
+  myBitRow:'My Bit link', myBitSet:'Connected ✓. Money you collect goes here', myBitNone:'Not set yet. Needed to collect money after shopping', myBitTitle:'My Bit link', myBitSave:'Save', myBitSaved:'✅ Link saved', myBitClear:'Remove the link',
+  inviteExpires:'Expires in {n} days', inviteExpiresToday:'Expires today', meLabel:'(me)', memberSheetChangeRole:'Change role', memberSheetEditName:'✏️ Change my name in this household', memberSheetRemove:'Remove from household', memberSheetLeave:'🚪 Leave the household', memberSheetTransfer:'Hand management to {n}', transferPick:'Who should manage the household?', dangerTransfer:'Hand over management', dangerDelete:'Delete the household', dangerLeave:'Leave the household',
+  itemFontLabel:'Item font', itemFontHand:'Handwriting', itemFontPlain:'Plain', versionRow:'Version',
+  fabAdd:'Add an item', listProgress:'{d} of {n} collected', fabRequest:'Request an item', requestTitle:'Request an item', requestGo:'Send for approval', collected:'Collected',
   leaveListTitle:'Leave this list?', leaveListConfirm:'You’ll go back to the home screen. The list stays exactly as it is.', leaveListAction:'Yes, leave',
 },
 };
@@ -936,7 +1008,7 @@ const CAT_ORDER = ['produce','nuts','bakery','ready','pantry','canned','grains',
 /* "what's new" — bump WHATS_NEW_VERSION and add one new entry at the END of each array whenever
    there's something worth announcing to EXISTING users (not every build, just real features).
    A brand-new user never sees this — they get the full guide instead, and are marked caught-up. */
-const WHATS_NEW_VERSION = 4;
+const WHATS_NEW_VERSION = 5;
 const WHATS_NEW = {
 he: [
   {version:1, items:[
@@ -963,6 +1035,14 @@ he: [
   {version:4, items:[
     'לחיצה ארוכה על מוצר וגרירה מזיזה אותו למקום אחר ברשימה, או לקטגוריה אחרת',
     'אפשר גם לבחור קטגוריה ידנית בחלון עריכת המוצר',
+  ]},
+  {version:5, items:[
+    'מבנה חדש: שלוש לשוניות קבועות בתחתית, בית · רשימות · משק הבית',
+    'עמוד בית חדש: הרשימה להמשיך, הוספה מהירה, מה מחכה לך ומה קרה לאחרונה',
+    'עמוד משק הבית: מי בבית, מה כל אחד יכול לעשות, הזמנות וקישור ביט',
+    'התפקידים פשוטים יותר: מנהל, שותף ומבקש. כל אחד רואה רק את מה שהוא יכול לעשות',
+    'מסך הרשימה נקי יותר: המוצרים מתחילים גבוה, והפעולות בתפריט ⋯',
+    'מי ששילם בקופה יכול לגבות בעצמו, לקישור הביט שלו',
   ]},
 ],
 en: [
@@ -991,6 +1071,14 @@ en: [
     'Long-press an item and drag to move it elsewhere in the list, or into another category',
     'You can also pick an item\'s category by hand in the edit window',
   ]},
+  {version:5, items:[
+    'A new layout: three fixed tabs at the bottom, Home · Lists · Household',
+    'A new Home: the list to continue, quick add, what waits for you and what just happened',
+    'A Household tab: who\'s here, what each person can do, invites and your Bit link',
+    'Simpler roles: Manager, Partner and Requester. Everyone sees only what they can do',
+    'A cleaner list screen: items start higher, actions live in the ⋯ menu',
+    'Whoever paid at the till can collect, to their own Bit link',
+  ]},
 ],
 };
 
@@ -998,28 +1086,32 @@ en: [
    both new users (automatically, once) and anyone opening it later from Settings */
 const GUIDE = {
 he: [
-  {icon:'🏠', title:'משק בית ותפקידים', body:'כל רשימת קניות שייכת ל"משק בית" — קבוצת אנשים שקונים ביחד. לכל חבר יש תפקיד: <b>ראש/ת משק בית</b> שולט/ת בהכל כולל הזמנות ומחיקה, <b>עריכה מלאה</b> יכול/ה להוסיף ולסמן בלי אישור, <b>בקשת מוצרים</b> צריך/ה אישור של עורך לפני שהמוצר מופיע ברשימה, ו<b>צפייה בלבד</b> רואה הכל בלי לגעת. אפשר לשנות תפקיד של כל חבר מתוך "ניהול חברי משק הבית".'},
-  {icon:'📋', title:'רשימות קניות', body:'במשק בית אחד אפשר לפתוח כמה רשימות (למשל "סופר שבועי" ו"בית מרקחת"). רשימה "פעילה" פתוחה להוספה וסימון; אחרי שסוגרים אותה היא עוברת ל"היסטוריה" ונשארת לקריאה בלבד.'},
+  {icon:'🏠', title:'שלוש לשוניות', body:'בתחתית המסך יש שלושה מקומות קבועים: <b>בית</b> (מה עכשיו: הרשימה להמשיך, מה מחכה לך, מה קרה לאחרונה), <b>רשימות</b> (רשימות פעילות וקניות קודמות לפי חודשים), ו<b>משק הבית</b> (מי בבית, הזמנות, קישור ביט והחלפת משק בית). רשימה פתוחה תופסת את כל המסך, והחץ למעלה מחזיר אחורה.'},
+  {icon:'👥', title:'תפקידים', body:'לכל אדם במשק הבית יש תפקיד: <b>מנהל</b> מנהל את משק הבית (הזמנות, תפקידים ותשלומים), <b>שותף</b> מוסיף, אוסף ומאשר בקשות, ו<b>מבקש</b> מבקש מוצרים שמחכים לאישור של מנהל או שותף. בעמוד משק הבית רואים את התפקיד של כל אחד, ולחיצה על אדם פותחת את הפעולות עליו.'},
+  {icon:'📋', title:'רשימות קניות', body:'במשק בית אחד אפשר לפתוח כמה רשימות (למשל "סופר שבועי" ו"פארם"). רשימה אחת אפשר לסמן כ<b>ראשית</b>, וההוספה המהירה בעמוד הבית נכנסת אליה. אחרי "סיום קניות" הרשימה עוברת ל"קניות קודמות" ונשארת לקריאה בלבד.'},
   {icon:'➕', title:'הוספת מוצרים', body:'לוחצים על + ומקלידים שם מוצר. האפליקציה מנחשת קטגוריה ואימוג׳י מתאים לבד — מילון מקומי מיידי, ואם הוא לא מזהה את המוצר, AI משדרג את הסיווג ברקע תוך כמה שניות בלי לעכב את ההוספה. אם המוצר כבר ברשימה, תופיע התראה עדינה עם אפשרות להוסיף בכל זאת.'},
   {icon:'✅', title:'סימון מוצרים', body:'לוחצים על העיגול ליד המוצר, או מחליקים עליו, כדי לסמן שהוא נאסף. ליד כל מוצר רואים בקטן מי הוסיף אותו, ומוצר שנאסף מראה גם מי אסף אותו — כך כשמתפזרים בסופר כל אחד רואה מה כבר נלקח.'},
-  {icon:'🙋', title:'בקשות לאישור', body:'מי שבתפקיד "בקשת מוצרים" מוסיף פריטים שממתינים לאישור בראש הרשימה. ראש משק הבית או מי שיש לו עריכה מלאה יכולים לאשר (✓) או לדחות (✕). מי שביקש יכול גם לערוך או למחוק את הבקשה שלו לפני שהיא מאושרת.'},
+  {icon:'🙋', title:'בקשות לאישור', body:'מה שמבקש מוסיף מחכה בפס "בקשות לאישור" בראש הרשימה. מנהל או שותף פותחים את הפס ומאשרים (✓) או דוחים (✕). המבקש יכול לערוך או למחוק בקשה שלו עד שהיא מאושרת.'},
   {icon:'🔄', title:'סנכרון חי ואופליין', body:'כל שינוי מופיע אצל כל בני משק הבית כמעט מיידית, בלי לרענן. כשאין רשת, אפשר להמשיך להוסיף ולסמן כרגיל — הכל נשמר במכשיר ומסתנכרן אוטומטית ברגע שחוזר חיבור.'},
   {icon:'🏁', title:'סיום קניות', body:'בסיום סבב קניות לוחצים "סיום קניות". אם נשארו מוצרים שלא נאספו, האפליקציה שואלת מה לעשות איתם: להשאיר ברשימה הסגורה, להעביר לרשימה פתוחה אחרת, או לפתוח להם רשימה חדשה.'},
   {icon:'📤', title:'שיתוף והזמנות', body:'אפשר להזמין בני משפחה למשק הבית עם קוד או קישור, ולבחור לכל מוזמן תפקיד מראש. בתוך רשימה אפשר גם לשלוח סיכום "נאסף/חסר" ישירות ב-WhatsApp.'},
-  {icon:'⚙️', title:'הגדרות אישיות', body:'מתפריט החשבון (האווטאר למעלה) אפשר לשנות ערכת נושא (בהיר/כהה/לפי המכשיר), גודל טקסט, שם תצוגה, סיסמה, ולסנכרן ידנית.'},
-  {icon:'👥', title:'ניהול משק הבית', body:'ראש משק הבית יכול להעביר את הבעלות לחבר אחר, להסיר חברים, ולמחוק משק בית לצמיתות (כולל כל הרשימות וההיסטוריה שלו). כל חבר יכול לעזוב משק בית בכל עת — חוץ מראש משק הבית, שצריך קודם להעביר בעלות אם יש עוד חברים.'},
+  {icon:'⚙️', title:'הגדרות אישיות', body:'מהאווטאר למעלה בעמוד הבית: מצב תצוגה (בהיר, כהה, אוטומטי), גודל טקסט, גופן המוצרים (כתב יד או רגיל), שפה, שם, סיסמה וסנכרון ידני.'},
+  {icon:'💰', title:'חלוקת החשבון', body:'אחרי "סיום קניות", מי ששילם בקופה (מנהל או שותף) מזין את הסכום ואת החלוקה. כל אחד רואה את החלק שלו בעמוד הבית, משלם בביט לקישור של מי ששילם, ולוחץ "שילמתי". את קישור הביט שומרים פעם אחת בעמוד משק הבית.'},
+  {icon:'🛡️', title:'ניהול משק הבית', body:'המנהל יכול להעביר את הניהול לאדם אחר, להסיר אנשים ולמחוק את משק הבית לצמיתות. הפעולות האלה נמצאות בתחתית עמוד משק הבית. כל אחד יכול לצאת ממשק הבית, חוץ מהמנהל, שצריך קודם להעביר את הניהול אם יש עוד אנשים.'},
 ],
 en: [
-  {icon:'🏠', title:'Household & roles', body:'Every shopping list belongs to a "household" — a group that shops together. Each member has a role: <b>owner</b> controls everything including invites and deletion, <b>editor</b> can add and check items without approval, <b>requester</b> needs an editor to approve items before they appear on the list, and <b>viewer</b> sees everything without touching it. Change anyone’s role from "Manage household members".'},
+  {icon:'🏠', title:'Three tabs', body:'The bar at the bottom has three fixed places: <b>Home</b> (what now: the list to continue, what waits for you, what just happened), <b>Lists</b> (active lists and past shopping by month), and <b>Household</b> (who\'s here, invites, your Bit link, switching households). An open list takes the whole screen; the arrow at the top takes you back.'},
+  {icon:'👥', title:'Roles', body:'Everyone in a household has a role: a <b>Manager</b> runs the household (invites, roles, payments), a <b>Partner</b> adds, collects and approves requests, and a <b>Requester</b> asks for items that wait for a manager or partner to approve. The Household tab shows everyone\'s role; tap a person for actions.'},
   {icon:'📋', title:'Shopping lists', body:'One household can have several lists at once (e.g. "weekly groceries" and "pharmacy"). An "open" list accepts new items and checkmarks; once you close it, it moves to history as read-only.'},
   {icon:'➕', title:'Adding items', body:'Tap + and type an item name. The app guesses a category and emoji instantly from a local dictionary, and if it doesn’t recognize the item, AI upgrades the category in the background within seconds without ever delaying the add. If the item is already on the list, a gentle warning lets you add it anyway if you really mean to.'},
   {icon:'✅', title:'Checking items off', body:'Tap the circle next to an item, or swipe it, to mark it collected. Each item shows who added it, and a collected item also shows who collected it — so when everyone splits up in the store, everyone can see what’s already taken.'},
-  {icon:'🙋', title:'Pending requests', body:'Anyone with the "requester" role adds items that wait for approval at the top of the list. The owner or any editor can approve (✓) or reject (✕). The requester can also edit or delete their own request before it’s approved.'},
+  {icon:'🙋', title:'Requests', body:'What a requester adds waits in the "requests" bar at the top of the list. A manager or partner opens it and approves (✓) or rejects (✕). Requesters can edit or delete their own request until it\'s approved.'},
   {icon:'🔄', title:'Real-time sync & offline', body:'Every change appears for the whole household almost instantly, no refresh needed. With no connection, you can keep adding and checking items as usual — everything is saved on the device and syncs automatically the moment you’re back online.'},
   {icon:'🏁', title:'Finishing a shopping trip', body:'When you’re done, tap "finish shopping". If anything is still unchecked, the app asks what to do with it: leave it in the closed list, move it to another open list, or start a new list for it.'},
   {icon:'📤', title:'Sharing & invites', body:'Invite family members to the household with a code or link, and pick a role for them in advance. From inside a list you can also send a "collected/still needed" summary straight to WhatsApp.'},
-  {icon:'⚙️', title:'Personal settings', body:'From the account menu (the avatar up top) you can change the theme (light/dark/system), text size, display name, password, and sync manually.'},
-  {icon:'👥', title:'Managing the household', body:'The owner can transfer ownership to another member, remove members, and permanently delete a household (including all of its lists and history). Any member can leave at any time — except the owner, who needs to transfer ownership first if other members remain.'},
+  {icon:'⚙️', title:'Personal settings', body:'From your avatar at the top of Home: theme (light, dark, auto), text size, item font (handwriting or plain), language, name, password and manual sync.'},
+  {icon:'💰', title:'Splitting the bill', body:'After "finish shopping", whoever paid at the till (a manager or partner) enters the total and the split. Everyone sees their share on Home, pays with Bit to the payer\'s link, and taps "I paid". You save your Bit link once on the Household tab.'},
+  {icon:'🛡️', title:'Managing the household', body:'The manager can hand over management, remove people and permanently delete the household; these sit at the bottom of the Household tab. Anyone can leave, except the manager, who first hands over management if others remain.'},
 ],
 };
 
@@ -1056,6 +1148,7 @@ en: [
     if(theme==='system') document.documentElement.removeAttribute('data-theme');
     else document.documentElement.setAttribute('data-theme', theme);
     document.documentElement.setAttribute('data-fontsize', fontSize);
+    document.documentElement.setAttribute('data-itemfont', typeof itemFont==='string'?itemFont:'hand');
   }
   function setTheme(t){
     theme = (t==='light'||t==='dark') ? t : 'system';
@@ -1067,6 +1160,13 @@ en: [
     try{ localStorage.setItem('cs-fontsize', fontSize); }catch(e){}
     apply();
   }
+  let itemFont='hand';
+  try{ itemFont = localStorage.getItem('cs-itemfont')==='plain' ? 'plain' : 'hand'; }catch(e){}
+  function setItemFont(f){
+    itemFont = f==='plain' ? 'plain' : 'hand';
+    try{ localStorage.setItem('cs-itemfont', itemFont); }catch(e){}
+    apply();
+  }
   function t(key){ return (STRINGS[lang]&&STRINGS[lang][key]) || STRINGS.he[key] || key; }
   function authErr(e){
     const msg = (e&&e.message) || String(e);
@@ -1076,7 +1176,7 @@ en: [
   }
   function setLang(l){ lang = l==='en'?'en':'he'; try{localStorage.setItem('cs-lang',lang)}catch(e){} apply(); if(window.CS.render) window.CS.render(); }
   apply();
-  Object.assign(window.CS,{t,lang:()=>lang,setLang,theme:()=>theme,setTheme,fontSize:()=>fontSize,setFontSize,authErr,CATS,CAT_ORDER,
+  Object.assign(window.CS,{t,lang:()=>lang,setLang,theme:()=>theme,setTheme,fontSize:()=>fontSize,setFontSize,itemFont:()=>itemFont,setItemFont,authErr,CATS,CAT_ORDER,
     guide:()=>GUIDE[lang]||GUIDE.he, whatsNew:()=>WHATS_NEW[lang]||WHATS_NEW.he, whatsNewVersion:WHATS_NEW_VERSION});
 })();
 </script>
@@ -1341,8 +1441,14 @@ function confirmSheet(opts){
 /* ---------- screens ---------- */
 function setScreen(name){
   $('splash').hidden = true;
-  ['auth','onboard','home','lists','main'].forEach(s=>{ $('view-'+s).hidden = s!==name; });
+  ['auth','onboard','home','lists','household','main'].forEach(s=>{ $('view-'+s).hidden = s!==name; });
+  document.body.dataset.screen = name;
   document.body.classList.toggle('in-list', name==='main');
+  const tabbed = name==='home'||name==='lists'||name==='household';
+  $('tabbar').hidden = !tabbed;
+  $('topbar').hidden = name==='auth'||name==='onboard';
+  document.querySelectorAll('#tabbar [data-tab]').forEach(b=>{ if(b.dataset.tab===name) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); });
+  window.scrollTo(0,0);
 }
 
 /* ---------- i18n paint ---------- */
@@ -1351,7 +1457,6 @@ function setScreen(name){
 function field(id,text){ const el=$(id); if(!el) return; el.placeholder=text; el.setAttribute('aria-label',text); }
 function paintStrings(){
   const t = CS.t;
-  $('brand-name').textContent = (window.CS.currentHouseholdName && window.CS.currentHouseholdName()) || t('appName');
   $('auth-title').textContent = t('authHero');
   $('auth-sub').textContent = t('authSub');
   $('tab-login').textContent = t('login');
@@ -1362,32 +1467,44 @@ function paintStrings(){
   $('au-forgot').textContent = t('forgot');
   $('onboard-title').textContent = t('onboardTitle');
   $('onboard-sub').textContent = t('onboardSub');
+  $('join-h').textContent = t('joinH');
+  $('join-sub').textContent = t('joinSub');
+  field('join-code', t('joinPh'));
+  $('join-go').textContent = t('joinGo');
   $('create-h').textContent = t('createHh');
   field('hh-name', t('hhNamePh'));
   $('hh-create').textContent = t('create');
-  $('trip-label').textContent = t('tripActive');
-  $('trip-close').textContent = t('tripClose');
-  $('home-lists-heading').textContent = t('homeListsHeading');
-  $('home-lists-more').textContent = t('homeListsMore');
-  $('home-lists-empty-text').textContent = t('listsEmpty');
-  $('home-lists-new-label').textContent = t('newListTitle');
+  field('home-quick-input', t('quickPh'));
+  $('home-quick-go').setAttribute('aria-label', t('ariaQuickAdd'));
+  $('home-waiting-h').textContent = t('waitingH');
+  $('home-others-h').textContent = t('othersH');
+  $('home-feed-h').textContent = t('feedH');
+  $('lists-new-label').textContent = t('newListTitle');
   $('lists-open-title').textContent = t('listsOpenTitle');
   $('lists-closed-title').textContent = t('listsClosedTitle');
   $('lists-empty-text').textContent = t('listsEmpty');
+  $('hh-members-h').textContent = t('hhMembersH');
+  $('hh-invites-h').textContent = t('hhInvitesH');
+  $('hh-bit-h').textContent = t('hhBitH');
+  $('hh-more-h').textContent = t('hhMoreH');
+  $('hh-invite').textContent = '＋ '+t('homeInvite');
   field('search-input', t('searchPh'));
   if($('item-input')) field('item-input', t('itemPh')); // only exists while the add sheet is open
   if($('item-qty')) field('item-qty', t('qtyPh'));
   if($('item-add')) $('item-add').textContent = t('add');
-  $('pending-title').textContent = t('pendingTitle');
   $('empty-text').textContent = t('emptyList');
-  $('fab-add-label').textContent = t('addToListFab');
-  $('fab-add').setAttribute('aria-label', t('addToListFab'));
+  $('list-finish').textContent = t('tripClose');
+  $('tab-home-label').textContent = t('tabHome');
+  $('tab-lists-label').textContent = t('tabLists');
+  $('tab-household-label').textContent = t('tabHousehold');
   $('refresh-label').textContent = t('refreshLabel');
   $('get-app-label').textContent = t('getAndroidApp');
+  $('get-app-close').setAttribute('aria-label', t('ariaClose'));
   $('au-google-label').textContent = t('googleGo');
   $('au-or-label').textContent = t('orEmail');
   const authGoMode = $('au-go').dataset.mode || 'login';
   $('au-go').textContent = authGoMode==='signup'?t('signupGo'):authGoMode==='reset'?t('resetGo'):t('loginGo');
+  if(window.CS.paintChrome) window.CS.paintChrome(); // the data layer repaints the header, tabs and role-dependent bits
 }
 
 /* ---------- member avatars: each person gets a stable color, hashed from their user id ---------- */
@@ -1418,124 +1535,86 @@ function fmtDate(iso){
   if(!iso) return '';
   try{ return new Date(iso).toLocaleDateString(CS.lang()==='he'?'he-IL':'en-US',{day:'numeric',month:'short'}); }catch(e){ return ''; }
 }
-/* ---------- home dashboard: list previews with remaining counts ---------- */
-function renderHomeLists(previewLists, counts, hasMore){
+/* ---------- home: the other open lists (the main one has the big card) ---------- */
+function renderHomeLists(previewLists, counts){
   const box=$('home-lists-preview');
   box.innerHTML=(previewLists||[]).map(l=>{
     const n=(counts&&counts[l.id])||0;
     const meta=n?CS.t('itemsLeft').replace('{n}',n):CS.t('allCollected');
     return `<li><button class="list-row" data-list="${l.id}">
-      <span class="e" style="font-size:1.3rem">🛒</span><span class="nm">${esc(l.name)}</span><span class="meta">${esc(meta)}</span>
+      <span class="e" style="font-size:1.3rem" aria-hidden="true">🛒</span><span class="nm">${esc(l.name)}</span><span class="meta">${esc(meta)}</span>
     </button></li>`;
   }).join('');
-  $('home-lists-empty').hidden=!!(previewLists&&previewLists.length);
-  box.hidden=!(previewLists&&previewLists.length);
-  $('home-lists-more').hidden=!hasMore;
+  $('home-others-section').hidden=!(previewLists&&previewLists.length);
 }
-/* search collapses to a single pill by default — tapping it reveals the field in its place */
-function collapseSearch(){
-  const input=$('search-input'); if(!input) return;
-  if(!input.value.trim()){ input.hidden=true; $('search-toggle').hidden=false; }
+function timeAgo(iso){
+  const t=CS.t, m=Math.max(0,Math.round((Date.now()-new Date(iso).getTime())/60000));
+  if(m<1) return t('agoNow');
+  if(m<60) return t('agoMin').replace('{n}',m);
+  if(m<24*60) return t('agoHour').replace('{n}',Math.round(m/60));
+  return t('agoDay').replace('{n}',Math.round(m/1440));
 }
-if($('search-toggle')) $('search-toggle').addEventListener('click',()=>{
-  $('search-toggle').hidden=true;
-  const input=$('search-input'); input.hidden=false; focusField(input);
-});
-if($('search-input')) $('search-input').addEventListener('blur',()=>setTimeout(collapseSearch,120));
-
-/* long-press an open list row to reveal a delete button, same as closed-list rows already have —
-   a plain tap still navigates; only a sustained press exposes the destructive action */
-function attachLongPress(container){
-  container.querySelectorAll('li > .list-row[data-list]').forEach(btn=>{
-    const li=btn.parentElement;
-    let timer=null, justRevealed=false;
-    const clearTimer=()=>{ clearTimeout(timer); timer=null; };
-    btn.addEventListener('pointerdown',()=>{
-      clearTimer();
-      timer=setTimeout(()=>{
-        timer=null;
-        if(!li.classList.contains('list-row-wrap')){
-          li.classList.add('list-row-wrap');
-          const del=document.createElement('button');
-          del.className='list-del';
-          del.dataset.delList=btn.dataset.list;
-          del.setAttribute('aria-label', CS.t('deleteList'));
-          del.textContent='🗑️';
-          li.appendChild(del);
-          justRevealed=true;
-          if(navigator.vibrate) navigator.vibrate(15);
-        }
-      },550);
-    });
-    btn.addEventListener('pointerup',clearTimer);
-    btn.addEventListener('pointercancel',clearTimer);
-    btn.addEventListener('pointerleave',clearTimer);
-    btn.addEventListener('click',e=>{
-      if(justRevealed){ justRevealed=false; e.preventDefault(); e.stopPropagation(); return; }
-      if(li.classList.contains('list-row-wrap')){
-        e.preventDefault(); e.stopPropagation();
-        li.classList.remove('list-row-wrap');
-        const del=li.querySelector('.list-del'); if(del) del.remove();
-      }
-    });
-  });
-}
-const fmtMoney=a=>'₪'+Number(a||0).toLocaleString('he-IL',{maximumFractionDigits:2});
-function renderLists(lists, canManage){
+const fmtMoney=a=>Number(a||0).toLocaleString('he-IL',{maximumFractionDigits:2})+' ₪';
+const ICON_MORE='<svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>';
+function renderLists(lists, canManage, mainId, counts){
+  const t=CS.t;
   const open=(lists||[]).filter(l=>l.status==='open');
   const closed=(lists||[]).filter(l=>l.status==='closed');
-  $('lists-open').innerHTML = open.map(l=>`<li><button class="list-row" data-list="${l.id}">
-    <span class="e" style="font-size:1.3rem">🛒</span><span class="nm">${esc(l.name)}</span><span class="meta">${esc(fmtDate(l.created_at))}</span>
-  </button></li>`).join('');
+  const more=l=>canManage?`<button class="row-more" data-list-more="${l.id}" aria-label="${esc(t('ariaMore').replace('{t}',l.name))}">${ICON_MORE}</button>`:'';
+  $('lists-open').innerHTML = open.map(l=>{
+    const n=counts&&counts[l.id];
+    const meta=n==null?fmtDate(l.created_at):(n?t('itemsLeft').replace('{n}',n):t('allCollected'));
+    return `<li class="list-row-wrap"><button class="list-row" data-list="${l.id}">
+    <span class="e" style="font-size:1.3rem" aria-hidden="true">🛒</span><span class="txt"><span class="nm-row"><span class="nm">${esc(l.name)}</span>${l.id===mainId?`<span class="star">⭐ ${esc(t('mainList'))}</span>`:''}</span><span class="meta">${esc(meta)}</span></span>
+  </button>${more(l)}</li>`;}).join('');
   $('lists-empty').hidden = !!open.length;
-  if(canManage) attachLongPress($('lists-open'));
   $('lists-closed-box').hidden = !closed.length;
-  // what this month's trips came to, from the totals owners entered
-  const now=new Date(), month=closed.filter(l=>l.total&&l.closed_at&&new Date(l.closed_at).getMonth()===now.getMonth()&&new Date(l.closed_at).getFullYear()===now.getFullYear());
-  $('lists-month').textContent = month.length ? CS.t('payMonth').replace('{a}',fmtMoney(month.reduce((s,l)=>s+(+l.total||0),0))) : '';
-  $('lists-closed').innerHTML = closed.map(l=>`<li class="list-row-wrap">
-    <button class="list-row closed" data-list="${l.id}">
-      <span class="e" style="font-size:1.3rem">✅</span><span class="nm">${esc(l.name)}</span><span class="meta">${l.total?esc(fmtMoney(l.total))+' · ':''}${esc(CS.t('closedOn').replace('{d}',fmtDate(l.closed_at)))}</span>
-    </button>
-    ${canManage?`<button class="list-del" data-del-list="${l.id}" aria-label="${esc(CS.t('deleteList'))}">🗑️</button>`:''}
-  </li>`).join('');
+  // past shopping, one block per month, each with what that month's trips came to
+  const byMonth=[];
+  closed.forEach(l=>{
+    const d=new Date(l.closed_at||l.created_at), key=d.getFullYear()+'-'+d.getMonth();
+    let g=byMonth.find(x=>x.key===key);
+    if(!g){ g={key,label:d.toLocaleDateString(CS.lang()==='he'?'he-IL':'en-US',{month:'long',year:'numeric'}),rows:[],sum:0}; byMonth.push(g); }
+    g.rows.push(l); g.sum+=(+l.total||0);
+  });
+  $('lists-closed').innerHTML = byMonth.map(g=>`<div class="month-h"><span>${esc(g.label)}</span>${g.sum?`<span class="sum">${esc(fmtMoney(g.sum))}</span>`:''}</div>
+    <ul class="list">${g.rows.map(l=>`<li class="list-row-wrap">
+      <button class="list-row closed" data-list="${l.id}">
+        <span class="e" style="font-size:1.3rem" aria-hidden="true">✅</span><span class="txt"><span class="nm">${esc(l.name)}</span><span class="meta">${l.total?esc(fmtMoney(l.total))+' · ':''}${esc(t('closedOn').replace('{d}',fmtDate(l.closed_at)))}</span></span>
+      </button>${more(l)}</li>`).join('')}</ul>`).join('');
 }
 
 /* ---------- view mode: grouped-by-category vs flat+draggable ---------- */
 let viewMode='grouped';
 try{ viewMode = localStorage.getItem('cs-view')||'grouped'; }catch(e){}
-function paintViewToggle(){
-  $('top-hhbar-view').textContent = viewMode==='flat'?'📋':'🗂️';
-  // shows what a tap switches to: category cards, or one flat reorderable list
-  $('list-hero-view').innerHTML = viewMode==='flat'
-    ? '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="6" rx="2"/><rect x="4" y="14" width="16" height="6" rx="2"/></svg>'
-    : '<svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h14M5 18h14"/></svg>';
-}
-function setViewMode(m){ viewMode=m; try{localStorage.setItem('cs-view',m)}catch(e){} paintViewToggle(); if(window.CS.rerenderMain) window.CS.rerenderMain(); }
-$('top-hhbar-view').addEventListener('click',()=>setViewMode(viewMode==='flat'?'grouped':'flat'));
-$('list-hero-view').addEventListener('click',()=>{ setViewMode(viewMode==='flat'?'grouped':'flat'); CS.toast(CS.t(viewMode==='flat'?'viewFlatToast':'viewGroupedToast')); });
-paintViewToggle();
+function setViewMode(m){ viewMode=m; try{localStorage.setItem('cs-view',m)}catch(e){} if(window.CS.rerenderMain) window.CS.rerenderMain(); }
 
 /* ---------- item rows ---------- */
 const ICON_TRASH='<svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg>';
 const ICON_TICK='<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>';
+// what this person may do comes from the data layer (CS.canEdit): a manager or partner edits the
+// list; a requester only asks, and only touches their own pending requests
 function itemRow(item, mode){
+  const t=CS.t;
   const cat = CS.CATS[item.category]||CS.CATS.other;
   const qty = item.qty ? `<span class="qty-tag">${esc(item.qty)}</span>` : '';
   const addedWho = personName(item.added_by_name);
+  const canEdit = !!(window.CS.canEdit && window.CS.canEdit());
+  const nm = item.text;
   if(mode==='pending'){
     const mine = item.created_by && CS.myId && item.created_by===CS.myId;
     const actions = mine
       ? `<span class="pending-actions">
-          <button class="ok-btn" data-action="edit" data-id="${item.id}" aria-label="${esc(CS.t('editItem'))}">✏️</button>
-          <button class="no-btn" data-action="del" data-id="${item.id}" aria-label="delete">🗑️</button>
+          <button class="ok-btn" data-action="edit" data-id="${item.id}" aria-label="${esc(t('editItem'))}">✏️</button>
+          <button class="no-btn" data-action="del" data-id="${item.id}" aria-label="${esc(t('ariaDelete').replace('{t}',nm))}">🗑️</button>
         </span>`
-      : `<span class="pending-actions">
-          <button class="ok-btn" data-action="approve" data-id="${item.id}" aria-label="approve">✓</button>
-          <button class="no-btn" data-action="reject" data-id="${item.id}" aria-label="reject">✕</button>
-        </span>`;
+      : canEdit ? `<span class="pending-actions">
+          <button class="ok-btn" data-action="approve" data-id="${item.id}" aria-label="${esc(t('ariaApprove').replace('{t}',nm))}">✓</button>
+          <button class="no-btn" data-action="reject" data-id="${item.id}" aria-label="${esc(t('ariaReject').replace('{t}',nm))}">✕</button>
+        </span>`
+      : `<span class="pending-state">${esc(t('pendingWaiting'))}</span>`;
     return `<li class="item" data-id="${item.id}">
-      <span class="emo e" data-cat="${esc(item.category||'other')}">${esc(item.emoji||cat.emoji)}</span>
+      <span class="emo e" data-cat="${esc(item.category||'other')}" aria-hidden="true">${esc(item.emoji||cat.emoji)}</span>
       <span class="t">${esc(item.text)}${addedWho}</span>
       ${qty}
       ${actions}
@@ -1543,20 +1622,28 @@ function itemRow(item, mode){
   }
   const done = item.status==='checked';
   const checkedWho = (done && item.checked_by_name)
-    ? `<span class="who-name checked-label">${esc(CS.t('checkedBy').replace('{n}',item.checked_by_name))}</span>` : '';
+    ? `<span class="who-name checked-label">${esc(t('checkedBy').replace('{n}',item.checked_by_name))}</span>` : '';
+  if(!canEdit){
+    // a requester sees the list as it is: no checkbox, no edit, no bin
+    return `<li class="item ro ${done?'done':''}" data-id="${item.id}">
+    <span class="emo e" data-cat="${esc(item.category||'other')}" aria-hidden="true">${esc(item.emoji||cat.emoji)}</span>
+    <span class="t"><span class="t-text">${esc(item.text)}</span>${qty}${done?`<span class="who-name checked-label">${esc(t('collected'))}</span>`:addedWho}</span>
+  </li>`;
+  }
   return `<li class="item ${done?'done':''}" data-id="${item.id}">
-    <button class="check" data-action="toggle" data-id="${item.id}" aria-label="check">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <button class="check" data-action="toggle" data-id="${item.id}" role="checkbox" aria-checked="${done}" aria-label="${esc(t('ariaCheck').replace('{t}',nm))}">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </button>
-    <span class="emo e" data-cat="${esc(item.category||'other')}">${esc(item.emoji||cat.emoji)}</span>
-    <button class="t" data-action="edit" data-id="${item.id}" aria-label="${esc(CS.t('editItem'))}"><span class="t-text">${esc(item.text)}</span>${qty}${addedWho}${checkedWho}</button>
+    <span class="emo e" data-cat="${esc(item.category||'other')}" aria-hidden="true">${esc(item.emoji||cat.emoji)}</span>
+    <button class="t" data-action="edit" data-id="${item.id}" aria-label="${esc(t('editItem'))}: ${esc(nm)}"><span class="t-text">${esc(item.text)}</span>${qty}${addedWho}${checkedWho}</button>
     <span class="done-mark" aria-hidden="true">${ICON_TICK}</span>
-    <button class="del" data-action="del" data-id="${item.id}" aria-label="delete">${ICON_TRASH}</button>
+    <button class="del" data-action="del" data-id="${item.id}" aria-label="${esc(t('ariaDelete').replace('{t}',nm))}">${ICON_TRASH}</button>
   </li>`;
 }
 
 /* swipe left/right on an item toggles check, as an alternative to the check button */
 function attachSwipe(container){
+  if(!(window.CS.canEdit && window.CS.canEdit())) return;
   container.querySelectorAll('.item[data-id]').forEach(el=>{
     let x0=null,y0=null,dx=0,active=false;
     el.addEventListener('pointerdown',e=>{
@@ -1685,18 +1772,12 @@ try{ localStorage.removeItem('cs-collapsed'); }catch(e){}
 /* "hide collected" toggle next to search — remembered per device */
 let hideDone=false;
 try{ hideDone=localStorage.getItem('cs-hide-done')==='1'; }catch(e){}
-function paintHideDone(nDone){
-  const btn=$('hide-done-btn'); if(!btn) return;
-  if(nDone===undefined) nDone=$('groups').querySelectorAll('.item.done').length;
-  $('groups').classList.toggle('hide-done',hideDone);
-  btn.setAttribute('aria-pressed',String(hideDone));
-  $('hide-done-label').textContent = hideDone ? CS.t('showDone').replace('{n}',nDone) : CS.t('hideDone');
-}
-$('hide-done-btn').addEventListener('click',()=>{
+function paintHideDone(){ $('groups').classList.toggle('hide-done',hideDone); }
+function toggleHideDone(){
   hideDone=!hideDone;
   try{ localStorage.setItem('cs-hide-done',hideDone?'1':'0'); }catch(e){}
   paintHideDone();
-});
+}
 function renderGroups(items){
   if(dragging) return; // never rebuild the rows under a finger mid-carry; the drop repaints with the latest data
   // checked items stay put among the active ones (same category, same position) — just marked done in place
@@ -1716,19 +1797,31 @@ function renderGroups(items){
     }).join('');
   }
   $('empty-state').hidden = !!visible.length;
-  const nameEl=$('top-hhbar-title');
-  $('list-hero-name').textContent = nameEl ? nameEl.textContent : '';
   const nDone=visible.filter(i=>i.status==='checked').length;
-  $('list-hero-count').textContent = CS.t('listCount').replace('{n}',visible.length).replace('{d}',nDone);
-  $('list-hero-bar').style.width = visible.length ? (100*nDone/visible.length)+'%' : '0';
-  paintHideDone(nDone);
+  paintHideDone();
   attachSwipe(box);
   attachLongDrag(box);
 
+  // requests: a manager/partner gets one folded bar ("2 requests to approve"); a requester sees them open
   const pending = items.filter(i=>i.status==='pending');
+  const canEdit = !!(window.CS.canEdit && window.CS.canEdit());
   $('pending-box').hidden = !pending.length;
+  $('pending-title').textContent = canEdit
+    ? (pending.length===1 ? CS.t('pendingCountOne') : CS.t('pendingCount').replace('{n}',pending.length))
+    : CS.t('myRequests');
+  const open = !canEdit || pendingOpen;
+  $('pending-toggle').setAttribute('aria-expanded',String(open));
+  $('pending-list').hidden = !open;
   $('pending-list').innerHTML = pending.map(i=>itemRow(i,'pending')).join('');
+  if(window.CS.onListPainted) window.CS.onListPainted(visible.length, nDone);
 }
+let pendingOpen=false;
+$('pending-toggle').addEventListener('click',()=>{
+  if(!(window.CS.canEdit && window.CS.canEdit())) return;
+  pendingOpen=!pendingOpen;
+  $('pending-toggle').setAttribute('aria-expanded',String(pendingOpen));
+  $('pending-list').hidden=!pendingOpen;
+});
 
 /* ---------- auth tabs ---------- */
 function setAuthMode(mode){
@@ -1758,7 +1851,7 @@ $('refresh-btn').addEventListener('click',()=>location.reload());
 Object.assign(window.CS,{
   $, esc, guess, openSheet, closeSheet, sheetHead, focusField, toast, toastAction, confirmSheet,
   setScreen, paintStrings, setAuthMode, renderMembers, renderGroups, renderLists, initials, personColor,
-  renderHomeLists, fmtDate,
+  renderHomeLists, fmtDate, timeAgo, fmtMoney, ICON_MORE, setViewMode, viewMode:()=>viewMode, toggleHideDone, hideDone:()=>hideDone, setPendingOpen:v=>{ pendingOpen=!!v; },
   render(){ paintStrings(); if(window.CS.rerenderMain) window.CS.rerenderMain(); },
 });
 paintStrings(); // body.html's hardcoded defaults are Hebrew; an English-preferring first visit needs this to actually show English, not just flip direction
@@ -1811,7 +1904,7 @@ function showOfflineNote(show){ const el=$('offline-note'); if(el){ el.hidden=!s
 
 function queueAdd(row){
   const tempId='tmp_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);
-  const status = role==='requester' ? 'pending' : 'active';
+  const status = canEdit() ? 'active' : 'pending';
   items.push({...row, id:tempId, status, checked_by:null, checked_at:null, created_at:new Date().toISOString(), updated_at:new Date().toISOString()});
   queue.push({op:'add', id:tempId, row});
   saveQueue(); cacheSnapshot(); paintItems();
@@ -1921,40 +2014,165 @@ window.onAndroidAuth=async(access_token,refresh_token)=>{
 };
 ['au-email','au-pass'].forEach(id=>$(id).addEventListener('keydown',e=>{ if(e.key==='Enter') doAuth(); }));
 
-function renderAccount(){
-  const box=$('acct-top');
-  if(!user){ box.innerHTML=''; $('listbar-acct').innerHTML=''; return; }
-  const ini=esc(CS.initials(user.user_metadata&&user.user_metadata.full_name||user.email));
-  box.innerHTML=`<button class="iconbtn avatarbtn" id="acct-btn" aria-label="account">${ini}</button>`;
-  $('acct-btn').onclick=openAccountSheet;
-  $('listbar-acct').innerHTML=`<button class="iconbtn avatarbtn" id="acct-btn2" aria-label="account">${ini}</button>`;
-  $('acct-btn2').onclick=openAccountSheet;
+/* ---------- roles: "viewer" was merged into "requester" (owner's call 2026-10-25) ---------- */
+const cap=s=>s?s[0].toUpperCase()+s.slice(1):'';
+const roleKey=r=>r==='viewer'?'requester':(r||'requester');
+const canEdit=()=>role==='owner'||role==='editor';
+window.CS.canEdit=canEdit;
+const roleLabel=r=>CS.t('role'+cap(roleKey(r)));
+const ROLE_ORDER={owner:0,editor:1,requester:2,viewer:2};
+// "שמואל ונטע" / "Shmuel and Neta"
+function listJoin(names){
+  names=names.filter(Boolean);
+  if(names.length<2) return names[0]||'';
+  const last=names[names.length-1], rest=names.slice(0,-1).join(', ');
+  return CS.lang()==='he' ? rest+' ו'+last : rest+' and '+last;
 }
+const approverNames=()=>listJoin(members.filter(m=>m.role==='owner'||m.role==='editor').map(m=>m.display_name||'?'));
+function myName(){
+  const mine=members.find(m=>m.user_id===(user&&user.id));
+  return (mine&&mine.display_name)||(user&&user.user_metadata&&user.user_metadata.full_name)||(user&&user.email)||'';
+}
+
+/* ---------- navigation: three tabs + a full-screen list, on the browser history so Android's back
+   button steps back one screen (MainActivity calls webView.goBack()). State {s, d}: d = depth above Home. */
+let screen='splash', curState=null;
+function setState(st,push){
+  try{ if(push) history.pushState(st,''); else history.replaceState(st,''); }catch(e){}
+  curState=st;
+}
+function showTab(name, opts){
+  opts=opts||{};
+  if(!household) return;
+  if(!opts.fromPop){
+    const d=(curState&&curState.d)||0;
+    if(name==='home'){
+      if(d>0 && curState.s!=='home'){ try{ history.go(-d); return; }catch(e){} } // popstate paints Home
+      setState({s:'home',d:0},false);
+    }else if(screen==='home' || !curState) setState({s:name,d:1},true);
+    else setState({s:name,d:Math.max(1,d)},false);
+  }
+  renderTab(name);
+}
+function renderTab(name){
+  screen=name;
+  CS.setScreen(name);
+  paintTop();
+  if(name==='home') renderHome();
+  else if(name==='lists') fetchLists();
+  else if(name==='household') renderHousehold();
+  trackPresence();
+}
+function goHome(){ showTab('home'); }
+function goBackFromList(){
+  try{ localStorage.removeItem('cs-last-list-at-'+household); }catch(e){} // left on purpose: don't resume into it next time
+  if(curState && curState.s==='main' && curState.d>0){ history.back(); return; }
+  showTab('lists');
+}
+addEventListener('popstate',e=>{
+  if(!household || !user) return;
+  if(!$('sheet').hidden){ closeSheet(); if(curState) try{ history.pushState(curState,''); }catch(err){} return; } // back closes the open sheet first
+  const st=e.state||{s:'home',d:0};
+  curState=st;
+  if(st.s==='main' && st.list) openList(st.list,{fromPop:true});
+  else renderTab(st.s==='lists'||st.s==='household'?st.s:'home');
+});
+document.querySelectorAll('#tabbar [data-tab]').forEach(b=>b.addEventListener('click',()=>{
+  const tab=b.dataset.tab;
+  if(tab===screen){ window.scrollTo({top:0,behavior:'smooth'}); return; }
+  showTab(tab);
+}));
+
+/* ---------- the header: what this screen is, plus its one or two actions ---------- */
+const ICON_BACK='<svg class="lc flip-rtl" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+const ICON_SEARCH='<svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>';
+const ICON_CHEV='<svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+const ICON_CHEV_SIDE='<svg class="lc chev flip-rtl" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>';
+function paintTop(){
+  const t=CS.t, row=$('tb-row'); if(!row) return;
+  const ini=user?esc(CS.initials(myName())):'';
+  const avatar=`<button class="tb-btn" id="tb-acct" aria-label="${esc(t('ariaSettings'))}">${ini}</button>`;
+  $('tb-progress').hidden = screen!=='main';
+  if(screen==='home'){
+    row.innerHTML=`<button class="tb-hh" id="tb-hh" aria-label="${esc(t('switchHousehold'))}: ${esc(hhName)}"><span class="nm">${esc(hhName||t('appName'))}</span>${ICON_CHEV}</button>${avatar}`;
+    $('tb-hh').onclick=openHouseholdSwitcher;
+  }else if(screen==='lists'){
+    row.innerHTML=`<div class="tb-title"><b>${esc(t('listsTitle'))}</b><small>${esc(hhName)}</small></div>`;
+  }else if(screen==='household'){
+    row.innerHTML=`<div class="tb-title"><b>${esc(t('homeMembers'))}</b><small>${esc(hhName)}</small></div>${avatar}`;
+  }else if(screen==='main'){
+    row.innerHTML=`<button class="tb-btn plain" id="tb-back" aria-label="${esc(t('ariaBack'))}">${ICON_BACK}</button>
+      <div class="tb-title"><b id="tb-list-name">${esc(curList?curList.name:'')}</b><small id="tb-list-sub"></small></div>
+      ${listStatus==='open'?`<button class="tb-btn" id="tb-search" aria-label="${esc(t('ariaSearch'))}" aria-expanded="${!$('search-row').hidden}">${ICON_SEARCH}</button>`:''}
+      <button class="tb-btn" id="tb-menu" aria-label="${esc(t('ariaMenu'))}">${CS.ICON_MORE}</button>`;
+    $('tb-back').onclick=goBackFromList;
+    if($('tb-search')) $('tb-search').onclick=toggleSearch;
+    $('tb-menu').onclick=openListMenu;
+    paintListSub();
+  }else row.innerHTML='';
+  if($('tb-acct')) $('tb-acct').onclick=openAccountSheet;
+}
+let lastTotal=0, lastDone=0;
+function paintListSub(){
+  const sub=$('tb-list-sub'); if(!sub) return;
+  const here=listStatus==='open'?presenceNames(listId):'';
+  sub.textContent=[lastTotal?CS.t('listProgress').replace('{d}',lastDone).replace('{n}',lastTotal):'', here?CS.t('listHere').replace('{n}',here):''].filter(Boolean).join(' · ');
+  $('tb-progress-bar').style.width = lastTotal ? (100*lastDone/lastTotal)+'%' : '0';
+}
+window.CS.onListPainted=(n,d)=>{ lastTotal=n; lastDone=d; paintListSub(); };
+// language switch: repaint whatever depends on strings outside the static markup
+window.CS.paintChrome=()=>{
+  if(!user || !household) return;
+  paintTop();
+  if(screen==='home') renderHome();
+  else if(screen==='lists') CS.renderLists(lists, canEdit(), starredMainId(), openCounts);
+  else if(screen==='household') renderHousehold();
+  else if(screen==='main') paintListChrome();
+};
+function toggleSearch(){
+  const row=$('search-row'), show=row.hidden;
+  row.hidden=!show;
+  if($('tb-search')) $('tb-search').setAttribute('aria-expanded',String(show));
+  if(show) focusField('search-input');
+  else if(searchQuery){ searchQuery=''; $('search-input').value=''; paintItems(); }
+}
+
+/* ---------- presence: who has which list open right now ---------- */
+let presenceState={};
+function presenceNames(lid){
+  if(!lid || !user) return '';
+  return listJoin(Object.keys(presenceState).filter(u=>u!==user.id && presenceState[u]===lid).map(nameOf));
+}
+function trackPresence(){
+  if(!hhChannel || !hhChannel.track) return;
+  const lid = screen==='main' && listStatus==='open' ? listId : null;
+  try{ const r=hhChannel.track({list:lid}); if(r && r.catch) r.catch(()=>{}); }catch(e){}
+}
+
+/* ---------- personal settings (the household's own settings live on its tab) ---------- */
 function openAccountSheet(){
   const t=CS.t;
-  const curTheme=CS.theme(), curFont=CS.fontSize(), curLang=CS.lang();
-  openSheet(sheetHead(t('settings'))+`
-    <div class="card">
+  const curTheme=CS.theme(), curFont=CS.fontSize(), curLang=CS.lang(), curItemFont=CS.itemFont();
+  openSheet(sheetHead(t('settings'))+`<div class="card">
       <div style="font-size:.9rem;color:var(--muted)" dir="ltr">${esc(user.email)}</div>
-
-      <p class="grp-h">${esc(t('settingsGroupHousehold'))}</p>
-      <button class="btn ghost" id="acct-members">👥 ${esc(t('homeMembers'))}</button>
-      <button class="btn ghost" id="acct-switch">🏠 ${esc(t('switchHousehold'))}</button>
-      ${household&&role==='owner'?`<button class="btn danger" id="acct-delete-hh">${esc(t('deleteHousehold'))}</button>`:''}
-
       <p class="grp-h">${esc(t('settingsGroupPersonal'))}</p>
       <p style="margin:2px 0 -4px">${esc(t('themeLabel'))}</p>
       <div class="role-pick" id="theme-pick">
-        ${['light','dark','system'].map(v=>`<button data-theme-opt="${v}" class="${v===curTheme?'active':''}">${esc(t('theme'+v[0].toUpperCase()+v.slice(1)))}</button>`).join('')}
+        ${['light','dark','system'].map(v=>`<button data-theme-opt="${v}" class="${v===curTheme?'active':''}" aria-pressed="${v===curTheme}">${esc(t('theme'+cap(v)))}</button>`).join('')}
       </div>
       <p style="margin:2px 0 -4px">${esc(t('fontSizeLabel'))}</p>
       <div class="role-pick" id="font-pick">
-        ${['normal','large','xlarge'].map(v=>`<button data-font-opt="${v}" class="${v===curFont?'active':''}">${esc(t('font'+v[0].toUpperCase()+v.slice(1)))}</button>`).join('')}
+        ${['normal','large','xlarge'].map(v=>`<button data-font-opt="${v}" class="${v===curFont?'active':''}" aria-pressed="${v===curFont}">${esc(t('font'+cap(v)))}</button>`).join('')}
+      </div>
+      <p style="margin:2px 0 -4px">${esc(t('itemFontLabel'))}</p>
+      <div class="role-pick" id="itemfont-pick">
+        <button data-itemfont-opt="hand" class="${curItemFont==='hand'?'active':''}" aria-pressed="${curItemFont==='hand'}" style="font-family:'Playpen Sans Hebrew',var(--body)">${esc(t('itemFontHand'))}</button>
+        <button data-itemfont-opt="plain" class="${curItemFont==='plain'?'active':''}" aria-pressed="${curItemFont==='plain'}">${esc(t('itemFontPlain'))}</button>
       </div>
       <p style="margin:2px 0 -4px">${esc(t('langLabel'))}</p>
       <div class="role-pick" id="lang-pick">
-        <button data-lang-opt="he" class="${curLang==='he'?'active':''}">עברית</button>
-        <button data-lang-opt="en" class="${curLang==='en'?'active':''}">English</button>
+        <button data-lang-opt="he" class="${curLang==='he'?'active':''}" aria-pressed="${curLang==='he'}">עברית</button>
+        <button data-lang-opt="en" class="${curLang==='en'?'active':''}" aria-pressed="${curLang==='en'}">English</button>
       </div>
       <button class="btn ghost" id="acct-profile">${esc(t('editProfile'))}</button>
 
@@ -1963,19 +2181,19 @@ function openAccountSheet(){
       <button class="btn ghost" id="acct-sync">🔄 ${esc(t('syncNow'))}</button>
       ${isAdmin?`<button class="btn ghost" id="acct-admin">🛠️ ${esc(t('adminPage'))}</button>`:''}
       <button class="btn ghost" id="acct-signout">👋 ${esc(t('signOut'))}</button>
+      <p class="sub" style="text-align:center;font-size:.8rem">${esc($('version-label').textContent)}</p>
     </div>`);
   if($('acct-admin')) $('acct-admin').onclick=()=>{ location.href='admin.html'; };
   $('theme-pick').querySelectorAll('[data-theme-opt]').forEach(b=>b.onclick=()=>{ CS.setTheme(b.dataset.themeOpt); openAccountSheet(); });
   $('font-pick').querySelectorAll('[data-font-opt]').forEach(b=>b.onclick=()=>{ CS.setFontSize(b.dataset.fontOpt); openAccountSheet(); });
+  $('itemfont-pick').querySelectorAll('[data-itemfont-opt]').forEach(b=>b.onclick=()=>{ CS.setItemFont(b.dataset.itemfontOpt); openAccountSheet(); });
   $('lang-pick').querySelectorAll('[data-lang-opt]').forEach(b=>b.onclick=()=>{ CS.setLang(b.dataset.langOpt); openAccountSheet(); });
   $('acct-profile').onclick=openProfileSheet;
-  $('acct-members').onclick=drawMembersSheet;
   $('acct-guide').onclick=()=>openGuideSheet();
   $('acct-sync').onclick=async()=>{ await flushQueue({resync:true}); await refreshHousehold(); toast('🔄'); };
-  $('acct-switch').onclick=()=>{ closeSheet(); openHouseholdSwitcher(); };
-  if($('acct-delete-hh')) $('acct-delete-hh').onclick=()=>deleteHousehold(openAccountSheet);
   $('acct-signout').onclick=async()=>{ await sb.auth.signOut(); closeSheet(); };
 }
+function renderAccount(){ if(user && household) paintTop(); }
 
 /* ---------- in-app guide: shown once automatically to every new user, reachable anytime from Settings ---------- */
 function openGuideSheet(){
@@ -2031,56 +2249,19 @@ async function listMyHouseholds(){
   if(error){ console.warn(error); return []; }
   return (data||[]).map(r=>({id:r.household_id,name:r.households&&r.households.name,role:r.role}));
 }
-let hhName='', hhBitLink='';
+let hhName='', hhBitLink='', mainListId=null;
 window.CS.currentHouseholdName=()=>household?hhName:null;
-function paintBrandName(){ $('brand-name').textContent = $('listbar-title').textContent = household?hhName:CS.t('appName'); }
-function memberCountLabel(n){ return n===1 ? CS.t('membersCountOne') : CS.t('membersCount').replace('{n}',n); }
-function paintMembersRow(){
-  const row=$('members-row'), heroRow=$('list-hero-members');
-  if(!household || !members.length){ row.hidden=heroRow.hidden=true; return; }
-  row.hidden=heroRow.hidden=false;
-  CS.renderMembers(members);
-  CS.renderMembers(members,'list-hero-avatars',4);
-  $('members-count-label').textContent = $('list-hero-mlabel').textContent = memberCountLabel(members.length);
-}
 function greetingText(){
   const h=new Date().getHours();
   const key = h>=5&&h<12 ? 'greetingMorning' : h>=12&&h<17 ? 'greetingAfternoon' : h>=17&&h<21 ? 'greetingEvening' : 'greetingNeutral';
-  const mine=members.find(m=>m.user_id===user.id);
-  const full=(mine&&mine.display_name)||(user.user_metadata&&user.user_metadata.full_name)||'';
-  const first=full.trim().split(' ')[0];
-  return CS.t(key).replace('{n}', first?(' '+first):'');
-}
-/* "where am I" only — who's in the household now lives in its own always-visible members-row,
-   painted separately by paintMembersRow(), not tied to this bar's per-screen mode */
-function setTopHhbar(mode){
-  const bar=$('top-hhbar');
-  if(mode==='none'){ bar.hidden=true; return; }
-  bar.hidden=false;
-  const shareBtn=$('top-hhbar-share'), viewBtn=$('top-hhbar-view'), newBtn=$('top-hhbar-new');
-  if(mode==='lists'){
-    $('top-hhbar-title').textContent=CS.t('homeLists');
-    $('top-hhbar-back').onclick=goHome;
-    shareBtn.hidden=true; viewBtn.hidden=true; newBtn.hidden=false;
-  }else if(mode==='main'){
-    $('top-hhbar-back').onclick=openListsPage;
-    shareBtn.hidden=false; viewBtn.hidden=false; newBtn.hidden=true;
-  }
-}
-function goHome(){
-  if(!household) return;
-  $('home-greeting').textContent=greetingText();
-  $('home-hh-name').textContent=hhName;
-  setTopHhbar('none');
-  CS.setScreen('home');
-  fetchHomeData().catch(()=>{}); // best-effort dashboard content — the screen already works without it
+  const first=myName().trim().split(' ')[0];
+  return CS.t(key).replace('{n}', first&&!first.includes('@')?(' '+first):'');
 }
 function applyCachedHousehold(cache){
   household=cache.hhId; hhName=cache.hhName||''; role=cache.role; members=cache.members||[];
   membersById={}; members.forEach(m=>membersById[m.user_id]=m);
-  paintBrandName();
-  paintMembersRow();
-  goHome();
+  setState({s:'home',d:0},false);
+  renderTab('home');
   showOfflineNote(true);
 }
 async function loadHousehold(hh, navigate){
@@ -2093,22 +2274,29 @@ async function loadHousehold(hh, navigate){
       sb.from('household_members').select('*').eq('household_id',hh),
     ]);
     if(e1||e2) throw (e1||e2);
-    if(!hrow){ if(navigate) CS.setScreen('onboard'); return; }
+    if(!hrow){ if(navigate){ screen='onboard'; CS.setScreen('onboard'); } return; }
     members=mrows||[]; membersById={}; members.forEach(m=>membersById[m.user_id]=m);
     role=(membersById[user.id]||{}).role||null;
-    hhName=hrow.name; hhBitLink=hrow.bit_link||'';
-    paintBrandName();
+    hhName=hrow.name; hhBitLink=hrow.bit_link||''; mainListId=hrow.main_list_id||null;
     await ensureDisplayName(hh);
-    paintMembersRow();
-    if(!$('view-lists').hidden) CS.renderLists(lists); // keep the open lists page's data fresh without navigating away from it
     showOfflineNote(false);
     subscribeHouseholdRealtime();
-    if(!navigate) return; // a background refresh (realtime update, resumed tab) must never yank the user off whatever screen they're on
-    // resume exactly where this household was left — a fresh boot should land in the list you
-    // were shopping from, not back at Home every time
-    let lastList=null; try{ lastList=localStorage.getItem('cs-last-list-'+hh); }catch(e){}
-    if(lastList && await openList(lastList, true)) return;
-    goHome();
+    if(!navigate){
+      // a background refresh (realtime update, resumed tab) must never yank the user off their screen,
+      // but whatever shows names, roles or permissions gets repainted
+      paintTop();
+      if(screen==='household') renderHousehold();
+      else if(screen==='lists') CS.renderLists(lists, canEdit(), starredMainId(), openCounts);
+      else if(screen==='main'){ paintListChrome(); paintItems(); }
+      return;
+    }
+    setState({s:'home',d:0},false);
+    // a fresh boot lands back in the list you were shopping from only if you were in it within the
+    // last hour (the app closed mid-shop); otherwise Home, where payments and requests wait
+    let lastList=null, lastAt=0;
+    try{ lastList=localStorage.getItem('cs-last-list-'+hh); lastAt=+(localStorage.getItem('cs-last-list-at-'+hh)||0); }catch(e){}
+    if(lastList && Date.now()-lastAt<60*60*1000 && await openList(lastList,{silent:true})) return;
+    renderTab('home');
   }catch(e){
     const cache=loadCache();
     if(cache && cache.hhId===hh) applyCachedHousehold(cache);
@@ -2116,20 +2304,9 @@ async function loadHousehold(hh, navigate){
   }
 }
 async function refreshHousehold(){ if(household) await loadHousehold(household, false); }
-$('brand-home-btn').addEventListener('click',async()=>{
-  if(!household) return;
-  if(!$('view-home').hidden){ openHouseholdSwitcher(); return; } // already home — "go home" would be a no-op, so this doubles as the household switcher
-  if(!$('view-main').hidden){ // leaving an open list mid-shopping shouldn't be one accidental tap away
-    const ok=await CS.confirmSheet({
-      title:CS.t('leaveListTitle'), body:CS.t('leaveListConfirm'), confirmLabel:CS.t('leaveListAction')
-    });
-    if(!ok) return;
-  }
-  goHome();
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='hidden' && screen==='main' && household){ try{ localStorage.setItem('cs-last-list-at-'+household,String(Date.now())); }catch(e){} }
 });
-$('members-row').addEventListener('click',()=>{ if(household) drawMembersSheet(); });
-$('list-hero-members').addEventListener('click',()=>{ if(household) drawMembersSheet(); });
-$('listbar-lists').addEventListener('click',()=>openListsPage());
 
 async function createHousehold(){
   const name=$('hh-name').value.trim();
@@ -2143,6 +2320,218 @@ async function createHousehold(){
   await loadHousehold(data);
 }
 $('hh-create').addEventListener('click',createHousehold);
+function openOnboard(){ screen='onboard'; CS.setScreen('onboard'); }
+// joining with a pasted invite: the whole link or just the code
+async function joinWithCode(){
+  const raw=$('join-code').value.trim(), msg=$('join-msg');
+  const m=raw.match(/[?&]join=([A-Za-z0-9_-]+)/);
+  const code=m?m[1]:raw.replace(/\s+/g,'');
+  if(!code){ msg.className='msg err'; msg.textContent=CS.t('needJoinCode'); msg.hidden=false; return; }
+  if($('join-go').disabled) return;
+  $('join-go').disabled=true; msg.hidden=true;
+  const {data,error}=await sb.rpc('accept_invite',{p_code:code});
+  $('join-go').disabled=false;
+  if(error){ msg.className='msg err'; msg.textContent=CS.t('errInvite'); msg.hidden=false; return; }
+  $('join-code').value='';
+  await loadHousehold(data);
+  toast(CS.t('joinedViaLink'));
+}
+$('join-go').addEventListener('click',joinWithCode);
+$('join-code').addEventListener('keydown',e=>{ if(e.key==='Enter') joinWithCode(); });
+
+/* ---------- the household tab: who's who and what each person can do ---------- */
+function myRoleText(){
+  const t=CS.t, r=roleKey(role);
+  if(r==='requester') return t('myRoleRequester').replace('{n}',esc(approverNames()));
+  return t('myRole'+cap(r));
+}
+const isMine=uid=>user && uid===user.id;
+async function renderHousehold(){
+  const t=CS.t;
+  $('hh-title').textContent=hhName;
+  const paintStats=()=>{
+    const now=new Date();
+    const month=lists.filter(l=>l.status==='closed'&&l.total&&l.closed_at&&new Date(l.closed_at).getMonth()===now.getMonth()&&new Date(l.closed_at).getFullYear()===now.getFullYear()).reduce((a,l)=>a+(+l.total||0),0);
+    const nOpen=lists.filter(l=>l.status==='open').length;
+    $('hh-stats').textContent=t('hhStats').replace('{p}',members.length===1?t('peopleOne'):t('peopleCount').replace('{n}',members.length)).replace('{l}',nOpen)+(month?t('hhStatsMonth').replace('{a}',CS.fmtMoney(month)):'');
+  };
+  paintStats();
+  $('hh-role-banner').innerHTML=myRoleText();
+  const sorted=members.slice().sort((a,b)=>(ROLE_ORDER[a.role]-ROLE_ORDER[b.role])||(isMine(b.user_id)-isMine(a.user_id))||String(a.display_name||'').localeCompare(String(b.display_name||'')));
+  $('hh-members').innerHTML=sorted.map(m=>{
+    const name=m.display_name||m.email||'?', r=roleKey(m.role);
+    return `<button class="member-btn" data-member="${m.user_id}">
+      <span class="avatar" style="background:${CS.personColor(m.user_id)}" aria-hidden="true">${esc(CS.initials(name))}</span>
+      <span class="who"><b>${esc(name)}${isMine(m.user_id)?' '+esc(t('meLabel')):''}</b><small>${esc(t('roleDesc'+cap(r)))}</small></span>
+      <span class="role-chip ${r}">${esc(roleLabel(r))}</span>
+    </button>`;
+  }).join('');
+  $('hh-members').querySelectorAll('[data-member]').forEach(b=>b.onclick=()=>openMemberSheet(b.dataset.member));
+  $('hh-invite').hidden=!canEdit();
+  $('hh-invite').onclick=openInviteSheet;
+  // my Bit link: where money goes when I'm the one who paid at the till
+  const me=membersById[user.id]||{}, myLink=me.bit_link||(role==='owner'?hhBitLink:'');
+  $('hh-bit-section').hidden=!canEdit();
+  $('hh-bit').innerHTML=`<span class="e" aria-hidden="true">💳</span><span class="tx">${esc(t('myBitRow'))}<small>${esc(myLink?t('myBitSet'):t('myBitNone'))}</small></span>${ICON_CHEV_SIDE}`;
+  $('hh-bit').onclick=openMyBitSheet;
+  $('hh-switch').innerHTML=`<span class="e" aria-hidden="true">🏠</span><span class="tx">${esc(t('hhSwitchRow'))}<small id="hh-switch-sub"></small></span>${ICON_CHEV_SIDE}`;
+  $('hh-switch').onclick=openHouseholdSwitcher;
+  $('hh-rename').hidden=role!=='owner';
+  $('hh-rename').innerHTML=`<span class="e" aria-hidden="true">✏️</span><span class="tx">${esc(t('hhRenameRow'))}</span>${ICON_CHEV_SIDE}`;
+  $('hh-rename').onclick=openRenameHouseholdSheet;
+  $('hh-new').innerHTML=`<span class="e" aria-hidden="true">➕</span><span class="tx">${esc(t('hhNewRow'))}</span>${ICON_CHEV_SIDE}`;
+  $('hh-new').onclick=openOnboard;
+  const others=members.filter(m=>!isMine(m.user_id));
+  $('hh-danger').innerHTML = role==='owner'
+    ? `${others.length?`<button class="linkbtn" id="hh-transfer">${esc(t('dangerTransfer'))}</button>`:''}<button class="linkbtn" id="hh-delete">${esc(t('dangerDelete'))}</button>`
+    : `<button class="linkbtn" id="hh-leave">${esc(t('dangerLeave'))}</button>`;
+  if($('hh-transfer')) $('hh-transfer').onclick=openTransferPicker;
+  if($('hh-delete')) $('hh-delete').onclick=()=>deleteHousehold(()=>{});
+  if($('hh-leave')) $('hh-leave').onclick=()=>removeMember(user.id);
+  listMyHouseholds().then(l=>{ const el=$('hh-switch-sub'); if(el && l.length>1) el.textContent=t('hhSwitchSub').replace('{n}',l.length); });
+  if(canEdit()) paintInvites(); else $('hh-invites-section').hidden=true;
+  if(!lists.length) fetchLists().then(()=>{ if(screen==='household') paintStats(); });
+}
+async function paintInvites(){
+  const t=CS.t, active=await fetchActiveInvites();
+  if(screen!=='household') return;
+  $('hh-invites-section').hidden=!active.length;
+  $('hh-invites').innerHTML=active.map(inv=>{
+    const days=Math.ceil((new Date(inv.expires_at)-Date.now())/864e5);
+    return `<div class="invite-row">
+      <span class="role-chip ${roleKey(inv.role)}">${esc(roleLabel(inv.role))}</span>
+      <span class="tx"><small>${esc(days<=1?t('inviteExpiresToday'):t('inviteExpires').replace('{n}',days))}</small></span>
+      <button class="row-more" data-share-invite="${esc(inv.code)}" aria-label="${esc(t('inviteShare'))}">📤</button>
+      <button class="row-more" data-revoke-invite="${esc(inv.code)}" aria-label="${esc(t('inviteRevoke'))}">🗑️</button>
+    </div>`;
+  }).join('');
+  $('hh-invites').querySelectorAll('[data-share-invite]').forEach(b=>b.onclick=()=>shareInvite(t('inviteShareText')+'\n'+joinUrlFor(b.dataset.shareInvite)));
+  $('hh-invites').querySelectorAll('[data-revoke-invite]').forEach(b=>b.onclick=async()=>{
+    const {error}=await sb.from('household_invites').delete().eq('code',b.dataset.revokeInvite);
+    if(error){ toast(CS.authErr(error)); return; }
+    toast(t('inviteRevoked'));
+    paintInvites();
+  });
+}
+// one person: what I can do with them depends on who I am (manager) and who they are (me or not)
+function openMemberSheet(uid){
+  const t=CS.t, m=membersById[uid]; if(!m) return;
+  const name=m.display_name||m.email||'?', self=isMine(uid), owner=role==='owner', r=roleKey(m.role);
+  let body=`<div class="row" style="display:flex;align-items:center;gap:12px">
+      <span class="avatar big" style="background:${CS.personColor(uid)}" aria-hidden="true">${esc(CS.initials(name))}</span>
+      <div><b>${esc(name)}${self?' '+esc(t('meLabel')):''}</b><div class="sub">${esc(roleLabel(r))} · ${esc(t('roleDesc'+cap(r)))}</div></div>
+    </div>`;
+  if(owner && !self && r!=='owner'){
+    body+=`<p class="grp-h">${esc(t('memberSheetChangeRole'))}</p>
+      ${['editor','requester'].map(x=>`<button class="role-opt ${x===r?'active':''}" data-set-role="${x}" aria-pressed="${x===r}"><b>${esc(roleLabel(x))}</b><small>${esc(t('roleDesc'+cap(x)))}</small></button>`).join('')}`;
+  }
+  const acts=[];
+  if(self) acts.push(`<button class="row-btn" id="ms-name">${esc(t('memberSheetEditName'))}</button>`);
+  if(owner && !self) acts.push(`<button class="row-btn" id="ms-transfer">👑 ${esc(t('memberSheetTransfer').replace('{n}',name))}</button>`);
+  if(owner && !self) acts.push(`<button class="row-btn danger" id="ms-remove">✕ ${esc(t('memberSheetRemove'))}</button>`);
+  if(self && !owner) acts.push(`<button class="row-btn danger" id="ms-leave">${esc(t('memberSheetLeave'))}</button>`);
+  if(acts.length) body+=`<div class="sheet-actions">${acts.join('')}</div>`;
+  openSheet(sheetHead(name)+`<div class="card">${body}</div>`);
+  $('sheet').querySelectorAll('[data-set-role]').forEach(b=>b.onclick=()=>setMemberRole(uid,b.dataset.setRole));
+  if($('ms-name')) $('ms-name').onclick=openEditNameSheet;
+  if($('ms-transfer')) $('ms-transfer').onclick=()=>transferOwnership(uid);
+  if($('ms-remove')) $('ms-remove').onclick=()=>removeMember(uid);
+  if($('ms-leave')) $('ms-leave').onclick=()=>removeMember(user.id);
+}
+async function setMemberRole(uid,newRole){
+  const {error}=await sb.from('household_members').update({role:newRole}).eq('household_id',household).eq('user_id',uid);
+  if(error){ toast(CS.authErr(error)); return; }
+  const m=membersById[uid]; if(m) m.role=newRole;
+  toast(CS.t('roleUpdated'));
+  closeSheet(); renderHousehold();
+}
+function openTransferPicker(){
+  const t=CS.t, others=members.filter(m=>!isMine(m.user_id));
+  openSheet(sheetHead(t('transferOwnerTitle'))+`<div class="card"><p class="sub">${esc(t('transferPick'))}</p><div class="sheet-actions">
+    ${others.map(m=>`<button class="row-btn" data-pick="${m.user_id}"><span class="avatar" style="background:${CS.personColor(m.user_id)};margin:0" aria-hidden="true">${esc(CS.initials(m.display_name||'?'))}</span><span class="tx">${esc(m.display_name||'?')}<small>${esc(roleLabel(m.role))}</small></span></button>`).join('')}
+  </div></div>`);
+  $('sheet').querySelectorAll('[data-pick]').forEach(b=>b.onclick=()=>transferOwnership(b.dataset.pick));
+}
+async function transferOwnership(uid){
+  const t=CS.t, m=membersById[uid];
+  const ok=await CS.confirmSheet({
+    title:t('transferOwnerTitle'),
+    body:t('transferOwnerConfirm').replace(/\{n\}/g,m?(m.display_name||m.email):''),
+    confirmLabel:t('transferOwnerAction'), danger:true
+  });
+  if(!ok) return;
+  const {error}=await sb.rpc('transfer_household_ownership',{p_household:household,p_new_owner:uid});
+  if(error){ toast(CS.authErr(error)); return; }
+  role='editor';
+  const me=membersById[user.id]; if(me) me.role='editor';
+  if(m) m.role='owner';
+  toast(t('ownerTransferred'));
+  renderHousehold(); paintTop();
+}
+async function removeMember(uid){
+  const t=CS.t, self=isMine(uid), m=membersById[uid];
+  if(self && role==='owner' && members.length>1){ toast(t('ownerMustTransferFirst')); return; }
+  if(self && role==='owner' && members.length===1){ await deleteHousehold(()=>{}); return; }
+  const ok=await CS.confirmSheet({
+    title:self?t('leaveTitle'):t('removeTitle'),
+    body:self?t('leaveConfirm'):t('removeConfirm').replace('{n}',m?(m.display_name||m.email):''),
+    confirmLabel:self?t('leaveAction'):t('removeAction'), danger:true
+  });
+  if(!ok) return;
+  const {error}=await sb.from('household_members').delete().eq('household_id',household).eq('user_id',uid);
+  if(error){ toast(CS.authErr(error)); return; }
+  if(self){ toast(t('youLeft')); await onUser(user); return; }
+  members=members.filter(x=>x.user_id!==uid);
+  membersById=Object.fromEntries(members.map(x=>[x.user_id,x]));
+  toast(t('memberRemoved'));
+  renderHousehold();
+}
+function openRenameHouseholdSheet(){
+  const t=CS.t;
+  openSheet(sheetHead(t('hhRenameTitle'))+`<div class="card">
+    <input id="hh-rename-input" value="${esc(hhName)}">
+    <button class="btn wide" id="hh-rename-save">${esc(t('editSave'))}</button>
+  </div>`);
+  CS.focusField('hh-rename-input');
+  const save=async()=>{
+    const name=$('hh-rename-input').value.trim(); if(!name) return;
+    const {error}=await sb.from('households').update({name}).eq('id',household);
+    if(error){ toast(CS.authErr(error)); return; }
+    hhName=name; closeSheet(); toast(t('hhRenamed'));
+    paintTop(); renderHousehold();
+  };
+  $('hh-rename-save').onclick=save;
+  $('hh-rename-input').addEventListener('keydown',e=>{ if(e.key==='Enter') save(); });
+}
+function openMyBitSheet(){
+  const t=CS.t, me=membersById[user.id]||{}, cur=me.bit_link||(role==='owner'?hhBitLink:'');
+  openSheet(sheetHead(t('myBitTitle'))+`<div class="card">
+    <p class="pay-help">${esc(t('payLinkHelp'))}</p>
+    <input id="bit-link" dir="ltr" placeholder="${esc(t('payLinkPh'))}" value="${esc(cur)}">
+    <label class="btn ghost wide">${esc(t('payQrBtn'))}<input type="file" accept="image/*" id="bit-qr" hidden></label>
+    <div id="bit-msg" class="msg err" hidden></div>
+    <button class="btn wide" id="bit-save">${esc(t('myBitSave'))}</button>
+    ${me.bit_link?`<button class="linkbtn" id="bit-clear">${esc(t('myBitClear'))}</button>`:''}
+  </div>`);
+  $('bit-qr').onchange=async e=>{
+    const f=e.target.files&&e.target.files[0]; if(!f) return;
+    const msg=$('bit-msg'); msg.hidden=true;
+    const txt=await readQrFromImage(f);
+    if(!txt){ msg.textContent=t('payQrFail'); msg.hidden=false; return; }
+    if(!/^https:\/\//i.test(txt)){ msg.textContent=t('payQrNotBit')+' '+txt.slice(0,60); msg.hidden=false; return; }
+    $('bit-link').value=txt; toast(t('payQrOk'));
+  };
+  const save=async link=>{
+    const msg=$('bit-msg'); msg.hidden=true;
+    if(link && !/^https:\/\//i.test(link)){ msg.textContent=t('payNeedLink'); msg.hidden=false; return; }
+    const {error}=await sb.from('household_members').update({bit_link:link||null}).eq('household_id',household).eq('user_id',user.id);
+    if(error){ msg.textContent=CS.authErr(error); msg.hidden=false; return; }
+    if(membersById[user.id]) membersById[user.id].bit_link=link||null;
+    closeSheet(); toast(t('myBitSaved')); renderHousehold();
+  };
+  $('bit-save').onclick=()=>save($('bit-link').value.trim());
+  if($('bit-clear')) $('bit-clear').onclick=()=>save('');
+}
 
 async function openHouseholdSwitcher(){
   const list=await listMyHouseholds();
@@ -2159,7 +2548,7 @@ async function openHouseholdSwitcher(){
     }).join('');
     openSheet(sheetHead(t('switchHousehold'))+`<div class="card">
       ${rows}
-      <button class="btn wide" id="hh-new">➕ ${esc(t('createHh'))}</button>
+      <button class="btn wide" id="sw-new">➕ ${esc(t('createHh'))}</button>
     </div>`);
     $('sheet').querySelectorAll('[data-hh]').forEach(b=>b.onclick=async()=>{ closeSheet(); await loadHousehold(b.dataset.hh); });
     $('sheet').querySelectorAll('[data-pin-hh]').forEach(b=>b.onclick=()=>{
@@ -2170,99 +2559,9 @@ async function openHouseholdSwitcher(){
       toast(wasPrimary?t('primaryHhUnsetToast'):t('primaryHhSetToast'));
       draw();
     });
-    $('hh-new').onclick=()=>{ closeSheet(); CS.setScreen('onboard'); };
+    $('sw-new').onclick=()=>{ closeSheet(); openOnboard(); };
   };
   draw();
-}
-
-/* ---------- household members management ---------- */
-function drawMembersSheet(){
-  const t=CS.t;
-  const isOwner=role==='owner';
-  const rows=members.map(m=>{
-    const isSelf=m.user_id===user.id;
-    const name=m.display_name||m.email||'?';
-    const label=esc(name)+(isSelf?' '+esc(t('you')):'');
-    const roleControl = (isOwner && !isSelf)
-      ? `<select class="role-select" data-role-member="${m.user_id}">
-          ${['editor','requester','viewer'].map(r=>`<option value="${r}" ${r===m.role?'selected':''}>${esc(t('role'+r[0].toUpperCase()+r.slice(1)))}</option>`).join('')}
-        </select>`
-      : `<span class="role-chip ${esc(m.role)}">${esc(t('role'+m.role[0].toUpperCase()+m.role.slice(1)))}</span>`;
-    const editBtn = isSelf ? `<button class="member-remove" data-edit-name="${m.user_id}" aria-label="edit name">✏️</button>` : '';
-    const transferBtn = (isOwner && !isSelf)
-      ? `<button class="member-remove" data-transfer-owner="${m.user_id}" aria-label="${esc(t('transferOwnerAction'))}" title="${esc(t('transferOwnerAction'))}">👑</button>`
-      : '';
-    const removeBtn = (isSelf || (isOwner && !isSelf))
-      ? `<button class="member-remove" data-remove-member="${m.user_id}" aria-label="remove">${isSelf?'🚪':'✕'}</button>`
-      : '';
-    return `<div class="member-row">
-      <span class="avatar" style="background:${CS.personColor(m.user_id)};margin-inline-start:0">${esc(CS.initials(name))}</span>
-      <span class="nm">${label}</span>
-      ${roleControl}
-      ${editBtn}
-      ${transferBtn}
-      ${removeBtn}
-    </div>`;
-  }).join('');
-  const inviteRow = (isOwner||role==='editor') ? `<button class="btn wide" id="members-invite-btn">➕ ${esc(t('homeInvite'))}</button>` : '';
-  const deleteHhRow = isOwner ? `<button class="btn danger wide" id="delete-household-btn">${esc(t('deleteHousehold'))}</button>` : '';
-  openSheet(sheetHead(t('membersTitle'))+`<div class="card">${inviteRow}${rows}${deleteHhRow}</div>`);
-  if(inviteRow) $('members-invite-btn').onclick=()=>{ closeSheet(); openInviteSheet(); };
-  if(isOwner) $('delete-household-btn').onclick=()=>deleteHousehold();
-  $('sheet').querySelectorAll('[data-transfer-owner]').forEach(b=>b.onclick=async()=>{
-    const uid=b.dataset.transferOwner;
-    const m=members.find(x=>x.user_id===uid);
-    const ok=await CS.confirmSheet({
-      title:t('transferOwnerTitle'),
-      body:t('transferOwnerConfirm').replace('{n}',m?(m.display_name||m.email):''),
-      confirmLabel:t('transferOwnerAction'), danger:true
-    });
-    if(!ok){ drawMembersSheet(); return; }
-    const {error}=await sb.rpc('transfer_household_ownership',{p_household:household,p_new_owner:uid});
-    if(error){ toast(CS.authErr(error)); return; }
-    role='editor';
-    const me=members.find(x=>x.user_id===user.id); if(me) me.role='editor';
-    if(m) m.role='owner';
-    membersById=Object.fromEntries(members.map(x=>[x.user_id,x]));
-    toast(t('ownerTransferred'));
-    drawMembersSheet();
-  });
-  $('sheet').querySelectorAll('[data-role-member]').forEach(sel=>sel.onchange=async()=>{
-    const uid=sel.dataset.roleMember, newRole=sel.value;
-    const {error}=await sb.from('household_members').update({role:newRole}).eq('household_id',household).eq('user_id',uid);
-    if(error){ toast(CS.authErr(error)); return; }
-    const m=members.find(x=>x.user_id===uid); if(m) m.role=newRole;
-    membersById=Object.fromEntries(members.map(x=>[x.user_id,x]));
-    toast(t('roleUpdated'));
-    drawMembersSheet();
-  });
-  $('sheet').querySelectorAll('[data-edit-name]').forEach(b=>b.onclick=()=>openEditNameSheet());
-  $('sheet').querySelectorAll('[data-remove-member]').forEach(b=>b.onclick=async()=>{
-    const uid=b.dataset.removeMember, isSelf=uid===user.id;
-    const m=members.find(x=>x.user_id===uid);
-    if(isSelf && role==='owner' && members.length>1){
-      toast(t('ownerMustTransferFirst'));
-      return;
-    }
-    if(isSelf && role==='owner' && members.length===1){
-      await deleteHousehold();
-      return;
-    }
-    const ok=await CS.confirmSheet({
-      title:isSelf?t('leaveTitle'):t('removeTitle'),
-      body:isSelf?t('leaveConfirm'):t('removeConfirm').replace('{n}',m?(m.display_name||m.email):''),
-      confirmLabel:isSelf?t('leaveAction'):t('removeAction'), danger:true
-    });
-    if(!ok){ drawMembersSheet(); return; }
-    const {error}=await sb.from('household_members').delete().eq('household_id',household).eq('user_id',uid);
-    if(error){ toast(CS.authErr(error)); return; }
-    if(isSelf){ closeSheet(); toast(t('youLeft')); await onUser(user); return; }
-    members=members.filter(x=>x.user_id!==uid);
-    membersById=Object.fromEntries(members.map(x=>[x.user_id,x]));
-    paintMembersRow();
-    toast(t('memberRemoved'));
-    drawMembersSheet();
-  });
 }
 
 async function deleteHousehold(onCancel){
@@ -2272,7 +2571,7 @@ async function deleteHousehold(onCancel){
     body:t('deleteHouseholdConfirm').replace('{n}',hhName||''),
     confirmLabel:t('deleteHousehold'), danger:true
   });
-  if(!ok){ (onCancel||drawMembersSheet)(); return; }
+  if(!ok){ if(onCancel) onCancel(); return; }
   const {error}=await sb.from('households').delete().eq('id',household);
   if(error){ toast(CS.authErr(error)); return; }
   closeSheet();
@@ -2295,9 +2594,9 @@ function openEditNameSheet(){
     const {error}=await sb.from('household_members').update({display_name:name}).eq('household_id',household).eq('user_id',user.id);
     if(error){ toast(CS.authErr(error)); return; }
     if(mine) mine.display_name=name;
-    paintMembersRow();
+    closeSheet();
     toast(t('nameUpdated'));
-    drawMembersSheet();
+    paintTop(); if(screen==='household') renderHousehold();
   };
 }
 
@@ -2337,35 +2636,101 @@ function openProfileSheet(){
   };
 }
 
-/* ---------- lists directory ---------- */
-let lists=[];
+/* ---------- lists: every list of the household, with what's left on the open ones ---------- */
+let lists=[], openCounts={}, openTotals={}, pendingCounts={};
 async function fetchLists(){
   const {data,error}=await sb.from('shopping_lists').select('*').eq('household_id',household).order('created_at',{ascending:false});
   if(error){ console.warn(error); return; }
   lists=data||[];
-  CS.renderLists(lists, role==='owner'||role==='editor');
-}
-async function openListsPage(){
-  setTopHhbar('lists');
-  CS.setScreen('lists');
-  await fetchLists();
-}
-$('home-lists-more').addEventListener('click',openListsPage);
-$('home-lists-empty-btn').addEventListener('click',openNewListSheet);
-
-/* ---------- home dashboard: open-list previews with remaining counts ---------- */
-async function fetchHomeData(){
-  await fetchLists();
-  const openLists=lists.filter(l=>l.status==='open');
-  const preview=openLists.slice(0,4);
-  let counts={};
-  if(preview.length){
-    const {data}=await sb.from('list_items').select('list_id,status').eq('household_id',household).in('status',['active','pending']);
-    (data||[]).forEach(r=>{ counts[r.list_id]=(counts[r.list_id]||0)+1; });
+  const openIds=lists.filter(l=>l.status==='open').map(l=>l.id);
+  openCounts={}; openTotals={}; pendingCounts={};
+  openIds.forEach(id=>{ openCounts[id]=0; openTotals[id]=0; pendingCounts[id]=0; });
+  if(openIds.length){
+    const {data:rows}=await sb.from('list_items').select('list_id,status').in('list_id',openIds);
+    (rows||[]).forEach(r=>{
+      if(!(r.list_id in openCounts)) return;
+      if(r.status==='pending') pendingCounts[r.list_id]++;
+      else{ openTotals[r.list_id]++; if(r.status==='active') openCounts[r.list_id]++; }
+    });
   }
-  CS.renderHomeLists(preview, counts, openLists.length>preview.length);
-  fetchHomePay().catch(()=>{});
+  CS.renderLists(lists, canEdit(), starredMainId(), openCounts);
+  $('lists-new').hidden=!canEdit();
 }
+// the main list: the one marked by hand if it's still open, otherwise the newest open list
+function starredMainId(){ return mainListId && lists.some(l=>l.id===mainListId && l.status==='open') ? mainListId : null; }
+function effectiveMainId(){
+  const s=starredMainId(); if(s) return s;
+  const open=lists.filter(l=>l.status==='open');
+  return open.length?open[0].id:null;
+}
+$('lists-new').addEventListener('click',()=>openNewListSheet());
+
+/* ---------- home: what now ---------- */
+async function renderHome(){
+  $('home-greeting').textContent=greetingText();
+  paintHome();
+  await fetchLists();
+  if(screen!=='home') return;
+  paintHome();
+  fetchHomePay().catch(()=>{});
+  fetchFeed().catch(()=>{});
+}
+function paintHome(){
+  const t=CS.t, box=$('home-hero');
+  const id=effectiveMainId(), l=id&&lists.find(x=>x.id===id);
+  if(!l){
+    box.innerHTML=`<div class="home-hero empty"><h2>${esc(t('heroNoList'))}</h2>${canEdit()?`<button class="go" id="hero-new">＋ ${esc(t('newListTitle'))}</button>`:`<p class="sub">${esc(t('heroNoListReq'))}</p>`}</div>`;
+    if($('hero-new')) $('hero-new').onclick=()=>openNewListSheet();
+  }else{
+    const left=openCounts[l.id]||0, total=openTotals[l.id]||0, done=total-left, here=presenceNames(l.id);
+    box.innerHTML=`<div class="home-hero">
+      <div class="hh-top"><h2>${esc(l.name)}</h2>${here?`<span class="here">${esc(t('heroHere').replace('{n}',here))}</span>`:''}</div>
+      ${total?`<div class="bar" aria-hidden="true"><span style="width:${Math.round(100*done/total)}%"></span></div><div class="meta">${esc(left?t('heroLeft').replace('{n}',left).replace('{t}',total):t('heroAllDone'))}</div>`:`<div class="meta">${esc(t('heroEmptyItems'))}</div>`}
+      <button class="go" data-list="${l.id}">${esc(done>0&&left>0?t('heroContinue'):t('heroOpen'))}</button>
+    </div>`;
+  }
+  $('home-quick').hidden=!l;
+  CS.renderHomeLists(lists.filter(x=>x.status==='open' && x.id!==id), openCounts);
+  // requests waiting for a manager/partner, per list
+  const req=canEdit()?lists.filter(x=>x.status==='open' && pendingCounts[x.id]):[];
+  $('home-requests').innerHTML=req.map(x=>{
+    const n=pendingCounts[x.id];
+    return `<li class="wait-row"><div class="wr-top"><span class="e" aria-hidden="true">🙋</span><span class="tx">${esc((n===1?t('reqWaitingOne'):t('reqWaiting').replace('{n}',n)).replace('{l}',x.name))}</span><button class="btn small" data-approve-list="${x.id}">${esc(t('approveGo'))}</button></div></li>`;
+  }).join('');
+  $('home-requests').querySelectorAll('[data-approve-list]').forEach(b=>b.onclick=()=>{ CS.setPendingOpen(true); openList(b.dataset.approveList); });
+  paintWaiting();
+}
+function paintWaiting(){
+  $('home-waiting-section').hidden = !$('home-requests').children.length && !$('home-pay').children.length;
+}
+// quick add from Home goes to the main list (a requester's lands as a request, like anywhere else)
+$('home-quick').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const input=$('home-quick-input'), text=input.value.trim(), lid=effectiveMainId();
+  if(!text||!lid) return;
+  if(!online){ toast(CS.t('offline')); return; }
+  const l=lists.find(x=>x.id===lid), g=CS.guess(text);
+  input.value='';
+  const row={list_id:lid, household_id:household, text, category:g.cat, emoji:g.emoji, created_by:user.id, position:Date.now(), status:canEdit()?'active':'pending'};
+  const {error}=await sb.from('list_items').insert(row);
+  if(error){ input.value=text; toast(CS.authErr(error)); return; }
+  toast((canEdit()?CS.t('quickTo'):CS.t('quickReqTo')).replace('{l}',l?l.name:''));
+  await fetchLists();
+  if(screen==='home') paintHome();
+});
+const ACT_KEYS={added:'actAdded',requested:'actRequested',approved:'actApproved',checked:'actChecked',unchecked:'actUnchecked',deleted:'actDeleted',rejected:'actRejected'};
+async function fetchFeed(){
+  const {data,error}=await sb.from('list_activity').select('actor,action,item_text,created_at').eq('household_id',household).neq('actor',user.id).order('created_at',{ascending:false}).limit(5);
+  if(screen!=='home') return;
+  const rows=(!error&&data)||[];
+  $('home-feed-section').hidden=!rows.length;
+  $('home-feed').innerHTML=rows.map(r=>{
+    const nm=nameOf(r.actor);
+    return `<li><span class="avatar" style="background:${CS.personColor(r.actor)}" aria-hidden="true">${esc(CS.initials(nm))}</span><span class="tx"><b>${esc(nm)}</b> · ${esc(ACT_KEYS[r.action]?CS.t(ACT_KEYS[r.action]):r.action)}: ${esc(r.item_text||'')}</span><span class="when">${esc(CS.timeAgo(r.created_at))}</span></li>`;
+  }).join('');
+}
+let homeRefreshTimer=null;
+function refreshHomeSoon(){ clearTimeout(homeRefreshTimer); homeRefreshTimer=setTimeout(()=>{ if(screen==='home') renderHome(); },400); }
 
 function openNewListSheet(){
   const t=CS.t;
@@ -2389,46 +2754,112 @@ function openNewListSheet(){
   $('new-list-go').onclick=go;
   $('new-list-name').addEventListener('keydown',e=>{ if(e.key==='Enter') go(); });
 }
-$('top-hhbar-new').addEventListener('click',openNewListSheet);
-
-document.addEventListener('click',async e=>{
-  const delBtn=e.target.closest('[data-del-list]');
-  if(delBtn){
-    const id=delBtn.dataset.delList;
-    const l=lists.find(x=>x.id===id);
-    const ok=await CS.confirmSheet({
-      title:CS.t('deleteListTitle'),
-      body:CS.t('deleteListConfirm').replace('{n}',l?l.name:''),
-      confirmLabel:CS.t('deleteList'), danger:true
-    });
-    if(!ok) return;
-    const {error}=await sb.from('shopping_lists').delete().eq('id',id);
-    if(error){ toast(CS.authErr(error)); return; }
-    toast(CS.t('listDeleted'));
-    await fetchLists();
-    return;
-  }
+// any [data-list] (a list row, the Home card) opens that list
+document.addEventListener('click',e=>{
+  const more=e.target.closest('[data-list-more]');
+  if(more){ openRowMenu(more.dataset.listMore); return; }
   const row=e.target.closest('[data-list]'); if(!row) return;
   openList(row.dataset.list);
 });
+// a list row's ⋯: mark it main, or delete it
+function openRowMenu(id){
+  const t=CS.t, l=lists.find(x=>x.id===id); if(!l) return;
+  const acts=[];
+  if(l.status==='open') acts.push(starredMainId()===id
+    ? `<button class="row-btn" id="rm-main">${esc(t('unsetMainList'))}</button>`
+    : `<button class="row-btn" id="rm-main">${esc(t('setMainList'))}</button>`);
+  acts.push(`<button class="row-btn danger" id="rm-del">${esc(t('listMenuDelete'))}</button>`);
+  openSheet(sheetHead(l.name)+`<div class="card"><div class="sheet-actions">${acts.join('')}</div></div>`);
+  if($('rm-main')) $('rm-main').onclick=()=>{ closeSheet(); setMainList(starredMainId()===id?null:id); };
+  $('rm-del').onclick=()=>{ closeSheet(); deleteListWithUndo(id); };
+}
+async function setMainList(id){
+  const {error}=await sb.rpc('set_main_list',{p_household:household,p_list_id:id});
+  if(error){ toast(CS.authErr(error)); return; }
+  mainListId=id;
+  toast(id?CS.t('mainListSet'):CS.t('mainListUnset'));
+  CS.renderLists(lists, canEdit(), starredMainId(), openCounts);
+  if(screen==='home') paintHome();
+}
+// deleting a list waits a few seconds so "undo" can simply cancel it
+function deleteListWithUndo(id){
+  const l=lists.find(x=>x.id===id); if(!l) return;
+  if(screen==='main' && listId===id) goBackFromList();
+  lists=lists.filter(x=>x.id!==id);
+  CS.renderLists(lists, canEdit(), starredMainId(), openCounts);
+  if(screen==='home') paintHome();
+  let undone=false;
+  const timer=setTimeout(async()=>{
+    if(undone) return;
+    const {error}=await sb.from('shopping_lists').delete().eq('id',id);
+    if(error){ toast(CS.authErr(error)); }
+    await fetchLists(); if(screen==='home') paintHome();
+  },5000);
+  toastAction(CS.t('listDeletedUndo'), CS.t('undo'), ()=>{
+    undone=true; clearTimeout(timer);
+    fetchLists().then(()=>{ if(screen==='home') paintHome(); });
+  }, 5000);
+}
+// the open list's ⋯ menu: everything that isn't adding or checking
+function openListMenu(){
+  const t=CS.t, open=listStatus==='open', acts=[];
+  acts.push(`<button class="row-btn" id="lm-share">${esc(t('listMenuShare'))}</button>`);
+  if(open){
+    acts.push(`<button class="row-btn" id="lm-view">${esc(CS.viewMode()==='flat'?t('listMenuViewGrouped'):t('listMenuView'))}</button>`);
+    const nDone=items.filter(i=>i.status==='checked').length;
+    acts.push(`<button class="row-btn" id="lm-hide">${esc(CS.hideDone()?t('listMenuShow').replace('{n}',nDone):t('listMenuHide'))}</button>`);
+  }
+  if(open && canEdit()) acts.push(`<button class="row-btn" id="lm-main">${esc(starredMainId()===listId?t('unsetMainList'):t('setMainList'))}</button>`);
+  if(open && canEdit()) acts.push(`<button class="row-btn" id="lm-finish">${esc(t('tripClose'))}</button>`);
+  if(canEdit()) acts.push(`<button class="row-btn danger" id="lm-del">${esc(t('listMenuDelete'))}</button>`);
+  openSheet(sheetHead(curList?curList.name:'')+`<div class="card"><div class="sheet-actions">${acts.join('')}</div></div>`);
+  $('lm-share').onclick=()=>{ closeSheet(); shareTripSummary(); };
+  if($('lm-view')) $('lm-view').onclick=()=>{ closeSheet(); CS.setViewMode(CS.viewMode()==='flat'?'grouped':'flat'); toast(t(CS.viewMode()==='flat'?'viewFlatToast':'viewGroupedToast')); };
+  if($('lm-hide')) $('lm-hide').onclick=()=>{ closeSheet(); CS.toggleHideDone(); };
+  if($('lm-main')) $('lm-main').onclick=()=>{ closeSheet(); if(!lists.length) fetchLists(); setMainList(starredMainId()===listId?null:listId); };
+  if($('lm-finish')) $('lm-finish').onclick=()=>{ closeSheet(); openCloseTripSheet(); };
+  if($('lm-del')) $('lm-del').onclick=()=>{ closeSheet(); const id=listId; if(!lists.some(l=>l.id===id) && curList) lists.push(curList); deleteListWithUndo(id); };
+}
 
-async function openList(id, silent){
+// the list screen's own chrome: who-can-do-what banner, finish button, the + button's wording
+function paintListChrome(){
+  const t=CS.t, open=listStatus==='open';
+  $('view-main').classList.toggle('readonly',!open);
+  $('list-hero-closed').hidden=open;
+  if(!open && curList) $('list-hero-closed').textContent=t('listClosedNote').replace('{d}',CS.fmtDate(curList.closed_at));
+  const banner=$('list-role-banner');
+  banner.hidden=!(open && !canEdit());
+  if(!banner.hidden) banner.textContent=t('listRoleRequester').replace('{n}',approverNames()||t('roleOwner'));
+  $('list-finish').hidden=!(open && canEdit());
+  $('list-finish').textContent=t('tripClose');
+  const fabLabel=canEdit()?t('fabAdd'):t('fabRequest');
+  $('fab-add-label').textContent=fabLabel;
+  $('fab-add').setAttribute('aria-label',fabLabel);
+  paintTop();
+}
+
+async function openList(id, opts){
+  opts=opts||{};
   const {data:lrow,error}=await sb.from('shopping_lists').select('*').eq('id',id).maybeSingle();
-  if(error||!lrow){ if(!silent) toast(CS.authErr(error||'not_found')); return false; }
-  if(silent && lrow.status!=='open') return false; // resuming after a restart: a list that's since been closed is history — land on Home instead
-  listId=id;
-  try{ localStorage.setItem('cs-last-list-'+household,id); }catch(e){}
-  setTopHhbar('main');
-  $('top-hhbar-title').textContent=lrow.name;
-  listStatus=lrow.status;
-  $('trip-bar').hidden=listStatus!=='open';
-  $('view-main').classList.toggle('readonly',listStatus!=='open');
-  $('list-hero-closed').hidden=listStatus==='open';
-  if(listStatus!=='open') $('list-hero-closed').textContent=CS.t('listClosedNote').replace('{d}',CS.fmtDate(lrow.closed_at));
-  curList=lrow; renderPayPanel();
-  searchQuery=''; $('search-input').value=''; $('search-input').hidden=true; $('search-toggle').hidden=false;
-  items=[]; paintItems(); // clear the previous list's items so they don't flash under this list's name while loading
+  if(error||!lrow){ if(!opts.silent) toast(CS.authErr(error||'not_found')); return false; }
+  if(opts.silent && lrow.status!=='open') return false; // resuming after a restart: a list that's since been closed is history — land on Home instead
+  const sameList = listId===id && screen==='main';
+  listId=id; curList=lrow; listStatus=lrow.status;
+  try{ localStorage.setItem('cs-last-list-'+household,id); localStorage.setItem('cs-last-list-at-'+household,String(Date.now())); }catch(e){}
+  if(!opts.fromPop && !sameList){
+    const d=(curState&&curState.d)||0;
+    setState({s:'main',list:id,d:d+1},true);
+  }
+  screen='main';
+  if(!sameList){
+    searchQuery=''; $('search-input').value=''; $('search-row').hidden=true;
+    lastTotal=0; lastDone=0;
+    items=[]; paintItems(); // clear the previous list's items so they don't flash under this list's name while loading
+  }
   CS.setScreen('main');
+  paintListChrome();
+  renderPayPanel();
+  trackPresence();
   queue=loadQueueFor(listId);
   await fetchItems();
   cacheSnapshot();
@@ -2442,8 +2873,10 @@ async function doCloseTrip(payload){
   const {error}=await sb.rpc('close_shopping_trip',payload);
   if(error){ toast(CS.authErr(error)); return; }
   toast(CS.t('tripClosed'));
-  await openListsPage();
-  if(role==='owner') openTripTotalSheet(payload.p_list_id); // straight to "what did it come to?"
+  try{ localStorage.removeItem('cs-last-list-at-'+household); }catch(e){}
+  setState({s:'lists',d:1},false);
+  renderTab('lists');
+  if(canEdit()) openTripTotalSheet(payload.p_list_id); // straight to "what did it come to?"
 }
 async function openCloseTripSheet(){
   const t=CS.t;
@@ -2503,13 +2936,13 @@ async function openCloseTripSheet(){
     doCloseTrip(payload);
   };
 }
-$('trip-close').addEventListener('click',openCloseTripSheet);
+$('list-finish').addEventListener('click',openCloseTripSheet);
 
 function buildTripSummaryText(){
   const t=CS.t;
   const bought=items.filter(i=>i.status==='checked');
   const notBought=items.filter(i=>i.status==='active'||i.status==='pending');
-  const name=$('top-hhbar-title').textContent||'';
+  const name=curList?curList.name:'';
   const lines=[`🛒 ${name}`.trim(),''];
   lines.push(`✅ ${t('boughtHeader')} (${bought.length})`);
   bought.forEach(i=>lines.push('• '+i.text));
@@ -2535,7 +2968,7 @@ async function shareTripSummary(){
    their share and a button to the owner's personal Bit link (a Bit "personal QR" link: the payer picks
    the amount there). Bit has no API, so "I paid" is self-reported; the owner sees who marked it. */
 let curList=null, curPayments=[];
-const money=a=>'₪'+Number(a||0).toLocaleString('he-IL',{minimumFractionDigits:0,maximumFractionDigits:2});
+const money=a=>Number(a||0).toLocaleString('he-IL',{minimumFractionDigits:0,maximumFractionDigits:2})+' ₪';
 const nameOf=uid=>(membersById[uid]&&membersById[uid].display_name)||'?';
 const parseAmt=v=>{ const n=parseFloat(String(v||'').replace(/[^\d.,]/g,'').replace(',','.')); return isFinite(n)?Math.round(n*100)/100:NaN; };
 function openLink(url){
@@ -2551,6 +2984,8 @@ function payShareTextFor(l){
   const rows=Object.entries(l.split||{}).filter(([u])=>u!==l.total_by).map(([u,a])=>`• ${nameOf(u)}: ${money(a)}`).join('\n');
   return CS.t('payShareText').replace('{l}',l.name).replace('{t}',money(l.total)).replace('{rows}',rows).replace('{link}',l.pay_link||'');
 }
+// whoever paid at the till collects to their own Bit link (the owner falls back to the household's old one)
+function myPayLink(){ const me=membersById[user.id]||{}; return me.bit_link||(role==='owner'?hhBitLink:'')||''; }
 function openTripTotalSheet(lid){
   const t=CS.t;
   const l=(lists.find(x=>x.id===lid)) || (curList&&curList.id===lid?curList:null) || {id:lid};
@@ -2562,7 +2997,7 @@ function openTripTotalSheet(lid){
     ${ms.map(m=>`<div class="split-row"><label><input type="checkbox" data-inc="${m.user_id}" ${(!l.split||m.user_id in prevSplit)?'checked':''}> ${esc(m.display_name||'?')} ${m.user_id===user.id?esc(t('payYou')):''}</label>
       <input type="text" inputmode="decimal" data-amt="${m.user_id}" value="${m.user_id in prevSplit?esc(String(prevSplit[m.user_id])):''}"></div>`).join('')}
     <p class="grp-h" style="margin-top:8px">${esc(t('payLinkLabel'))}</p>
-    <input id="tt-link" dir="ltr" placeholder="${esc(t('payLinkPh'))}" value="${esc(hhBitLink||'')}">
+    <input id="tt-link" dir="ltr" placeholder="${esc(t('payLinkPh'))}" value="${esc(myPayLink())}">
     <label class="btn ghost wide" style="margin-top:6px">${esc(t('payQrBtn'))}<input type="file" accept="image/*" id="tt-qr" hidden></label>
     <p class="pay-help">${esc(t('payLinkHelp'))}</p>
     <div id="tt-msg" class="msg err" hidden></div>
@@ -2607,14 +3042,14 @@ function openTripTotalSheet(lid){
     const {error}=await sb.rpc('set_trip_total',{p_list_id:lid,p_total:total,p_split:split,p_pay_link:link});
     btn.disabled=false;
     if(error){ msg.textContent=CS.authErr(error); msg.hidden=false; return; }
-    hhBitLink=link;
+    if(membersById[user.id]) membersById[user.id].bit_link=link;
     const upd={total,split,pay_link:link,total_by:user.id,total_at:new Date().toISOString()};
     const li=lists.find(x=>x.id===lid); if(li) Object.assign(li,upd);
     if(curList&&curList.id===lid){ Object.assign(curList,upd); }
     closeSheet(); toast(t('paySent'));
-    CS.renderLists(lists, role==='owner'||role==='editor');
+    if(screen==='lists') CS.renderLists(lists, canEdit(), starredMainId(), openCounts);
     await renderPayPanel();
-    shareText(payShareTextFor(Object.assign({name:l.name||($('top-hhbar-title').textContent||'')},li||l,upd)));
+    shareText(payShareTextFor(Object.assign({name:l.name||(curList?curList.name:'')},li||l,upd)));
   };
 }
 // a Bit "personal QR" screenshot → the payment URL inside it (jsQR, loaded only when needed)
@@ -2658,13 +3093,14 @@ function askAmount(title, def){
 async function renderPayPanel(){
   const box=$('pay-panel'); const l=curList;
   if(!l || l.status==='open'){ box.hidden=true; box.innerHTML=''; return; }
-  const t=CS.t, isOwner=role==='owner';
+  const t=CS.t;
   if(!l.total){
-    box.hidden=!isOwner;
-    box.innerHTML=isOwner?`<button class="btn wide" id="pp-start" style="margin:0">${esc(t('payStart'))}</button>`:'';
-    if(isOwner) $('pp-start').onclick=()=>openTripTotalSheet(l.id);
+    box.hidden=!canEdit();
+    box.innerHTML=canEdit()?`<button class="btn wide" id="pp-start" style="margin:0">${esc(t('payStart'))}</button>`:'';
+    if(canEdit()) $('pp-start').onclick=()=>openTripTotalSheet(l.id);
     return;
   }
+  const isOwner = l.total_by===user.id || role==='owner'; // may edit the total and mark others as paid
   const {data}=await sb.from('trip_payments').select('*').eq('list_id',l.id);
   if(!curList||curList.id!==l.id) return;
   curPayments=data||[];
@@ -2701,31 +3137,34 @@ async function renderPayPanel(){
     if(await markPaid(l.id,a,u)) renderPayPanel();
   });
 }
-// Home: anything I still owe, newest first
+// Home "waiting for you": what I still owe, and what others still owe me
 async function fetchHomePay(){
-  const sec=$('home-pay-section'); if(!sec||!household||!user) return;
+  if(!household||!user) return;
   const since=new Date(Date.now()-60*864e5).toISOString();
   const [{data:ls},{data:ps}]=await Promise.all([
     sb.from('shopping_lists').select('id,name,total,split,pay_link,total_by,total_at').eq('household_id',household).not('total','is',null).gt('total_at',since).order('total_at',{ascending:false}),
-    sb.from('trip_payments').select('list_id').eq('household_id',household).eq('user_id',user.id),
+    sb.from('trip_payments').select('list_id,user_id').eq('household_id',household),
   ]);
-  const paid=new Set((ps||[]).map(p=>p.list_id));
-  const owe=(ls||[]).filter(l=>l.total_by!==user.id && l.split && l.split[user.id]>0 && !paid.has(l.id));
-  $('home-pay-h').textContent=CS.t('payHomeH');
-  sec.hidden=!owe.length;
-  $('home-pay').innerHTML=owe.map(l=>`<li class="pay-home">
-    <div>${esc(CS.t('payHomeRow').replace('{n}',nameOf(l.total_by)).replace('{a}',money(l.split[user.id])).replace('{l}',l.name))}</div>
-    <div class="pp-btns">${l.pay_link?`<button class="btn bit" data-home-bit="${l.id}">${esc(CS.t('payBit'))}</button>`:''}<button class="btn" data-home-paid="${l.id}">${esc(CS.t('payMarkPaid'))}</button></div>
-  </li>`).join('');
+  const paid=new Set((ps||[]).map(p=>p.list_id+'|'+p.user_id));
+  const owe=(ls||[]).filter(l=>l.total_by!==user.id && l.split && l.split[user.id]>0 && !paid.has(l.id+'|'+user.id));
+  const collect=(ls||[]).map(l=>{
+    if(l.total_by!==user.id || !l.split) return null;
+    const left=Object.keys(l.split).filter(u=>u!==user.id && !paid.has(l.id+'|'+u)).reduce((s,u)=>s+(+l.split[u]||0),0);
+    return left>0?{l,left}:null;
+  }).filter(Boolean);
+  const t=CS.t;
+  $('home-pay').innerHTML=owe.map(l=>`<li class="wait-row">
+    <div class="wr-top"><span class="e" aria-hidden="true">💰</span><span class="tx">${esc(t('payHomeRow').replace('{n}',nameOf(l.total_by)).replace('{a}',money(l.split[user.id])).replace('{l}',l.name))}</span></div>
+    <div class="pp-btns">${l.pay_link?`<button class="btn bit" data-home-bit="${l.id}">${esc(t('payBit'))}</button>`:''}<button class="btn" data-home-paid="${l.id}">${esc(t('payMarkPaid'))}</button></div>
+  </li>`).join('')+collect.map(c=>`<li class="wait-row"><div class="wr-top"><span class="e" aria-hidden="true">🧾</span><span class="tx">${esc(t('collectRow').replace('{a}',money(c.left)).replace('{l}',c.l.name))}</span><button class="btn small ghost" data-list="${c.l.id}">${esc(t('collectGo'))}</button></div></li>`).join('');
   $('home-pay').querySelectorAll('[data-home-bit]').forEach(b=>b.onclick=()=>{ const l=owe.find(x=>x.id===b.dataset.homeBit); openLink(l.pay_link); });
   $('home-pay').querySelectorAll('[data-home-paid]').forEach(b=>b.onclick=async()=>{
     const l=owe.find(x=>x.id===b.dataset.homePaid);
-    const a=await askAmount(CS.t('payHowMuch'),l.split[user.id]); if(a==null) return;
-    if(await markPaid(l.id,a)){ toast(CS.t('payMarkedOk')); fetchHomePay(); }
+    const a=await askAmount(t('payHowMuch'),l.split[user.id]); if(a==null) return;
+    if(await markPaid(l.id,a)){ toast(t('payMarkedOk')); fetchHomePay(); }
   });
+  paintWaiting();
 }
-$('top-hhbar-share').addEventListener('click',shareTripSummary);
-$('listbar-share').addEventListener('click',shareTripSummary);
 
 /* ---------- invites ---------- */
 async function shareInvite(text){
@@ -2757,7 +3196,7 @@ function openInviteSheet(){
     const activeRows=active.map(inv=>`<div style="display:flex;flex-direction:column;gap:6px;padding:8px 0;border-bottom:1px solid var(--line)">
         <input class="invite-link-input" value="${esc(joinUrlFor(inv.code))}" readonly dir="ltr" style="width:100%">
         <div style="display:flex;align-items:center;gap:8px">
-          <span class="role-chip ${esc(inv.role)}">${esc(t('role'+inv.role[0].toUpperCase()+inv.role.slice(1)))}</span>
+          <span class="role-chip ${esc(roleKey(inv.role))}">${esc(roleLabel(inv.role))}</span>
           <span style="flex:1"></span>
           <button class="member-remove" data-revoke-invite="${inv.code}" aria-label="${esc(t('inviteRevoke'))}" title="${esc(t('inviteRevoke'))}">🗑️</button>
         </div>
@@ -2766,8 +3205,8 @@ function openInviteSheet(){
       ${active.length?`<p class="sub">${esc(t('activeInvitesTitle'))}</p>${activeRows}`:''}
       <p class="sub">${esc(t('inviteSub'))}</p>
       <p>${esc(t('inviteRole'))}</p>
-      <div class="role-pick">
-        ${['editor','requester','viewer'].map(r=>`<button data-role="${r}" class="${r===inviteRole?'active':''}" type="button">${esc(t('role'+r[0].toUpperCase()+r.slice(1)))}</button>`).join('')}
+      <div style="display:flex;flex-direction:column;gap:8px">
+        ${['editor','requester'].map(r=>`<button data-role="${r}" class="role-opt ${r===inviteRole?'active':''}" aria-pressed="${r===inviteRole}" type="button"><b>${esc(roleLabel(r))}</b><small>${esc(t('roleDesc'+cap(r)))}</small></button>`).join('')}
       </div>
       <button class="btn wide" id="inv-go">${esc(t('invite'))}</button>
     </div>`);
@@ -2796,6 +3235,7 @@ function openInviteSheet(){
     </div>`);
     selectOnClick();
     $('inv-share').onclick=()=>shareInvite(shareMsg);
+    if(screen==='household') renderHousehold();
   }
   draw();
 }
@@ -2831,7 +3271,7 @@ async function fetchItems(){
 // items stuck in "other" (added before the dictionary knew them, or whose AI upgrade never got saved)
 // get re-guessed against the current dictionary each time the list loads, and the fix is saved
 function reclassifyOther(){
-  if(listStatus!=='open' || role==='requester') return;
+  if(listStatus!=='open' || !canEdit()) return;
   items.forEach(it=>{
     if(it.category && it.category!=='other') return;
     if(it.category==='other' && it.emoji && it.emoji!==CS.CATS.other.emoji) return; // placed in Other by hand (or has its own emoji): leave it
@@ -2901,18 +3341,20 @@ async function addItem(){
   const g=CS.guess(text); // instant local dictionary guess — the item appears right away, no network wait
   const row={ list_id:listId, household_id:household, text, category:g.cat, emoji:g.emoji, qty:qty||null, created_by:user.id, position:Date.now() };
   queueAdd(row); // optimistic: shows immediately and syncs in the background, online or not
-  toast(role==='requester'?CS.t('itemRequested'):CS.t('itemAdded'));
+  toast(canEdit()?CS.t('itemAdded'):CS.t('itemRequested'));
   if(online) flushQueue();
   if(online && g.cat==='other') queueAiUpgrade(text); // ask the AI to refine it once it's safely saved, never blocking the add
 }
 function openAddSheet(){
   const t=CS.t;
   forceAddDup=false;
-  openSheet(sheetHead(t('add'))+`<div class="card">
+  const req=!canEdit(); // a requester's item waits for approval: say so on the sheet itself
+  openSheet(sheetHead(req?t('requestTitle'):t('add'))+`<div class="card">
+    ${req?`<p class="sub">${esc(t('listRoleRequester').replace('{n}',approverNames()||t('roleOwner')))}</p>`:''}
     <input id="item-input" placeholder="${esc(t('itemPh'))}" autocomplete="off">
     <input id="item-qty" class="qty-input" placeholder="${esc(t('qtyPh'))}" autocomplete="off" inputmode="numeric">
     <div id="item-dup-msg" class="msg" hidden></div>
-    <button class="btn wide" id="item-add">${esc(t('add'))}</button>
+    <button class="btn wide" id="item-add">${esc(req?t('requestGo'):t('add'))}</button>
   </div>`);
   $('item-add').addEventListener('click',addItem);
   $('item-input').addEventListener('keydown',e=>{ if(e.key==='Enter') addItem(); });
@@ -2975,8 +3417,10 @@ function moveItem(id,{cat,prevId,nextId,order}){
   saveMove(id,patch,prev);
 }
 
+// a requester may only touch their own requests that are still waiting
+const canTouch=it=>canEdit() || (it && it.status==='pending' && it.created_by===user.id);
 async function toggleItem(id){
-  if(listStatus!=='open') return; // a closed list is history, not editable
+  if(listStatus!=='open' || !canEdit()) return; // a closed list is history, not editable
   const it=items.find(i=>i.id===id); if(!it) return;
   const prev={status:it.status,checked_by:it.checked_by,checked_at:it.checked_at};
   const patch = it.status==='checked'
@@ -2991,7 +3435,7 @@ async function toggleItem(id){
 // pops once when the last open item on the list gets checked by this user
 function maybeAllDone(){
   if(listStatus!=='open' || !items.length || items.some(i=>i.status!=='checked')) return;
-  const t=CS.t, canClose=role==='owner'||role==='editor';
+  const t=CS.t, canClose=canEdit();
   openSheet(sheetHead(t('allDoneTitle'))+`<div class="card all-done">
     <div class="big">🛒🎉</div>
     <p>${esc(t('allDoneBody').replace('{n}',items.length))}</p>
@@ -3004,7 +3448,7 @@ function maybeAllDone(){
 }
 async function delItem(id){
   if(listStatus!=='open') return;
-  const it=items.find(i=>i.id===id); if(!it) return;
+  const it=items.find(i=>i.id===id); if(!it || !canTouch(it)) return;
   items=items.filter(i=>i.id!==id); paintItems();
   if(!online || isTemp(id)){ queueOp('del',id); return; } // no undo window offline: it's already safely queued
   // deletes the row right away (so it actually leaves the shared list for everyone, not just this
@@ -3021,7 +3465,7 @@ async function delItem(id){
 }
 function openEditSheet(id){
   if(listStatus!=='open') return;
-  const it=items.find(i=>i.id===id); if(!it) return;
+  const it=items.find(i=>i.id===id); if(!it || !canTouch(it)) return;
   const t=CS.t, curCat=it.category||'other';
   openSheet(sheetHead(t('editItem'))+`<div class="card">
     <input id="edit-text" value="${esc(it.text)}">
@@ -3085,7 +3529,7 @@ function subscribeHouseholdRealtime(){
   if(hhChannel){ sb.removeChannel(hhChannel); hhChannel=null; }
   if(!household) return;
   flushItemRejections(); // catch up on rejections that arrived while we weren't connected
-  hhChannel=sb.channel('household:'+household)
+  hhChannel=sb.channel('household:'+household,{config:{presence:{key:user.id}}})
     .on('postgres_changes',{event:'*',schema:'public',table:'household_members',filter:'household_id=eq.'+household},()=>{
       refreshHousehold();
     })
@@ -3099,7 +3543,7 @@ function subscribeHouseholdRealtime(){
         const name=membersById[row.created_by]?membersById[row.created_by].display_name:'';
         toast(CS.t('notifyListOpened').replace('{n}',name||'?').replace('{l}',row.name));
       }
-      if(!$('view-lists').hidden) fetchLists();
+      if(screen==='lists') fetchLists(); else if(screen==='home') refreshHomeSoon();
     })
     .on('postgres_changes',{event:'UPDATE',schema:'public',table:'shopping_lists',filter:'household_id=eq.'+household},payload=>{
       const row=payload.new;
@@ -3112,15 +3556,25 @@ function subscribeHouseholdRealtime(){
         if(curList && curList.id===row.id){ Object.assign(curList,row); renderPayPanel(); }
         fetchHomePay().catch(()=>{});
       }
-      if(!$('view-lists').hidden) fetchLists();
+      if(row.id===listId && curList && screen==='main'){ Object.assign(curList,row); listStatus=row.status; paintListChrome(); }
+      if(screen==='lists') fetchLists(); else if(screen==='home') refreshHomeSoon();
+    })
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'list_activity',filter:'household_id=eq.'+household},()=>{
+      if(screen==='home') refreshHomeSoon(); // someone added / checked / requested something: Home's numbers and feed move
+    })
+    .on('presence',{event:'sync'},()=>{
+      const st=hhChannel?hhChannel.presenceState():{}, next={};
+      Object.keys(st).forEach(k=>{ const metas=st[k]||[]; const m=metas[metas.length-1]; next[k]=m&&m.list||null; });
+      presenceState=next;
+      if(screen==='main') paintListSub(); else if(screen==='home') paintHome();
     })
     .on('postgres_changes',{event:'*',schema:'public',table:'trip_payments',filter:'household_id=eq.'+household},payload=>{
       const row=payload.new&&payload.new.list_id?payload.new:payload.old;
-      if(payload.eventType==='INSERT' && row.user_id!==user.id && row.marked_by!==user.id && role==='owner') toast(CS.t('payNotifyPaid').replace('{n}',nameOf(row.user_id)).replace('{a}',money(row.amount)));
+      if(payload.eventType==='INSERT' && row.user_id!==user.id && row.marked_by!==user.id && (role==='owner'||(curList&&curList.id===row.list_id&&curList.total_by===user.id))) toast(CS.t('payNotifyPaid').replace('{n}',nameOf(row.user_id)).replace('{a}',money(row.amount)));
       if(curList && row && curList.id===row.list_id) renderPayPanel();
       fetchHomePay().catch(()=>{});
     })
-    .subscribe();
+    .subscribe(status=>{ if(status==='SUBSCRIBED') trackPresence(); });
 }
 function subscribeListRealtime(){
   if(channel){ sb.removeChannel(channel); channel=null; }
@@ -3168,13 +3622,13 @@ async function onUser(u){
     lastPing=0; pingSeen();
     sb.rpc('is_admin').then(({data})=>{ isAdmin=data===true; },()=>{});
   }
-  if(!u){ household=null; listId=null; items=[]; paintBrandName(); paintMembersRow(); CS.setScreen('auth'); return; }
+  if(!u){ household=null; listId=null; items=[]; screen='auth'; CS.setScreen('auth'); return; }
   if(pendingJoin && await consumePendingJoin()){ maybeShowOnboarding(); return; }
   const list=await listMyHouseholds();
   if(!list.length){
     const cache=loadCache();
     if(cache && cache.hhId){ await loadHousehold(cache.hhId); maybeShowOnboarding(); return; } // offline cold start: fall back to last-known household
-    CS.setScreen('onboard'); maybeShowOnboarding(); return;
+    openOnboard(); maybeShowOnboarding(); return;
   }
   let primary=null; try{ primary=localStorage.getItem('cs-primary-hh'); }catch(e){}
   let last=null; try{ last=localStorage.getItem('cs-last-hh'); }catch(e){}
@@ -3217,7 +3671,10 @@ const inApp = !!window.CartApp;
 try{ const u=new URL(location.href); if(u.searchParams.has('v')){ u.searchParams.delete('v'); history.replaceState(history.state,'',u.toString()); } }catch(e){} // tidy the cache-busting ?v= away
 // browsers get a permanent "download the Android app" pill (not iPhone/iPad, where an APK can't install)
 if(!inApp && !/iPhone|iPad|iPod/i.test(navigator.userAgent) && !(navigator.platform==='MacIntel' && navigator.maxTouchPoints>1)){
-  const g=$('get-app'); if(g){ g.href=SITE+'apk/cartsync-debug.apk'; g.hidden=false; document.body.classList.add('has-get-app'); }
+  let dismissed=false; try{ dismissed=localStorage.getItem('cs-getapp-dismissed')==='1'; }catch(e){}
+  const g=$('get-app');
+  if(g && !dismissed){ $('get-app-link').href=SITE+'apk/cartsync-debug.apk'; g.hidden=false; document.body.classList.add('has-get-app'); }
+  if($('get-app-close')) $('get-app-close').onclick=()=>{ g.hidden=true; document.body.classList.remove('has-get-app'); try{ localStorage.setItem('cs-getapp-dismissed','1'); }catch(e){} };
 }
 
 function showBtn(show, label, onClick){
@@ -3271,7 +3728,7 @@ function freshReload(build){
     const u=new URL(location.href); u.searchParams.set('v',build);
     location.replace(u.toString());
   };
-  const busy = !!document.querySelector('.sheet') || (document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName));
+  const busy = (!!$('sheet') && !$('sheet').hidden) || (document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName));
   if(!busy) go();
   else { showBtn(true, CS.t('updateNow'), go); showUpdateSheet(go); }
 }
