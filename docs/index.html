@@ -1758,7 +1758,7 @@ $('refresh-btn').addEventListener('click',()=>location.reload());
 Object.assign(window.CS,{
   $, esc, guess, openSheet, closeSheet, sheetHead, focusField, toast, toastAction, confirmSheet,
   setScreen, paintStrings, setAuthMode, renderMembers, renderGroups, renderLists, initials, personColor,
-  renderHomeLists,
+  renderHomeLists, fmtDate,
   render(){ paintStrings(); if(window.CS.rerenderMain) window.CS.rerenderMain(); },
 });
 paintStrings(); // body.html's hardcoded defaults are Hebrew; an English-preferring first visit needs this to actually show English, not just flip direction
@@ -2424,7 +2424,7 @@ async function openList(id, silent){
   $('trip-bar').hidden=listStatus!=='open';
   $('view-main').classList.toggle('readonly',listStatus!=='open');
   $('list-hero-closed').hidden=listStatus==='open';
-  if(listStatus!=='open') $('list-hero-closed').textContent=CS.t('listClosedNote').replace('{d}',fmtDate(lrow.closed_at));
+  if(listStatus!=='open') $('list-hero-closed').textContent=CS.t('listClosedNote').replace('{d}',CS.fmtDate(lrow.closed_at));
   curList=lrow; renderPayPanel();
   searchQuery=''; $('search-input').value=''; $('search-input').hidden=true; $('search-toggle').hidden=false;
   items=[]; paintItems(); // clear the previous list's items so they don't flash under this list's name while loading
