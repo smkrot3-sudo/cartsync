@@ -337,11 +337,21 @@ body.in-list .top{padding:10px 12px}
 .item.swiping{transition:none}
 .item.swipe-ok{background:var(--ok-soft)}
 .item{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
-/* long-press drag: the picked-up row lifts and follows the finger through the list */
-.item.dragging{z-index:5;transform:scale(1.03);box-shadow:0 10px 26px rgba(0,0,0,.22);opacity:.96;transition:none}
-.pad .item.dragging{background:var(--paper)!important;box-shadow:0 10px 26px rgba(40,30,10,.25)}
-.group.drop-target .group-h{outline:2px dashed var(--accent);outline-offset:-4px}
+/* long-press drag. While the finger holds still a bar fills along the row (so it's clear something
+   is coming); once full the row is picked up: it lifts, gets an accent frame and a "moving" tag,
+   everything else fades back, and a banner at the top says drag mode is on */
+.item.pressing::before{content:"";position:absolute;inset-inline-start:0;bottom:0;height:3px;width:0;background:var(--accent);border-radius:3px;animation:press-fill .45s linear .15s forwards;z-index:2}
+@keyframes press-fill{to{width:100%}}
+.item.dragging{z-index:6;transform:scale(1.04);box-shadow:0 14px 34px rgba(0,0,0,.28),0 0 0 2.5px var(--accent);background:var(--accent-soft)!important;border-radius:14px!important;transition:none}
+.item.dragging::after{content:attr(data-drag-label);position:absolute;top:-11px;inset-inline-end:14px;background:var(--accent);color:#fff;font:600 .72rem/1 "Assistant",system-ui,sans-serif;padding:4px 9px;border-radius:999px;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+body.item-dragging #groups .item:not(.dragging){opacity:.45;transition:opacity .15s}
+body.item-dragging #groups .group-h{opacity:.75}
+.group.drop-target .group-h{opacity:1!important;outline:2.5px dashed var(--accent);outline-offset:-4px;border-radius:10px}
 body.item-dragging{cursor:grabbing}
+body.item-dragging #fab-add,body.item-dragging .get-app{opacity:0;pointer-events:none;transition:opacity .15s}
+.pad .item.dragging,.pad .group .item.dragging{background:color-mix(in srgb,var(--paper) 70%,var(--accent) 30%)!important;border-radius:14px;box-shadow:0 14px 34px rgba(40,30,10,.3),0 0 0 2.5px var(--accent);border-bottom-color:transparent}
+.drag-banner{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:60;background:var(--accent);color:#fff;font-weight:700;font-size:.92rem;padding:9px 18px;border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.25);white-space:nowrap;pointer-events:none;animation:banner-in .18s ease-out}
+@keyframes banner-in{from{opacity:0;transform:translate(-50%,-8px)}}
 .item .qty-tag{display:inline-block;font-size:.8em;font-weight:600;color:var(--muted);background:var(--soft);border-radius:999px;padding:1px 9px;font-variant-numeric:tabular-nums;margin-inline-start:7px;vertical-align:1px;text-decoration:none}
 .item .check{width:22px;height:22px;border:2px solid var(--muted);background:transparent;border-radius:5px;flex:none;display:grid;place-items:center;padding:0;transition:all .15s ease;position:relative}
 .item .check::after{content:"";position:absolute;inset:-11px}
@@ -674,7 +684,7 @@ he: {
   needHhName:'צריך לתת שם למשק הבית',
   versionLabel:'גרסה: {v}', updateAvailable:'יש עדכון', updateNow:'🔄 לעדכן',
   updateDownloading:'מוריד...', updateFailed:'העדכון נכשל, אפשר לנסות שוב', updateDone:'✅ מותקן',
-  updateSheetBody:'גרסה חדשה של קניות ביחד מוכנה להתקנה.', updateLater:'אחר כך', refreshLabel:'לרענן', viewFlatToast:'תצוגת רשימה אחת, בלי קטגוריות. לחיצה נוספת מחזירה קטגוריות', dragHint:'לחיצה ארוכה על מוצר וגרירה מזיזה אותו, גם לקטגוריה אחרת', movedToCat:'הועבר ל{c}', category:'קטגוריה', viewGroupedToast:'תצוגה לפי קטגוריות', getAndroidApp:'הורדת האפליקציה לאנדרואיד',
+  updateSheetBody:'גרסה חדשה של קניות ביחד מוכנה להתקנה.', updateLater:'אחר כך', refreshLabel:'לרענן', viewFlatToast:'תצוגת רשימה אחת, בלי קטגוריות. לחיצה נוספת מחזירה קטגוריות', dragHint:'לחיצה ארוכה על מוצר וגרירה מזיזה אותו, גם לקטגוריה אחרת', dragBanner:'✋ מצב גרירה: גררו ושחררו במקום החדש', dragTag:'בגרירה', movedToCat:'הועבר ל{c}', category:'קטגוריה', viewGroupedToast:'תצוגה לפי קטגוריות', getAndroidApp:'הורדת האפליקציה לאנדרואיד',
   whatsNewTitle:'מה חדש', whatsNewIntro:'כמה שיפורים שהתווספו מאז הפעם האחרונה שנכנסת:', whatsNewClose:'הבנתי',
   themeLabel:'מצב תצוגה', themeLight:'☀️ בהיר', themeDark:'🌙 כהה', themeSystem:'⚙️ אוטומטי',
   addedBy:'הוספה ע״י {n}', checkedBy:'נאסף ע״י {n}',
@@ -757,7 +767,7 @@ en: {
   needHhName:'Give the household a name',
   versionLabel:'Version: {v}', updateAvailable:'Update available', updateNow:'🔄 Update',
   updateDownloading:'Downloading...', updateFailed:'Update failed, try again', updateDone:'✅ Installed',
-  updateSheetBody:'A new version of CartSync is ready to install.', updateLater:'Later', refreshLabel:'Refresh', viewFlatToast:'Single list, no categories. Tap again for categories', dragHint:'Long-press an item and drag to move it, even into another category', movedToCat:'Moved to {c}', category:'Category', viewGroupedToast:'Grouped by category', getAndroidApp:'Get the Android app',
+  updateSheetBody:'A new version of CartSync is ready to install.', updateLater:'Later', refreshLabel:'Refresh', viewFlatToast:'Single list, no categories. Tap again for categories', dragHint:'Long-press an item and drag to move it, even into another category', dragBanner:'✋ Drag mode: move it and let go', dragTag:'Moving', movedToCat:'Moved to {c}', category:'Category', viewGroupedToast:'Grouped by category', getAndroidApp:'Get the Android app',
   whatsNewTitle:'What’s new', whatsNewIntro:'A few improvements since you were last here:', whatsNewClose:'Got it',
   themeLabel:'Appearance', themeLight:'☀️ Light', themeDark:'🌙 Dark', themeSystem:'⚙️ Auto',
   addedBy:'Added by {n}', checkedBy:'Collected by {n}',
@@ -1522,7 +1532,7 @@ function attachSwipe(container){
   });
 }
 
-/* long-press (~0.4s) then drag to move an item: up/down in the list, or — in the category view —
+/* long-press (~0.6s) then drag to move an item: up/down in the list, or — in the category view —
    into another category's card, which moves the item to that category. Pointer + touch based, since
    HTML5 drag-and-drop never fires on phones. */
 let dragging=false;
@@ -1539,9 +1549,10 @@ function attachLongDrag(box){
 let press=null;
 function pressStart(el,x,y){
   pressEnd();
-  press={el,x0:x,y0:y,x,y,timer:setTimeout(()=>dragBegin(),420)};
+  press={el,x0:x,y0:y,x,y,timer:setTimeout(()=>dragBegin(),600)};
+  el.classList.add('pressing');
 }
-function pressEnd(){ if(press){ clearTimeout(press.timer); press=null; } }
+function pressEnd(){ if(press){ clearTimeout(press.timer); press.el.classList.remove('pressing'); press=null; } }
 function pressMove(x,y){
   if(!press) return;
   press.x=x; press.y=y;
@@ -1553,9 +1564,13 @@ function dragBegin(){
   dragging=true;
   const el=press.el;
   el.style.transform=''; el.classList.remove('swiping','swipe-ok');
+  el.classList.remove('pressing');
+  el.dataset.dragLabel=CS.t('dragTag');
   el.classList.add('dragging'); document.body.classList.add('item-dragging');
+  const banner=document.createElement('div'); banner.className='drag-banner'; banner.id='drag-banner'; banner.textContent=CS.t('dragBanner');
+  document.body.appendChild(banner);
   press.fromCat=(el.closest('.group')||{}).dataset?.cat||null;
-  try{ navigator.vibrate && navigator.vibrate(25); }catch(e){}
+  try{ navigator.vibrate && navigator.vibrate(40); }catch(e){}
   autoScroll();
 }
 function dragTo(x,y){
@@ -1591,6 +1606,7 @@ function dragEnd(){
   const el=press.el;
   dragging=false; pressEnd();
   el.classList.remove('dragging'); document.body.classList.remove('item-dragging');
+  const banner=$('drag-banner'); if(banner) banner.remove();
   document.querySelectorAll('.group.drop-target').forEach(g=>g.classList.remove('drop-target'));
   // the row was a button under the finger — don't let the release also open the edit sheet
   const swallow=e=>{ e.stopPropagation(); e.preventDefault(); };
