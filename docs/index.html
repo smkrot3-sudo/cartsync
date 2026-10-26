@@ -529,7 +529,15 @@ body:not([data-screen="home"]) .get-app{display:none}
 /* the houses screen and the fridge shelf: the app's two "places" drawn as objects */
 .houses-h{font-size:1.5rem;margin:8px 0 2px}
 .houses-sub{color:var(--muted);margin:0 0 14px}
-.houses-grid,.fridges{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.fridges{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.houses-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.houses-grid .place{padding:10px 4px 10px;gap:4px;border-radius:16px}
+.houses-grid .place svg{max-width:96px}
+.houses-grid .place .nm{font-size:.92rem}
+.houses-grid .place .meta{font-size:.72rem}
+.houses-grid .pin{width:32px;height:32px;font-size:.9rem;inset-block-start:2px;inset-inline-start:2px}
+.houses-grid .place.new{min-height:0;font-size:.85rem}
+.houses-grid .place.new .plus{font-size:1.5rem}
 .place-wrap{position:relative;display:flex}
 .place-wrap .place{flex:1}
 .place{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--surface);border:0;border-radius:18px;padding:14px 8px 12px;box-shadow:var(--shadow);color:inherit;cursor:pointer;width:100%}
@@ -641,8 +649,8 @@ body:not([data-screen="home"]) .get-app{display:none}
   <!-- ---------- lists: active lists, then past shopping by month ---------- -->
   <!-- ---------- the houses: one house per household, the way in ---------- -->
   <section class="view" id="view-houses" hidden>
-    <h1 class="houses-h" id="houses-title">הבתים שלי</h1>
-    <p class="houses-sub" id="houses-sub">בוחרים בית, ונכנסים לרשימות שלו.</p>
+    <h1 class="houses-h" id="houses-title">משקי הבית שלי</h1>
+    <p class="houses-sub" id="houses-sub">בוחרים משק בית, ונכנסים לרשימות שלו.</p>
     <div class="houses-grid" id="houses-grid"></div>
   </section>
 
@@ -796,7 +804,7 @@ he: {
   homeSub:'כל הרשימות המשותפות של משק הבית, במקום אחד.',
   homeLists:'הרשימות שלי', homeInvite:'להזמין מישהו', homeSwitch:'להחליף משק בית',
   primaryHhSet:'לסמן כמשק בית ראשי', primaryHhUnset:'להסיר סימון ראשי',
-  housesTitle:'הבתים שלי', housesSub:'בוחרים בית, ונכנסים לרשימות שלו.', houseNew:'בית חדש', ariaHouse:'להיכנס ל{n}', ariaFridgeOpen:'רשימה פתוחה: {n}', ariaFridgeClosed:'קנייה שנסגרה: {n}', fridgeEmpty:'ריק', houseLists:'{n} רשימות פתוחות', houseListsOne:'רשימה פתוחה אחת', houseListsNone:'אין רשימות פתוחות',
+  housesTitle:'משקי הבית שלי', housesSub:'בוחרים משק בית, ונכנסים לרשימות שלו.', houseNew:'משק בית חדש', ariaHouse:'להיכנס ל{n}', ariaFridgeOpen:'רשימה פתוחה: {n}', ariaFridgeClosed:'קנייה שנסגרה: {n}', fridgeEmpty:'ריק', houseLists:'{n} רשימות פתוחות', houseListsOne:'רשימה פתוחה אחת', houseListsNone:'אין רשימות פתוחות',
   primaryHhSetToast:'⭐ סומן כמשק בית ראשי — ייפתח ראשון תמיד', primaryHhUnsetToast:'סימון הראשי הוסר',
   homeListsHeading:'הרשימות הפעילות', homeListsMore:'כל הרשימות ←',
   homeMembers:'משק הבית', itemsLeft:'{n} פריטים נשארו', allCollected:'הכל נאסף ✅',
@@ -910,7 +918,7 @@ en: {
   homeSub:'All of your household\'s shared lists, in one place.',
   homeLists:'My lists', homeInvite:'Invite someone', homeSwitch:'Switch household',
   primaryHhSet:'Set as primary household', primaryHhUnset:'Remove as primary',
-  housesTitle:'My houses', housesSub:'Pick a house to open its lists.', houseNew:'New house', ariaHouse:'Open {n}', ariaFridgeOpen:'Open list: {n}', ariaFridgeClosed:'Closed trip: {n}', fridgeEmpty:'Empty', houseLists:'{n} open lists', houseListsOne:'1 open list', houseListsNone:'No open lists',
+  housesTitle:'My households', housesSub:'Pick a household to open its lists.', houseNew:'New household', ariaHouse:'Open {n}', ariaFridgeOpen:'Open list: {n}', ariaFridgeClosed:'Closed trip: {n}', fridgeEmpty:'Empty', houseLists:'{n} open lists', houseListsOne:'1 open list', houseListsNone:'No open lists',
   primaryHhSetToast:'⭐ Set as primary household — opens first every time', primaryHhUnsetToast:'No longer primary',
   homeListsHeading:'Active lists', homeListsMore:'All lists →',
   homeMembers:'Household', itemsLeft:'{n} items left', allCollected:'All collected ✅',
@@ -1073,7 +1081,7 @@ he: [
     'מי ששילם בקופה יכול לגבות בעצמו, לקישור הביט שלו',
   ]},
   {version:6, items:[
-    'מסך בתים: כל משק בית הוא בית, ונכנסים אליו בלחיצה',
+    'מסך משקי הבית: כל משק בית מצויר כבית קטן, ונכנסים אליו בלחיצה',
     'הרשימות הן מקררים: פתוחה = דלת פתוחה למעלה, סגורה = מקרר סגור למטה עם תאריך',
   ]},
 ],
@@ -1122,7 +1130,7 @@ en: [
    both new users (automatically, once) and anyone opening it later from Settings */
 const GUIDE = {
 he: [
-  {icon:'🏘️', title:'הבתים והמקררים', body:'מי שחבר ביותר ממשק בית אחד נכנס למסך <b>הבתים</b>: כל משק בית הוא בית, ולחיצה עליו נכנסת לרשימות שלו. תמיד אפשר לחזור לשם מהשם של משק הבית בראש המסך. הרשימות עצמן מצוירות כמקררים: רשימה פעילה היא מקרר עם דלת פתוחה והיא למעלה, וקנייה שנסגרה היא מקרר סגור למטה עם תאריך הסגירה.'},
+  {icon:'🏘️', title:'משקי הבית והמקררים', body:'מי שחבר ביותר ממשק בית אחד נכנס למסך <b>משקי הבית</b>: כל משק בית מצויר כבית קטן, ולחיצה עליו נכנסת לרשימות שלו. תמיד אפשר לחזור לשם מהשם של משק הבית בראש המסך. הרשימות עצמן מצוירות כמקררים: רשימה פעילה היא מקרר עם דלת פתוחה והיא למעלה, וקנייה שנסגרה היא מקרר סגור למטה עם תאריך הסגירה.'},
   {icon:'🏠', title:'שלוש לשוניות', body:'בתחתית המסך יש שלושה מקומות קבועים: <b>בית</b> (מה עכשיו: הרשימה להמשיך, מה מחכה לך, מה קרה לאחרונה), <b>רשימות</b> (רשימות פעילות וקניות קודמות לפי חודשים), ו<b>משק הבית</b> (מי בבית, הזמנות, קישור ביט והחלפת משק בית). רשימה פתוחה תופסת את כל המסך, והחץ למעלה מחזיר אחורה.'},
   {icon:'👥', title:'תפקידים', body:'לכל אדם במשק הבית יש תפקיד: <b>מנהל</b> מנהל את משק הבית (הזמנות, תפקידים ותשלומים), <b>שותף</b> מוסיף, אוסף ומאשר בקשות, ו<b>מבקש</b> מבקש מוצרים שמחכים לאישור של מנהל או שותף. בעמוד משק הבית רואים את התפקיד של כל אחד, ולחיצה על אדם פותחת את הפעולות עליו.'},
   {icon:'📋', title:'רשימות קניות', body:'במשק בית אחד אפשר לפתוח כמה רשימות (למשל "סופר שבועי" ו"פארם"). רשימה אחת אפשר לסמן כ<b>ראשית</b>, וההוספה המהירה בעמוד הבית נכנסת אליה. אחרי "סיום קניות" הרשימה עוברת ל"קניות קודמות" ונשארת לקריאה בלבד.'},
@@ -1137,7 +1145,7 @@ he: [
   {icon:'🛡️', title:'ניהול משק הבית', body:'המנהל יכול להעביר את הניהול לאדם אחר, להסיר אנשים ולמחוק את משק הבית לצמיתות. הפעולות האלה נמצאות בתחתית עמוד משק הבית. כל אחד יכול לצאת ממשק הבית, חוץ מהמנהל, שצריך קודם להעביר את הניהול אם יש עוד אנשים.'},
 ],
 en: [
-  {icon:'🏘️', title:'Houses and fridges', body:'If you belong to more than one household, you start on the <b>houses</b> screen: each household is a house, and tapping one opens its lists. You can always get back there from the household name at the top. The lists themselves are drawn as fridges: an active list is a fridge with its door open, up top, and a closed trip is a shut fridge below, with the date it closed.'},
+  {icon:'🏘️', title:'Households and fridges', body:'If you belong to more than one household, you start on the <b>households</b> screen: each household is drawn as a little house, and tapping one opens its lists. You can always get back there from the household name at the top. The lists themselves are drawn as fridges: an active list is a fridge with its door open, up top, and a closed trip is a shut fridge below, with the date it closed.'},
   {icon:'🏠', title:'Three tabs', body:'The bar at the bottom has three fixed places: <b>Home</b> (what now: the list to continue, what waits for you, what just happened), <b>Lists</b> (active lists and past shopping by month), and <b>Household</b> (who\'s here, invites, your Bit link, switching households). An open list takes the whole screen; the arrow at the top takes you back.'},
   {icon:'👥', title:'Roles', body:'Everyone in a household has a role: a <b>Manager</b> runs the household (invites, roles, payments), a <b>Partner</b> adds, collects and approves requests, and a <b>Requester</b> asks for items that wait for a manager or partner to approve. The Household tab shows everyone\'s role; tap a person for actions.'},
   {icon:'📋', title:'Shopping lists', body:'One household can have several lists at once (e.g. "weekly groceries" and "pharmacy"). An "open" list accepts new items and checkmarks; once you close it, it moves to history as read-only.'},
@@ -1595,44 +1603,71 @@ function timeAgo(iso){
 const fmtMoney=a=>Number(a||0).toLocaleString('he-IL',{maximumFractionDigits:2})+' ₪';
 const ICON_MORE='<svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>';
 /* ---------- the app drawn as objects: a house per household, a fridge per list ---------- */
-// one house, roof and door in the household's own colour so each is recognisable at a glance
+// one household, drawn as a little flat-style house (owner's reference 2026-10-26): roof in a colour
+// picked by the household's id from a fixed palette, so each one stays recognisable at a glance
+const ROOFS=['#C8432F','#3E7FB5','#2F8A6B','#7A4FB0','#D9822B','#B5466E'];
 function houseSvg(seed){
-  const c=personColor(seed), dark=`color-mix(in srgb,${c} 78%, #000)`;
-  return `<svg viewBox="0 0 110 104" aria-hidden="true" focusable="false">
-    <rect x="72" y="12" width="11" height="20" rx="2.5" fill="${dark}"/>
-    <rect x="25" y="42" width="60" height="56" rx="6" fill="var(--surface)" stroke="var(--line)" stroke-width="2.5"/>
-    <path d="M55 6 104 45 6 45Z" fill="${c}" stroke="${c}" stroke-width="3" stroke-linejoin="round"/>
-    <rect x="46" y="66" width="18" height="32" rx="3" fill="${c}"/>
-    <circle cx="60" cy="83" r="2" fill="var(--surface)"/>
-    <rect x="31" y="54" width="13" height="13" rx="2" fill="var(--gold-soft)" stroke="var(--line)" stroke-width="1.5"/>
-    <rect x="66" y="54" width="13" height="13" rx="2" fill="var(--gold-soft)" stroke="var(--line)" stroke-width="1.5"/>
+  let h=0; const str=String(seed||''); for(let i=0;i<str.length;i++) h=(h*31+str.charCodeAt(i))>>>0;
+  const roof=ROOFS[h%ROOFS.length];
+  return `<svg viewBox="0 0 120 104" aria-hidden="true" focusable="false">
+    <rect x="25" y="14" width="13" height="28" fill="#A8432F"/>
+    <path d="M25 22H38M25 30H38M31 14V22M28 22V30M35 30V38" stroke="#7E2E20" stroke-width="1.2"/>
+    <rect x="21" y="9" width="21" height="7" rx="2" fill="${roof}"/>
+    <path d="M20 52 60 24 100 52V104H20Z" fill="#D9A066"/>
+    <rect x="25" y="58" width="3" height="12" rx="1.5" fill="#fff" opacity=".4"/>
+    <rect x="25" y="74" width="3" height="8" rx="1.5" fill="#fff" opacity=".4"/>
+    <path d="M11 56 60 19 109 56" fill="none" stroke="${roof}" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M22 44 34 35M38 32 43 28" stroke="#fff" stroke-width="2.5" stroke-linecap="round" opacity=".55"/>
+    <rect x="31" y="60" width="26" height="5" fill="#9C5B2E"/>
+    <rect x="33" y="64" width="22" height="40" fill="#7A2E22"/>
+    <rect x="37" y="69" width="14" height="11" rx="2" fill="#4A90C2"/>
+    <rect x="37" y="88" width="14" height="10" rx="1.5" fill="#62241A"/>
+    <circle cx="51" cy="85" r="2.3" fill="#E0A030"/>
+    <rect x="66" y="64" width="25" height="21" rx="1" fill="#F2EBDD"/>
+    <rect x="68.5" y="66.5" width="9" height="7.5" fill="#3E7FB5"/><rect x="79.5" y="66.5" width="9" height="7.5" fill="#4A90C2"/>
+    <rect x="68.5" y="75.5" width="9" height="7.5" fill="#4A90C2"/><rect x="79.5" y="75.5" width="9" height="7.5" fill="#2F6699"/>
+    <rect x="63" y="85" width="31" height="5" rx="2" fill="#9C5B2E"/>
+    <circle cx="16" cy="102" r="12" fill="#4E8A3C"/><circle cx="25" cy="104" r="8" fill="#2F6B35"/>
+    <circle cx="101" cy="99" r="14" fill="#4E8A3C"/><circle cx="110" cy="101" r="10" fill="#2F6B35"/>
   </svg>`;
 }
-// one fridge, standard size whether it holds three items or thirty: open door = an open list
+// one fridge per list, cartoon style (owner's reference 2026-10-26): thick outline, teal front, a darker
+// side for depth, orange handles, little feet. Same size whatever the list holds. While the list is
+// still open the bottom door stands open on the shelves; a closed list keeps both doors shut.
+const FR={ink:'#1E2A2E',front:'#64A0A2',side:'#2B5F7E',handle:'#D9822B',feet:'#8A5A3A',inside:'#F3F1E7',trim:'#C9D3D4'};
 function fridgeSvg(open,fullness){
-  const body=`<rect x="26" y="6" width="58" height="128" rx="9" fill="${open?'color-mix(in srgb,var(--gold-soft) 65%, var(--surface))':'var(--surface)'}" stroke="var(--line)" stroke-width="2.5"/>`;
-  if(!open) return `<svg viewBox="0 0 110 140" aria-hidden="true" focusable="false">
-    ${body}
-    <path d="M26 48 H84" stroke="var(--line)" stroke-width="2.5"/>
-    <rect x="71" y="22" width="4.5" height="17" rx="2.2" fill="var(--muted)"/>
-    <rect x="71" y="58" width="4.5" height="26" rx="2.2" fill="var(--muted)"/>
+  const k=FR.ink;
+  const shell=`<ellipse cx="60" cy="145" rx="48" ry="4.5" fill="#000" opacity=".13"/>
+    <rect x="31" y="136" width="10" height="6" rx="1.5" fill="${FR.feet}" stroke="${k}" stroke-width="1.5"/>
+    <rect x="65" y="137" width="10" height="6" rx="1.5" fill="${FR.feet}" stroke="${k}" stroke-width="1.5"/>
+    <rect x="92" y="130" width="8" height="5" rx="1.5" fill="${FR.feet}" stroke="${k}" stroke-width="1.5"/>
+    <path d="M80 11 101 18V129L80 138Z" fill="${FR.side}" stroke="${k}" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M28 10H80L101 18" fill="none" stroke="${k}" stroke-width="3" stroke-linejoin="round"/>`;
+  const top=`<rect x="22" y="9" width="59" height="129" rx="8" fill="${FR.front}" stroke="${k}" stroke-width="3"/>
+    <rect x="25.5" y="13" width="3" height="116" rx="1.5" fill="#fff" opacity=".18"/>
+    <path d="M24 16H78" stroke="${k}" stroke-width="1.4" opacity=".5"/>
+    <rect x="23.5" y="50" width="56" height="4" fill="${FR.trim}" stroke="${k}" stroke-width="1.3"/>
+    <rect x="29" y="22" width="6" height="20" rx="2" fill="${FR.handle}" stroke="${k}" stroke-width="2"/>`;
+  if(!open) return `<svg viewBox="0 0 120 150" aria-hidden="true" focusable="false">${shell}${top}
+    <rect x="29" y="62" width="6" height="22" rx="2" fill="${FR.handle}" stroke="${k}" stroke-width="2"/>
   </svg>`;
-  const shelves=[58,86,114];
-  const goods=[[32,'var(--accent)',9,11],[44,'var(--gold)',7,8],[54,'var(--coral)',10,13],[68,'var(--accent)',8,9]];
-  const n=Math.min(goods.length,Math.max(0,fullness));
-  let items='';
-  shelves.forEach((y,si)=>{
-    goods.slice(0,si<2?n:Math.max(0,n-2)).forEach(([x,fill,w,h],i)=>{
-      if((si+i)%2 && si===2) return;
-      items+=`<rect x="${x}" y="${y-h-1}" width="${w}" height="${h}" rx="2" fill="${fill}" opacity=".85"/>`;
-    });
-  });
-  return `<svg viewBox="0 0 110 140" aria-hidden="true" focusable="false">
-    ${body}
-    ${shelves.map(y=>`<path d="M30 ${y} H80" stroke="var(--line)" stroke-width="2"/>`).join('')}
-    ${items}
-    <path d="M26 6 4 19 4 129 26 134Z" fill="var(--surface)" stroke="var(--line)" stroke-width="2.5" stroke-linejoin="round"/>
-    <rect x="17" y="58" width="4" height="24" rx="2" fill="var(--muted)"/>
+  // the open bottom compartment: shelves, a few groceries (fewer when little is left), and the door swung out
+  const g=Math.max(0,Math.min(6,fullness|0));
+  const goods=[
+    `<rect x="30" y="66" width="8" height="13" rx="2" fill="#fff" stroke="${k}" stroke-width="1.3"/><rect x="31.5" y="63" width="5" height="4" rx="1" fill="#3E7FB5"/>`,
+    `<circle cx="47" cy="75" r="4.5" fill="#E0463A" stroke="${k}" stroke-width="1.3"/>`,
+    `<path d="M56 79 68 79 68 72Z" fill="#F2C14E" stroke="${k}" stroke-width="1.3" stroke-linejoin="round"/>`,
+    `<rect x="31" y="92" width="7" height="15" rx="2" fill="#4E8A3C" stroke="${k}" stroke-width="1.3"/>`,
+    `<rect x="43" y="98" width="13" height="9" rx="2" fill="#E8DCC0" stroke="${k}" stroke-width="1.3"/>`,
+    `<circle cx="64" cy="103" r="4" fill="#F28C28" stroke="${k}" stroke-width="1.3"/>`,
+  ];
+  return `<svg viewBox="0 0 120 150" aria-hidden="true" focusable="false">${shell}${top}
+    <path d="M23.5 54H79.5V130A7 7 0 0 1 72.5 137H30.5A7 7 0 0 1 23.5 130Z" fill="${FR.inside}" stroke="${k}" stroke-width="3"/>
+    <path d="M26 82H77M26 110H77" stroke="${k}" stroke-width="2"/>
+    <rect x="28" y="116" width="47" height="17" rx="3" fill="#DCE9E3" stroke="${k}" stroke-width="1.5"/>
+    ${goods.slice(0,g).join('')}
+    <path d="M80 54 107 62V141L80 137Z" fill="${FR.front}" stroke="${k}" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M84 72 103 77M84 96 103 101M84 120 103 125" stroke="${k}" stroke-width="1.6" opacity=".55"/>
   </svg>`;
 }
 // the way in: every household I belong to, as a house
