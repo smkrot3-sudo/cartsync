@@ -17,15 +17,22 @@ async function ctx(me,opts={}){
  if(opts.addInit) await c.addInitScript(opts.addInit);
  const p=await c.newPage(); p.on('pageerror',e=>{errors++;console.log('ERR['+me+']',e.message,e.stack&&e.stack.split('\n')[1])});
  p.on('console',m=>{if(m.type()==='error'||m.type()==='warning')console.log('console['+me+']',m.type(),m.text().slice(0,200))});
- await p.goto('https://app.test/index.html'); await p.waitForTimeout(1500); return p;
+ await p.goto('https://app.test/index.html'); await p.waitForTimeout(1500);
+ if(!opts.stayOnHouses && await p.evaluate(()=>document.body.dataset.screen==='houses')){ await p.click('[data-house=h1]'); await p.waitForTimeout(900); await p.click('#tab-home'); await p.waitForTimeout(600); }
+ return p;
 }
 const shot=async(p,n,full)=>{await p.waitForTimeout(500);await p.screenshot({path:OUT+n+'.png',fullPage:!!full});console.log('shot',n)};
 const T=async(p,sel)=>{await p.click(sel);await p.waitForTimeout(600)};
 const close=async p=>{await p.evaluate(()=>{const b=document.querySelector('#sheet [data-act=sheet-close]'); if(b) b.click();}); await p.waitForTimeout(400)};
 let p=await ctx('u1',{out:true}); await shot(p,'01-auth');
+// the houses: the way in when you belong to more than one household
+p=await ctx('u1',{stayOnHouses:true}); await shot(p,'01b-houses',true);
+console.log('entry screen:', await p.evaluate(()=>document.body.dataset.screen));
+await T(p,'[data-house=h1]'); console.log('after picking a house:', await p.evaluate(()=>document.body.dataset.screen));
+await shot(p,'01c-fridges-after-house',true);
 // owner
 p=await ctx('u1'); await shot(p,'02-home-owner',true);
-await T(p,'#tb-hh'); await shot(p,'03-switcher'); await close(p);
+await T(p,'#tb-hh'); await shot(p,'03-houses-from-topbar',true); await p.goBack(); await p.waitForTimeout(700);
 await T(p,'#tb-acct'); await shot(p,'04-settings',true); await close(p);
 await T(p,'#tab-lists'); await shot(p,'05-lists-owner',true);
 await T(p,'[data-list-more=l2]'); await shot(p,'05b-row-menu'); await close(p);
