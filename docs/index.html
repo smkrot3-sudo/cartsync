@@ -557,51 +557,65 @@ body:not([data-screen="houses"]):not([data-screen="lists"]) .get-app{display:non
 :root[data-theme="dark"]{--enamel:#22373A;--enamel-ink:#0E1517}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--enamel:#22373A;--enamel-ink:#0E1517}}
 body[data-screen="lists"]{background:var(--enamel)}
-.fridge-face{position:relative;min-height:72vh;padding:6px 40px 24px;margin-bottom:8px}
+.fridge-face{position:relative;min-height:72vh;padding:10px 34px 28px;margin-bottom:8px}
 .fridge-face > *{position:relative;z-index:1}
-.fridge-face > .deco{position:absolute;z-index:0;pointer-events:none}
-.deco.mag svg{display:block;width:40px;height:40px;filter:drop-shadow(0 3px 2px rgba(0,0,0,.28))}
-.deco.photo{width:62px;padding:4px 4px 12px;background:#FFFDF6;border-radius:2px;box-shadow:0 4px 8px rgba(0,0,0,.2)}
-.deco.photo svg{display:block;width:100%;height:auto;border:1.5px solid #CFC7B5}
-.deco.photo::after{content:"";position:absolute;top:-8px;left:50%;width:15px;height:15px;margin-left:-7.5px;border-radius:50%;background:var(--mg,#E0463A);border:2px solid var(--enamel-ink);box-shadow:0 2px 2px rgba(0,0,0,.3)}
-.deco-in{break-inside:avoid;display:flex;justify-content:center;padding:10px 0 18px}
-.deco-in .deco{position:relative}
-.deco-in .deco.photo{width:96px;padding:6px 6px 18px}
-.magnet-label{display:block;width:fit-content;margin:6px 0 14px;padding:4px 14px;background:#FFF7E0;color:#1E2A2E;border:2.5px solid #1E2A2E;font-size:.92rem;font-weight:800;border-radius:9px;box-shadow:0 3px 0 rgba(0,0,0,.22);transform:rotate(-1.5deg)}
-#lists-closed-box{margin-top:14px}
+.fridge-face > .deco{position:absolute;z-index:0;pointer-events:none;display:flex;align-items:flex-start;gap:2px}
+.fruit{display:block;filter:drop-shadow(0 3px 2px rgba(0,0,0,.3))}
+.fruit svg{display:block;width:100%;height:auto}
+/* a glossy round magnet: a bright highlight up top, darker rim, a soft drop shadow */
+.mag{display:block;flex:none;width:var(--s);height:var(--s);border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0 9%,color-mix(in srgb,var(--c) 70%,#fff) 22%,var(--c) 55%,color-mix(in srgb,var(--c) 70%,#000) 100%);box-shadow:0 3px 3px rgba(0,0,0,.3)}
+.ltr{display:inline-block;font:900 2rem/1 "Arial Rounded MT Bold","Varela Round","Assistant",system-ui,sans-serif;color:var(--c);transform:rotate(var(--r));text-shadow:0 1px 0 color-mix(in srgb,var(--c) 60%,#000),0 2px 0 color-mix(in srgb,var(--c) 60%,#000),0 4px 4px rgba(0,0,0,.3);margin-inline:1px}
+.ltrs{direction:ltr}
+.polaroid{display:block;width:58px;padding:5px 5px 14px;background:linear-gradient(#FFFFFF,#EFEFEA);transform:rotate(var(--r));box-shadow:0 2px 3px rgba(0,0,0,.2),0 8px 12px -6px rgba(0,0,0,.3)}
+.polaroid span{display:block;aspect-ratio:1;background:linear-gradient(135deg,color-mix(in srgb,var(--tone) 80%,#fff) 0%,var(--tone) 45%,#111 100%)}
+.deco-in{break-inside:avoid;position:relative;display:flex;justify-content:center;padding:14px 0 22px}
+.deco-in .polaroid{width:92px;padding:6px 6px 20px}
+.deco-in .mag{position:absolute;top:8px;left:50%;margin-left:6px}
+.mini-sticky{position:absolute;bottom:12px;left:50%;width:46px;height:22px;margin-left:-6px;background:linear-gradient(#FFE97A,#F6D84A);transform:rotate(3deg);box-shadow:0 2px 3px rgba(0,0,0,.18)}
+/* section labels: a strip of paper under a magnet */
+.magnet-label{position:relative;display:block;width:fit-content;margin:8px 0 16px;padding:5px 16px;background:#FFFFFF;color:#2B2B2B;font-size:.9rem;font-weight:800;border-radius:1px;box-shadow:0 1px 2px rgba(0,0,0,.18),0 6px 8px -5px rgba(0,0,0,.3);transform:rotate(-1deg)}
+.magnet-label::after{content:"";position:absolute;top:-6px;inset-inline-start:-6px;width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0 9%,#F06A5A 25%,#D93A2B 55%,#8E1E14 100%);box-shadow:0 2px 2px rgba(0,0,0,.3)}
+#lists-closed-box{position:relative;margin-top:18px}
+#lists-closed-box > .deco{position:absolute;z-index:0;pointer-events:none;display:flex;align-items:flex-start;gap:2px}
+.fridge-face{padding-bottom:64px}
 .fridge-face .empty-line{font-weight:700}
-.fridge-face .note-wrap .more{background:rgba(255,255,255,.8)}
-.notes{columns:2;column-gap:16px;padding:8px 6px 0;--hand:"Playpen Sans Hebrew","Assistant",system-ui,sans-serif}
+.notes{columns:2;column-gap:18px;padding:8px 4px 0;--hand:"Playpen Sans Hebrew","Assistant",system-ui,sans-serif}
 :root[data-itemfont="plain"] .notes{--hand:"Assistant",system-ui,sans-serif}
-.note-wrap{break-inside:avoid;position:relative;display:block;padding-top:8px;margin-bottom:16px}
-.note{position:relative;display:block;width:100%;text-align:start;border:0;border-radius:2px;padding:16px 14px 14px;font-family:var(--hand);color:#253352;background:#fff;transform:rotate(var(--rot));box-shadow:0 7px 12px rgba(0,0,0,.14),0 1px 2px rgba(0,0,0,.12);cursor:pointer;transition:transform .12s}
+.note-wrap{break-inside:avoid;position:relative;display:block;padding-top:10px;margin-bottom:20px;isolation:isolate}
+/* the paper: short, never a scroll. Square, a little taller than wide, or a little wider than tall */
+.note{position:relative;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:6px;width:100%;text-align:center;border:0;padding:20px 12px 16px;font-family:var(--hand);color:#2A2F3A;background:#F7F7F4;transform:rotate(var(--rot));border-radius:1px 1px 3px 3px;box-shadow:0 1px 1px rgba(0,0,0,.12),0 4px 6px rgba(0,0,0,.12);cursor:pointer;transition:transform .12s}
+.note.shape-sq{aspect-ratio:1}
+.note.shape-rect{aspect-ratio:5/6}
+.note.shape-wide{aspect-ratio:6/5}
+/* the lifted corner: a curved lower edge and a shadow that falls further where the paper curls off the door */
+.note{border-end-end-radius:60% 10px}
+.note-wrap::after{content:"";position:absolute;z-index:-1;bottom:6px;inset-inline-end:8px;width:55%;height:24px;background:transparent;box-shadow:0 12px 10px rgba(0,0,0,.28);transform:rotate(4deg) skewX(-6deg)}
+[dir="rtl"] .note-wrap::after{transform:rotate(-4deg) skewX(6deg)}
 .note:active{transform:rotate(var(--rot)) scale(.97)}
-.note .pin{position:absolute;top:-7px;left:50%;width:17px;height:17px;margin-left:-8.5px;border-radius:50%;background:radial-gradient(circle at 35% 32%,rgba(255,255,255,.85) 0 2px,var(--pin) 3.5px);box-shadow:0 3px 3px rgba(0,0,0,.28),inset 0 -2px 0 rgba(0,0,0,.18)}
-.note .tape{position:absolute;top:-10px;left:50%;width:60px;height:20px;margin-left:-30px;transform:rotate(-4deg);background:rgba(255,255,255,.6);box-shadow:0 1px 2px rgba(0,0,0,.12);border-left:1px dashed rgba(0,0,0,.08);border-right:1px dashed rgba(0,0,0,.08)}
-.note .n-date{display:block;font-size:.72rem;opacity:.65;text-align:end;line-height:14px;margin-bottom:2px}
-.note .n-title{display:block;font-weight:600;font-size:1.06rem;line-height:24px;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:4px;margin-bottom:2px;overflow-wrap:anywhere}
-.note .n-line{display:block;font-size:.9rem;line-height:22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.note .n-line.done{text-decoration:line-through;opacity:.5}
-.note .n-line.n-empty{opacity:.55}
+.note .pin{position:absolute;top:-8px;left:var(--pin-x);width:20px;height:20px;margin-left:-10px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0 9%,color-mix(in srgb,var(--pin) 70%,#fff) 22%,var(--pin) 55%,color-mix(in srgb,var(--pin) 65%,#000) 100%);box-shadow:0 4px 4px rgba(0,0,0,.32)}
+.note .n-title{display:block;font-weight:600;font-size:1.12rem;line-height:1.3;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.note .n-star{color:#E8B320;margin-inline-end:4px}
+.note .n-ticks{display:flex;flex-direction:column;gap:7px;width:78%}
+.note .n-ticks i{display:block;height:9px;border-bottom:1.3px solid #9AA0A8;position:relative;padding-inline-start:14px}
+.note .n-ticks i::before{content:"";position:absolute;inset-inline-start:0;bottom:-1px;width:9px;height:9px;border:1.3px solid #9AA0A8}
+.note.closed .n-title{text-decoration:line-through;text-decoration-thickness:2.5px;text-decoration-color:rgba(42,47,58,.75);opacity:.7}
+.note .n-closed{display:block;font-size:.76rem;font-family:var(--body);font-weight:800;color:#A8322A}
+.note.closed{filter:saturate(.85)}
+.paper-todo{background:linear-gradient(170deg,#FBFBF8,#ECECE7)}
+.paper-sticky{background:linear-gradient(170deg,#FFF09A,#F8DC52);border-radius:0 0 3px 3px}
+.paper-pink{background:linear-gradient(170deg,#FFC9D9,#F4A7C0)}
+.paper-blue{background:linear-gradient(170deg,#DCEBF7,#BCD6EC)}
+.paper-lined{background:#FDFDFB;background-image:linear-gradient(90deg,transparent 14px,#E7A3A3 14px 15.5px,transparent 15.5px),repeating-linear-gradient(transparent 0 17px,#C9DCEE 17px 18px)}
+.paper-grid{background:#FCFCFA;background-image:linear-gradient(#D8E0E8 1px,transparent 1px),linear-gradient(90deg,#D8E0E8 1px,transparent 1px);background-size:12px 12px}
+/* torn from a pad: a perforated top edge */
+.paper-torn{background:linear-gradient(170deg,#FFFFFF,#EEEDE6)}
+.paper-torn::before{content:"";position:absolute;top:-3px;left:0;right:0;height:6px;background:radial-gradient(circle 3.2px at 6px 3px,var(--enamel) 96%,transparent) 0 0/12px 6px repeat-x}
+.note.new{background:rgba(255,255,255,.4);border:2px dashed var(--accent);box-shadow:none;--rot:-1deg;color:var(--accent);font-family:var(--body);aspect-ratio:1;border-radius:4px}
+.note-wrap:has(.note.new)::after{display:none}
 .note-wrap:has(.more) .note{padding-bottom:36px}
-.note .n-more{display:block;font-size:.78rem;opacity:.6;line-height:20px}
-.note .n-left{display:block;margin-top:6px;font-size:.76rem;font-family:var(--body);font-weight:700;color:#2F7D5B}
-.note.closed .n-line{text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:rgba(37,51,82,.7);opacity:.75}
-.note .n-closed{display:block;margin-top:8px;font-size:.78rem;font-family:var(--body);font-weight:800;color:#B23A3A}
-.note .n-cross{position:absolute;inset:26px 12px 30px;width:calc(100% - 24px);height:calc(100% - 56px);pointer-events:none}
-.note .n-cross path{fill:none;stroke:rgba(37,51,82,.55);stroke-width:2.4;stroke-linecap:round;vector-effect:non-scaling-stroke}
-.paper-lined{background:#fff;background-image:repeating-linear-gradient(transparent 0 21px,#C9DCEE 21px 22px);background-position:0 39px}
-.paper-lined::before{content:"";position:absolute;inset-block:0;inset-inline-start:9px;width:1.5px;background:#E89494}
-.paper-sticky{background:linear-gradient(#FFE88F,#FFE07A);border-radius:1px}
-.paper-pink{background:linear-gradient(#FFD0D9,#FFC3CF)}
-.paper-mint{background:linear-gradient(#D3F2DD,#C4EBD1)}
-.paper-grid{background:#FDFDFB;background-image:linear-gradient(#DCE3EA 1px,transparent 1px),linear-gradient(90deg,#DCE3EA 1px,transparent 1px);background-size:11px 11px}
-.paper-index{background:#FBFCFE;background-image:linear-gradient(#E9A3A3,#E9A3A3),repeating-linear-gradient(transparent 0 21px,#BFD3EA 21px 22px);background-size:100% 1.5px,100% 100%;background-position:0 38px,0 39px;background-repeat:no-repeat,repeat}
-.paper-kraft{background:linear-gradient(#EADBBE,#E2D0AE);color:#3B2F22}
-.note.new{background:color-mix(in srgb,var(--surface) 55%,transparent);border:2.5px dashed var(--accent);box-shadow:none;--rot:-1.5deg;text-align:center;color:var(--accent);font-family:var(--body);padding:22px 10px}
 .note.new .plus{display:block;font-size:2rem;line-height:1;font-weight:700}
-.note.new .n-title{text-decoration:none;font-weight:800}
-.note-wrap .more{position:absolute;inset-block-end:2px;inset-inline-end:2px;width:32px;height:32px;border:0;border-radius:50%;background:rgba(255,255,255,.7);color:#253352;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.note.new .n-title{text-decoration:none;font-weight:800;font-size:1rem}
+.note-wrap .more{position:absolute;z-index:2;inset-block-end:4px;inset-inline-end:2px;width:30px;height:30px;border:0;border-radius:50%;background:rgba(255,255,255,.75);color:#2A2F3A;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .note-wrap .more svg{width:16px;height:16px}
 body[data-screen="lists"] .sec-h{color:var(--fg)}
 /* the list's own strip: who's in this household (a ring = has this list open now), and the one-list/categories switch */
@@ -1729,84 +1743,54 @@ function renderHouses(list, primaryId, counts){
 // a household's lists, as notes pinned to a drawn fridge door (owner's call 2026-10-26). Each note is
 // its own kind of paper, tilt and pin, picked from the list's id so it stays the same note every time.
 // An open list is written out; a closed one is crossed off, with the day it was done.
-const NOTE_PAPERS=['lined','sticky','grid','pink','index','kraft','mint'];
-const PIN_COLORS=['#E0463A','#3E7FB5','#2F9A57','#F2B92E','#8E5BC9'];
+// each list is a paper note held by a glossy magnet: square or oblong, plain, sticky, lined or squared,
+// with only the list's name written on it (a closed one is struck through, with the day it closed)
+const NOTE_PAPERS=['todo','sticky','lined','grid','pink','blue','sticky','torn'];
+const NOTE_SHAPES=['sq','rect','sq','wide'];
+const PIN_COLORS=['#D93A2B','#2E7FC1','#2F9A57','#E8B320','#1C9AA8'];
 function noteHash(id){ let h=0; const s=String(id||''); for(let i=0;i<s.length;i++) h=(h*131+s.charCodeAt(i))>>>0; return h; }
 const shortDate=iso=>{ const d=new Date(iso); return isNaN(d)?'':d.getDate()+'.'+(d.getMonth()+1); };
 function noteHtml(l, opts){
   const t=CS.t, h=noteHash(l.id), closed=l.status==='closed';
-  const paper=NOTE_PAPERS[h%NOTE_PAPERS.length], pin=PIN_COLORS[(h>>3)%PIN_COLORS.length];
-  const rot=(((h>>6)%9)-4)*0.75, tape=(h>>9)%4===0;
-  const rows=(opts.items||[]), max=closed?5:6, shown=rows.slice(0,max), extra=rows.length-shown.length;
-  const lines=shown.length
-    ? shown.map(r=>`<span class="n-line${r.status==='checked'?' done':''}">${esc(r.text)}</span>`).join('')
-    : (closed?'':`<span class="n-line n-empty">${esc(t('fridgeEmpty'))}</span>`);
-  const meta=closed
-    ? `<span class="n-closed">✓ ${esc(t('closedOn').replace('{d}',shortDate(l.closed_at)))}${l.total?'<br>'+esc(fmtMoney(l.total)):''}</span>`
-    : (opts.left!=null?`<span class="n-left">${esc(opts.left?t('itemsLeft').replace('{n}',opts.left):t('allCollected'))}</span>`:'');
-  return `<div class="note-wrap"><button class="note paper-${paper}${closed?' closed':''}" data-list="${l.id}" style="--rot:${rot}deg;--pin:${pin}"
+  const paper=NOTE_PAPERS[h%NOTE_PAPERS.length], shape=NOTE_SHAPES[(h>>4)%NOTE_SHAPES.length], pin=PIN_COLORS[(h>>3)%PIN_COLORS.length];
+  const rot=(((h>>6)%7)-3)*0.8, side=['50%','24%','76%'][(h>>9)%3];
+  const ticks=paper==='todo'?'<span class="n-ticks" aria-hidden="true"><i></i><i></i><i></i></span>':'';
+  return `<div class="note-wrap"><button class="note paper-${paper} shape-${shape}${closed?' closed':''}" data-list="${l.id}" style="--rot:${rot}deg;--pin:${pin};--pin-x:${side}"
       aria-label="${esc(t(closed?'ariaFridgeClosed':'ariaFridgeOpen').replace('{n}',l.name))}">
-    ${tape?'<span class="tape" aria-hidden="true"></span>':'<span class="pin" aria-hidden="true"></span>'}
-    <span class="n-date">${esc(shortDate(closed?l.closed_at:l.created_at))}</span>
-    <span class="n-title">${opts.main?'⭐ ':''}${esc(l.name)}</span>
-    <span class="n-lines">${lines}</span>
-    ${extra>0?`<span class="n-more">${esc(t('noteMore').replace('{n}',extra))}</span>`:''}
-    ${meta}
-    ${closed?`<svg class="n-cross" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M8 10 92 90M90 12 10 88"/></svg>`:''}
+    <span class="pin" aria-hidden="true"></span>
+    <span class="n-title">${opts.main?'<span class="n-star" aria-hidden="true">★</span>':''}${esc(l.name)}</span>
+    ${ticks}
+    ${closed?`<span class="n-closed">${esc(t('closedOn').replace('{d}',shortDate(l.closed_at)))}</span>`:''}
   </button>${opts.more||''}</div>`;
 }
-/* fridge decorations: drawn animal magnets and kids' drawings of the family, in the same ink style as the houses */
-const INK='stroke="#1E2A2E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"';
-const EYES=(x1,x2,y)=>`<circle cx="${x1}" cy="${y}" r="2.6" fill="#1E2A2E"/><circle cx="${x2}" cy="${y}" r="2.6" fill="#1E2A2E"/>`;
-const ANIMALS=[
-  // cat
-  `<path d="M9 20 L11 6 L20 14 Q24 13 28 14 L37 6 L39 20 Q42 40 24 41 Q6 40 9 20Z" fill="#F2A541" ${INK}/>${EYES(18,30,24)}<path d="M22 29 L26 29 L24 31Z" fill="#E0637A"/><path d="M24 31v2M8 28h8M8 32l8-1M40 28h-8M40 32l-8-1" fill="none" ${INK} stroke-width="1.6"/>`,
-  // dog
-  `<path d="M12 12 Q4 14 6 30 Q12 30 13 22Z" fill="#8A5A3A" ${INK}/><path d="M36 12 Q44 14 42 30 Q36 30 35 22Z" fill="#8A5A3A" ${INK}/><path d="M12 14 Q24 6 36 14 Q41 38 24 41 Q7 38 12 14Z" fill="#D9A877" ${INK}/>${EYES(19,29,22)}<ellipse cx="24" cy="30" rx="4" ry="3" fill="#1E2A2E"/><path d="M24 33q0 4 4 4" fill="none" ${INK} stroke-width="1.8"/>`,
-  // frog
-  `<circle cx="15" cy="13" r="7" fill="#7CC36A" ${INK}/><circle cx="33" cy="13" r="7" fill="#7CC36A" ${INK}/><path d="M6 26 Q6 16 24 17 Q42 16 42 26 Q42 40 24 40 Q6 40 6 26Z" fill="#7CC36A" ${INK}/><circle cx="15" cy="13" r="3" fill="#fff"/><circle cx="33" cy="13" r="3" fill="#fff"/>${EYES(15,33,13)}<path d="M15 29 Q24 36 33 29" fill="none" ${INK} stroke-width="2"/><circle cx="12" cy="31" r="2.4" fill="#F48FB1"/><circle cx="36" cy="31" r="2.4" fill="#F48FB1"/>`,
-  // bear
-  `<circle cx="11" cy="11" r="6" fill="#A0663E" ${INK}/><circle cx="37" cy="11" r="6" fill="#A0663E" ${INK}/><circle cx="24" cy="26" r="16" fill="#A0663E" ${INK}/><ellipse cx="24" cy="31" rx="8" ry="6" fill="#E8C9A0" ${INK} stroke-width="2"/>${EYES(18,30,22)}<ellipse cx="24" cy="29" rx="2.8" ry="2" fill="#1E2A2E"/>`,
-  // pig
-  `<path d="M10 16 L9 6 L18 11Z M38 16 L39 6 L30 11Z" fill="#F7A8B8" ${INK}/><circle cx="24" cy="25" r="16" fill="#F7A8B8" ${INK}/><ellipse cx="24" cy="29" rx="7" ry="5" fill="#F48FB1" ${INK} stroke-width="2"/><circle cx="21.5" cy="29" r="1.4" fill="#1E2A2E"/><circle cx="26.5" cy="29" r="1.4" fill="#1E2A2E"/>${EYES(17,31,20)}`,
-  // fish
-  `<path d="M6 24 Q18 8 34 24 Q18 40 6 24Z" fill="#5BB4E5" ${INK}/><path d="M33 24 L43 15 L43 33Z" fill="#F2A541" ${INK}/><circle cx="14" cy="22" r="2.6" fill="#1E2A2E"/><path d="M20 18 Q23 24 20 30M25 19 Q28 24 25 29" fill="none" ${INK} stroke-width="1.6"/>`,
-  // chick
-  `<circle cx="24" cy="25" r="16" fill="#F7D547" ${INK}/><path d="M20 8 Q24 2 24 10 Q27 3 28 9" fill="none" ${INK} stroke-width="2"/><path d="M20 27 L28 27 L24 33Z" fill="#F2A541" ${INK} stroke-width="2"/>${EYES(18,30,21)}<path d="M8 27 Q4 22 9 20M40 27 Q44 22 39 20" fill="none" ${INK} stroke-width="2"/>`,
-  // bunny
-  `<path d="M16 18 Q10 2 16 2 Q22 2 20 16Z M32 18 Q38 2 32 2 Q26 2 28 16Z" fill="#fff" ${INK}/><circle cx="24" cy="28" r="14" fill="#fff" ${INK}/>${EYES(19,29,26)}<path d="M22 31 L26 31 L24 33Z" fill="#F48FB1"/><circle cx="14" cy="32" r="2.4" fill="#F7B8C8"/><circle cx="34" cy="32" r="2.4" fill="#F7B8C8"/>`
-];
-// little stick people for the drawings: x, height, skin/shirt colour, dress or not
-const kid=(x,h,c,dress)=>{const y=46-h, r=h*.17;
-  return `<circle cx="${x}" cy="${y+r}" r="${r}" fill="#F6D2B0" stroke="#1E2A2E" stroke-width="1.3"/>`
-   + (dress?`<path d="M${x} ${y+2*r} L${x-h*.2} ${y+h*.7} L${x+h*.2} ${y+h*.7}Z" fill="${c}" stroke="#1E2A2E" stroke-width="1.3" stroke-linejoin="round"/>`
-           :`<path d="M${x} ${y+2*r} V${y+h*.68}" stroke="${c}" stroke-width="3.2" stroke-linecap="round"/>`)
-   + `<path d="M${x-h*.22} ${y+h*.42} L${x} ${y+h*.36} L${x+h*.22} ${y+h*.42} M${x-h*.12} ${y+h} L${x} ${y+h*.68} L${x+h*.12} ${y+h}" fill="none" stroke="#1E2A2E" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>`;};
-const SUN='<circle cx="50" cy="9" r="5" fill="#F7D547" stroke="#E0A020" stroke-width="1.2"/>';
-const PHOTOS=[
-  // family of four under the sun
-  `<rect width="60" height="50" fill="#DDF0FB"/><rect y="44" width="60" height="6" fill="#9ED37E"/>${SUN}${kid(10,30,'#3E7CC4')}${kid(22,27,'#E0637A',1)}${kid(34,17,'#F2A541')}${kid(44,14,'#7CC36A',1)}`,
-  // in front of the house
-  `<rect width="60" height="50" fill="#FFF3D6"/><rect y="44" width="60" height="6" fill="#9ED37E"/><path d="M4 44V24h20v20Z" fill="#F2B880" stroke="#1E2A2E" stroke-width="1.3"/><path d="M1 25 L14 13 L27 25Z" fill="#E0463A" stroke="#1E2A2E" stroke-width="1.3" stroke-linejoin="round"/><rect x="11" y="33" width="6" height="11" fill="#8A5A3A"/>${kid(36,26,'#3E7CC4')}${kid(48,22,'#B07CD8',1)}`,
-  // at the beach
-  `<rect width="60" height="50" fill="#CDEBFA"/><rect y="32" width="60" height="9" fill="#5BB4E5"/><rect y="41" width="60" height="9" fill="#F3DFA8"/>${SUN}${kid(16,24,'#E0637A',1)}${kid(30,16,'#F2A541')}${kid(42,26,'#2F7D5B')}`,
-  // with the dog
-  `<rect width="60" height="50" fill="#EAF6E0"/><rect y="44" width="60" height="6" fill="#9ED37E"/><path d="M8 20 q4-8 8 0" fill="none" stroke="#7A9FC9" stroke-width="1.3"/>${kid(16,28,'#E0637A',1)}${kid(30,18,'#3E7CC4')}<ellipse cx="45" cy="40" rx="7" ry="4" fill="#D9A877" stroke="#1E2A2E" stroke-width="1.3"/><circle cx="52" cy="35" r="3.6" fill="#D9A877" stroke="#1E2A2E" stroke-width="1.3"/><path d="M41 44v2M49 44v2M38 39 l-3-3" stroke="#1E2A2E" stroke-width="1.3" stroke-linecap="round"/>`
-];
-const MAG_COLORS=['#E0463A','#3E7CC4','#F2A541','#7CC36A','#B07CD8'];
-const animalSvg=i=>`<svg viewBox="0 0 48 48" aria-hidden="true">${ANIMALS[i%ANIMALS.length]}</svg>`;
-const photoHtml=(i,style='')=>`<div class="deco photo" style="--mg:${MAG_COLORS[i%MAG_COLORS.length]};${style}"><svg viewBox="0 0 60 50" aria-hidden="true">${PHOTOS[i%PHOTOS.length]}</svg></div>`;
-// side layout down both edges: a magnet or a photo every ~13% of the height, alternating sides, a little tilted
+/* the things that live on a fridge, drawn semi-realistic like the notes: glossy round magnets,
+   fruit magnets, a b c letters, and polaroids. Kept to a few calm clusters, not sprinkled everywhere */
+const FRUIT={
+  apple:`<svg viewBox="0 0 44 44"><path d="M22 13c-3-3-14-3-15 8-1 10 6 19 10 19 2 0 3-1 5-1s3 1 5 1c4 0 11-9 10-19-1-11-12-11-15-8Z" fill="url(#fz-apple)"/><path d="M22 13c0-4 1-7 3-9" stroke="#6B4423" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M24 9c3-5 9-5 11-3-3 4-8 5-11 3Z" fill="#4FA33A"/><ellipse cx="14" cy="20" rx="3" ry="5" fill="#fff" opacity=".45" transform="rotate(20 14 20)"/></svg>`,
+  orange:`<svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="17" fill="#F08A1C"/><circle cx="22" cy="22" r="14" fill="#FFD9A0"/><g fill="url(#fz-orange)">${[0,45,90,135,180,225,270,315].map(a=>`<path d="M22 22 L${(22+12.5*Math.cos((a+4)*Math.PI/180)).toFixed(1)} ${(22+12.5*Math.sin((a+4)*Math.PI/180)).toFixed(1)} A12.5 12.5 0 0 1 ${(22+12.5*Math.cos((a+41)*Math.PI/180)).toFixed(1)} ${(22+12.5*Math.sin((a+41)*Math.PI/180)).toFixed(1)}Z"/>`).join('')}</g><circle cx="22" cy="22" r="2" fill="#FFE9C7"/></svg>`,
+  banana:`<svg viewBox="0 0 56 44"><path d="M6 10c3 18 20 28 44 22-3 6-14 10-24 8C14 37 4 26 6 10Z" fill="url(#fz-banana)"/><path d="M10 12c4 14 16 22 36 21-2 3-10 6-18 5C17 36 9 26 10 12Z" fill="#F7D43B" opacity=".9"/><path d="M6 10l-1-5 3 0Z M50 32l4 1-1 2Z" fill="#6B4E1F"/></svg>`,
+  lemon:`<svg viewBox="0 0 44 44"><ellipse cx="22" cy="22" rx="16" ry="12" fill="url(#fz-lemon)" transform="rotate(-25 22 22)"/><ellipse cx="16" cy="17" rx="4" ry="2.4" fill="#fff" opacity=".5" transform="rotate(-25 16 17)"/></svg>`
+};
+const FRIDGE_DEFS=`<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <radialGradient id="fz-apple" cx=".35" cy=".35" r=".75"><stop offset="0" stop-color="#FF6B5A"/><stop offset=".6" stop-color="#D62B1E"/><stop offset="1" stop-color="#8E1510"/></radialGradient>
+  <linearGradient id="fz-orange" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFB040"/><stop offset="1" stop-color="#F07A10"/></linearGradient>
+  <linearGradient id="fz-banana" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE45C"/><stop offset="1" stop-color="#D9A514"/></linearGradient>
+  <radialGradient id="fz-lemon" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#FFF27A"/><stop offset="1" stop-color="#E6C21A"/></radialGradient>
+</defs></svg>`;
+const mag=(c,size=16)=>`<i class="mag" style="--c:${c};--s:${size}px"></i>`;
+const fruit=(k,w=40)=>`<span class="fruit" style="width:${w}px">${FRUIT[k]}</span>`;
+const letter=(ch,c,rot)=>`<b class="ltr" style="--c:${c};--r:${rot}deg">${ch}</b>`;
+const polaroid=(rot,tone)=>`<span class="polaroid" style="--r:${rot}deg;--tone:${tone}"><span></span></span>`;
+// a few calm clusters: by the section labels, one polaroid on the side, letters and a fruit at the bottom
 function fridgeDeco(seed){
-  let out='';
-  for(let k=0;k<8;k++){
-    const side=(k%2)?'right':'left', top=2+k*12.5, rot=((noteHash(seed+':'+k)%15)-7);
-    const pos=`top:${top}%;${side}:${k%4<2?-6:-12}px;transform:rotate(${rot}deg)`;
-    out += (k%3===1) ? photoHtml(seed.length+k,pos)
-      : `<span class="deco mag" style="${pos}">${animalSvg(noteHash(seed)+k)}</span>`;
-  }
-  return out;
+  const h=noteHash(seed);
+  return FRIDGE_DEFS
+    + `<div class="deco" style="top:8px;inset-inline-end:4px">${mag('#E8B320',13)}${mag('#D93A2B')}${fruit('banana',48)}</div>`
+    + `<div class="deco" style="top:34%;inset-inline-end:-18px">${polaroid(6,'#2B3440')}${mag('#2F9A57',14)}</div>`
+    + `<div class="deco" style="bottom:0;inset-inline-start:6px"><span class="ltrs">${letter('a','#D93A2B',-12)}${letter('b','#2E7FC1',8)}${letter('c','#E8B320',-6)}</span></div>`
+    + `<div class="deco" style="bottom:2px;inset-inline-end:8px">${fruit(['orange','lemon'][h%2],34)}${mag('#D93A2B',13)}</div>`;
 }
+const CLOSED_DECO=`<div class="deco" aria-hidden="true" style="top:-2px;inset-inline-end:4px">${mag('#2E7FC1',14)}${fruit('apple',36)}</div>`;
 function renderLists(lists, canManage, mainId, counts){
   const t=CS.t, items=CS.noteItems||{};
   const open=(lists||[]).filter(l=>l.status==='open');
@@ -1821,14 +1805,14 @@ function renderLists(lists, canManage, mainId, counts){
   // magnets and family drawings: once per household, behind the notes
   const face=$('fridge-face'), seed=String((lists&&lists[0]&&lists[0].household_id)||'home');
   if(face.dataset.deco!==seed){
-    face.querySelectorAll(':scope > .deco').forEach(n=>n.remove());
+    face.querySelectorAll(':scope > .deco, #lists-closed-box > .deco').forEach(n=>n.remove());
     face.insertAdjacentHTML('afterbegin', fridgeDeco(seed)); face.dataset.deco=seed;
+    $('lists-closed-box').insertAdjacentHTML('afterbegin', CLOSED_DECO);
   }
-  // and one drawing hanging between the notes, among the old trips
+  // and one polaroid held up among the old trips, a sticky note tucked under it
   if(closed.length>=2){
-    const cut=Math.min(2,closed.length);
-    const w=$('lists-closed').children[cut-1];
-    if(w) w.insertAdjacentHTML('afterend', `<div class="deco-in" aria-hidden="true">${photoHtml(noteHash(seed))}</div>`);
+    const w=$('lists-closed').children[1];
+    if(w) w.insertAdjacentHTML('afterend', `<div class="deco-in" aria-hidden="true">${polaroid(-4,'#33302B')}<span class="mini-sticky"></span>${mag('#E8B320',14)}</div>`);
   }
 }
 
