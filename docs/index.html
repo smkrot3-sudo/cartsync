@@ -422,7 +422,7 @@ body[data-screen="main"] .tb-progress{background:var(--soft)}
 .tabbar button .lc{width:24px;height:24px;padding:3px 18px;box-sizing:content-box;border-radius:14px}
 .tabbar button[aria-current="page"]{color:var(--accent)}
 .tabbar button[aria-current="page"] .lc{background:var(--accent-soft)}
-body:not([data-screen="main"]) .wrap{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+body:not([data-screen="main"]) .wrap{padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))}
 .version-bar{display:none}
 body[data-screen="household"] .version-bar{display:flex}
 
@@ -520,40 +520,47 @@ body[data-screen="main"] .wrap{padding-bottom:calc(110px + env(safe-area-inset-b
 .get-app{display:flex;align-items:center;gap:8px;margin-top:12px;background:var(--surface);border:1.5px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:14px;padding:6px 6px 6px 6px;padding-inline-start:12px;font-weight:700;font-size:.9rem}
 .get-app a{flex:1;color:var(--accent);text-decoration:none}
 .get-app-x{border:0;background:transparent;color:var(--muted);width:40px;height:40px;border-radius:50%}
-body:not([data-screen="home"]) .get-app{display:none}
+body:not([data-screen="houses"]):not([data-screen="lists"]) .get-app{display:none}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
 /* the plain item font, for anyone who finds the handwriting hard to read */
 :root[data-itemfont="plain"] .pad{--hand:"Assistant",system-ui,sans-serif}
 .who-name{font-size:.8rem}
 
-/* the houses screen and the fridge shelf: the app's two "places" drawn as objects */
+/* the households and the fridges: two little illustrated scenes (owner's call 2026-10-26). Each scene is a
+   panel; every object stands on its own strip of ground, and with no gaps between the cells the strips
+   join into one lawn / one kitchen floor per row. */
+:root{--sky:#DDEFFA;--grass:#BFE0A2;--grass-ink:#2F5B25;--wall:#E6F1EE;--floor:#E9D3AE;--floor-ink:#5A4128}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--sky:#17232E;--grass:#2A4426;--grass-ink:#D7EBC9;--wall:#18282A;--floor:#3D3226;--floor-ink:#F0E1C6}}
+:root[data-theme="dark"]{--sky:#17232E;--grass:#2A4426;--grass-ink:#D7EBC9;--wall:#18282A;--floor:#3D3226;--floor-ink:#F0E1C6}
 .houses-h{font-size:1.5rem;margin:8px 0 2px}
 .houses-sub{color:var(--muted);margin:0 0 14px}
-.fridges,.houses-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.fridges .place,.houses-grid .place{padding:10px 4px 10px;gap:4px;border-radius:16px}
-.fridges .place svg{max-width:84px}
-.houses-grid .place svg{max-width:96px}
-.fridges .place .nm,.houses-grid .place .nm{font-size:.92rem}
-.fridges .place .meta,.houses-grid .place .meta{font-size:.72rem}
-.fridges .more{width:32px;height:32px;inset-block-start:2px;inset-inline-end:2px}
-.fridges .more svg{width:16px;height:16px}
-.houses-grid .pin{width:32px;height:32px;font-size:.9rem;inset-block-start:2px;inset-inline-start:2px}
-.houses-grid .place.new{min-height:0;font-size:.85rem}
-.houses-grid .place.new .plus{font-size:1.5rem}
+.fridges,.houses-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
+.houses-grid{background:var(--sky)}
+.fridges{background:var(--wall);background-image:linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px);background-size:22px 22px}
 .place-wrap{position:relative;display:flex}
 .place-wrap .place{flex:1}
-.place{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--surface);border:0;border-radius:18px;padding:14px 8px 12px;box-shadow:var(--shadow);color:inherit;cursor:pointer;width:100%}
-.place:active{transform:scale(.97)}
-.place svg{width:100%;height:auto;max-width:132px;display:block}
-.place .nm{font-weight:700;font-size:1rem;text-align:center;line-height:1.25;max-width:100%;overflow-wrap:anywhere}
-.place .meta{font-size:.78rem;color:var(--muted);text-align:center}
-.place-wrap .pin,.place-wrap .more{position:absolute;inset-block-start:4px;width:40px;height:40px;border:0;background:transparent;font-size:1.05rem;border-radius:50%;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center}
-.place-wrap .pin{inset-inline-start:4px}
-.place-wrap .more{inset-inline-end:4px}
-.place-wrap .more svg{width:20px;height:20px}
-.place.closed{opacity:.8}
-.place.new{justify-content:center;border:2px dashed var(--line);background:transparent;box-shadow:none;min-height:150px;color:var(--accent);font-weight:700;gap:2px}
-.place.new .plus{font-size:1.8rem;line-height:1}
+.place{position:relative;display:flex;flex-direction:column;align-items:center;gap:0;background:transparent;border:0;padding:14px 0 0;color:inherit;cursor:pointer;width:100%;font:inherit}
+.place:active svg{transform:scale(.95)}
+.place svg{width:100%;height:auto;display:block;transition:transform .12s;padding:0 6px;box-sizing:border-box}
+.fridges .place svg{max-width:94px}
+.houses-grid .place svg{max-width:104px}
+.place .floor{align-self:stretch;flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px 12px}
+.houses-grid .floor{background:var(--grass);color:var(--grass-ink)}
+.fridges .floor{background:var(--floor);color:var(--floor-ink)}
+.place .nm{font-weight:800;font-size:.92rem;text-align:center;line-height:1.2;max-width:100%;overflow-wrap:anywhere}
+.place .meta{font-size:.72rem;text-align:center;opacity:.8;line-height:1.3}
+.place-wrap .pin,.place-wrap .more{position:absolute;inset-block-start:2px;width:34px;height:34px;border:0;background:color-mix(in srgb,var(--surface) 70%,transparent);font-size:.9rem;border-radius:50%;color:var(--fg);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.place-wrap .pin{inset-inline-start:2px}
+.place-wrap .more{inset-inline-end:2px}
+.place-wrap .more svg{width:16px;height:16px}
+.place.closed svg{filter:saturate(.75)}
+.place.new .nm{color:var(--accent)}
+/* the list's own strip: who's in this household (a ring = has this list open now), and the one-list/categories switch */
+.list-people{display:flex;align-items:center;gap:10px;margin:2px 0 10px}
+.list-people .avatars{display:flex;padding-inline-start:9px;flex:1;min-width:0}
+.list-people .avatar.here{box-shadow:0 0 0 2.5px var(--accent)}
+.chip-btn{border:1.5px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:8px 14px;font:inherit;font-size:.86rem;font-weight:700;min-height:40px;cursor:pointer;white-space:nowrap}
+#view-main.readonly .chip-btn{display:inline-block}
 .here-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-inline-end:5px;vertical-align:middle}
 [dir="ltr"] .flip-rtl{transform:scaleX(-1)}
 .pad .item.ro{padding-inline-start:60px}
@@ -633,18 +640,9 @@ body:not([data-screen="home"]) .get-app{display:none}
       <input id="home-quick-input" placeholder="מה חסר בבית?" autocomplete="off">
       <button class="quick-go" id="home-quick-go" type="submit" aria-label="הוספה"><svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
     </form>
-    <section class="sec" id="home-waiting-section" hidden>
-      <h2 class="sec-h" id="home-waiting-h">מחכה לך</h2>
-      <ul class="list" id="home-requests"></ul>
-      <ul class="list" id="home-pay"></ul>
-    </section>
     <section class="sec" id="home-others-section" hidden>
       <h2 class="sec-h" id="home-others-h">רשימות נוספות</h2>
       <ul class="list" id="home-lists-preview"></ul>
-    </section>
-    <section class="sec" id="home-feed-section" hidden>
-      <h2 class="sec-h" id="home-feed-h">לאחרונה</h2>
-      <ul class="feed card" id="home-feed"></ul>
     </section>
   </section>
 
@@ -657,15 +655,23 @@ body:not([data-screen="home"]) .get-app{display:none}
   </section>
 
   <section class="view" id="view-lists" hidden>
-    <button class="btn wide" id="lists-new" hidden>＋ <span id="lists-new-label">רשימה חדשה</span></button>
     <section class="sec">
       <h2 class="sec-h" id="lists-open-title">פעילות</h2>
       <div class="fridges" id="lists-open"></div>
       <p class="empty-line" id="lists-empty" hidden><span id="lists-empty-text">אין עדיין רשימות פעילות.</span></p>
     </section>
+    <section class="sec" id="home-waiting-section" hidden>
+      <h2 class="sec-h" id="home-waiting-h">מחכה לך</h2>
+      <ul class="list" id="home-requests"></ul>
+      <ul class="list" id="home-pay"></ul>
+    </section>
     <section class="sec" id="lists-closed-box" hidden>
       <h2 class="sec-h" id="lists-closed-title">קניות קודמות</h2>
       <div id="lists-closed"></div>
+    </section>
+    <section class="sec" id="home-feed-section" hidden>
+      <h2 class="sec-h" id="home-feed-h">לאחרונה</h2>
+      <ul class="feed card" id="home-feed"></ul>
     </section>
   </section>
 
@@ -704,6 +710,10 @@ body:not([data-screen="home"]) .get-app{display:none}
   <section class="view" id="view-main" hidden>
     <div id="offline-note" class="offline-note" hidden></div>
     <p class="lh-closed" id="list-hero-closed" hidden></p>
+    <div class="list-people" id="list-people">
+      <div class="avatars" id="list-avatars"></div>
+      <button class="chip-btn" id="view-toggle" type="button"></button>
+    </div>
     <p class="role-banner" id="list-role-banner" hidden></p>
     <div class="search-row" id="search-row" hidden>
       <input id="search-input" class="search-input" placeholder="חיפוש ברשימה…" autocomplete="off">
@@ -858,7 +868,7 @@ he: {
   myBitRow:'קישור הביט שלי', myBitSet:'מחובר ✓. לשם יגיע הכסף כשגובים אחרי קנייה', myBitNone:'עוד לא הוגדר. צריך אותו כדי לגבות כסף אחרי קנייה', myBitTitle:'קישור הביט שלי', myBitSave:'לשמור', myBitSaved:'✅ הקישור נשמר', myBitClear:'להסיר את הקישור',
   inviteExpires:'פג בעוד {n} ימים', inviteExpiresToday:'פג היום', meLabel:'(אני)', memberSheetChangeRole:'שינוי תפקיד', memberSheetEditName:'✏️ שינוי השם שלי במשק הבית', memberSheetRemove:'הסרה ממשק הבית', memberSheetLeave:'🚪 יציאה ממשק הבית', memberSheetTransfer:'העברת הניהול ל{n}', transferPick:'למי להעביר את הניהול?', dangerTransfer:'העברת הניהול למישהו אחר', dangerDelete:'מחיקת משק הבית', dangerLeave:'יציאה ממשק הבית',
   itemFontLabel:'גופן המוצרים', itemFontHand:'כתב יד', itemFontPlain:'רגיל', versionRow:'גרסה',
-  fabAdd:'להוסיף מוצר', listProgress:'{d} מתוך {n} נאספו', fabRequest:'לבקש מוצר', requestTitle:'בקשת מוצר', requestGo:'לשלוח לאישור', collected:'נאסף',
+  viewToFlat:'רשימה אחת', viewToGrouped:'לפי קטגוריות', fabAdd:'להוסיף מוצר', listProgress:'{d} מתוך {n} נאספו', fabRequest:'לבקש מוצר', requestTitle:'בקשת מוצר', requestGo:'לשלוח לאישור', collected:'נאסף',
   leaveListTitle:'לצאת מהרשימה?', leaveListConfirm:'חוזרים למסך הבית. הרשימה תישמר בדיוק כמו שהיא.', leaveListAction:'כן, לצאת',
 },
 en: {
@@ -972,7 +982,7 @@ en: {
   myBitRow:'My Bit link', myBitSet:'Connected ✓. Money you collect goes here', myBitNone:'Not set yet. Needed to collect money after shopping', myBitTitle:'My Bit link', myBitSave:'Save', myBitSaved:'✅ Link saved', myBitClear:'Remove the link',
   inviteExpires:'Expires in {n} days', inviteExpiresToday:'Expires today', meLabel:'(me)', memberSheetChangeRole:'Change role', memberSheetEditName:'✏️ Change my name in this household', memberSheetRemove:'Remove from household', memberSheetLeave:'🚪 Leave the household', memberSheetTransfer:'Hand management to {n}', transferPick:'Who should manage the household?', dangerTransfer:'Hand over management', dangerDelete:'Delete the household', dangerLeave:'Leave the household',
   itemFontLabel:'Item font', itemFontHand:'Handwriting', itemFontPlain:'Plain', versionRow:'Version',
-  fabAdd:'Add an item', listProgress:'{d} of {n} collected', fabRequest:'Request an item', requestTitle:'Request an item', requestGo:'Send for approval', collected:'Collected',
+  viewToFlat:'One list', viewToGrouped:'By category', fabAdd:'Add an item', listProgress:'{d} of {n} collected', fabRequest:'Request an item', requestTitle:'Request an item', requestGo:'Send for approval', collected:'Collected',
   leaveListTitle:'Leave this list?', leaveListConfirm:'You’ll go back to the home screen. The list stays exactly as it is.', leaveListAction:'Yes, leave',
 },
 };
@@ -1492,8 +1502,7 @@ function setScreen(name){
   ['auth','onboard','houses','home','lists','household','main'].forEach(s=>{ $('view-'+s).hidden = s!==name; });
   document.body.dataset.screen = name;
   document.body.classList.toggle('in-list', name==='main');
-  const tabbed = name==='home'||name==='lists'||name==='household';
-  $('tabbar').hidden = !tabbed;
+  $('tabbar').hidden = true; // gone (owner's call 2026-10-26): every screen has a back arrow instead
   $('topbar').hidden = name==='auth'||name==='onboard';
   document.querySelectorAll('#tabbar [data-tab]').forEach(b=>{ if(b.dataset.tab===name) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); });
   window.scrollTo(0,0);
@@ -1527,7 +1536,6 @@ function paintStrings(){
   $('home-waiting-h').textContent = t('waitingH');
   $('home-others-h').textContent = t('othersH');
   $('home-feed-h').textContent = t('feedH');
-  $('lists-new-label').textContent = t('newListTitle');
   $('lists-open-title').textContent = t('listsOpenTitle');
   $('lists-closed-title').textContent = t('listsClosedTitle');
   $('lists-empty-text').textContent = t('listsEmpty');
@@ -1633,12 +1641,32 @@ function houseSvg(seed){
     <circle cx="101" cy="99" r="14" fill="#4E8A3C"/><circle cx="110" cy="101" r="10" fill="#2F6B35"/>
   </svg>`;
 }
+// the "add one" spot in each scene: the same shape, drawn dashed, with a plus
+const NEW_HOUSE_SVG=`<svg viewBox="0 0 120 104" aria-hidden="true" focusable="false">
+  <path d="M14 54 60 20 106 54M24 50V102H96V50" fill="none" stroke="var(--accent)" stroke-width="3.5" stroke-dasharray="8 7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M60 58V90M44 74H76" stroke="var(--accent)" stroke-width="6" stroke-linecap="round"/></svg>`;
+const NEW_FRIDGE_SVG=`<svg viewBox="0 0 120 150" aria-hidden="true" focusable="false">
+  <rect x="22" y="9" width="59" height="129" rx="8" fill="none" stroke="var(--accent)" stroke-width="3.5" stroke-dasharray="8 7"/>
+  <path d="M51.5 56V92M33.5 74H69.5" stroke="var(--accent)" stroke-width="6" stroke-linecap="round"/></svg>`;
 // one fridge per list, cartoon style (owner's reference 2026-10-26): thick outline, teal front, a darker
 // side for depth, orange handles, little feet. Same size whatever the list holds. While the list is
 // still open the bottom door stands open on the shelves; a closed list keeps both doors shut.
+// Little notes pinned to the doors, like a real family fridge.
 const FR={ink:'#1E2A2E',front:'#64A0A2',side:'#2B5F7E',handle:'#D9822B',feet:'#8A5A3A',inside:'#F3F1E7',trim:'#C9D3D4'};
-function fridgeSvg(open,fullness){
+function fridgeNote(x,y,w,h,rot,fill){
   const k=FR.ink;
+  return `<g transform="rotate(${rot} ${x+w/2} ${y+h/2})">
+    <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1.5" fill="${fill}" stroke="${k}" stroke-width="1.3"/>
+    <path d="M${x+4} ${y+8.5}H${x+w-4}M${x+4} ${y+12.5}H${x+w-7}${h>18?`M${x+4} ${y+16.5}H${x+w-5}`:''}" stroke="${k}" stroke-width="1" opacity=".45"/>
+    <circle cx="${x+w/2}" cy="${y+2.6}" r="2.7" fill="#E0463A" stroke="${k}" stroke-width="1"/>
+    <circle cx="${x+w/2-.8}" cy="${y+1.8}" r=".8" fill="#fff" opacity=".8"/>
+  </g>`;
+}
+function fridgeSvg(open,fullness,seed){
+  const k=FR.ink;
+  // which notes hang where depends on the list, so the fridges don't all look identical
+  let h=0; const str=String(seed||''); for(let i=0;i<str.length;i++) h=(h*31+str.charCodeAt(i))>>>0;
+  const tilt=(h%7)-3, notes=['#FFE58A','#FFC4CF','#BDE3F7','#C9EBB8'];
   const shell=`<ellipse cx="60" cy="145" rx="48" ry="4.5" fill="#000" opacity=".13"/>
     <rect x="31" y="136" width="10" height="6" rx="1.5" fill="${FR.feet}" stroke="${k}" stroke-width="1.5"/>
     <rect x="65" y="137" width="10" height="6" rx="1.5" fill="${FR.feet}" stroke="${k}" stroke-width="1.5"/>
@@ -1649,9 +1677,13 @@ function fridgeSvg(open,fullness){
     <rect x="25.5" y="13" width="3" height="116" rx="1.5" fill="#fff" opacity=".18"/>
     <path d="M24 16H78" stroke="${k}" stroke-width="1.4" opacity=".5"/>
     <rect x="23.5" y="50" width="56" height="4" fill="${FR.trim}" stroke="${k}" stroke-width="1.3"/>
-    <rect x="29" y="22" width="6" height="20" rx="2" fill="${FR.handle}" stroke="${k}" stroke-width="2"/>`;
+    <rect x="29" y="22" width="6" height="20" rx="2" fill="${FR.handle}" stroke="${k}" stroke-width="2"/>
+    ${fridgeNote(44,20,22,19,-6+tilt,notes[h%4])}`;
   if(!open) return `<svg viewBox="0 0 120 150" aria-hidden="true" focusable="false">${shell}${top}
     <rect x="29" y="62" width="6" height="22" rx="2" fill="${FR.handle}" stroke="${k}" stroke-width="2"/>
+    ${fridgeNote(43,66,25,23,5-tilt,notes[(h+1)%4])}
+    ${fridgeNote(48,97,20,17,-4+tilt,notes[(h+2)%4])}
+    <circle cx="70" cy="122" r="4.5" fill="#F2C14E" stroke="${k}" stroke-width="1.3"/><path d="M70 117.5c1-2 3-2.5 4-2" stroke="#4E8A3C" stroke-width="1.6" fill="none" stroke-linecap="round"/>
   </svg>`;
   // the open bottom compartment: shelves, a few groceries (fewer when little is left), and the door swung out
   const g=Math.max(0,Math.min(6,fullness|0));
@@ -1672,7 +1704,7 @@ function fridgeSvg(open,fullness){
     <path d="M84 72 103 77M84 96 103 101M84 120 103 125" stroke="${k}" stroke-width="1.6" opacity=".55"/>
   </svg>`;
 }
-// the way in: every household I belong to, as a house
+// the way in: every household I belong to, as a house standing on the grass
 function renderHouses(list, primaryId, counts){
   const t=CS.t;
   $('houses-title').textContent=t('housesTitle');
@@ -1682,12 +1714,11 @@ function renderHouses(list, primaryId, counts){
     const meta=n?(n===1?t('houseListsOne'):t('houseLists').replace('{n}',n)):t('houseListsNone');
     const pinned=h.id===primaryId;
     return `<div class="place-wrap"><button class="place" data-house="${h.id}" aria-label="${esc(t('ariaHouse').replace('{n}',h.name))}">
-      ${houseSvg(h.id)}<span class="nm">${esc(h.name)}</span><span class="meta">${esc(meta)}</span>
+      ${houseSvg(h.id)}<span class="floor"><span class="nm">${esc(h.name)}</span><span class="meta">${esc(meta)}</span></span>
     </button><button class="pin" data-pin-hh="${h.id}" aria-label="${esc(pinned?t('primaryHhUnset'):t('primaryHhSet'))}" aria-pressed="${pinned}">${pinned?'⭐':'☆'}</button></div>`;
-  }).join('')+`<button class="place new" id="houses-new"><span class="plus" aria-hidden="true">＋</span><span>${esc(t('houseNew'))}</span></button>`;
+  }).join('')+`<div class="place-wrap"><button class="place new" id="houses-new">${NEW_HOUSE_SVG}<span class="floor"><span class="nm">${esc(t('houseNew'))}</span></span></button></div>`;
 }
-
-// the lists screen: open lists are fridges with the door open, past trips are closed fridges below
+// a household's fridges: open lists stand on top with the bottom door open, past trips are shut fridges below
 function renderLists(lists, canManage, mainId, counts){
   const t=CS.t;
   const open=(lists||[]).filter(l=>l.status==='open');
@@ -1697,12 +1728,14 @@ function renderLists(lists, canManage, mainId, counts){
     const n=counts&&counts[l.id];
     const meta=n==null?fmtDate(l.created_at):(n?t('itemsLeft').replace('{n}',n):t('allCollected'));
     return `<div class="place-wrap"><button class="place" data-list="${l.id}" aria-label="${esc(t('ariaFridgeOpen').replace('{n}',l.name))}">
-      ${fridgeSvg(true,n==null?3:n)}
-      <span class="nm">${l.id===mainId?'⭐ ':''}${esc(l.name)}</span><span class="meta">${esc(meta)}</span>
-    </button>${more(l)}</div>`;}).join('');
-  $('lists-empty').hidden = !!open.length;
+      ${fridgeSvg(true,n==null?3:n,l.id)}
+      <span class="floor"><span class="nm">${l.id===mainId?'⭐ ':''}${esc(l.name)}</span><span class="meta">${esc(meta)}</span></span>
+    </button>${more(l)}</div>`;}).join('')
+    + (canManage?`<div class="place-wrap"><button class="place new" id="fridge-new" aria-label="${esc(t('newListTitle'))}">${NEW_FRIDGE_SVG}<span class="floor"><span class="nm">${esc(t('newListTitle'))}</span></span></button></div>`:'');
+  $('lists-open').hidden = !open.length && !canManage;
+  $('lists-empty').hidden = !!open.length || canManage;
   $('lists-closed-box').hidden = !closed.length;
-  // past shopping, one shelf per month, each with what that month's trips came to
+  // past shopping, one row of the kitchen per month, each with what that month's trips came to
   const byMonth=[];
   closed.forEach(l=>{
     const d=new Date(l.closed_at||l.created_at), key=d.getFullYear()+'-'+d.getMonth();
@@ -1713,7 +1746,7 @@ function renderLists(lists, canManage, mainId, counts){
   $('lists-closed').innerHTML = byMonth.map(g=>`<div class="month-h"><span>${esc(g.label)}</span>${g.sum?`<span class="sum">${esc(fmtMoney(g.sum))}</span>`:''}</div>
     <div class="fridges">${g.rows.map(l=>`<div class="place-wrap">
       <button class="place closed" data-list="${l.id}" aria-label="${esc(t('ariaFridgeClosed').replace('{n}',l.name))}">
-        ${fridgeSvg(false)}<span class="nm">${esc(l.name)}</span><span class="meta">${esc(t('closedOn').replace('{d}',fmtDate(l.closed_at)))}${l.total?'<br>'+esc(fmtMoney(l.total)):''}</span>
+        ${fridgeSvg(false,0,l.id)}<span class="floor"><span class="nm">${esc(l.name)}</span><span class="meta">${esc(t('closedOn').replace('{d}',fmtDate(l.closed_at)))}${l.total?'<br>'+esc(fmtMoney(l.total)):''}</span></span>
       </button>${more(l)}</div>`).join('')}</div>`).join('');
 }
 
@@ -2167,8 +2200,11 @@ function myName(){
   return (mine&&mine.display_name)||(user&&user.user_metadata&&user.user_metadata.full_name)||(user&&user.email)||'';
 }
 
-/* ---------- navigation: three tabs + a full-screen list, on the browser history so Android's back
-   button steps back one screen (MainActivity calls webView.goBack()). State {s, d}: d = depth above Home. */
+/* ---------- navigation: a straight path, households → a household's fridges → a list (or its members page),
+   on the browser history so the back arrow and Android's back button (MainActivity calls webView.goBack())
+   always step back exactly one screen. No tab bar (owner's call 2026-10-26). State {s, d}: d = depth. */
+const DEPTH={houses:0,lists:1,household:2,main:2};
+const PARENT={lists:'houses',household:'lists',main:'lists'};
 let screen='splash', curState=null;
 function setState(st,push){
   try{ if(push) history.pushState(st,''); else history.replaceState(st,''); }catch(e){}
@@ -2176,68 +2212,68 @@ function setState(st,push){
 }
 function showTab(name, opts){
   opts=opts||{};
-  if(!household) return;
+  if(name==='home') name='lists'; // the household's own screen is its fridges now
+  if(!household && name!=='houses') return;
   if(!opts.fromPop){
-    const d=(curState&&curState.d)||0;
-    if(name==='home'){
-      if(d>0 && curState.s!=='home'){ try{ history.go(-d); return; }catch(e){} } // popstate paints Home
-      setState({s:'home',d:0},false);
-    }else if(name==='houses'){
-      setState({s:'houses',d:household?d+1:0},!!household); // the way in when nothing is open yet; a step forward from inside a household
-    }else if(screen==='home' || !curState) setState({s:name,d:1},true);
-    else setState({s:name,d:Math.max(1,d)},false);
+    const d=DEPTH[name], cd=curState?(curState.d||0):-1;
+    if(cd>d && curState.s!==name){ try{ history.go(d-cd); return; }catch(e){} } // going up: walk the history back, popstate paints it
+    setState({s:name,d}, cd>=0 && d>cd);
   }
   renderTab(name);
 }
+// the first screen after a cold start still gets the screens above it in the history, so back walks up
+function seedHistory(to){
+  setState({s:'houses',d:0},false);
+  if(DEPTH[to]>=1) setState({s:'lists',d:1},true);
+}
 function renderTab(name){
+  if(name==='home') name='lists';
   screen=name;
   CS.setScreen(name);
   paintTop();
-  if(name==='home') renderHome();
-  else if(name==='houses') renderHousesScreen();
-  else if(name==='lists') fetchLists();
+  if(name==='houses') renderHousesScreen();
+  else if(name==='lists') renderFridges();
   else if(name==='household') renderHousehold();
   trackPresence();
 }
-function goHome(){ showTab('home'); }
+function goHome(){ showTab('lists'); }
+function goUp(){
+  if(curState && curState.d>0){ history.back(); return; }
+  const parent=PARENT[screen]; if(parent) showTab(parent);
+}
 function goBackFromList(){
   try{ localStorage.removeItem('cs-last-list-at-'+household); }catch(e){} // left on purpose: don't resume into it next time
-  if(curState && curState.s==='main' && curState.d>0){ history.back(); return; }
-  showTab('lists');
+  goUp();
 }
 addEventListener('popstate',e=>{
   if(!household || !user) return;
   if(!$('sheet').hidden){ closeSheet(); if(curState) try{ history.pushState(curState,''); }catch(err){} return; } // back closes the open sheet first
-  const st=e.state||{s:'home',d:0};
+  const st=e.state||{s:'houses',d:0};
   curState=st;
   if(st.s==='main' && st.list) openList(st.list,{fromPop:true});
-  else renderTab(st.s==='lists'||st.s==='household'||st.s==='houses'?st.s:'home');
+  else renderTab(DEPTH[st.s]!=null?st.s:'lists');
 });
-document.querySelectorAll('#tabbar [data-tab]').forEach(b=>b.addEventListener('click',()=>{
-  const tab=b.dataset.tab;
-  if(tab===screen){ window.scrollTo({top:0,behavior:'smooth'}); return; }
-  showTab(tab);
-}));
 
 /* ---------- the header: what this screen is, plus its one or two actions ---------- */
 const ICON_BACK='<svg class="lc flip-rtl" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
 const ICON_SEARCH='<svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>';
 const ICON_CHEV='<svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+const ICON_PEOPLE='<svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.3c2.2.7 3.5 2.8 3.5 5.7"/></svg>';
 const ICON_CHEV_SIDE='<svg class="lc chev flip-rtl" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>';
 function paintTop(){
   const t=CS.t, row=$('tb-row'); if(!row) return;
   const ini=user?esc(CS.initials(myName())):'';
   const avatar=`<button class="tb-btn" id="tb-acct" aria-label="${esc(t('ariaSettings'))}">${ini}</button>`;
   $('tb-progress').hidden = screen!=='main';
-  if(screen==='home'){
-    row.innerHTML=`<button class="tb-hh" id="tb-hh" aria-label="${esc(t('switchHousehold'))}: ${esc(hhName)}"><span class="nm">${esc(hhName||t('appName'))}</span>${ICON_CHEV}</button>${avatar}`;
-    $('tb-hh').onclick=openHouseholdSwitcher;
-  }else if(screen==='houses'){
+  const back=`<button class="tb-btn plain" id="tb-up" aria-label="${esc(t('ariaBack'))}">${ICON_BACK}</button>`;
+  if(screen==='houses'){
     row.innerHTML=`<div class="tb-title"><b>${esc(t('housesTitle'))}</b></div>${avatar}`;
   }else if(screen==='lists'){
-    row.innerHTML=`<div class="tb-title"><b>${esc(t('listsTitle'))}</b><small>${esc(hhName)}</small></div>`;
+    row.innerHTML=`${back}<div class="tb-title"><b>${esc(hhName||t('appName'))}</b><small>${esc(t('listsTitle'))}</small></div>
+      <button class="tb-btn" id="tb-people" aria-label="${esc(t('homeMembers'))}">${ICON_PEOPLE}</button>${avatar}`;
+    $('tb-people').onclick=()=>showTab('household');
   }else if(screen==='household'){
-    row.innerHTML=`<div class="tb-title"><b>${esc(t('homeMembers'))}</b><small>${esc(hhName)}</small></div>${avatar}`;
+    row.innerHTML=`${back}<div class="tb-title"><b>${esc(t('homeMembers'))}</b><small>${esc(hhName)}</small></div>${avatar}`;
   }else if(screen==='main'){
     row.innerHTML=`<button class="tb-btn plain" id="tb-back" aria-label="${esc(t('ariaBack'))}">${ICON_BACK}</button>
       <div class="tb-title"><b id="tb-list-name">${esc(curList?curList.name:'')}</b><small id="tb-list-sub"></small></div>
@@ -2249,6 +2285,7 @@ function paintTop(){
     paintListSub();
   }else row.innerHTML='';
   if($('tb-acct')) $('tb-acct').onclick=openAccountSheet;
+  if($('tb-up')) $('tb-up').onclick=goUp;
 }
 let lastTotal=0, lastDone=0;
 function paintListSub(){
@@ -2262,8 +2299,8 @@ window.CS.onListPainted=(n,d)=>{ lastTotal=n; lastDone=d; paintListSub(); };
 window.CS.paintChrome=()=>{
   if(!user || !household) return;
   paintTop();
-  if(screen==='home') renderHome();
-  else if(screen==='lists') CS.renderLists(lists, canEdit(), starredMainId(), openCounts);
+  if(screen==='lists'){ CS.renderLists(lists, canEdit(), starredMainId(), openCounts); paintRequests(); }
+  else if(screen==='houses') renderHousesScreen();
   else if(screen==='household') renderHousehold();
   else if(screen==='main') paintListChrome();
 };
@@ -2398,8 +2435,8 @@ function greetingText(){
 function applyCachedHousehold(cache){
   household=cache.hhId; hhName=cache.hhName||''; role=cache.role; members=cache.members||[];
   membersById={}; members.forEach(m=>membersById[m.user_id]=m);
-  setState({s:'home',d:0},false);
-  renderTab('home');
+  seedHistory('lists');
+  renderTab('lists');
   showOfflineNote(true);
 }
 async function loadHousehold(hh, navigate, landing){
@@ -2429,12 +2466,11 @@ async function loadHousehold(hh, navigate, landing){
       else if(screen==='main'){ paintListChrome(); paintItems(); }
       return;
     }
-    setState({s:'home',d:0},false);
-    if(landing==='lists'){ showTab('lists'); return; }
+    seedHistory('lists'); // households → this household, so the back arrow always has somewhere to go
     // a fresh boot lands back in the list you were shopping from only if you were in it within the
-    // last hour (the app closed mid-shop); otherwise Home, where payments and requests wait
-    if(freshLastList(hh) && await openList(freshLastList(hh),{silent:true})) return;
-    renderTab('home');
+    // last hour (the app closed mid-shop); otherwise this household's fridges, where requests and payments wait
+    if(landing!=='lists' && freshLastList(hh) && await openList(freshLastList(hh),{silent:true})) return;
+    renderTab('lists');
   }catch(e){
     const cache=loadCache();
     if(cache && cache.hhId===hh) applyCachedHousehold(cache);
@@ -2802,7 +2838,6 @@ async function fetchLists(){
     });
   }
   CS.renderLists(lists, canEdit(), starredMainId(), openCounts);
-  $('lists-new').hidden=!canEdit();
 }
 // the main list: the one marked by hand if it's still open, otherwise the newest open list
 function starredMainId(){ return mainListId && lists.some(l=>l.id===mainListId && l.status==='open') ? mainListId : null; }
@@ -2811,35 +2846,18 @@ function effectiveMainId(){
   const open=lists.filter(l=>l.status==='open');
   return open.length?open[0].id:null;
 }
-$('lists-new').addEventListener('click',()=>openNewListSheet());
 
-/* ---------- home: what now ---------- */
-async function renderHome(){
-  $('home-greeting').textContent=greetingText();
-  paintHome();
+/* ---------- a household's own screen: what waits for me, its fridges, and what just happened ---------- */
+async function renderFridges(){
   await fetchLists();
-  if(screen!=='home') return;
-  paintHome();
+  if(screen!=='lists') return;
+  paintRequests();
   fetchHomePay().catch(()=>{});
   fetchFeed().catch(()=>{});
 }
-function paintHome(){
-  const t=CS.t, box=$('home-hero');
-  const id=effectiveMainId(), l=id&&lists.find(x=>x.id===id);
-  if(!l){
-    box.innerHTML=`<div class="home-hero empty"><h2>${esc(t('heroNoList'))}</h2>${canEdit()?`<button class="go" id="hero-new">＋ ${esc(t('newListTitle'))}</button>`:`<p class="sub">${esc(t('heroNoListReq'))}</p>`}</div>`;
-    if($('hero-new')) $('hero-new').onclick=()=>openNewListSheet();
-  }else{
-    const left=openCounts[l.id]||0, total=openTotals[l.id]||0, done=total-left, here=presenceNames(l.id);
-    box.innerHTML=`<div class="home-hero">
-      <div class="hh-top"><h2>${esc(l.name)}</h2>${here?`<span class="here">${esc(t('heroHere').replace('{n}',here))}</span>`:''}</div>
-      ${total?`<div class="bar" aria-hidden="true"><span style="width:${Math.round(100*done/total)}%"></span></div><div class="meta">${esc(left?t('heroLeft').replace('{n}',left).replace('{t}',total):t('heroAllDone'))}</div>`:`<div class="meta">${esc(t('heroEmptyItems'))}</div>`}
-      <button class="go" data-list="${l.id}">${esc(done>0&&left>0?t('heroContinue'):t('heroOpen'))}</button>
-    </div>`;
-  }
-  $('home-quick').hidden=!l;
-  CS.renderHomeLists(lists.filter(x=>x.status==='open' && x.id!==id), openCounts);
-  // requests waiting for a manager/partner, per list
+// requests waiting for a manager/partner, per list
+function paintRequests(){
+  const t=CS.t;
   const req=canEdit()?lists.filter(x=>x.status==='open' && pendingCounts[x.id]):[];
   $('home-requests').innerHTML=req.map(x=>{
     const n=pendingCounts[x.id];
@@ -2851,25 +2869,10 @@ function paintHome(){
 function paintWaiting(){
   $('home-waiting-section').hidden = !$('home-requests').children.length && !$('home-pay').children.length;
 }
-// quick add from Home goes to the main list (a requester's lands as a request, like anywhere else)
-$('home-quick').addEventListener('submit',async e=>{
-  e.preventDefault();
-  const input=$('home-quick-input'), text=input.value.trim(), lid=effectiveMainId();
-  if(!text||!lid) return;
-  if(!online){ toast(CS.t('offline')); return; }
-  const l=lists.find(x=>x.id===lid), g=CS.guess(text);
-  input.value='';
-  const row={list_id:lid, household_id:household, text, category:g.cat, emoji:g.emoji, created_by:user.id, position:Date.now(), status:canEdit()?'active':'pending'};
-  const {error}=await sb.from('list_items').insert(row);
-  if(error){ input.value=text; toast(CS.authErr(error)); return; }
-  toast((canEdit()?CS.t('quickTo'):CS.t('quickReqTo')).replace('{l}',l?l.name:''));
-  await fetchLists();
-  if(screen==='home') paintHome();
-});
 const ACT_KEYS={added:'actAdded',requested:'actRequested',approved:'actApproved',checked:'actChecked',unchecked:'actUnchecked',deleted:'actDeleted',rejected:'actRejected'};
 async function fetchFeed(){
   const {data,error}=await sb.from('list_activity').select('actor,action,item_text,created_at').eq('household_id',household).neq('actor',user.id).order('created_at',{ascending:false}).limit(5);
-  if(screen!=='home') return;
+  if(screen!=='lists') return;
   const rows=(!error&&data)||[];
   $('home-feed-section').hidden=!rows.length;
   $('home-feed').innerHTML=rows.map(r=>{
@@ -2878,7 +2881,7 @@ async function fetchFeed(){
   }).join('');
 }
 let homeRefreshTimer=null;
-function refreshHomeSoon(){ clearTimeout(homeRefreshTimer); homeRefreshTimer=setTimeout(()=>{ if(screen==='home') renderHome(); },400); }
+function refreshHomeSoon(){ clearTimeout(homeRefreshTimer); homeRefreshTimer=setTimeout(()=>{ if(screen==='lists') renderFridges(); },400); }
 
 function openNewListSheet(){
   const t=CS.t;
@@ -2904,6 +2907,7 @@ function openNewListSheet(){
 }
 // any [data-list] (a list row, the Home card) opens that list
 document.addEventListener('click',e=>{
+  if(e.target.closest('#fridge-new')){ openNewListSheet(); return; }
   const more=e.target.closest('[data-list-more]');
   if(more){ openRowMenu(more.dataset.listMore); return; }
   const row=e.target.closest('[data-list]'); if(!row) return;
@@ -2927,7 +2931,7 @@ async function setMainList(id){
   mainListId=id;
   toast(id?CS.t('mainListSet'):CS.t('mainListUnset'));
   CS.renderLists(lists, canEdit(), starredMainId(), openCounts);
-  if(screen==='home') paintHome();
+  if(screen==='lists') paintRequests();
 }
 // deleting a list waits a few seconds so "undo" can simply cancel it
 function deleteListWithUndo(id){
@@ -2935,17 +2939,17 @@ function deleteListWithUndo(id){
   if(screen==='main' && listId===id) goBackFromList();
   lists=lists.filter(x=>x.id!==id);
   CS.renderLists(lists, canEdit(), starredMainId(), openCounts);
-  if(screen==='home') paintHome();
+  if(screen==='lists') paintRequests();
   let undone=false;
   const timer=setTimeout(async()=>{
     if(undone) return;
     const {error}=await sb.from('shopping_lists').delete().eq('id',id);
     if(error){ toast(CS.authErr(error)); }
-    await fetchLists(); if(screen==='home') paintHome();
+    await fetchLists(); if(screen==='lists') paintRequests();
   },5000);
   toastAction(CS.t('listDeletedUndo'), CS.t('undo'), ()=>{
     undone=true; clearTimeout(timer);
-    fetchLists().then(()=>{ if(screen==='home') paintHome(); });
+    fetchLists().then(()=>{ if(screen==='lists') paintRequests(); });
   }, 5000);
 }
 // the open list's ⋯ menu: everything that isn't adding or checking
@@ -2953,7 +2957,6 @@ function openListMenu(){
   const t=CS.t, open=listStatus==='open', acts=[];
   acts.push(`<button class="row-btn" id="lm-share">${esc(t('listMenuShare'))}</button>`);
   if(open){
-    acts.push(`<button class="row-btn" id="lm-view">${esc(CS.viewMode()==='flat'?t('listMenuViewGrouped'):t('listMenuView'))}</button>`);
     const nDone=items.filter(i=>i.status==='checked').length;
     acts.push(`<button class="row-btn" id="lm-hide">${esc(CS.hideDone()?t('listMenuShow').replace('{n}',nDone):t('listMenuHide'))}</button>`);
   }
@@ -2962,7 +2965,6 @@ function openListMenu(){
   if(canEdit()) acts.push(`<button class="row-btn danger" id="lm-del">${esc(t('listMenuDelete'))}</button>`);
   openSheet(sheetHead(curList?curList.name:'')+`<div class="card"><div class="sheet-actions">${acts.join('')}</div></div>`);
   $('lm-share').onclick=()=>{ closeSheet(); shareTripSummary(); };
-  if($('lm-view')) $('lm-view').onclick=()=>{ closeSheet(); CS.setViewMode(CS.viewMode()==='flat'?'grouped':'flat'); toast(t(CS.viewMode()==='flat'?'viewFlatToast':'viewGroupedToast')); };
   if($('lm-hide')) $('lm-hide').onclick=()=>{ closeSheet(); CS.toggleHideDone(); };
   if($('lm-main')) $('lm-main').onclick=()=>{ closeSheet(); if(!lists.length) fetchLists(); setMainList(starredMainId()===listId?null:listId); };
   if($('lm-finish')) $('lm-finish').onclick=()=>{ closeSheet(); openCloseTripSheet(); };
@@ -2983,8 +2985,28 @@ function paintListChrome(){
   const fabLabel=canEdit()?t('fabAdd'):t('fabRequest');
   $('fab-add-label').textContent=fabLabel;
   $('fab-add').setAttribute('aria-label',fabLabel);
+  paintPeople();
   paintTop();
 }
+// who's in this household, right on the list (a green ring = has this list open right now),
+// next to the switch between one plain list and items by category
+function paintPeople(){
+  const box=$('list-avatars'); if(!box) return;
+  const here=new Set(Object.keys(presenceState).filter(u=>presenceState[u]===listId));
+  if(user && screen==='main' && listStatus==='open') here.add(user.id);
+  const ms=members.slice().sort((a,b)=>(ROLE_ORDER[a.role]??3)-(ROLE_ORDER[b.role]??3));
+  box.innerHTML=ms.slice(0,7).map(m=>{
+    const nm=m.display_name||m.email||'?';
+    return `<span class="avatar${here.has(m.user_id)?' here':''}" style="background:${CS.personColor(m.user_id)}" title="${esc(nm)}" aria-label="${esc(nm)}">${esc(CS.initials(nm))}</span>`;
+  }).join('')+(ms.length>7?`<span class="avatar avatar-more">+${ms.length-7}</span>`:'');
+  const vt=$('view-toggle'), flat=CS.viewMode()==='flat';
+  vt.textContent = flat ? '🗂️ '+CS.t('viewToGrouped') : '📋 '+CS.t('viewToFlat');
+  vt.setAttribute('aria-pressed',String(flat));
+}
+$('view-toggle').addEventListener('click',()=>{
+  CS.setViewMode(CS.viewMode()==='flat'?'grouped':'flat');
+  paintPeople();
+});
 
 async function openList(id, opts){
   opts=opts||{};
@@ -3021,10 +3043,8 @@ async function doCloseTrip(payload){
   const {error}=await sb.rpc('close_shopping_trip',payload);
   if(error){ toast(CS.authErr(error)); return; }
   toast(CS.t('tripClosed'));
-  try{ localStorage.removeItem('cs-last-list-at-'+household); }catch(e){}
-  setState({s:'lists',d:1},false);
-  renderTab('lists');
-  if(canEdit()) openTripTotalSheet(payload.p_list_id); // straight to "what did it come to?"
+  goBackFromList();
+  if(canEdit()) setTimeout(()=>openTripTotalSheet(payload.p_list_id),450); // straight to "what did it come to?" once the fridges are back
 }
 async function openCloseTripSheet(){
   const t=CS.t;
@@ -3691,7 +3711,7 @@ function subscribeHouseholdRealtime(){
         const name=membersById[row.created_by]?membersById[row.created_by].display_name:'';
         toast(CS.t('notifyListOpened').replace('{n}',name||'?').replace('{l}',row.name));
       }
-      if(screen==='lists') fetchLists(); else if(screen==='home') refreshHomeSoon();
+      if(screen==='lists') refreshHomeSoon();
     })
     .on('postgres_changes',{event:'UPDATE',schema:'public',table:'shopping_lists',filter:'household_id=eq.'+household},payload=>{
       const row=payload.new;
@@ -3705,16 +3725,16 @@ function subscribeHouseholdRealtime(){
         fetchHomePay().catch(()=>{});
       }
       if(row.id===listId && curList && screen==='main'){ Object.assign(curList,row); listStatus=row.status; paintListChrome(); }
-      if(screen==='lists') fetchLists(); else if(screen==='home') refreshHomeSoon();
+      if(screen==='lists') refreshHomeSoon();
     })
     .on('postgres_changes',{event:'INSERT',schema:'public',table:'list_activity',filter:'household_id=eq.'+household},()=>{
-      if(screen==='home') refreshHomeSoon(); // someone added / checked / requested something: Home's numbers and feed move
+      if(screen==='lists') refreshHomeSoon(); // someone added / checked / requested something: Home's numbers and feed move
     })
     .on('presence',{event:'sync'},()=>{
       const st=hhChannel?hhChannel.presenceState():{}, next={};
       Object.keys(st).forEach(k=>{ const metas=st[k]||[]; const m=metas[metas.length-1]; next[k]=m&&m.list||null; });
       presenceState=next;
-      if(screen==='main') paintListSub(); else if(screen==='home') paintHome();
+      if(screen==='main'){ paintListSub(); paintPeople(); }
     })
     .on('postgres_changes',{event:'*',schema:'public',table:'trip_payments',filter:'household_id=eq.'+household},payload=>{
       const row=payload.new&&payload.new.list_id?payload.new:payload.old;
