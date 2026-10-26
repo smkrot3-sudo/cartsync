@@ -529,12 +529,14 @@ body:not([data-screen="home"]) .get-app{display:none}
 /* the houses screen and the fridge shelf: the app's two "places" drawn as objects */
 .houses-h{font-size:1.5rem;margin:8px 0 2px}
 .houses-sub{color:var(--muted);margin:0 0 14px}
-.fridges{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-.houses-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.houses-grid .place{padding:10px 4px 10px;gap:4px;border-radius:16px}
+.fridges,.houses-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.fridges .place,.houses-grid .place{padding:10px 4px 10px;gap:4px;border-radius:16px}
+.fridges .place svg{max-width:84px}
 .houses-grid .place svg{max-width:96px}
-.houses-grid .place .nm{font-size:.92rem}
-.houses-grid .place .meta{font-size:.72rem}
+.fridges .place .nm,.houses-grid .place .nm{font-size:.92rem}
+.fridges .place .meta,.houses-grid .place .meta{font-size:.72rem}
+.fridges .more{width:32px;height:32px;inset-block-start:2px;inset-inline-end:2px}
+.fridges .more svg{width:16px;height:16px}
 .houses-grid .pin{width:32px;height:32px;font-size:.9rem;inset-block-start:2px;inset-inline-start:2px}
 .houses-grid .place.new{min-height:0;font-size:.85rem}
 .houses-grid .place.new .plus{font-size:1.5rem}
@@ -1711,7 +1713,7 @@ function renderLists(lists, canManage, mainId, counts){
   $('lists-closed').innerHTML = byMonth.map(g=>`<div class="month-h"><span>${esc(g.label)}</span>${g.sum?`<span class="sum">${esc(fmtMoney(g.sum))}</span>`:''}</div>
     <div class="fridges">${g.rows.map(l=>`<div class="place-wrap">
       <button class="place closed" data-list="${l.id}" aria-label="${esc(t('ariaFridgeClosed').replace('{n}',l.name))}">
-        ${fridgeSvg(false)}<span class="nm">${esc(l.name)}</span><span class="meta">${esc(t('closedOn').replace('{d}',fmtDate(l.closed_at)))}${l.total?' · '+esc(fmtMoney(l.total)):''}</span>
+        ${fridgeSvg(false)}<span class="nm">${esc(l.name)}</span><span class="meta">${esc(t('closedOn').replace('{d}',fmtDate(l.closed_at)))}${l.total?'<br>'+esc(fmtMoney(l.total)):''}</span>
       </button>${more(l)}</div>`).join('')}</div>`).join('');
 }
 
