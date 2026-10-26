@@ -534,19 +534,15 @@ body:not([data-screen="houses"]):not([data-screen="lists"]) .get-app{display:non
 :root[data-theme="dark"]{--sky:#17232E;--grass:#2A4426;--grass-ink:#D7EBC9;--wall:#18282A;--floor:#3D3226;--floor-ink:#F0E1C6}
 .houses-h{font-size:1.5rem;margin:8px 0 2px}
 .houses-sub{color:var(--muted);margin:0 0 14px}
-.fridges,.houses-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
-.houses-grid{background:var(--sky)}
-.fridges{background:var(--wall);background-image:linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px);background-size:22px 22px}
+.houses-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-radius:20px;overflow:hidden;box-shadow:var(--shadow);background:var(--sky)}
 .place-wrap{position:relative;display:flex}
 .place-wrap .place{flex:1}
 .place{position:relative;display:flex;flex-direction:column;align-items:center;gap:0;background:transparent;border:0;padding:14px 0 0;color:inherit;cursor:pointer;width:100%;font:inherit}
 .place:active svg{transform:scale(.95)}
 .place svg{width:100%;height:auto;display:block;transition:transform .12s;padding:0 6px;box-sizing:border-box}
-.fridges .place svg{max-width:94px}
 .houses-grid .place svg{max-width:104px}
 .place .floor{align-self:stretch;flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px 12px}
 .houses-grid .floor{background:var(--grass);color:var(--grass-ink)}
-.fridges .floor{background:var(--floor);color:var(--floor-ink)}
 .place .nm{font-weight:800;font-size:.92rem;text-align:center;line-height:1.2;max-width:100%;overflow-wrap:anywhere}
 .place .meta{font-size:.72rem;text-align:center;opacity:.8;line-height:1.3}
 .place-wrap .pin,.place-wrap .more{position:absolute;inset-block-start:2px;width:34px;height:34px;border:0;background:color-mix(in srgb,var(--surface) 70%,transparent);font-size:.9rem;border-radius:50%;color:var(--fg);cursor:pointer;display:flex;align-items:center;justify-content:center}
@@ -555,6 +551,49 @@ body:not([data-screen="houses"]):not([data-screen="lists"]) .get-app{display:non
 .place-wrap .more svg{width:16px;height:16px}
 .place.closed svg{filter:saturate(.75)}
 .place.new .nm{color:var(--accent)}
+/* the lists screen is a fridge door: cream enamel, a chrome handle down the side, magnet labels,
+   and every list a different kind of note pinned or taped to it */
+:root{--door-a:#F4F1EA;--door-b:#FCFBF7;--door-edge:#E2DDD2;--magnet:#2F7D5B}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--door-a:#2A2F31;--door-b:#33393B;--door-edge:#202426;--magnet:#3FA868}}
+:root[data-theme="dark"]{--door-a:#2A2F31;--door-b:#33393B;--door-edge:#202426;--magnet:#3FA868}
+body[data-screen="lists"]{background:linear-gradient(90deg,var(--door-edge) 0,var(--door-a) 3%,var(--door-b) 45%,var(--door-a) 92%,var(--door-edge) 100%)}
+body[data-screen="lists"]::before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.35) 38%,transparent 46%)}
+.fridge-handle{position:fixed;top:24vh;inset-inline-start:4px;width:11px;height:150px;border-radius:7px;background:linear-gradient(90deg,#9EA5AD,#F4F6F8 45%,#A7AEB6);box-shadow:0 3px 6px rgba(0,0,0,.25);z-index:0;pointer-events:none}
+.magnet-label{display:block;width:fit-content;margin:6px 0 14px;padding:4px 14px;background:var(--magnet);color:#fff;font-size:.9rem;font-weight:800;border-radius:8px;box-shadow:0 3px 0 rgba(0,0,0,.18);transform:rotate(-1.5deg)}
+.notes{columns:2;column-gap:16px;padding:8px 6px 0;--hand:"Playpen Sans Hebrew","Assistant",system-ui,sans-serif}
+:root[data-itemfont="plain"] .notes{--hand:"Assistant",system-ui,sans-serif}
+.note-wrap{break-inside:avoid;position:relative;display:block;padding-top:8px;margin-bottom:16px}
+.note{position:relative;display:block;width:100%;text-align:start;border:0;border-radius:2px;padding:16px 14px 14px;font-family:var(--hand);color:#253352;background:#fff;transform:rotate(var(--rot));box-shadow:0 7px 12px rgba(0,0,0,.14),0 1px 2px rgba(0,0,0,.12);cursor:pointer;transition:transform .12s}
+.note:active{transform:rotate(var(--rot)) scale(.97)}
+.note .pin{position:absolute;top:-7px;left:50%;width:17px;height:17px;margin-left:-8.5px;border-radius:50%;background:radial-gradient(circle at 35% 32%,rgba(255,255,255,.85) 0 2px,var(--pin) 3.5px);box-shadow:0 3px 3px rgba(0,0,0,.28),inset 0 -2px 0 rgba(0,0,0,.18)}
+.note .tape{position:absolute;top:-10px;left:50%;width:60px;height:20px;margin-left:-30px;transform:rotate(-4deg);background:rgba(255,255,255,.6);box-shadow:0 1px 2px rgba(0,0,0,.12);border-left:1px dashed rgba(0,0,0,.08);border-right:1px dashed rgba(0,0,0,.08)}
+.note .n-date{display:block;font-size:.72rem;opacity:.65;text-align:end;line-height:14px;margin-bottom:2px}
+.note .n-title{display:block;font-weight:600;font-size:1.06rem;line-height:24px;text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:4px;margin-bottom:2px;overflow-wrap:anywhere}
+.note .n-line{display:block;font-size:.9rem;line-height:22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.note .n-line.done{text-decoration:line-through;opacity:.5}
+.note .n-line.n-empty{opacity:.55}
+.note-wrap:has(.more) .note{padding-bottom:36px}
+#view-lists{padding-inline-start:10px}
+.note .n-more{display:block;font-size:.78rem;opacity:.6;line-height:20px}
+.note .n-left{display:block;margin-top:6px;font-size:.76rem;font-family:var(--body);font-weight:700;color:#2F7D5B}
+.note.closed .n-line{text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:rgba(37,51,82,.7);opacity:.75}
+.note .n-closed{display:block;margin-top:8px;font-size:.78rem;font-family:var(--body);font-weight:800;color:#B23A3A}
+.note .n-cross{position:absolute;inset:26px 12px 30px;width:calc(100% - 24px);height:calc(100% - 56px);pointer-events:none}
+.note .n-cross path{fill:none;stroke:rgba(37,51,82,.55);stroke-width:2.4;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.paper-lined{background:#fff;background-image:repeating-linear-gradient(transparent 0 21px,#C9DCEE 21px 22px);background-position:0 39px}
+.paper-lined::before{content:"";position:absolute;inset-block:0;inset-inline-start:9px;width:1.5px;background:#E89494}
+.paper-sticky{background:linear-gradient(#FFE88F,#FFE07A);border-radius:1px}
+.paper-pink{background:linear-gradient(#FFD0D9,#FFC3CF)}
+.paper-mint{background:linear-gradient(#D3F2DD,#C4EBD1)}
+.paper-grid{background:#FDFDFB;background-image:linear-gradient(#DCE3EA 1px,transparent 1px),linear-gradient(90deg,#DCE3EA 1px,transparent 1px);background-size:11px 11px}
+.paper-index{background:#FBFCFE;background-image:linear-gradient(#E9A3A3,#E9A3A3),repeating-linear-gradient(transparent 0 21px,#BFD3EA 21px 22px);background-size:100% 1.5px,100% 100%;background-position:0 38px,0 39px;background-repeat:no-repeat,repeat}
+.paper-kraft{background:linear-gradient(#EADBBE,#E2D0AE);color:#3B2F22}
+.note.new{background:color-mix(in srgb,var(--surface) 55%,transparent);border:2.5px dashed var(--accent);box-shadow:none;--rot:-1.5deg;text-align:center;color:var(--accent);font-family:var(--body);padding:22px 10px}
+.note.new .plus{display:block;font-size:2rem;line-height:1;font-weight:700}
+.note.new .n-title{text-decoration:none;font-weight:800}
+.note-wrap .more{position:absolute;inset-block-end:2px;inset-inline-end:2px;width:32px;height:32px;border:0;border-radius:50%;background:rgba(255,255,255,.7);color:#253352;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.note-wrap .more svg{width:16px;height:16px}
+body[data-screen="lists"] .sec-h{color:var(--fg)}
 /* the list's own strip: who's in this household (a ring = has this list open now), and the one-list/categories switch */
 .list-people{display:flex;align-items:center;gap:10px;margin:2px 0 10px}
 .list-people .avatars{display:flex;padding-inline-start:9px;flex:1;min-width:0}
@@ -655,9 +694,10 @@ body:not([data-screen="houses"]):not([data-screen="lists"]) .get-app{display:non
   </section>
 
   <section class="view" id="view-lists" hidden>
+    <div class="fridge-handle" aria-hidden="true"></div>
     <section class="sec">
-      <h2 class="sec-h" id="lists-open-title">פעילות</h2>
-      <div class="fridges" id="lists-open"></div>
+      <h2 class="magnet-label" id="lists-open-title">פעילות</h2>
+      <div class="notes" id="lists-open"></div>
       <p class="empty-line" id="lists-empty" hidden><span id="lists-empty-text">אין עדיין רשימות פעילות.</span></p>
     </section>
     <section class="sec" id="home-waiting-section" hidden>
@@ -666,8 +706,8 @@ body:not([data-screen="houses"]):not([data-screen="lists"]) .get-app{display:non
       <ul class="list" id="home-pay"></ul>
     </section>
     <section class="sec" id="lists-closed-box" hidden>
-      <h2 class="sec-h" id="lists-closed-title">קניות קודמות</h2>
-      <div id="lists-closed"></div>
+      <h2 class="magnet-label" id="lists-closed-title">קניות קודמות</h2>
+      <div class="notes" id="lists-closed"></div>
     </section>
     <section class="sec" id="home-feed-section" hidden>
       <h2 class="sec-h" id="home-feed-h">לאחרונה</h2>
@@ -816,7 +856,7 @@ he: {
   homeSub:'כל הרשימות המשותפות של משק הבית, במקום אחד.',
   homeLists:'הרשימות שלי', homeInvite:'להזמין מישהו', homeSwitch:'להחליף משק בית',
   primaryHhSet:'לסמן כמשק בית ראשי', primaryHhUnset:'להסיר סימון ראשי',
-  housesTitle:'משקי הבית שלי', housesSub:'בוחרים משק בית, ונכנסים לרשימות שלו.', houseNew:'משק בית חדש', ariaHouse:'להיכנס ל{n}', ariaFridgeOpen:'רשימה פתוחה: {n}', ariaFridgeClosed:'קנייה שנסגרה: {n}', fridgeEmpty:'ריק', houseLists:'{n} רשימות פתוחות', houseListsOne:'רשימה פתוחה אחת', houseListsNone:'אין רשימות פתוחות',
+  housesTitle:'משקי הבית שלי', housesSub:'בוחרים משק בית, ונכנסים לרשימות שלו.', houseNew:'משק בית חדש', ariaHouse:'להיכנס ל{n}', ariaFridgeOpen:'רשימה פתוחה: {n}', ariaFridgeClosed:'קנייה שנסגרה: {n}', fridgeEmpty:'עוד ריקה…', noteMore:'ועוד {n}…', houseLists:'{n} רשימות פתוחות', houseListsOne:'רשימה פתוחה אחת', houseListsNone:'אין רשימות פתוחות',
   primaryHhSetToast:'⭐ סומן כמשק בית ראשי — ייפתח ראשון תמיד', primaryHhUnsetToast:'סימון הראשי הוסר',
   homeListsHeading:'הרשימות הפעילות', homeListsMore:'כל הרשימות ←',
   homeMembers:'משק הבית', itemsLeft:'{n} פריטים נשארו', allCollected:'הכל נאסף ✅',
@@ -930,7 +970,7 @@ en: {
   homeSub:'All of your household\'s shared lists, in one place.',
   homeLists:'My lists', homeInvite:'Invite someone', homeSwitch:'Switch household',
   primaryHhSet:'Set as primary household', primaryHhUnset:'Remove as primary',
-  housesTitle:'My households', housesSub:'Pick a household to open its lists.', houseNew:'New household', ariaHouse:'Open {n}', ariaFridgeOpen:'Open list: {n}', ariaFridgeClosed:'Closed trip: {n}', fridgeEmpty:'Empty', houseLists:'{n} open lists', houseListsOne:'1 open list', houseListsNone:'No open lists',
+  housesTitle:'My households', housesSub:'Pick a household to open its lists.', houseNew:'New household', ariaHouse:'Open {n}', ariaFridgeOpen:'Open list: {n}', ariaFridgeClosed:'Closed trip: {n}', fridgeEmpty:'Still empty…', noteMore:'and {n} more…', houseLists:'{n} open lists', houseListsOne:'1 open list', houseListsNone:'No open lists',
   primaryHhSetToast:'⭐ Set as primary household — opens first every time', primaryHhUnsetToast:'No longer primary',
   homeListsHeading:'Active lists', homeListsMore:'All lists →',
   homeMembers:'Household', itemsLeft:'{n} items left', allCollected:'All collected ✅',
@@ -1056,7 +1096,7 @@ const CAT_ORDER = ['produce','nuts','bakery','ready','pantry','canned','grains',
 /* "what's new" — bump WHATS_NEW_VERSION and add one new entry at the END of each array whenever
    there's something worth announcing to EXISTING users (not every build, just real features).
    A brand-new user never sees this — they get the full guide instead, and are marked caught-up. */
-const WHATS_NEW_VERSION = 7;
+const WHATS_NEW_VERSION = 8;
 const WHATS_NEW = {
 he: [
   {version:1, items:[
@@ -1100,6 +1140,9 @@ he: [
     'בלי פס תחתון: חץ חזרה בכל מסך, צעד אחד אחורה',
     'מקרר עם פלוס להוספת רשימה, ופתקים עם סיכות על הדלתות',
     'ברשימה חזר הפס של בני הבית, וכפתור למעבר בין רשימה אחת לקטגוריות',
+  ]},
+  {version:8, items:[
+    'הרשימות הן פתקים על דלת מקרר: כל פתק שונה, פעיל כתוב רגיל, וסגור מחוק עם תאריך הסגירה',
   ]},
 ],
 en: [
@@ -1145,6 +1188,9 @@ en: [
     'A fridge with a plus to add a list, and little pinned notes on the doors',
     'The household strip is back on the list, with a switch between one list and categories',
   ]},
+  {version:8, items:[
+    'Lists are notes on a fridge door: every note is different, open ones written out, finished ones crossed off with the date',
+  ]},
 ],
 };
 
@@ -1152,7 +1198,7 @@ en: [
    both new users (automatically, once) and anyone opening it later from Settings */
 const GUIDE = {
 he: [
-  {icon:'🏘️', title:'משקי הבית והמקררים', body:'מי שחבר ביותר ממשק בית אחד נכנס למסך <b>משקי הבית</b>: כל משק בית מצויר כבית קטן, ולחיצה עליו נכנסת לרשימות שלו. תמיד אפשר לחזור לשם מהשם של משק הבית בראש המסך. הרשימות עצמן מצוירות כמקררים: רשימה פעילה היא מקרר עם דלת פתוחה והיא למעלה, וקנייה שנסגרה היא מקרר סגור למטה עם תאריך הסגירה.'},
+  {icon:'🏘️', title:'משקי הבית והפתקים', body:'מי שחבר ביותר ממשק בית אחד נכנס למסך <b>משקי הבית</b>: כל משק בית מצויר כבית קטן, ולחיצה עליו נכנסת לרשימות שלו. הרשימות תלויות כ<b>פתקים על דלת המקרר</b>: פתק של רשימה פעילה כתוב רגיל, ופתק של קנייה שנסגרה מחוק בקווים ועליו התאריך שבו נסגרה. הפתק המקווקו עם הפלוס פותח רשימה חדשה.'},
   {icon:'🏠', title:'ניווט', body:'הדרך פשוטה: <b>משקי הבית</b> → המקררים של משק הבית → הרשימה. בכל מסך יש חץ למעלה שחוזר צעד אחד אחורה, וגם כפתור החזרה של הטלפון. במסך המקררים יש כפתור אנשים שפותח את עמוד משק הבית: מי בבית, הזמנות, קישור ביט והחלפת משק בית.'},
   {icon:'👥', title:'תפקידים', body:'לכל אדם במשק הבית יש תפקיד: <b>מנהל</b> מנהל את משק הבית (הזמנות, תפקידים ותשלומים), <b>שותף</b> מוסיף, אוסף ומאשר בקשות, ו<b>מבקש</b> מבקש מוצרים שמחכים לאישור של מנהל או שותף. בעמוד משק הבית רואים את התפקיד של כל אחד, ולחיצה על אדם פותחת את הפעולות עליו.'},
   {icon:'📋', title:'רשימות קניות', body:'במשק בית אחד אפשר לפתוח כמה רשימות (למשל "סופר שבועי" ו"פארם"). רשימה אחת אפשר לסמן כ<b>ראשית</b>, וההוספה המהירה בעמוד הבית נכנסת אליה. אחרי "סיום קניות" הרשימה עוברת ל"קניות קודמות" ונשארת לקריאה בלבד.'},
@@ -1167,7 +1213,7 @@ he: [
   {icon:'🛡️', title:'ניהול משק הבית', body:'המנהל יכול להעביר את הניהול לאדם אחר, להסיר אנשים ולמחוק את משק הבית לצמיתות. הפעולות האלה נמצאות בתחתית עמוד משק הבית. כל אחד יכול לצאת ממשק הבית, חוץ מהמנהל, שצריך קודם להעביר את הניהול אם יש עוד אנשים.'},
 ],
 en: [
-  {icon:'🏘️', title:'Households and fridges', body:'If you belong to more than one household, you start on the <b>households</b> screen: each household is drawn as a little house, and tapping one opens its lists. You can always get back there from the household name at the top. The lists themselves are drawn as fridges: an active list is a fridge with its door open, up top, and a closed trip is a shut fridge below, with the date it closed.'},
+  {icon:'🏘️', title:'Households and notes', body:'If you belong to more than one household, you start on the <b>households</b> screen: each household is drawn as a little house, and tapping one opens its lists. The lists hang as <b>notes on the fridge door</b>: an active list is written out, and a finished trip is crossed off with the date it closed. The dashed note with a plus starts a new list.'},
   {icon:'🏠', title:'Getting around', body:'The path is simple: <b>households</b> → that household\'s fridges → a list. Every screen has a back arrow at the top that steps back one screen, and so does the phone\'s back button. On the fridges screen, the people button opens the household page: who\'s here, invites, your Bit link and switching households.'},
   {icon:'👥', title:'Roles', body:'Everyone in a household has a role: a <b>Manager</b> runs the household (invites, roles, payments), a <b>Partner</b> adds, collects and approves requests, and a <b>Requester</b> asks for items that wait for a manager or partner to approve. The Household tab shows everyone\'s role; tap a person for actions.'},
   {icon:'📋', title:'Shopping lists', body:'One household can have several lists at once (e.g. "weekly groceries" and "pharmacy"). An "open" list accepts new items and checkmarks; once you close it, it moves to history as read-only.'},
@@ -1655,65 +1701,6 @@ function houseSvg(seed){
 const NEW_HOUSE_SVG=`<svg viewBox="0 0 120 104" aria-hidden="true" focusable="false">
   <path d="M14 54 60 20 106 54M24 50V102H96V50" fill="none" stroke="var(--accent)" stroke-width="3.5" stroke-dasharray="8 7" stroke-linecap="round" stroke-linejoin="round"/>
   <path d="M60 58V90M44 74H76" stroke="var(--accent)" stroke-width="6" stroke-linecap="round"/></svg>`;
-const NEW_FRIDGE_SVG=`<svg viewBox="0 0 120 150" aria-hidden="true" focusable="false">
-  <rect x="22" y="9" width="59" height="129" rx="8" fill="none" stroke="var(--accent)" stroke-width="3.5" stroke-dasharray="8 7"/>
-  <path d="M51.5 56V92M33.5 74H69.5" stroke="var(--accent)" stroke-width="6" stroke-linecap="round"/></svg>`;
-// one fridge per list, cartoon style (owner's reference 2026-10-26): thick outline, teal front, a darker
-// side for depth, orange handles, little feet. Same size whatever the list holds. While the list is
-// still open the bottom door stands open on the shelves; a closed list keeps both doors shut.
-// Little notes pinned to the doors, like a real family fridge.
-const FR={ink:'#1E2A2E',front:'#64A0A2',side:'#2B5F7E',handle:'#D9822B',feet:'#8A5A3A',inside:'#F3F1E7',trim:'#C9D3D4'};
-function fridgeNote(x,y,w,h,rot,fill){
-  const k=FR.ink;
-  return `<g transform="rotate(${rot} ${x+w/2} ${y+h/2})">
-    <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1.5" fill="${fill}" stroke="${k}" stroke-width="1.3"/>
-    <path d="M${x+4} ${y+8.5}H${x+w-4}M${x+4} ${y+12.5}H${x+w-7}${h>18?`M${x+4} ${y+16.5}H${x+w-5}`:''}" stroke="${k}" stroke-width="1" opacity=".45"/>
-    <circle cx="${x+w/2}" cy="${y+2.6}" r="2.7" fill="#E0463A" stroke="${k}" stroke-width="1"/>
-    <circle cx="${x+w/2-.8}" cy="${y+1.8}" r=".8" fill="#fff" opacity=".8"/>
-  </g>`;
-}
-function fridgeSvg(open,fullness,seed){
-  const k=FR.ink;
-  // which notes hang where depends on the list, so the fridges don't all look identical
-  let h=0; const str=String(seed||''); for(let i=0;i<str.length;i++) h=(h*31+str.charCodeAt(i))>>>0;
-  const tilt=(h%7)-3, notes=['#FFE58A','#FFC4CF','#BDE3F7','#C9EBB8'];
-  const shell=`<ellipse cx="60" cy="145" rx="48" ry="4.5" fill="#000" opacity=".13"/>
-    <rect x="31" y="136" width="10" height="6" rx="1.5" fill="${FR.feet}" stroke="${k}" stroke-width="1.5"/>
-    <rect x="65" y="137" width="10" height="6" rx="1.5" fill="${FR.feet}" stroke="${k}" stroke-width="1.5"/>
-    <rect x="92" y="130" width="8" height="5" rx="1.5" fill="${FR.feet}" stroke="${k}" stroke-width="1.5"/>
-    <path d="M80 11 101 18V129L80 138Z" fill="${FR.side}" stroke="${k}" stroke-width="3" stroke-linejoin="round"/>
-    <path d="M28 10H80L101 18" fill="none" stroke="${k}" stroke-width="3" stroke-linejoin="round"/>`;
-  const top=`<rect x="22" y="9" width="59" height="129" rx="8" fill="${FR.front}" stroke="${k}" stroke-width="3"/>
-    <rect x="25.5" y="13" width="3" height="116" rx="1.5" fill="#fff" opacity=".18"/>
-    <path d="M24 16H78" stroke="${k}" stroke-width="1.4" opacity=".5"/>
-    <rect x="23.5" y="50" width="56" height="4" fill="${FR.trim}" stroke="${k}" stroke-width="1.3"/>
-    <rect x="29" y="22" width="6" height="20" rx="2" fill="${FR.handle}" stroke="${k}" stroke-width="2"/>
-    ${fridgeNote(44,20,22,19,-6+tilt,notes[h%4])}`;
-  if(!open) return `<svg viewBox="0 0 120 150" aria-hidden="true" focusable="false">${shell}${top}
-    <rect x="29" y="62" width="6" height="22" rx="2" fill="${FR.handle}" stroke="${k}" stroke-width="2"/>
-    ${fridgeNote(43,66,25,23,5-tilt,notes[(h+1)%4])}
-    ${fridgeNote(48,97,20,17,-4+tilt,notes[(h+2)%4])}
-    <circle cx="70" cy="122" r="4.5" fill="#F2C14E" stroke="${k}" stroke-width="1.3"/><path d="M70 117.5c1-2 3-2.5 4-2" stroke="#4E8A3C" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-  </svg>`;
-  // the open bottom compartment: shelves, a few groceries (fewer when little is left), and the door swung out
-  const g=Math.max(0,Math.min(6,fullness|0));
-  const goods=[
-    `<rect x="30" y="66" width="8" height="13" rx="2" fill="#fff" stroke="${k}" stroke-width="1.3"/><rect x="31.5" y="63" width="5" height="4" rx="1" fill="#3E7FB5"/>`,
-    `<circle cx="47" cy="75" r="4.5" fill="#E0463A" stroke="${k}" stroke-width="1.3"/>`,
-    `<path d="M56 79 68 79 68 72Z" fill="#F2C14E" stroke="${k}" stroke-width="1.3" stroke-linejoin="round"/>`,
-    `<rect x="31" y="92" width="7" height="15" rx="2" fill="#4E8A3C" stroke="${k}" stroke-width="1.3"/>`,
-    `<rect x="43" y="98" width="13" height="9" rx="2" fill="#E8DCC0" stroke="${k}" stroke-width="1.3"/>`,
-    `<circle cx="64" cy="103" r="4" fill="#F28C28" stroke="${k}" stroke-width="1.3"/>`,
-  ];
-  return `<svg viewBox="0 0 120 150" aria-hidden="true" focusable="false">${shell}${top}
-    <path d="M23.5 54H79.5V130A7 7 0 0 1 72.5 137H30.5A7 7 0 0 1 23.5 130Z" fill="${FR.inside}" stroke="${k}" stroke-width="3"/>
-    <path d="M26 82H77M26 110H77" stroke="${k}" stroke-width="2"/>
-    <rect x="28" y="116" width="47" height="17" rx="3" fill="#DCE9E3" stroke="${k}" stroke-width="1.5"/>
-    ${goods.slice(0,g).join('')}
-    <path d="M80 54 107 62V141L80 137Z" fill="${FR.front}" stroke="${k}" stroke-width="3" stroke-linejoin="round"/>
-    <path d="M84 72 103 77M84 96 103 101M84 120 103 125" stroke="${k}" stroke-width="1.6" opacity=".55"/>
-  </svg>`;
-}
 // the way in: every household I belong to, as a house standing on the grass
 function renderHouses(list, primaryId, counts){
   const t=CS.t;
@@ -1728,36 +1715,46 @@ function renderHouses(list, primaryId, counts){
     </button><button class="pin" data-pin-hh="${h.id}" aria-label="${esc(pinned?t('primaryHhUnset'):t('primaryHhSet'))}" aria-pressed="${pinned}">${pinned?'⭐':'☆'}</button></div>`;
   }).join('')+`<div class="place-wrap"><button class="place new" id="houses-new">${NEW_HOUSE_SVG}<span class="floor"><span class="nm">${esc(t('houseNew'))}</span></span></button></div>`;
 }
-// a household's fridges: open lists stand on top with the bottom door open, past trips are shut fridges below
+// a household's lists, as notes pinned to a drawn fridge door (owner's call 2026-10-26). Each note is
+// its own kind of paper, tilt and pin, picked from the list's id so it stays the same note every time.
+// An open list is written out; a closed one is crossed off, with the day it was done.
+const NOTE_PAPERS=['lined','sticky','grid','pink','index','kraft','mint'];
+const PIN_COLORS=['#E0463A','#3E7FB5','#2F9A57','#F2B92E','#8E5BC9'];
+function noteHash(id){ let h=0; const s=String(id||''); for(let i=0;i<s.length;i++) h=(h*131+s.charCodeAt(i))>>>0; return h; }
+const shortDate=iso=>{ const d=new Date(iso); return isNaN(d)?'':d.getDate()+'.'+(d.getMonth()+1); };
+function noteHtml(l, opts){
+  const t=CS.t, h=noteHash(l.id), closed=l.status==='closed';
+  const paper=NOTE_PAPERS[h%NOTE_PAPERS.length], pin=PIN_COLORS[(h>>3)%PIN_COLORS.length];
+  const rot=(((h>>6)%9)-4)*0.75, tape=(h>>9)%4===0;
+  const rows=(opts.items||[]), max=closed?5:6, shown=rows.slice(0,max), extra=rows.length-shown.length;
+  const lines=shown.length
+    ? shown.map(r=>`<span class="n-line${r.status==='checked'?' done':''}">${esc(r.text)}</span>`).join('')
+    : (closed?'':`<span class="n-line n-empty">${esc(t('fridgeEmpty'))}</span>`);
+  const meta=closed
+    ? `<span class="n-closed">✓ ${esc(t('closedOn').replace('{d}',shortDate(l.closed_at)))}${l.total?'<br>'+esc(fmtMoney(l.total)):''}</span>`
+    : (opts.left!=null?`<span class="n-left">${esc(opts.left?t('itemsLeft').replace('{n}',opts.left):t('allCollected'))}</span>`:'');
+  return `<div class="note-wrap"><button class="note paper-${paper}${closed?' closed':''}" data-list="${l.id}" style="--rot:${rot}deg;--pin:${pin}"
+      aria-label="${esc(t(closed?'ariaFridgeClosed':'ariaFridgeOpen').replace('{n}',l.name))}">
+    ${tape?'<span class="tape" aria-hidden="true"></span>':'<span class="pin" aria-hidden="true"></span>'}
+    <span class="n-date">${esc(shortDate(closed?l.closed_at:l.created_at))}</span>
+    <span class="n-title">${opts.main?'⭐ ':''}${esc(l.name)}</span>
+    <span class="n-lines">${lines}</span>
+    ${extra>0?`<span class="n-more">${esc(t('noteMore').replace('{n}',extra))}</span>`:''}
+    ${meta}
+    ${closed?`<svg class="n-cross" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M8 10 92 90M90 12 10 88"/></svg>`:''}
+  </button>${opts.more||''}</div>`;
+}
 function renderLists(lists, canManage, mainId, counts){
-  const t=CS.t;
+  const t=CS.t, items=CS.noteItems||{};
   const open=(lists||[]).filter(l=>l.status==='open');
   const closed=(lists||[]).filter(l=>l.status==='closed');
   const more=l=>canManage?`<button class="more" data-list-more="${l.id}" aria-label="${esc(t('ariaMore').replace('{t}',l.name))}">${ICON_MORE}</button>`:'';
-  $('lists-open').innerHTML = open.map(l=>{
-    const n=counts&&counts[l.id];
-    const meta=n==null?fmtDate(l.created_at):(n?t('itemsLeft').replace('{n}',n):t('allCollected'));
-    return `<div class="place-wrap"><button class="place" data-list="${l.id}" aria-label="${esc(t('ariaFridgeOpen').replace('{n}',l.name))}">
-      ${fridgeSvg(true,n==null?3:n,l.id)}
-      <span class="floor"><span class="nm">${l.id===mainId?'⭐ ':''}${esc(l.name)}</span><span class="meta">${esc(meta)}</span></span>
-    </button>${more(l)}</div>`;}).join('')
-    + (canManage?`<div class="place-wrap"><button class="place new" id="fridge-new" aria-label="${esc(t('newListTitle'))}">${NEW_FRIDGE_SVG}<span class="floor"><span class="nm">${esc(t('newListTitle'))}</span></span></button></div>`:'');
+  $('lists-open').innerHTML = open.map(l=>noteHtml(l,{items:items[l.id],left:counts?counts[l.id]:null,main:l.id===mainId,more:more(l)})).join('')
+    + (canManage?`<div class="note-wrap"><button class="note new" id="fridge-new"><span class="plus" aria-hidden="true">＋</span><span class="n-title">${esc(t('newListTitle'))}</span></button></div>`:'');
   $('lists-open').hidden = !open.length && !canManage;
   $('lists-empty').hidden = !!open.length || canManage;
   $('lists-closed-box').hidden = !closed.length;
-  // past shopping, one row of the kitchen per month, each with what that month's trips came to
-  const byMonth=[];
-  closed.forEach(l=>{
-    const d=new Date(l.closed_at||l.created_at), key=d.getFullYear()+'-'+d.getMonth();
-    let g=byMonth.find(x=>x.key===key);
-    if(!g){ g={key,label:d.toLocaleDateString(CS.lang()==='he'?'he-IL':'en-US',{month:'long',year:'numeric'}),rows:[],sum:0}; byMonth.push(g); }
-    g.rows.push(l); g.sum+=(+l.total||0);
-  });
-  $('lists-closed').innerHTML = byMonth.map(g=>`<div class="month-h"><span>${esc(g.label)}</span>${g.sum?`<span class="sum">${esc(fmtMoney(g.sum))}</span>`:''}</div>
-    <div class="fridges">${g.rows.map(l=>`<div class="place-wrap">
-      <button class="place closed" data-list="${l.id}" aria-label="${esc(t('ariaFridgeClosed').replace('{n}',l.name))}">
-        ${fridgeSvg(false,0,l.id)}<span class="floor"><span class="nm">${esc(l.name)}</span><span class="meta">${esc(t('closedOn').replace('{d}',fmtDate(l.closed_at)))}${l.total?'<br>'+esc(fmtMoney(l.total)):''}</span></span>
-      </button>${more(l)}</div>`).join('')}</div>`).join('');
+  $('lists-closed').innerHTML = closed.map(l=>noteHtml(l,{items:items[l.id],more:more(l)})).join('');
 }
 
 /* ---------- view mode: grouped-by-category vs flat+draggable ---------- */
@@ -2837,16 +2834,20 @@ async function fetchLists(){
   if(error){ console.warn(error); return; }
   lists=data||[];
   const openIds=lists.filter(l=>l.status==='open').map(l=>l.id);
+  const closedIds=lists.filter(l=>l.status==='closed').slice(0,24).map(l=>l.id); // older trips get a note without their lines
   openCounts={}; openTotals={}; pendingCounts={};
   openIds.forEach(id=>{ openCounts[id]=0; openTotals[id]=0; pendingCounts[id]=0; });
-  if(openIds.length){
-    const {data:rows}=await sb.from('list_items').select('list_id,status').in('list_id',openIds);
+  const notes={};
+  if(openIds.length||closedIds.length){
+    const {data:rows}=await sb.from('list_items').select('list_id,status,text,position').in('list_id',openIds.concat(closedIds)).order('position');
     (rows||[]).forEach(r=>{
+      if(r.status!=='pending') (notes[r.list_id]=notes[r.list_id]||[]).push(r);
       if(!(r.list_id in openCounts)) return;
       if(r.status==='pending') pendingCounts[r.list_id]++;
       else{ openTotals[r.list_id]++; if(r.status==='active') openCounts[r.list_id]++; }
     });
   }
+  window.CS.noteItems=notes;
   CS.renderLists(lists, canEdit(), starredMainId(), openCounts);
 }
 // the main list: the one marked by hand if it's still open, otherwise the newest open list
