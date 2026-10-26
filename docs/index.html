@@ -1056,7 +1056,7 @@ const CAT_ORDER = ['produce','nuts','bakery','ready','pantry','canned','grains',
 /* "what's new" — bump WHATS_NEW_VERSION and add one new entry at the END of each array whenever
    there's something worth announcing to EXISTING users (not every build, just real features).
    A brand-new user never sees this — they get the full guide instead, and are marked caught-up. */
-const WHATS_NEW_VERSION = 6;
+const WHATS_NEW_VERSION = 7;
 const WHATS_NEW = {
 he: [
   {version:1, items:[
@@ -1095,6 +1095,11 @@ he: [
   {version:6, items:[
     'מסך משקי הבית: כל משק בית מצויר כבית קטן, ונכנסים אליו בלחיצה',
     'הרשימות הן מקררים: פתוחה = דלת פתוחה למעלה, סגורה = מקרר סגור למטה עם תאריך',
+  ]},
+  {version:7, items:[
+    'בלי פס תחתון: חץ חזרה בכל מסך, צעד אחד אחורה',
+    'מקרר עם פלוס להוספת רשימה, ופתקים עם סיכות על הדלתות',
+    'ברשימה חזר הפס של בני הבית, וכפתור למעבר בין רשימה אחת לקטגוריות',
   ]},
 ],
 en: [
@@ -1135,6 +1140,11 @@ en: [
     'A houses screen: every household is a house you tap to walk into',
     'Lists are fridges now: open ones have their door open on top, closed trips are shut fridges below, with the date',
   ]},
+  {version:7, items:[
+    'No bottom bar: a back arrow on every screen, one step back each time',
+    'A fridge with a plus to add a list, and little pinned notes on the doors',
+    'The household strip is back on the list, with a switch between one list and categories',
+  ]},
 ],
 };
 
@@ -1143,7 +1153,7 @@ en: [
 const GUIDE = {
 he: [
   {icon:'🏘️', title:'משקי הבית והמקררים', body:'מי שחבר ביותר ממשק בית אחד נכנס למסך <b>משקי הבית</b>: כל משק בית מצויר כבית קטן, ולחיצה עליו נכנסת לרשימות שלו. תמיד אפשר לחזור לשם מהשם של משק הבית בראש המסך. הרשימות עצמן מצוירות כמקררים: רשימה פעילה היא מקרר עם דלת פתוחה והיא למעלה, וקנייה שנסגרה היא מקרר סגור למטה עם תאריך הסגירה.'},
-  {icon:'🏠', title:'שלוש לשוניות', body:'בתחתית המסך יש שלושה מקומות קבועים: <b>בית</b> (מה עכשיו: הרשימה להמשיך, מה מחכה לך, מה קרה לאחרונה), <b>רשימות</b> (רשימות פעילות וקניות קודמות לפי חודשים), ו<b>משק הבית</b> (מי בבית, הזמנות, קישור ביט והחלפת משק בית). רשימה פתוחה תופסת את כל המסך, והחץ למעלה מחזיר אחורה.'},
+  {icon:'🏠', title:'ניווט', body:'הדרך פשוטה: <b>משקי הבית</b> → המקררים של משק הבית → הרשימה. בכל מסך יש חץ למעלה שחוזר צעד אחד אחורה, וגם כפתור החזרה של הטלפון. במסך המקררים יש כפתור אנשים שפותח את עמוד משק הבית: מי בבית, הזמנות, קישור ביט והחלפת משק בית.'},
   {icon:'👥', title:'תפקידים', body:'לכל אדם במשק הבית יש תפקיד: <b>מנהל</b> מנהל את משק הבית (הזמנות, תפקידים ותשלומים), <b>שותף</b> מוסיף, אוסף ומאשר בקשות, ו<b>מבקש</b> מבקש מוצרים שמחכים לאישור של מנהל או שותף. בעמוד משק הבית רואים את התפקיד של כל אחד, ולחיצה על אדם פותחת את הפעולות עליו.'},
   {icon:'📋', title:'רשימות קניות', body:'במשק בית אחד אפשר לפתוח כמה רשימות (למשל "סופר שבועי" ו"פארם"). רשימה אחת אפשר לסמן כ<b>ראשית</b>, וההוספה המהירה בעמוד הבית נכנסת אליה. אחרי "סיום קניות" הרשימה עוברת ל"קניות קודמות" ונשארת לקריאה בלבד.'},
   {icon:'➕', title:'הוספת מוצרים', body:'לוחצים על + ומקלידים שם מוצר. האפליקציה מנחשת קטגוריה ואימוג׳י מתאים לבד — מילון מקומי מיידי, ואם הוא לא מזהה את המוצר, AI משדרג את הסיווג ברקע תוך כמה שניות בלי לעכב את ההוספה. אם המוצר כבר ברשימה, תופיע התראה עדינה עם אפשרות להוסיף בכל זאת.'},
@@ -1158,7 +1168,7 @@ he: [
 ],
 en: [
   {icon:'🏘️', title:'Households and fridges', body:'If you belong to more than one household, you start on the <b>households</b> screen: each household is drawn as a little house, and tapping one opens its lists. You can always get back there from the household name at the top. The lists themselves are drawn as fridges: an active list is a fridge with its door open, up top, and a closed trip is a shut fridge below, with the date it closed.'},
-  {icon:'🏠', title:'Three tabs', body:'The bar at the bottom has three fixed places: <b>Home</b> (what now: the list to continue, what waits for you, what just happened), <b>Lists</b> (active lists and past shopping by month), and <b>Household</b> (who\'s here, invites, your Bit link, switching households). An open list takes the whole screen; the arrow at the top takes you back.'},
+  {icon:'🏠', title:'Getting around', body:'The path is simple: <b>households</b> → that household\'s fridges → a list. Every screen has a back arrow at the top that steps back one screen, and so does the phone\'s back button. On the fridges screen, the people button opens the household page: who\'s here, invites, your Bit link and switching households.'},
   {icon:'👥', title:'Roles', body:'Everyone in a household has a role: a <b>Manager</b> runs the household (invites, roles, payments), a <b>Partner</b> adds, collects and approves requests, and a <b>Requester</b> asks for items that wait for a manager or partner to approve. The Household tab shows everyone\'s role; tap a person for actions.'},
   {icon:'📋', title:'Shopping lists', body:'One household can have several lists at once (e.g. "weekly groceries" and "pharmacy"). An "open" list accepts new items and checkmarks; once you close it, it moves to history as read-only.'},
   {icon:'➕', title:'Adding items', body:'Tap + and type an item name. The app guesses a category and emoji instantly from a local dictionary, and if it doesn’t recognize the item, AI upgrades the category in the background within seconds without ever delaying the add. If the item is already on the list, a gentle warning lets you add it anyway if you really mean to.'},
