@@ -551,31 +551,26 @@ body:not([data-screen="houses"]):not([data-screen="lists"]) .get-app{display:non
 .place-wrap .more svg{width:16px;height:16px}
 .place.closed svg{filter:saturate(.75)}
 .place.new .nm{color:var(--accent)}
-/* the lists screen is a fridge door: cream enamel, a chrome handle down the side, magnet labels,
-   and every list a different kind of note pinned or taped to it */
-body[data-screen="lists"]{background:var(--wall);background-image:linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px);background-size:26px 26px}
-.big-fridge{--ink:#1E2A2E;--front:#64A0A2;--side:#2B5F7E;position:relative;margin:6px 14px 46px 4px;background:var(--front);border:4px solid var(--ink);border-radius:26px;box-shadow:0 26px 18px -18px rgba(0,0,0,.35)}
-[dir="rtl"] .big-fridge{margin:6px 4px 46px 14px}
-.big-fridge::before{content:"";position:absolute;inset-block:6px 0;inset-inline-start:10px;width:6px;border-radius:3px;background:rgba(255,255,255,.22)}
-.bf-side{position:absolute;top:14px;bottom:8px;inset-inline-end:-16px;width:14px;background:var(--side);border:4px solid var(--ink);border-inline-start:0;border-start-end-radius:14px;border-end-end-radius:14px}
-.bf-freezer{position:relative;min-height:104px;padding:18px 22px 12px 56px;display:flex;align-items:flex-end;justify-content:space-between}
-[dir="rtl"] .bf-freezer{padding:18px 22px 12px 56px}
-.bf-trim{height:10px;background:#C9D3D4;border-block:3px solid var(--ink)}
-.bf-door{position:relative;min-height:62vh;padding:18px 20px 30px 56px}
-.bf-handle{position:absolute;top:18px;inset-inline-end:18px;width:13px;height:58px;border-radius:7px;background:#D9822B;border:3px solid var(--ink)}
-.bf-handle.long{top:26px;height:130px}
-.bf-foot{position:absolute;bottom:-17px;width:34px;height:14px;background:#8A5A3A;border:3px solid var(--ink);border-top:0;border-radius:0 0 6px 6px}
-.bf-foot.a{inset-inline-start:28px}.bf-foot.b{inset-inline-end:34px}
-.bf-magnets{position:absolute;top:16px;inset-inline-start:26px;display:flex;gap:10px}
-.mg{display:block;width:22px;height:22px;border:2.5px solid var(--ink);border-radius:50%;box-shadow:0 2px 0 rgba(0,0,0,.25)}
-.mg.lemon{background:#F2C14E;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;transform:rotate(-20deg)}
-.mg.apple{background:#E0463A}
-.mg.heart{background:#F48FB1;border-radius:6px;transform:rotate(45deg) scale(.8)}
+/* the lists screen is the fridge itself: one flat enamel colour over the whole screen, no drawn outline.
+   Animal magnets and kids' drawings of the family sit along the sides, and the notes hang between them */
+:root{--enamel:#D7EBE6;--enamel-ink:#1E2A2E}
+:root[data-theme="dark"]{--enamel:#22373A;--enamel-ink:#0E1517}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--enamel:#22373A;--enamel-ink:#0E1517}}
+body[data-screen="lists"]{background:var(--enamel)}
+.fridge-face{position:relative;min-height:72vh;padding:6px 40px 24px;margin-bottom:8px}
+.fridge-face > *{position:relative;z-index:1}
+.fridge-face > .deco{position:absolute;z-index:0;pointer-events:none}
+.deco.mag svg{display:block;width:40px;height:40px;filter:drop-shadow(0 3px 2px rgba(0,0,0,.28))}
+.deco.photo{width:62px;padding:4px 4px 12px;background:#FFFDF6;border-radius:2px;box-shadow:0 4px 8px rgba(0,0,0,.2)}
+.deco.photo svg{display:block;width:100%;height:auto;border:1.5px solid #CFC7B5}
+.deco.photo::after{content:"";position:absolute;top:-8px;left:50%;width:15px;height:15px;margin-left:-7.5px;border-radius:50%;background:var(--mg,#E0463A);border:2px solid var(--enamel-ink);box-shadow:0 2px 2px rgba(0,0,0,.3)}
+.deco-in{break-inside:avoid;display:flex;justify-content:center;padding:10px 0 18px}
+.deco-in .deco{position:relative}
+.deco-in .deco.photo{width:96px;padding:6px 6px 18px}
 .magnet-label{display:block;width:fit-content;margin:6px 0 14px;padding:4px 14px;background:#FFF7E0;color:#1E2A2E;border:2.5px solid #1E2A2E;font-size:.92rem;font-weight:800;border-radius:9px;box-shadow:0 3px 0 rgba(0,0,0,.22);transform:rotate(-1.5deg)}
-.bf-freezer .magnet-label{margin:0}
 #lists-closed-box{margin-top:14px}
-.big-fridge .empty-line{color:#fff;font-weight:700}
-.big-fridge .note-wrap .more{background:rgba(255,255,255,.8)}
+.fridge-face .empty-line{font-weight:700}
+.fridge-face .note-wrap .more{background:rgba(255,255,255,.8)}
 .notes{columns:2;column-gap:16px;padding:8px 6px 0;--hand:"Playpen Sans Hebrew","Assistant",system-ui,sans-serif}
 :root[data-itemfont="plain"] .notes{--hand:"Assistant",system-ui,sans-serif}
 .note-wrap{break-inside:avoid;position:relative;display:block;padding-top:8px;margin-bottom:16px}
@@ -709,25 +704,15 @@ body[data-screen="lists"] .sec-h{color:var(--fg)}
   </section>
 
   <section class="view" id="view-lists" hidden>
-    <!-- one big cartoon fridge: the freezer door up top, the lists pinned to the big door below -->
-    <div class="big-fridge">
-      <div class="bf-side" aria-hidden="true"></div>
-      <div class="bf-freezer">
-        <span class="bf-handle" aria-hidden="true"></span>
-        <span class="bf-magnets" aria-hidden="true"><i class="mg lemon"></i><i class="mg apple"></i><i class="mg heart"></i></span>
-        <h2 class="magnet-label" id="lists-open-title">פעילות</h2>
-      </div>
-      <div class="bf-trim" aria-hidden="true"></div>
-      <div class="bf-door">
-        <span class="bf-handle long" aria-hidden="true"></span>
-        <div class="notes" id="lists-open"></div>
-        <p class="empty-line" id="lists-empty" hidden><span id="lists-empty-text">אין עדיין רשימות פעילות.</span></p>
-        <section id="lists-closed-box" hidden>
-          <h2 class="magnet-label" id="lists-closed-title">קניות קודמות</h2>
-          <div class="notes" id="lists-closed"></div>
-        </section>
-      </div>
-      <span class="bf-foot a" aria-hidden="true"></span><span class="bf-foot b" aria-hidden="true"></span>
+    <!-- the whole screen is the fridge door: magnets and drawings along the sides (added by renderLists), notes between -->
+    <div class="fridge-face" id="fridge-face">
+      <h2 class="magnet-label" id="lists-open-title">פעילות</h2>
+      <div class="notes" id="lists-open"></div>
+      <p class="empty-line" id="lists-empty" hidden><span id="lists-empty-text">אין עדיין רשימות פעילות.</span></p>
+      <section id="lists-closed-box" hidden>
+        <h2 class="magnet-label" id="lists-closed-title">קניות קודמות</h2>
+        <div class="notes" id="lists-closed"></div>
+      </section>
     </div>
     <section class="sec" id="home-waiting-section" hidden>
       <h2 class="sec-h" id="home-waiting-h">מחכה לך</h2>
@@ -1770,6 +1755,58 @@ function noteHtml(l, opts){
     ${closed?`<svg class="n-cross" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M8 10 92 90M90 12 10 88"/></svg>`:''}
   </button>${opts.more||''}</div>`;
 }
+/* fridge decorations: drawn animal magnets and kids' drawings of the family, in the same ink style as the houses */
+const INK='stroke="#1E2A2E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"';
+const EYES=(x1,x2,y)=>`<circle cx="${x1}" cy="${y}" r="2.6" fill="#1E2A2E"/><circle cx="${x2}" cy="${y}" r="2.6" fill="#1E2A2E"/>`;
+const ANIMALS=[
+  // cat
+  `<path d="M9 20 L11 6 L20 14 Q24 13 28 14 L37 6 L39 20 Q42 40 24 41 Q6 40 9 20Z" fill="#F2A541" ${INK}/>${EYES(18,30,24)}<path d="M22 29 L26 29 L24 31Z" fill="#E0637A"/><path d="M24 31v2M8 28h8M8 32l8-1M40 28h-8M40 32l-8-1" fill="none" ${INK} stroke-width="1.6"/>`,
+  // dog
+  `<path d="M12 12 Q4 14 6 30 Q12 30 13 22Z" fill="#8A5A3A" ${INK}/><path d="M36 12 Q44 14 42 30 Q36 30 35 22Z" fill="#8A5A3A" ${INK}/><path d="M12 14 Q24 6 36 14 Q41 38 24 41 Q7 38 12 14Z" fill="#D9A877" ${INK}/>${EYES(19,29,22)}<ellipse cx="24" cy="30" rx="4" ry="3" fill="#1E2A2E"/><path d="M24 33q0 4 4 4" fill="none" ${INK} stroke-width="1.8"/>`,
+  // frog
+  `<circle cx="15" cy="13" r="7" fill="#7CC36A" ${INK}/><circle cx="33" cy="13" r="7" fill="#7CC36A" ${INK}/><path d="M6 26 Q6 16 24 17 Q42 16 42 26 Q42 40 24 40 Q6 40 6 26Z" fill="#7CC36A" ${INK}/><circle cx="15" cy="13" r="3" fill="#fff"/><circle cx="33" cy="13" r="3" fill="#fff"/>${EYES(15,33,13)}<path d="M15 29 Q24 36 33 29" fill="none" ${INK} stroke-width="2"/><circle cx="12" cy="31" r="2.4" fill="#F48FB1"/><circle cx="36" cy="31" r="2.4" fill="#F48FB1"/>`,
+  // bear
+  `<circle cx="11" cy="11" r="6" fill="#A0663E" ${INK}/><circle cx="37" cy="11" r="6" fill="#A0663E" ${INK}/><circle cx="24" cy="26" r="16" fill="#A0663E" ${INK}/><ellipse cx="24" cy="31" rx="8" ry="6" fill="#E8C9A0" ${INK} stroke-width="2"/>${EYES(18,30,22)}<ellipse cx="24" cy="29" rx="2.8" ry="2" fill="#1E2A2E"/>`,
+  // pig
+  `<path d="M10 16 L9 6 L18 11Z M38 16 L39 6 L30 11Z" fill="#F7A8B8" ${INK}/><circle cx="24" cy="25" r="16" fill="#F7A8B8" ${INK}/><ellipse cx="24" cy="29" rx="7" ry="5" fill="#F48FB1" ${INK} stroke-width="2"/><circle cx="21.5" cy="29" r="1.4" fill="#1E2A2E"/><circle cx="26.5" cy="29" r="1.4" fill="#1E2A2E"/>${EYES(17,31,20)}`,
+  // fish
+  `<path d="M6 24 Q18 8 34 24 Q18 40 6 24Z" fill="#5BB4E5" ${INK}/><path d="M33 24 L43 15 L43 33Z" fill="#F2A541" ${INK}/><circle cx="14" cy="22" r="2.6" fill="#1E2A2E"/><path d="M20 18 Q23 24 20 30M25 19 Q28 24 25 29" fill="none" ${INK} stroke-width="1.6"/>`,
+  // chick
+  `<circle cx="24" cy="25" r="16" fill="#F7D547" ${INK}/><path d="M20 8 Q24 2 24 10 Q27 3 28 9" fill="none" ${INK} stroke-width="2"/><path d="M20 27 L28 27 L24 33Z" fill="#F2A541" ${INK} stroke-width="2"/>${EYES(18,30,21)}<path d="M8 27 Q4 22 9 20M40 27 Q44 22 39 20" fill="none" ${INK} stroke-width="2"/>`,
+  // bunny
+  `<path d="M16 18 Q10 2 16 2 Q22 2 20 16Z M32 18 Q38 2 32 2 Q26 2 28 16Z" fill="#fff" ${INK}/><circle cx="24" cy="28" r="14" fill="#fff" ${INK}/>${EYES(19,29,26)}<path d="M22 31 L26 31 L24 33Z" fill="#F48FB1"/><circle cx="14" cy="32" r="2.4" fill="#F7B8C8"/><circle cx="34" cy="32" r="2.4" fill="#F7B8C8"/>`
+];
+// little stick people for the drawings: x, height, skin/shirt colour, dress or not
+const kid=(x,h,c,dress)=>{const y=46-h, r=h*.17;
+  return `<circle cx="${x}" cy="${y+r}" r="${r}" fill="#F6D2B0" stroke="#1E2A2E" stroke-width="1.3"/>`
+   + (dress?`<path d="M${x} ${y+2*r} L${x-h*.2} ${y+h*.7} L${x+h*.2} ${y+h*.7}Z" fill="${c}" stroke="#1E2A2E" stroke-width="1.3" stroke-linejoin="round"/>`
+           :`<path d="M${x} ${y+2*r} V${y+h*.68}" stroke="${c}" stroke-width="3.2" stroke-linecap="round"/>`)
+   + `<path d="M${x-h*.22} ${y+h*.42} L${x} ${y+h*.36} L${x+h*.22} ${y+h*.42} M${x-h*.12} ${y+h} L${x} ${y+h*.68} L${x+h*.12} ${y+h}" fill="none" stroke="#1E2A2E" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>`;};
+const SUN='<circle cx="50" cy="9" r="5" fill="#F7D547" stroke="#E0A020" stroke-width="1.2"/>';
+const PHOTOS=[
+  // family of four under the sun
+  `<rect width="60" height="50" fill="#DDF0FB"/><rect y="44" width="60" height="6" fill="#9ED37E"/>${SUN}${kid(10,30,'#3E7CC4')}${kid(22,27,'#E0637A',1)}${kid(34,17,'#F2A541')}${kid(44,14,'#7CC36A',1)}`,
+  // in front of the house
+  `<rect width="60" height="50" fill="#FFF3D6"/><rect y="44" width="60" height="6" fill="#9ED37E"/><path d="M4 44V24h20v20Z" fill="#F2B880" stroke="#1E2A2E" stroke-width="1.3"/><path d="M1 25 L14 13 L27 25Z" fill="#E0463A" stroke="#1E2A2E" stroke-width="1.3" stroke-linejoin="round"/><rect x="11" y="33" width="6" height="11" fill="#8A5A3A"/>${kid(36,26,'#3E7CC4')}${kid(48,22,'#B07CD8',1)}`,
+  // at the beach
+  `<rect width="60" height="50" fill="#CDEBFA"/><rect y="32" width="60" height="9" fill="#5BB4E5"/><rect y="41" width="60" height="9" fill="#F3DFA8"/>${SUN}${kid(16,24,'#E0637A',1)}${kid(30,16,'#F2A541')}${kid(42,26,'#2F7D5B')}`,
+  // with the dog
+  `<rect width="60" height="50" fill="#EAF6E0"/><rect y="44" width="60" height="6" fill="#9ED37E"/><path d="M8 20 q4-8 8 0" fill="none" stroke="#7A9FC9" stroke-width="1.3"/>${kid(16,28,'#E0637A',1)}${kid(30,18,'#3E7CC4')}<ellipse cx="45" cy="40" rx="7" ry="4" fill="#D9A877" stroke="#1E2A2E" stroke-width="1.3"/><circle cx="52" cy="35" r="3.6" fill="#D9A877" stroke="#1E2A2E" stroke-width="1.3"/><path d="M41 44v2M49 44v2M38 39 l-3-3" stroke="#1E2A2E" stroke-width="1.3" stroke-linecap="round"/>`
+];
+const MAG_COLORS=['#E0463A','#3E7CC4','#F2A541','#7CC36A','#B07CD8'];
+const animalSvg=i=>`<svg viewBox="0 0 48 48" aria-hidden="true">${ANIMALS[i%ANIMALS.length]}</svg>`;
+const photoHtml=(i,style='')=>`<div class="deco photo" style="--mg:${MAG_COLORS[i%MAG_COLORS.length]};${style}"><svg viewBox="0 0 60 50" aria-hidden="true">${PHOTOS[i%PHOTOS.length]}</svg></div>`;
+// side layout down both edges: a magnet or a photo every ~13% of the height, alternating sides, a little tilted
+function fridgeDeco(seed){
+  let out='';
+  for(let k=0;k<8;k++){
+    const side=(k%2)?'right':'left', top=2+k*12.5, rot=((noteHash(seed+':'+k)%15)-7);
+    const pos=`top:${top}%;${side}:${k%4<2?-6:-12}px;transform:rotate(${rot}deg)`;
+    out += (k%3===1) ? photoHtml(seed.length+k,pos)
+      : `<span class="deco mag" style="${pos}">${animalSvg(noteHash(seed)+k)}</span>`;
+  }
+  return out;
+}
 function renderLists(lists, canManage, mainId, counts){
   const t=CS.t, items=CS.noteItems||{};
   const open=(lists||[]).filter(l=>l.status==='open');
@@ -1781,6 +1818,18 @@ function renderLists(lists, canManage, mainId, counts){
   $('lists-empty').hidden = !!open.length || canManage;
   $('lists-closed-box').hidden = !closed.length;
   $('lists-closed').innerHTML = closed.map(l=>noteHtml(l,{items:items[l.id],more:more(l)})).join('');
+  // magnets and family drawings: once per household, behind the notes
+  const face=$('fridge-face'), seed=String((lists&&lists[0]&&lists[0].household_id)||'home');
+  if(face.dataset.deco!==seed){
+    face.querySelectorAll(':scope > .deco').forEach(n=>n.remove());
+    face.insertAdjacentHTML('afterbegin', fridgeDeco(seed)); face.dataset.deco=seed;
+  }
+  // and one drawing hanging between the notes, among the old trips
+  if(closed.length>=2){
+    const cut=Math.min(2,closed.length);
+    const w=$('lists-closed').children[cut-1];
+    if(w) w.insertAdjacentHTML('afterend', `<div class="deco-in" aria-hidden="true">${photoHtml(noteHash(seed))}</div>`);
+  }
 }
 
 /* ---------- view mode: grouped-by-category vs flat+draggable ---------- */
