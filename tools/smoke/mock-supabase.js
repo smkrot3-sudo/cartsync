@@ -73,6 +73,11 @@ const rpc=async(n,a)=>{
  if(n==='is_admin') return {data:ME==='u1',error:null};
  if(n==='set_main_list'){DB.households.find(h=>h.id===a.p_household).main_list_id=a.p_list_id;return {data:null,error:null}}
  if(n==='create_shopping_list'){const id='l'+Date.now();DB.shopping_lists.push({id,household_id:a.p_household,name:a.p_name,status:'open',created_at:new Date().toISOString()});return {data:id,error:null}}
+ if(n==='cart_month_stats') return {data:{month:a.p_month,household:'בית רוט',trips:6,spent:2140.5,spent_prev:2390,lists_new:7,added:118,bought:97,requests:9,
+  biggest:{name:'סופר יום חמישי',total:486.4},top_items:[{text:'חלב',n:6},{text:'חלות',n:4},{text:'בננות',n:3},{text:'במבה',n:3},{text:'ביצים',n:2}],
+  top_cats:[{cat:'produce',n:31},{cat:'dairy',n:22},{cat:'bakery',n:14},{cat:'snacks',n:9}],busiest_dow:4,
+  members:[{user_id:'u2',name:'נטע',added:51,bought:44,trips:3,paid:520,collected:0},{user_id:'u1',name:'שמואל',added:40,bought:38,trips:3,paid:0,collected:2140.5},{user_id:'u3',name:'יואב',added:9,bought:0,trips:0,paid:0,collected:0}],
+  me:{days:17,steady:true},ai_text:window.__MOCK_AI||null},error:null};
  return {data:null,error:null};
 };
 const presence={u2:[{list:'l1'}]};
