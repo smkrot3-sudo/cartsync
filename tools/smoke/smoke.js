@@ -60,8 +60,6 @@ p=await ctx('u2'); await shot(p,'24-fridges-editor',true); await T(p,'#lists-clo
 // close trip
 p=await ctx('u1'); await T(p,'#lists-open [data-list=l1]'); await T(p,'#list-finish'); await shot(p,'26-close-trip');
 // dark + english
-p=await ctx('u1',{addInit:()=>{window.__MOCK_AI='שמואל, איזה חודש! 6 קניות, וחלב הופיע ברשימה 6 פעמים, אז אולי שווה לקנות שניים בכל פעם 🥛. נטע הייתה האלופה של החודש עם 51 פריטים, ויום חמישי הוא בבירור יום הקניות שלכם. ההוצאה ירדה ב-250 ₪ לעומת ספטמבר, כל הכבוד.'}});
-await T(p,'#tb-people'); await T(p,'#hh-month'); await shot(p,'31-month-summary'); await p.evaluate(()=>document.querySelector('#sheet').scrollTop=2000); await shot(p,'31b-month-summary-end');
 p=await ctx('u1',{dark:true,stayOnHouses:true}); await shot(p,'27-households-dark'); await T(p,'[data-house=h1]'); await shot(p,'27b-fridges-dark',true); await T(p,'#lists-open [data-list=l1]'); await shot(p,'28-list-dark');
 p=await ctx('u1',{addInit:()=>{try{localStorage.setItem('cs-lang','en')}catch(e){}}}); await shot(p,'29-fridges-en',true); await T(p,'#lists-open [data-list=l1]'); await shot(p,'30-list-en');
 await b.close();

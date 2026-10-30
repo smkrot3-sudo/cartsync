@@ -618,38 +618,6 @@ body[data-screen="lists"]{background:var(--enamel)}
 .note-wrap .more{position:absolute;z-index:2;inset-block-end:4px;inset-inline-end:2px;width:30px;height:30px;border:0;border-radius:50%;background:rgba(255,255,255,.75);color:#2A2F3A;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .note-wrap .more svg{width:16px;height:16px}
 body[data-screen="lists"] .sec-h{color:var(--fg)}
-/* ---------- monthly summary ---------- */
-.ms-open{margin-top:10px}
-.ms{--ms-ink:var(--fg)}
-.ms-hero{border-radius:18px;padding:18px 16px 16px;margin-bottom:12px;background:linear-gradient(135deg,#2F7D5B,#3E9E73 55%,#7CC08F);color:#fff;box-shadow:0 8px 20px rgba(47,125,91,.25)}
-.ms-hero small{display:block;opacity:.85;font-weight:700;font-size:.82rem}
-.ms-hero h2{margin:2px 0 0;font-size:1.5rem;line-height:1.2}
-.ms-tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.ms-tile{background:var(--soft);border-radius:14px;padding:12px}
-.ms-tile b{display:block;font-size:1.5rem;line-height:1.1;font-variant-numeric:tabular-nums}
-.ms-tile span{font-size:.8rem;color:var(--muted);font-weight:700}
-.ms-tile em{display:block;font-style:normal;font-size:.74rem;font-weight:700;margin-top:4px;color:var(--muted)}
-.ms-tile em.up{color:#B23A3A}.ms-tile em.down{color:#2F7D5B}
-.ms-sec{margin:14px 0 6px;font-size:.88rem;font-weight:800;color:var(--muted)}
-.ms-chips{display:flex;flex-wrap:wrap;gap:6px}
-.ms-chip{background:var(--soft);border-radius:999px;padding:5px 11px;font-weight:700;font-size:.88rem}
-.ms-chip i{font-style:normal;color:var(--muted);font-weight:600;margin-inline-start:4px}
-.ms-bar{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;margin:6px 0;font-size:.88rem;font-weight:700}
-.ms-bar .track{height:10px;border-radius:5px;background:var(--soft);overflow:hidden}
-.ms-bar .track i{display:block;height:100%;border-radius:5px;background:var(--accent)}
-.ms-who{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
-.ms-who:last-child{border-bottom:0}
-.ms-who .avatar{flex:none}
-.ms-who b{display:block}
-.ms-who small{color:var(--muted);font-size:.8rem}
-.ms-facts{margin:10px 0 0;padding:0;list-style:none;font-size:.9rem}
-.ms-facts li{padding:3px 0}
-.ms-ai{margin-top:14px;border-radius:16px;padding:14px;background:linear-gradient(135deg,#FFF6D8,#FDE7C2);color:#3B2F22;line-height:1.55;font-size:.95rem}
-.ms-ai b{display:block;margin-bottom:6px}
-.ms-ai.dim{background:var(--soft);color:var(--muted);font-size:.84rem}
-.ms-ai .dots::after{content:"…";animation:msdots 1.2s steps(3) infinite}
-@keyframes msdots{0%{content:"."}50%{content:".."}100%{content:"..."}}
-.ms .btn.wide{margin-top:14px}
 /* the list's own strip: who's in this household (a ring = has this list open now), and the one-list/categories switch */
 .list-people{display:flex;align-items:center;gap:10px;margin:2px 0 10px}
 .list-people .avatars{display:flex;padding-inline-start:9px;flex:1;min-width:0}
@@ -777,7 +745,6 @@ body[data-screen="lists"] .sec-h{color:var(--fg)}
     <div class="card hh-summary">
       <h2 id="hh-title">…</h2>
       <p class="sub" id="hh-stats"></p>
-      <button class="btn ghost ms-open" id="hh-month">📊 סיכום החודש</button>
     </div>
     <p class="role-banner" id="hh-role-banner"></p>
     <section class="sec">
@@ -961,11 +928,6 @@ he: {
   mainList:'ראשית', setMainList:'⭐ לסמן כרשימה ראשית', unsetMainList:'להסיר סימון ראשית', mainListSet:'⭐ זו הרשימה הראשית עכשיו. הוספה מהירה מהבית נכנסת אליה.', mainListUnset:'הסימון הוסר',
   listMenuShare:'📤 שליחת סיכום', listMenuView:'תצוגה: רשימה אחת בלי קטגוריות', listMenuViewGrouped:'תצוגה: לפי קטגוריות', listMenuHide:'הסתרת מה שנאסף', listMenuShow:'הצגת מה שנאסף ({n})', listMenuDelete:'🗑️ מחיקת הרשימה', listDeletedUndo:'🗑️ הרשימה נמחקה',
   pendingCount:'{n} בקשות לאישור', pendingCountOne:'בקשה אחת לאישור', myRequests:'בקשות שמחכות לאישור', pendingWaiting:'ממתין',
-  msTitle:'סיכום {m}', msSoFar:'{m} עד עכשיו', msOpen:'📊 סיכום החודש', msTrips:'קניות', msSpent:'הוצאה', msAdded:'פריטים נוספו', msBought:'פריטים נאספו',
-  msVsPrev:'{d} מהחודש שעבר', msUp:'↑ {a}', msDown:'↓ {a}', msSame:'כמו בחודש שעבר', msTop:'הכי הרבה ברשימות', msCats:'מה קנינו', msWho:'מי עשה מה',
-  msWhoLine:'הוסיף {a} · אסף {b}', msTripsBy:'סגר {n} קניות', msPaid:'שילם {a}', msBiggest:'הקנייה הגדולה: {n} ({a})', msBusy:'היום הכי עמוס: {d}', msMyDays:'היית באפליקציה ב-{n} ימים החודש',
-  msAi:'✨ כמה מילים מהעוזר', msAiLoading:'העוזר כותב…', msAiSteady:'כמה מילים מהעוזר מגיעות למי שמשתמש באפליקציה באופן קבוע (לפחות 8 ימים בחודש, ב-3 שבועות שונים).', msAiLater:'כמה מילים מהעוזר יגיעו בערב היום האחרון של החודש.',
-  msShare:'📤 לשלוח את הסיכום', msEmpty:'לא היו קניות החודש. בחודש הבא 💪', msShareHead:'📊 {t} · {h}',
   hhStats:'{p} · {l} רשימות פעילות', hhStatsMonth:' · החודש {a}', peopleCount:'{n} אנשים', peopleOne:'אדם אחד',
   hhMembersH:'מי בבית', hhInvitesH:'הזמנות פתוחות', hhBitH:'תשלומים', hhMoreH:'משקי בית', hhSwitchRow:'החלפת משק בית', hhSwitchSub:'{n} משקי בית בחשבון', hhNewRow:'פתיחת משק בית חדש', hhRenameRow:'שינוי שם משק הבית', hhRenameTitle:'שם משק הבית', hhRenamed:'✅ השם עודכן',
   myBitRow:'קישור הביט שלי', myBitSet:'מחובר ✓. לשם יגיע הכסף כשגובים אחרי קנייה', myBitNone:'עוד לא הוגדר. צריך אותו כדי לגבות כסף אחרי קנייה', myBitTitle:'קישור הביט שלי', myBitSave:'לשמור', myBitSaved:'✅ הקישור נשמר', myBitClear:'להסיר את הקישור',
@@ -1080,11 +1042,6 @@ en: {
   mainList:'Main', setMainList:'⭐ Make this the main list', unsetMainList:'Unmark as main', mainListSet:'⭐ This is the main list now. Quick add on Home goes here.', mainListUnset:'Unmarked',
   listMenuShare:'📤 Share a summary', listMenuView:'View: one list, no categories', listMenuViewGrouped:'View: by category', listMenuHide:'Hide collected', listMenuShow:'Show collected ({n})', listMenuDelete:'🗑️ Delete the list', listDeletedUndo:'🗑️ List deleted',
   pendingCount:'{n} requests to approve', pendingCountOne:'1 request to approve', myRequests:'Requests waiting for approval', pendingWaiting:'Waiting',
-  msTitle:'{m} summary', msSoFar:'{m} so far', msOpen:'📊 Monthly summary', msTrips:'Trips', msSpent:'Spent', msAdded:'Items added', msBought:'Items collected',
-  msVsPrev:'{d} vs last month', msUp:'↑ {a}', msDown:'↓ {a}', msSame:'Same as last month', msTop:'Most on the lists', msCats:'What we bought', msWho:'Who did what',
-  msWhoLine:'added {a} · collected {b}', msTripsBy:'closed {n} trips', msPaid:'paid {a}', msBiggest:'Biggest trip: {n} ({a})', msBusy:'Busiest day: {d}', msMyDays:'You used the app on {n} days this month',
-  msAi:'✨ A few words from the assistant', msAiLoading:'The assistant is writing…', msAiSteady:'A few words from the assistant come to people who use the app regularly (at least 8 days a month, across 3 different weeks).', msAiLater:'A few words from the assistant arrive on the evening of the last day of the month.',
-  msShare:'📤 Share the summary', msEmpty:'No shopping this month. Next month 💪', msShareHead:'📊 {t} · {h}',
   hhStats:'{p} · {l} active lists', hhStatsMonth:' · {a} this month', peopleCount:'{n} people', peopleOne:'1 person',
   hhMembersH:'Who\'s here', hhInvitesH:'Open invites', hhBitH:'Payments', hhMoreH:'Households', hhSwitchRow:'Switch household', hhSwitchSub:'{n} households on this account', hhNewRow:'Start a new household', hhRenameRow:'Rename the household', hhRenameTitle:'Household name', hhRenamed:'✅ Name updated',
   myBitRow:'My Bit link', myBitSet:'Connected ✓. Money you collect goes here', myBitNone:'Not set yet. Needed to collect money after shopping', myBitTitle:'My Bit link', myBitSave:'Save', myBitSaved:'✅ Link saved', myBitClear:'Remove the link',
@@ -2638,8 +2595,6 @@ const isMine=uid=>user && uid===user.id;
 async function renderHousehold(){
   const t=CS.t;
   $('hh-title').textContent=hhName;
-  $('hh-month').textContent=t('msOpen');
-  $('hh-month').onclick=()=>openMonthSummary();
   const paintStats=()=>{
     const now=new Date();
     const month=lists.filter(l=>l.status==='closed'&&l.total&&l.closed_at&&new Date(l.closed_at).getMonth()===now.getMonth()&&new Date(l.closed_at).getFullYear()===now.getFullYear()).reduce((a,l)=>a+(+l.total||0),0);
@@ -2969,7 +2924,6 @@ async function renderFridges(){
   paintRequests();
   fetchHomePay().catch(()=>{});
   fetchFeed().catch(()=>{});
-  maybeShowMonthSummary().catch(()=>{});
 }
 // requests waiting for a manager/partner, per list
 function paintRequests(){
@@ -3235,112 +3189,6 @@ function buildTripSummaryText(){
   notBought.forEach(i=>lines.push('• '+i.text));
   return lines.join('\n');
 }
-/* ---------- monthly summary (owner's request 2026-10-30) ----------
-   From 18:00 on the month's last day (Israel time) until the 7th of the next month, the summary pops up
-   once per household when someone opens the app; the household page can reopen it any time. Numbers come
-   from the cart_month_stats RPC. The "month-summary" edge function adds a few words from the AI, only for
-   steady users (8+ active days across 3+ weeks), once per user and month, and caches them. */
-function israelNow(){
-  const p=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Jerusalem',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',hourCycle:'h23'}).formatToParts(new Date());
-  const g=k=>+p.find(x=>x.type===k).value;
-  return {y:g('year'),m:g('month'),d:g('day'),h:g('hour')};
-}
-const monthKey=(y,m)=>`${y}-${String(m).padStart(2,'0')}-01`;
-// the month whose summary is due now, or null outside the window
-function dueSummaryMonth(){
-  const n=israelNow(), last=new Date(n.y,n.m,0).getDate();
-  if(n.d===last && n.h>=18) return monthKey(n.y,n.m);
-  if(n.d<=7) return n.m===1?monthKey(n.y-1,12):monthKey(n.y,n.m-1);
-  return null;
-}
-const monthName=key=>{ const [y,m]=key.split('-').map(Number); try{ return new Date(y,m-1,15).toLocaleDateString(CS.lang()==='he'?'he-IL':'en-US',{month:'long',year:'numeric'}); }catch(e){ return key; } };
-const DOW_HE=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'], DOW_EN=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-let msShownFor=null;
-async function maybeShowMonthSummary(){
-  const due=dueSummaryMonth(); if(!due||!household) return;
-  const key='cs-ms-'+household+'-'+due;
-  if(msShownFor===key) return; msShownFor=key;
-  try{ if(localStorage.getItem(key)) return; }catch(e){}
-  if(!$('sheet').hidden) return; // don't cover something the person is in the middle of
-  openMonthSummary(due, true);
-}
-async function openMonthSummary(month, auto){
-  const t=CS.t, hh=household, due=dueSummaryMonth();
-  month = month || due || (()=>{ const n=israelNow(); return monthKey(n.y,n.m); })();
-  const ended = month===due; // the month is over (or it's its last evening): the full summary
-  const {data:st,error}=await sb.rpc('cart_month_stats',{p_household:hh,p_month:month});
-  if(error||!st){ if(!auto) toast(CS.authErr(error||{})); return; }
-  if(hh!==household) return;
-  if(auto && !st.trips && !st.added) return; // nothing happened: no need to pop up
-  try{ localStorage.setItem('cs-ms-'+hh+'-'+month,'1'); }catch(e){}
-  if(ended) sb.rpc('cart_month_seen',{p_household:hh,p_month:month}).then(()=>{},()=>{});
-  openSheet(monthSummaryHtml(st, month, ended));
-  $('ms-share').onclick=()=>shareMonthSummary(st, month);
-  // a few words from the assistant: cached, or written now for a steady user once the month is over
-  const box=$('ms-ai');
-  if(st.ai_text){ box.className='ms-ai'; box.innerHTML=`<b>${esc(t('msAi'))}</b>${esc(st.ai_text)}`; return; }
-  if(!ended){ box.className='ms-ai dim'; box.textContent=t('msAiLater'); return; }
-  if(!(st.me&&st.me.steady)){ box.className='ms-ai dim'; box.textContent=t('msAiSteady'); return; }
-  box.className='ms-ai'; box.innerHTML=`<b>${esc(t('msAi'))}</b><span class="dots">${esc(t('msAiLoading').replace('…',''))}</span>`;
-  try{
-    const {data,error:e2}=await sb.functions.invoke('month-summary',{body:{household:hh,month,lang:CS.lang()}});
-    if(e2||!data||!data.ai_text) throw e2||new Error('no text');
-    st.ai_text=data.ai_text;
-    if($('ms-ai')) $('ms-ai').innerHTML=`<b>${esc(t('msAi'))}</b>${esc(data.ai_text)}`;
-  }catch(e){ if($('ms-ai')) $('ms-ai').hidden=true; }
-}
-function monthSummaryHtml(st, month, ended){
-  const t=CS.t, he=CS.lang()==='he', money=CS.fmtMoney;
-  const title=(ended?t('msTitle'):t('msSoFar')).replace('{m}',monthName(month));
-  let vs='';
-  if(st.spent_prev>0 && st.spent>0){
-    const d=Math.round(st.spent-st.spent_prev);
-    vs = d===0?`<em>${esc(t('msSame'))}</em>`
-       : `<em class="${d>0?'up':'down'}">${esc(t('msVsPrev').replace('{d}',(d>0?t('msUp'):t('msDown')).replace('{a}',money(Math.abs(d)))))}</em>`;
-  }
-  const tiles=`<div class="ms-tiles">
-    <div class="ms-tile"><b>${st.trips}</b><span>${esc(t('msTrips'))}</span></div>
-    <div class="ms-tile"><b>${esc(money(st.spent))}</b><span>${esc(t('msSpent'))}</span>${vs}</div>
-    <div class="ms-tile"><b>${st.added}</b><span>${esc(t('msAdded'))}</span></div>
-    <div class="ms-tile"><b>${st.bought}</b><span>${esc(t('msBought'))}</span></div>
-  </div>`;
-  const top=(st.top_items||[]).length?`<div class="ms-sec">${esc(t('msTop'))}</div><div class="ms-chips">${st.top_items.map(x=>`<span class="ms-chip">${esc(x.text)}<i>×${x.n}</i></span>`).join('')}</div>`:'';
-  const cats=st.top_cats||[], maxC=Math.max(1,...cats.map(c=>c.n));
-  const catsHtml=cats.length?`<div class="ms-sec">${esc(t('msCats'))}</div>`+cats.map(c=>{ const k=CS.CATS[c.cat]||CS.CATS.other;
-    return `<div class="ms-bar"><span>${k.emoji} ${esc(he?k.he:k.en)}</span><span class="track"><i style="width:${Math.round(c.n/maxC*100)}%"></i></span><span>${c.n}</span></div>`; }).join(''):'';
-  const who=(st.members||[]).filter(m=>m.added||m.bought||m.trips||m.paid);
-  const whoHtml=who.length?`<div class="ms-sec">${esc(t('msWho'))}</div>`+who.map(m=>{
-    const bits=[t('msWhoLine').replace('{a}',m.added).replace('{b}',m.bought)];
-    if(m.trips) bits.push(t('msTripsBy').replace('{n}',m.trips));
-    if(m.paid>0) bits.push(t('msPaid').replace('{a}',money(m.paid)));
-    return `<div class="ms-who"><span class="avatar" style="background:${CS.personColor(m.user_id)}" aria-hidden="true">${esc(CS.initials(m.name||'?'))}</span><div><b>${esc(m.name||'?')}</b><small>${esc(bits.join(' · '))}</small></div></div>`;
-  }).join(''):'';
-  const facts=[];
-  if(st.biggest&&st.biggest.total) facts.push(t('msBiggest').replace('{n}',st.biggest.name).replace('{a}',money(st.biggest.total)));
-  if(st.busiest_dow!=null) facts.push(t('msBusy').replace('{d}',(he?DOW_HE:DOW_EN)[st.busiest_dow]));
-  if(st.me&&st.me.days) facts.push(t('msMyDays').replace('{n}',st.me.days));
-  const body=(st.trips||st.added)
-    ? tiles+top+catsHtml+whoHtml+(facts.length?`<ul class="ms-facts">${facts.map(f=>`<li>• ${esc(f)}</li>`).join('')}</ul>`:'')
-    : `<p class="sub">${esc(t('msEmpty'))}</p>`;
-  return `<div class="ms">${sheetHead('')}
-    <div class="ms-hero"><small>${esc(st.household||hhName)}</small><h2>${esc(title)}</h2></div>
-    ${body}
-    <div class="ms-ai dim" id="ms-ai"></div>
-    <button class="btn wide" id="ms-share">${esc(t('msShare'))}</button>
-  </div>`;
-}
-async function shareMonthSummary(st, month){
-  const t=CS.t, money=CS.fmtMoney;
-  const lines=[t('msShareHead').replace('{t}',t('msTitle').replace('{m}',monthName(month))).replace('{h}',st.household||hhName),
-    `🛒 ${t('msTrips')}: ${st.trips}`, `💰 ${t('msSpent')}: ${money(st.spent)}`, `📝 ${t('msAdded')}: ${st.added}`, `✅ ${t('msBought')}: ${st.bought}`];
-  if((st.top_items||[]).length) lines.push(`⭐ ${t('msTop')}: ${st.top_items.map(x=>x.text).join(', ')}`);
-  if(st.ai_text) lines.push('', st.ai_text);
-  const text=lines.join('\n');
-  if(window.CartApp && window.CartApp.shareText){ try{ window.CartApp.shareText(text); return; }catch(e){} }
-  if(navigator.share){ try{ await navigator.share({title:CS.t('appName'),text}); }catch(e){} return; }
-  window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');
-}
-
 async function shareTripSummary(){
   const text=buildTripSummaryText();
   if(window.CartApp && window.CartApp.shareText){
