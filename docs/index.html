@@ -24,6 +24,65 @@
 @font-face{font-family:"Suez One";src:url(fonts/suez-one-latin-400-normal.woff2) format("woff2");font-display:swap}
 @font-face{font-family:"Rubik Wet Paint";src:url(fonts/rubik-wetpaint-hebrew.woff2) format("woff2");unicode-range:U+0307-0308,U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F;font-display:swap}
 @font-face{font-family:"Rubik Wet Paint";src:url(fonts/rubik-wetpaint-latin.woff2) format("woff2");font-display:swap}
+/* ---------- 2026-11-07 extras ---------- */
+@keyframes check-pop{0%{transform:scale(.55) rotate(-14deg)}55%{transform:scale(1.3) rotate(5deg)}100%{transform:scale(1) rotate(-2deg)}}
+@keyframes row-glow{from{box-shadow:inset 0 0 0 999px color-mix(in srgb,var(--pen-ok,#2E8B57) 22%,transparent)}to{box-shadow:inset 0 0 0 999px transparent}}
+.item.just-checked .check{animation:check-pop .45s cubic-bezier(.3,1.6,.5,1)}
+.item.just-checked{animation:row-glow .8s ease-out}
+.cart-run{position:fixed;inset:0;z-index:70;pointer-events:none;overflow:hidden}
+.cart-run .cart{position:absolute;bottom:22%;font-size:4rem;inset-inline-start:-90px;animation:cart-drive 1.6s cubic-bezier(.45,.05,.4,1) forwards}
+[dir="rtl"] .cart-run .cart{transform:scaleX(1)}
+@keyframes cart-drive{0%{inset-inline-start:-90px;transform:translateY(0)}20%{transform:translateY(-6px)}40%{transform:translateY(0)}60%{transform:translateY(-6px)}100%{inset-inline-start:calc(100vw + 20px);transform:translateY(0)}}
+.cart-run .conf{position:absolute;top:-40px;left:var(--x);font-size:1.5rem;animation:conf-fall 1.9s ease-in var(--d) forwards}
+@keyframes conf-fall{to{transform:translateY(105vh) rotate(var(--r));opacity:.2}}
+.collectors{list-style:none;margin:0 0 6px;padding:0;display:flex;flex-direction:column;gap:6px}
+.collectors li{display:flex;align-items:center;gap:10px;background:var(--soft);border-radius:12px;padding:8px 12px}
+.collectors li b{flex:1}.collectors li .n{color:var(--muted);font-size:.9rem}
+.list-extras{display:flex;flex-direction:column;gap:8px;margin:8px 0 2px}
+.list-extras .ex-row{display:flex;gap:8px;flex-wrap:wrap}
+.list-extras .chip-btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.ex-note{margin:0;font-size:.86rem;color:var(--muted)}
+.ex-note.store{color:var(--fg);background:color-mix(in srgb,var(--accent) 12%,var(--surface));border-radius:12px;padding:8px 12px;font-weight:600}
+.ex-card{background:var(--surface);border-radius:14px;box-shadow:var(--shadow);padding:10px 12px}
+.ex-card p{margin:0 0 6px;font-size:.92rem}
+.ex-card.hol{background:linear-gradient(135deg,color-mix(in srgb,#F2C14E 22%,var(--surface)),var(--surface))}
+.sugg{display:flex;gap:6px;flex-wrap:wrap}
+.sugg .chip{border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:999px;padding:6px 11px;font:inherit;font-size:.86rem;display:inline-flex;align-items:center;gap:4px;cursor:pointer}
+.sugg .chip small{color:var(--muted);font-size:.75rem}
+.sugg .chip button{all:unset;cursor:pointer;color:var(--muted);padding:0 2px}
+.sugg-h{margin:10px 0 6px;font-size:.85rem;color:var(--muted);font-weight:600}
+.add-sugg{margin-top:4px}
+.msg.voice-found{display:flex;flex-direction:column;gap:8px}
+.item-input-row{display:flex;gap:8px;align-items:stretch}
+.item-input-row input{flex:1;min-width:0}
+.mic-btn{flex:none;width:52px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--accent);display:grid;place-items:center;cursor:pointer}
+.mic-btn svg{width:22px;height:22px}
+.mic-btn.listening{background:#E5484D;color:#fff;border-color:#E5484D;animation:mic-pulse 1s ease-in-out infinite}
+@keyframes mic-pulse{50%{box-shadow:0 0 0 8px rgba(229,72,77,.18)}}
+.hol-sticker{position:absolute;top:6px;inset-inline-end:10px;font-size:1.6rem;transform:rotate(-12deg);filter:drop-shadow(0 2px 2px rgba(0,0,0,.15));pointer-events:none;z-index:2}
+[dir="rtl"] .hol-sticker{inset-inline-end:auto;left:10px}
+/* notepad papers — light only; dark mode keeps its own night paper */
+.pad[data-paper="yellow"]{--paper:#FFF3B0;--rule:#E3CC6A;--margin:#E07B6A}
+.pad[data-paper="grid"]{--paper:#FBFCFE;--rule:#C4D4E8;background-image:linear-gradient(#DCE6F3 1px,transparent 1px),linear-gradient(90deg,#DCE6F3 1px,transparent 1px);background-size:22px 22px}
+.pad[data-paper="kraft"]{--paper:#E8D9BC;--rule:#CBB48C;--margin:#B5735A;--ink:#3A2C1D;--pencil:#77664F}
+.pad[data-paper="mint"]{--paper:#E6F5EC;--rule:#B3DAC2;--margin:#E58C8C;--ink:#1E4A34}
+.pad[data-paper="pink"]{--paper:#FDECF1;--rule:#EFC3D0;--margin:#D9879B;--ink:#5A2340}
+:root[data-theme="dark"] .pad[data-paper="grid"]{background-image:none}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pad[data-paper="grid"]{background-image:none}}
+.pad-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.paper-sw{border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:8px;display:flex;flex-direction:column;gap:6px;align-items:center;font:inherit;font-size:.85rem;color:var(--fg);cursor:pointer}
+.paper-sw.active{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 25%,transparent)}
+.pad.mini{display:block;width:100%;height:56px;padding:0;margin:0;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.12);background-color:var(--paper);
+  background-image:repeating-linear-gradient(transparent 0 13px,var(--rule) 13px 14.5px)}
+.pad.mini[data-paper="grid"]{background-image:linear-gradient(#DCE6F3 1px,transparent 1px),linear-gradient(90deg,#DCE6F3 1px,transparent 1px);background-size:10px 10px}
+.pad.mini::before,.pad.mini::after{display:none}
+/* shop mode: big, high-contrast rows you can read from arm's length with a cart in the other hand */
+body.shop-mode .pad{--paper:#FFFFFF!important;--ink:#000000!important;--rule:#7C8BA0!important;--pencil:#3A3A3A!important;background-image:none!important}
+body.shop-mode .pad .item,body.shop-mode .pad .group .item{min-height:62px}
+body.shop-mode .pad .item .t,body.shop-mode .pad .item .t-text{font-size:1.5rem;font-weight:600}
+body.shop-mode .pad .item .check{width:32px;height:32px}
+body.shop-mode .pad .group .group-h{font-size:1.45rem}
+body.shop-mode .pad .who-name{display:none}
 </style>
 <style>
 /* Layout: a fresh green grocery look (soft green app bar, tinted category cards), phone first —
@@ -765,6 +824,7 @@ body[data-screen="lists"] .sec-h{color:var(--fg)}
       <div class="card menu-card">
         <button class="row-btn" id="hh-switch"></button>
         <button class="row-btn" id="hh-rename" hidden></button>
+        <button class="row-btn" id="hh-paper" hidden></button>
         <button class="row-btn" id="hh-new"></button>
       </div>
     </section>
@@ -779,6 +839,7 @@ body[data-screen="lists"] .sec-h{color:var(--fg)}
       <div class="avatars" id="list-avatars"></div>
       <button class="chip-btn" id="view-toggle" type="button"></button>
     </div>
+    <div class="list-extras" id="list-extras" hidden></div>
     <p class="role-banner" id="list-role-banner" hidden></p>
     <div class="search-row" id="search-row" hidden>
       <input id="search-input" class="search-input" placeholder="חיפוש ברשימה…" autocomplete="off">
@@ -877,6 +938,16 @@ he: {
   payEdit:'עריכת סכום', payShare:'שיתוף בוואטסאפ', payStart:'💰 הזנת סכום הקנייה ובקשת תשלום', payOwnerMark:'לסמן תשלום של {n}?', payOwnerUnmark:'לבטל את הסימון של {n}?',
   payHomeH:'תשלומים פתוחים', payHomeRow:'החלק שלך ב"{l}": {a}, ל{n}', payNotify:'💰 בקשת תשלום מ{n} על "{l}"', payNotifyPaid:'💰 תשלום מ{n}: {a}',
   payShareText:'🛒 {l}\nהקנייה יצאה {t}.\n{rows}\nלתשלום בביט: {link}', payMonth:'החודש: {a}', payNoLink:'עוד אין קישור ביט. מי שאסף את הכסף יכול להוסיף אותו.',
+  collectedN:'אסף/ה {n}', whoCollected:'מי אסף הכי הרבה', soundLabel:'צלילים ורטט בסימון', soundOn:'מופעל', soundOff:'כבוי',
+  hol_rh:'ראש השנה', hol_sukkot:'סוכות', hol_hanukkah:'חנוכה', hol_tubishvat:'ט״ו בשבט', hol_purim:'פורים', hol_pesach:'פסח', hol_shavuot:'שבועות',
+  holToday:'היום!', holTomorrow:'מחר', holInDays:'בעוד {n} ימים', usualH:'אולי חסר? בדרך כלל קונים:', usualDays:'{n} ימים', suggestH:'הצעות מהירות',
+  storeOrderNote:'🧭 הקטגוריות מסודרות לפי הסדר שבו אתם עוברים בסופר', addedN:'נוספו {n} מוצרים', requestedN:'נשלחו {n} בקשות', nothingNew:'הכל כבר ברשימה',
+  voiceBtn:'הוספה בקול', voiceListening:'🎤 מקשיב... אפשר לומר כמה מוצרים, למשל: חלב, שתי עגבניות וגבינה צהובה', voiceNothing:'לא שמעתי מוצרים. אפשר לנסות שוב', voiceAddN:'להוסיף {n} מוצרים',
+  paperTitle:'🎨 צבע הפנקס', paperSub:'כל מי שבמשק הבית יראה את הרשימות על הנייר הזה', paperRow:'צבע הפנקס',
+  paper_classic:'קלאסי', paper_yellow:'צהוב', paper_grid:'משבצות', paper_kraft:'ממוחזר', paper_mint:'מנטה', paper_pink:'ורוד',
+  atStoreBtn:'🛒 אני בסופר עכשיו', atStoreMine:'🛒 אני בסופר · לסיים', atStoreOn:'🛒 כולם בבית יודעים שאת/ה בסופר. המסך יישאר דולק',
+  atStoreOther:'🛒 {n} בסופר עכשיו ({ago}). מה שתוסיפו עכשיו יופיע לו/לה מיד', atStoreNotify:'🛒 {n} בסופר עכשיו עם "{l}". חסר משהו? זה הזמן להוסיף',
+  shopModeBtn:'🔍 אותיות גדולות',
   tripClosed:'✅ הרשימה נסגרה', boughtHeader:'נאסף', notBoughtHeader:'חסר',
   homeSub:'כל הרשימות המשותפות של משק הבית, במקום אחד.',
   homeLists:'הרשימות שלי', homeInvite:'להזמין מישהו', homeSwitch:'להחליף משק בית',
@@ -991,6 +1062,16 @@ en: {
   payEdit:'Edit amount', payShare:'Share on WhatsApp', payStart:'💰 Enter the total and request payment', payOwnerMark:'Mark {n} as paid?', payOwnerUnmark:'Unmark {n}?',
   payHomeH:'Open payments', payHomeRow:'Your share of "{l}": {a}, to {n}', payNotify:'💰 {n} requested payment for "{l}"', payNotifyPaid:'💰 {n} marked {a} as paid',
   payShareText:'🛒 {l}\nThe shop came to {t}.\n{rows}\nPay with Bit: {link}', payMonth:'This month: {a}', payNoLink:'No Bit link yet. Whoever collected can add one.',
+  collectedN:'collected {n}', whoCollected:'Who collected the most', soundLabel:'Sounds and buzz on check', soundOn:'On', soundOff:'Off',
+  hol_rh:'Rosh Hashana', hol_sukkot:'Sukkot', hol_hanukkah:'Hanukkah', hol_tubishvat:'Tu BiShvat', hol_purim:'Purim', hol_pesach:'Passover', hol_shavuot:'Shavuot',
+  holToday:'today!', holTomorrow:'tomorrow', holInDays:'in {n} days', usualH:'Running low? You usually buy:', usualDays:'{n}d', suggestH:'Quick picks',
+  storeOrderNote:'🧭 Categories follow the order you walk the store', addedN:'{n} items added', requestedN:'{n} requests sent', nothingNew:'Already on the list',
+  voiceBtn:'Add by voice', voiceListening:'🎤 Listening... say a few items, e.g. milk, two tomatoes and cheese', voiceNothing:'Didn’t catch any items. Try again', voiceAddN:'Add {n} items',
+  paperTitle:'🎨 Notepad paper', paperSub:'Everyone in the household sees the lists on this paper', paperRow:'Notepad paper',
+  paper_classic:'Classic', paper_yellow:'Yellow', paper_grid:'Grid', paper_kraft:'Recycled', paper_mint:'Mint', paper_pink:'Pink',
+  atStoreBtn:'🛒 I’m at the store', atStoreMine:'🛒 At the store · done', atStoreOn:'🛒 The household knows you’re at the store. The screen stays on',
+  atStoreOther:'🛒 {n} is at the store now ({ago}). Anything you add shows up for them right away', atStoreNotify:'🛒 {n} is at the store with "{l}". Missing anything? Add it now',
+  shopModeBtn:'🔍 Big print',
   tripClosed:'✅ List closed', boughtHeader:'Collected', notBoughtHeader:'Still needed',
   homeSub:'All of your household\'s shared lists, in one place.',
   homeLists:'My lists', homeInvite:'Invite someone', homeSwitch:'Switch household',
@@ -1121,7 +1202,7 @@ const CAT_ORDER = ['produce','nuts','bakery','ready','pantry','canned','grains',
 /* "what's new" — bump WHATS_NEW_VERSION and add one new entry at the END of each array whenever
    there's something worth announcing to EXISTING users (not every build, just real features).
    A brand-new user never sees this — they get the full guide instead, and are marked caught-up. */
-const WHATS_NEW_VERSION = 8;
+const WHATS_NEW_VERSION = 9;
 const WHATS_NEW = {
 he: [
   {version:1, items:[
@@ -1169,6 +1250,14 @@ he: [
   {version:8, items:[
     'הרשימות הן פתקים על דלת מקרר: כל פתק שונה, פעיל כתוב רגיל, וסגור מחוק עם תאריך הסגירה',
   ]},
+  {version:9, items:[
+    'כפתור "אני בסופר עכשיו": כולם בבית מקבלים הודעה ויכולים להוסיף מה שחסר',
+    'הצעות "בדרך כלל קונים" לפי הקניות שלכם, ותזכורות לפני חגים',
+    'הוספת כמה מוצרים בבת אחת בקול 🎤',
+    'הקטגוריות מסתדרות לבד לפי הסדר שבו אתם עוברים בסופר',
+    'אותיות גדולות בזמן קנייה, והמסך לא נכבה',
+    'צבע פנקס לכל משק בית, צליל ורטט קטן בסימון, וחגיגה כשהרשימה נגמרת',
+  ]},
 ],
 en: [
   {version:1, items:[
@@ -1215,6 +1304,14 @@ en: [
   ]},
   {version:8, items:[
     'Lists are notes on a fridge door: every note is different, open ones written out, finished ones crossed off with the date',
+  ]},
+  {version:9, items:[
+    '"I’m at the store" button: the household gets told and can add what’s missing',
+    '"You usually buy" suggestions from your history, and reminders before holidays',
+    'Add several items at once by voice 🎤',
+    'Categories arrange themselves in the order you walk the store',
+    'Big print while shopping, and the screen stays on',
+    'Notepad paper per household, a little tick and buzz on check, and a celebration when the list is done',
   ]},
 ],
 };
@@ -2021,7 +2118,7 @@ function renderGroups(items){
   }else{
     const byCat = {};
     visible.forEach(i=>{ (byCat[i.category||'other'] = byCat[i.category||'other']||[]).push(i); });
-    box.innerHTML = CS.CAT_ORDER.filter(c=>byCat[c]&&byCat[c].length).map(c=>{
+    box.innerHTML = (window.CS.catOrder?CS.catOrder():CS.CAT_ORDER).filter(c=>byCat[c]&&byCat[c].length).map(c=>{
       const meta = CS.CATS[c], open = byCat[c].filter(i=>i.status!=='checked').length;
       return `<div class="group ${open?'':'all-done'}" data-cat="${c}">
         <div class="group-h"><span class="e">${meta.emoji}</span><span class="gname">${CS.lang()==='he'?meta.he:meta.en}</span><span class="gcount">${open}/${byCat[c].length}</span></div>
@@ -2415,6 +2512,11 @@ function openAccountSheet(){
         <button data-lang-opt="he" class="${curLang==='he'?'active':''}" aria-pressed="${curLang==='he'}">עברית</button>
         <button data-lang-opt="en" class="${curLang==='en'?'active':''}" aria-pressed="${curLang==='en'}">English</button>
       </div>
+      <p style="margin:2px 0 -4px">${esc(t('soundLabel'))}</p>
+      <div class="role-pick" id="sound-pick">
+        <button data-sound-opt="1" class="${soundOn?'active':''}" aria-pressed="${soundOn}">${esc(t('soundOn'))}</button>
+        <button data-sound-opt="0" class="${!soundOn?'active':''}" aria-pressed="${!soundOn}">${esc(t('soundOff'))}</button>
+      </div>
       <button class="btn ghost" id="acct-profile">${esc(t('editProfile'))}</button>
 
       <p class="grp-h">${esc(t('settingsGroupApp'))}</p>
@@ -2429,6 +2531,7 @@ function openAccountSheet(){
   $('font-pick').querySelectorAll('[data-font-opt]').forEach(b=>b.onclick=()=>{ CS.setFontSize(b.dataset.fontOpt); openAccountSheet(); });
   $('itemfont-pick').querySelectorAll('[data-itemfont-opt]').forEach(b=>b.onclick=()=>{ CS.setItemFont(b.dataset.itemfontOpt); openAccountSheet(); });
   $('lang-pick').querySelectorAll('[data-lang-opt]').forEach(b=>b.onclick=()=>{ CS.setLang(b.dataset.langOpt); openAccountSheet(); });
+  $('sound-pick').querySelectorAll('[data-sound-opt]').forEach(b=>b.onclick=()=>{ setSound(b.dataset.soundOpt==='1'); if(soundOn) tick(); openAccountSheet(); });
   $('acct-profile').onclick=openProfileSheet;
   $('acct-guide').onclick=()=>openGuideSheet();
   $('acct-sync').onclick=async()=>{ await flushQueue({resync:true}); await refreshHousehold(); toast('🔄'); };
@@ -2518,7 +2621,7 @@ async function loadHousehold(hh, navigate, landing){
     if(!hrow){ if(navigate){ screen='onboard'; CS.setScreen('onboard'); } return; }
     members=mrows||[]; membersById={}; members.forEach(m=>membersById[m.user_id]=m);
     role=(membersById[user.id]||{}).role||null;
-    hhName=hrow.name; hhBitLink=hrow.bit_link||''; mainListId=hrow.main_list_id||null;
+    hhName=hrow.name; hhBitLink=hrow.bit_link||''; mainListId=hrow.main_list_id||null; padTheme=hrow.pad_theme||'classic'; applyPaper();
     await ensureDisplayName(hh);
     showOfflineNote(false);
     subscribeHouseholdRealtime();
@@ -2625,6 +2728,9 @@ async function renderHousehold(){
   $('hh-rename').hidden=role!=='owner';
   $('hh-rename').innerHTML=`<span class="e" aria-hidden="true">✏️</span><span class="tx">${esc(t('hhRenameRow'))}</span>${ICON_CHEV_SIDE}`;
   $('hh-rename').onclick=openRenameHouseholdSheet;
+  $('hh-paper').hidden=role!=='owner';
+  $('hh-paper').innerHTML=`<span class="e" aria-hidden="true">🎨</span><span class="tx">${esc(t('paperRow'))}<small>${esc(t('paper_'+(padTheme||'classic')))}</small></span>${ICON_CHEV_SIDE}`;
+  $('hh-paper').onclick=openPaperSheet;
   $('hh-new').innerHTML=`<span class="e" aria-hidden="true">➕</span><span class="tx">${esc(t('hhNewRow'))}</span>${ICON_CHEV_SIDE}`;
   $('hh-new').onclick=openOnboard;
   const others=members.filter(m=>!isMine(m.user_id));
@@ -3098,12 +3204,14 @@ async function openList(id, opts){
   }
   CS.setScreen('main');
   paintListChrome();
+  paintExtras();
   renderPayPanel();
   trackPresence();
   queue=loadQueueFor(listId);
   await fetchItems();
   cacheSnapshot();
   subscribeListRealtime();
+  refreshExtras();
   if(queue.length) flushQueue({resync:true});
   return true;
 }
@@ -3492,6 +3600,7 @@ function paintItems(){
   if(searchQuery) list=list.filter(i=>i.text.toLowerCase().includes(searchQuery));
   CS.renderGroups(list);
   cacheSnapshot();
+  paintExtrasSoon();
 }
 $('search-input').addEventListener('input',e=>{ searchQuery=e.target.value.trim().toLowerCase(); paintItems(); });
 async function fetchItems(){
@@ -3589,11 +3698,14 @@ function openAddSheet(){
   const req=!canEdit(); // a requester's item waits for approval: say so on the sheet itself
   openSheet(sheetHead(req?t('requestTitle'):t('add'))+`<div class="card">
     ${req?`<p class="sub">${esc(t('listRoleRequester').replace('{n}',approverNames()||t('roleOwner')))}</p>`:''}
-    <input id="item-input" placeholder="${esc(t('itemPh'))}" autocomplete="off">
+    <div class="item-input-row"><input id="item-input" placeholder="${esc(t('itemPh'))}" autocomplete="off">${canVoice()?`<button type="button" class="mic-btn" id="item-voice" aria-label="${esc(t('voiceBtn'))}"><svg class="lc" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg></button>`:''}</div>
     <input id="item-qty" class="qty-input" placeholder="${esc(t('qtyPh'))}" autocomplete="off" inputmode="numeric">
     <div id="item-dup-msg" class="msg" hidden></div>
     <button class="btn wide" id="item-add">${esc(req?t('requestGo'):t('add'))}</button>
+    <div id="add-sugg" class="add-sugg" hidden></div>
   </div>`);
+  if($('item-voice')) $('item-voice').onclick=startVoiceAdd;
+  paintAddSheetExtras();
   $('item-add').addEventListener('click',addItem);
   $('item-input').addEventListener('keydown',e=>{ if(e.key==='Enter') addItem(); });
   $('item-input').addEventListener('input',()=>{ forceAddDup=false; const m=$('item-dup-msg'); if(m) m.hidden=true; });
@@ -3665,7 +3777,7 @@ async function toggleItem(id){
     ? {status:'active',checked_by:null,checked_at:null}
     : {status:'checked',checked_by:user.id,checked_at:new Date().toISOString()};
   Object.assign(it,patch); paintItems(); // instant feedback — a checkbox tap shouldn't wait on a round trip
-  if(patch.status==='checked') maybeAllDone();
+  if(patch.status==='checked'){ reactCheck(id); maybeAllDone(); }
   if(!online || isTemp(id)){ queueOp('toggle',id,patch); return; }
   const {error}=await sb.from('list_items').update(patch).eq('id',id);
   if(error){ Object.assign(it,prev); paintItems(); toast(CS.authErr(error)); return; }
@@ -3673,10 +3785,12 @@ async function toggleItem(id){
 // pops once when the last open item on the list gets checked by this user
 function maybeAllDone(){
   if(listStatus!=='open' || !items.length || items.some(i=>i.status!=='checked')) return;
-  const t=CS.t, canClose=canEdit();
+  const t=CS.t, canClose=canEdit(), who=collectorsLine();
+  celebrate();
   openSheet(sheetHead(t('allDoneTitle'))+`<div class="card all-done">
     <div class="big">🛒🎉</div>
     <p>${esc(t('allDoneBody').replace('{n}',items.length))}</p>
+    ${who?`<p class="sugg-h">${esc(t('whoCollected'))}</p><ul class="collectors">${who}</ul>`:''}
     ${canClose?`<p style="color:var(--muted)">${esc(t('allDoneAsk'))}</p>
     <button class="btn wide" id="all-done-close">${esc(t('allDoneClose'))}</button>
     <button class="btn ghost wide" data-act="sheet-close">${esc(t('allDoneKeep'))}</button>`
@@ -3795,6 +3909,7 @@ function subscribeHouseholdRealtime(){
         fetchHomePay().catch(()=>{});
       }
       if(row.id===listId && curList && screen==='main'){ Object.assign(curList,row); listStatus=row.status; paintListChrome(); }
+      onListRowUpdate(row);
       if(screen==='lists') refreshHomeSoon();
     })
     .on('postgres_changes',{event:'INSERT',schema:'public',table:'list_activity',filter:'household_id=eq.'+household},()=>{
@@ -3837,6 +3952,322 @@ function subscribeListRealtime(){
 }
 addEventListener('online',()=>{ online=true; showOfflineNote(false); flushQueue({resync:true}); });
 addEventListener('offline',()=>{ online=false; showOfflineNote(true); });
+
+
+/* ---------- the owner's picks from the ideas round (2026-11-07) ----------
+   little reactions on a check, a celebration when the list is done, holiday reminders, the household's
+   own notepad paper, "what you usually buy", categories in the order you walk the store, adding by
+   voice, "I'm at the store now", and a big-print shop mode that keeps the screen on */
+
+// --- micro-reactions: a pop on the box, a short buzz and a soft tick (Settings can mute it) ---
+let soundOn=true; try{ soundOn=localStorage.getItem('cs-sound')!=='0'; }catch(e){}
+function setSound(on){ soundOn=!!on; try{ localStorage.setItem('cs-sound',on?'1':'0'); }catch(e){} }
+let actx=null;
+function tick(){
+  if(!soundOn) return;
+  try{
+    actx=actx||new (window.AudioContext||window.webkitAudioContext)();
+    const n=actx.currentTime, o=actx.createOscillator(), g=actx.createGain();
+    o.type='triangle'; o.frequency.setValueAtTime(880,n); o.frequency.exponentialRampToValueAtTime(1400,n+.06);
+    g.gain.setValueAtTime(.0001,n); g.gain.exponentialRampToValueAtTime(.16,n+.01); g.gain.exponentialRampToValueAtTime(.0001,n+.15);
+    o.connect(g); g.connect(actx.destination); o.start(n); o.stop(n+.17);
+  }catch(e){}
+}
+function reactCheck(id){
+  try{ navigator.vibrate && navigator.vibrate(12); }catch(e){}
+  tick();
+  requestAnimationFrame(()=>{
+    const el=document.querySelector(`#groups .item[data-id="${CSS.escape(id)}"]`);
+    if(el){ el.classList.add('just-checked'); setTimeout(()=>el.classList.remove('just-checked'),800); }
+  });
+}
+
+// --- the last item: the cart drives across the screen, then who collected what ---
+function celebrate(){
+  const ov=document.createElement('div'); ov.className='cart-run'; ov.setAttribute('aria-hidden','true');
+  const bits=['🎉','✨','🥳','🎊','⭐','🍎','🥖','🧀'];
+  ov.innerHTML=`<span class="cart">🛒</span>`+Array.from({length:18},(_,i)=>`<span class="conf" style="--x:${Math.round(Math.random()*100)}vw;--d:${(Math.random()*.6).toFixed(2)}s;--r:${Math.round(Math.random()*720-360)}deg">${bits[i%bits.length]}</span>`).join('');
+  document.body.appendChild(ov);
+  try{ navigator.vibrate && navigator.vibrate([20,60,30]); }catch(e){}
+  setTimeout(()=>ov.remove(),2300);
+}
+function collectorsLine(){
+  const c={}; items.forEach(i=>{ if(i.status==='checked' && i.checked_by) c[i.checked_by]=(c[i.checked_by]||0)+1; });
+  const rows=Object.entries(c).sort((a,b)=>b[1]-a[1]);
+  if(!rows.length) return '';
+  const medal=['🥇','🥈','🥉'];
+  return rows.slice(0,5).map(([u,n],i)=>`<li><span>${medal[i]||'•'}</span><b>${esc(nameOf(u))}</b><span class="n">${esc(CS.t('collectedN').replace('{n}',n))}</span></li>`).join('');
+}
+
+// --- holidays: two weeks before, a sticker on the notepad and what people usually need ---
+const HOLIDAYS=[
+  {m:['Tishri'],d:1,k:'rh',emo:'🍎🍯',items:['תפוחים','דבש','רימון','תמרים','סילאן','חלה עגולה','ראש דג']},
+  {m:['Tishri'],d:15,k:'sukkot',emo:'🌿🍋',items:['קישוטים לסוכה','פירות יבשים','יין','חלות','מפות חד־פעמיות']},
+  {m:['Kislev'],d:25,k:'hanukkah',emo:'🕎🍩',items:['סופגניות','נרות חנוכה','שמן','תפוחי אדמה','מטבעות שוקולד','קמח']},
+  {m:['Shevat'],d:15,k:'tubishvat',emo:'🌳🌰',items:['פירות יבשים','תמרים','תאנים מיובשות','אגוזים','שקדים']},
+  {m:['Adar','Adar II'],d:14,k:'purim',emo:'🎭🍬',items:['אוזני המן','ממתקים למשלוח מנות','מגשים חד־פעמיים','צלופן','יין']},
+  {m:['Nisan'],d:15,k:'pesach',emo:'🍷🫓',items:['מצות','יין','מיץ ענבים','חזרת','ביצים','קמח מצה','נייר כסף']},
+  {m:['Sivan'],d:6,k:'shavuot',emo:'🧀🌾',items:['גבינה לבנה','שמנת מתוקה','גבינת שמנת','בצק עלים','פירות']},
+];
+let hebFmt=null;
+function upcomingHoliday(){
+  try{
+    hebFmt=hebFmt||new Intl.DateTimeFormat('en-u-ca-hebrew',{month:'long',day:'numeric'});
+    const base=new Date(); base.setHours(12,0,0,0);
+    for(let d=0; d<=14; d++){
+      const dt=new Date(base.getTime()+d*864e5), p={};
+      hebFmt.formatToParts(dt).forEach(x=>p[x.type]=x.value);
+      const h=HOLIDAYS.find(h=>h.m.includes(p.month) && +p.day===h.d);
+      if(h) return Object.assign({days:d},h);
+    }
+  }catch(e){}
+  return null;
+}
+
+// --- history: what this household keeps buying, and the order they walk the store in ---
+let hist={hh:null,at:0,rows:[]};
+async function loadHistory(){
+  if(hist.hh===household && Date.now()-hist.at<10*60*1000) return hist.rows;
+  const since=new Date(Date.now()-150*864e5).toISOString();
+  const {data,error}=await sb.from('list_items').select('text,category,emoji,list_id,checked_at').eq('household_id',household).eq('status','checked').gt('checked_at',since).limit(3000);
+  if(error) return hist.rows;
+  hist={hh:household,at:Date.now(),rows:(data||[]).filter(r=>r.checked_at)};
+  learnStoreOrder();
+  return hist.rows;
+}
+// bought on 3+ separate trips, and it's been about as long as usual since the last time
+function usualSuggestions(){
+  const by={}, now=Date.now();
+  hist.rows.forEach(r=>{
+    const k=normText(r.text); if(!k) return;
+    const o=by[k]||(by[k]={text:r.text,lists:new Set(),first:Infinity,last:0});
+    const t=new Date(r.checked_at).getTime();
+    o.lists.add(r.list_id); if(t<o.first) o.first=t; if(t>o.last){ o.last=t; o.text=r.text; }
+  });
+  const onList=new Set(items.filter(i=>i.status!=='checked').map(i=>normText(i.text)));
+  return Object.entries(by).filter(([k,o])=>o.lists.size>=3 && !onList.has(k)).map(([k,o])=>{
+    const every=Math.max(2,(o.last-o.first)/864e5/(o.lists.size-1)), since=(now-o.last)/864e5;
+    return {text:o.text,days:Math.round(since),due:since/every};
+  }).filter(s=>s.due>=0.8 && s.days>=2).sort((a,b)=>b.due-a.due).slice(0,6);
+}
+let learnedOrder=null;
+function learnStoreOrder(){
+  const trips={};
+  hist.rows.forEach(r=>{ (trips[r.list_id]=trips[r.list_id]||[]).push(r); });
+  const sum={}, cnt={}; let used=0;
+  Object.values(trips).forEach(rows=>{
+    const first={};
+    rows.forEach(r=>{ const c=r.category||'other', t=new Date(r.checked_at).getTime(); if(!(c in first)||t<first[c]) first[c]=t; });
+    const cats=Object.keys(first).sort((a,b)=>first[a]-first[b]);
+    const span=first[cats[cats.length-1]]-first[cats[0]];
+    if(cats.length<3 || span<3*60*1000) return; // ticked off all at once afterwards: says nothing about the aisles
+    used++;
+    cats.forEach((c,i)=>{ sum[c]=(sum[c]||0)+i/(cats.length-1); cnt[c]=(cnt[c]||0)+1; });
+  });
+  if(used<3){ learnedOrder=null; return; }
+  const base=CS.CAT_ORDER, L=base.length-1;
+  const score=c=>cnt[c]>=2 ? sum[c]/cnt[c] : base.indexOf(c)/L;
+  learnedOrder=base.slice().sort((a,b)=>score(a)-score(b));
+}
+window.CS.catOrder=()=>learnedOrder||CS.CAT_ORDER;
+
+// --- adding by voice: "חלב, שתי עגבניות וגבינה צהובה" → three items ---
+const NUMW={'אחד':1,'אחת':1,'שני':2,'שתי':2,'שניים':2,'שתיים':2,'זוג':2,'שלוש':3,'שלושה':3,'ארבע':4,'ארבעה':4,'חמש':5,'חמישה':5,'שש':6,'שישה':6,'שבע':7,'שבעה':7,'שמונה':8,'תשע':9,'תשעה':9,'עשר':10,'עשרה':10,
+  'one':1,'two':2,'three':3,'four':4,'five':5,'six':6,'seven':7,'eight':8,'nine':9,'ten':10};
+const UNITS=/^(קילו|ק"ג|ק״ג|קג|גרם|ליטר|חבילות|חבילה|בקבוקים|בקבוק|יחידות|קופסאות|קופסה|שקיות|מארזים|kg|kilo|liters?|packs?|bottles?)$/i;
+const isNumW=w=>/^\d+([.,]\d+)?$/.test(w) || NUMW[w.toLowerCase()]!=null;
+function parseSpoken(s){
+  const chunks=String(s||'').replace(/\s+(וגם|גם|ועוד|and|also|plus)\s+/gi,',').split(/[,،;.\n]+/);
+  const phrases=[];
+  chunks.forEach(c=>{
+    let cur=[];
+    const flush=()=>{ if(cur.length) phrases.push(cur); cur=[]; };
+    c.trim().split(/\s+/).filter(Boolean).forEach(w=>{
+      if(cur.length && /^ו./.test(w) && w.length>2){
+        const rest=w.slice(1);
+        // "ועגבניות" starts a new item; "וופל" stays a word when the dictionary knows it whole
+        if(isNumW(rest) || CS.guess(w).cat==='other'){ flush(); cur.push(rest); return; }
+      }
+      if(cur.length && isNumW(w) && !isNumW(cur[cur.length-1])) flush(); // "חלב שתי עגבניות"
+      cur.push(w);
+    });
+    flush();
+  });
+  return phrases.map(ws=>{
+    let qty='';
+    if(ws.length>1 && isNumW(ws[0])){
+      const n=NUMW[ws[0].toLowerCase()]; qty=String(n!=null?n:ws.shift()); if(n!=null) ws.shift();
+      if(ws.length>1 && UNITS.test(ws[0])) qty+=' '+ws.shift();
+    }
+    return {text:ws.join(' ').trim(),qty};
+  }).filter(x=>x.text);
+}
+const canVoice=()=>!!((window.CartApp && window.CartApp.startVoice) || window.SpeechRecognition || window.webkitSpeechRecognition);
+function listen(onText){
+  if(window.CartApp && window.CartApp.startVoice){
+    window.onVoiceResult=txt=>{ window.onVoiceResult=null; onText(txt||''); };
+    try{ window.CartApp.startVoice(CS.lang()==='he'?'he-IL':'en-US'); }catch(e){ onText(''); }
+    return;
+  }
+  const R=window.SpeechRecognition||window.webkitSpeechRecognition;
+  try{
+    const r=new R(); r.lang=CS.lang()==='he'?'he-IL':'en-US'; r.interimResults=false; r.maxAlternatives=1;
+    let got=false;
+    r.onresult=e=>{ got=true; onText(e.results[0][0].transcript); };
+    r.onerror=()=>{ if(!got){ got=true; onText(''); } };
+    r.onend=()=>{ if(!got) onText(''); };
+    r.start();
+  }catch(e){ onText(''); }
+}
+// one item into the open list, the same way the add sheet does it (no duplicates of what's still open)
+function addTextItem(text,qty){
+  if(!text || !listId || listStatus!=='open') return false;
+  const norm=normText(text);
+  if(items.some(i=>i.status!=='checked' && normText(i.text)===norm)) return false;
+  const g=CS.guess(text);
+  queueAdd({list_id:listId,household_id:household,text,category:g.cat,emoji:g.emoji,qty:qty||null,created_by:user.id,position:Date.now()+Math.random()});
+  if(online && g.cat==='other') queueAiUpgrade(text);
+  return true;
+}
+function addMany(list){
+  const n=list.filter(x=>addTextItem(x.text,x.qty)).length;
+  if(online) flushQueue();
+  toast(n ? CS.t(canEdit()?'addedN':'requestedN').replace('{n}',n) : CS.t('nothingNew'));
+  paintExtrasSoon();
+}
+function startVoiceAdd(){
+  const t=CS.t, msg=$('item-dup-msg'), btn=$('item-voice');
+  if(btn) btn.classList.add('listening');
+  if(msg){ msg.hidden=false; msg.className='msg'; msg.textContent=t('voiceListening'); }
+  listen(txt=>{
+    if(btn) btn.classList.remove('listening');
+    const found=parseSpoken(txt);
+    if(!msg) return;
+    if(!found.length){ msg.className='msg warn'; msg.textContent=t('voiceNothing'); return; }
+    msg.className='msg voice-found';
+    msg.innerHTML=`<div class="sugg">${found.map((f,i)=>`<span class="chip" data-v="${i}">${esc(f.text)}${f.qty?` <small>${esc(f.qty)}</small>`:''} <button type="button" aria-label="✕" data-vx="${i}">✕</button></span>`).join('')}</div>
+      <button class="btn wide" id="voice-add-go" type="button">${esc(t('voiceAddN').replace('{n}',found.length))}</button>`;
+    msg.querySelectorAll('[data-vx]').forEach(b=>b.onclick=()=>{ found[+b.dataset.vx]=null; b.parentElement.remove(); const left=found.filter(Boolean).length; $('voice-add-go').textContent=t('voiceAddN').replace('{n}',left); if(!left) msg.hidden=true; });
+    $('voice-add-go').onclick=()=>{ closeSheet(); addMany(found.filter(Boolean)); };
+  });
+}
+// suggestion chips for the add sheet: the holiday's list first, then the usual items
+function suggestionChips(){
+  const hol=upcomingHoliday(), out=[];
+  const onList=new Set(items.filter(i=>i.status!=='checked').map(i=>normText(i.text)));
+  if(hol) hol.items.filter(x=>!onList.has(normText(x))).slice(0,5).forEach(x=>out.push({text:x,tag:hol.emo.slice(0,2)}));
+  usualSuggestions().forEach(s=>{ if(!out.some(o=>normText(o.text)===normText(s.text))) out.push({text:s.text,tag:'↺'}); });
+  return out.slice(0,8);
+}
+function paintAddSheetExtras(){
+  const box=$('add-sugg'); if(!box) return;
+  const chips=suggestionChips();
+  box.hidden=!chips.length;
+  box.innerHTML=chips.length?`<p class="sugg-h">${esc(CS.t('suggestH'))}</p><div class="sugg">${chips.map(c=>`<button type="button" class="chip" data-sugg="${esc(c.text)}"><span aria-hidden="true">${esc(c.tag)}</span> ${esc(c.text)}</button>`).join('')}</div>`:'';
+  box.querySelectorAll('[data-sugg]').forEach(b=>b.onclick=()=>{ if(addTextItem(b.dataset.sugg,'')){ if(online) flushQueue(); toast(CS.t(canEdit()?'itemAdded':'itemRequested')); } b.remove(); if(!box.querySelector('[data-sugg]')) box.hidden=true; });
+}
+
+// --- the household's notepad paper (owner picks; everyone sees it) ---
+const PAPERS=['classic','yellow','grid','kraft','mint','pink'];
+let padTheme='classic';
+function applyPaper(){ document.querySelectorAll('.pad:not(.mini)').forEach(p=>p.dataset.paper=padTheme||'classic'); }
+function openPaperSheet(){
+  const t=CS.t;
+  openSheet(sheetHead(t('paperTitle'))+`<div class="card">
+    <p class="sub">${esc(t('paperSub'))}</p>
+    <div class="pad-picker">${PAPERS.map(p=>`<button type="button" class="paper-sw${p===padTheme?' active':''}" data-paper-opt="${p}" aria-pressed="${p===padTheme}"><span class="pad mini" data-paper="${p}"></span><span>${esc(t('paper_'+p))}</span></button>`).join('')}</div>
+  </div>`);
+  $('sheet').querySelectorAll('[data-paper-opt]').forEach(b=>b.onclick=async()=>{
+    const prev=padTheme; padTheme=b.dataset.paperOpt; applyPaper(); openPaperSheet();
+    const {error}=await sb.from('households').update({pad_theme:padTheme}).eq('id',household);
+    if(error){ padTheme=prev; applyPaper(); toast(CS.authErr(error)); }
+  });
+}
+
+// --- "I'm at the store now", and the big-print shop mode that keeps the screen awake ---
+const SHOP_FRESH=3*60*60*1000;
+const shopperOf=l=>l && l.shopping_now_by && l.shopping_now_at && Date.now()-new Date(l.shopping_now_at).getTime()<SHOP_FRESH ? l.shopping_now_by : null;
+let shopMode=false; try{ shopMode=localStorage.getItem('cs-shop-mode')==='1'; }catch(e){}
+let wakeSentinel=null, awakeWanted=false;
+async function keepAwake(on){
+  awakeWanted=!!on;
+  if(window.CartApp && window.CartApp.keepScreenOn){ try{ window.CartApp.keepScreenOn(!!on); }catch(e){} return; }
+  try{
+    if(on && !wakeSentinel && navigator.wakeLock) wakeSentinel=await navigator.wakeLock.request('screen');
+    if(!on && wakeSentinel){ await wakeSentinel.release(); wakeSentinel=null; }
+  }catch(e){ wakeSentinel=null; }
+}
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible' && awakeWanted){ wakeSentinel=null; keepAwake(true); } });
+function wantAwake(){ return screen==='main' && listStatus==='open' && (shopMode || shopperOf(curList)===(user&&user.id)); }
+function setShopMode(on){
+  shopMode=!!on; try{ localStorage.setItem('cs-shop-mode',on?'1':'0'); }catch(e){}
+  document.body.classList.toggle('shop-mode',shopMode && screen==='main');
+  keepAwake(wantAwake());
+  paintExtras();
+}
+async function toggleAtStore(){
+  if(!curList || listStatus!=='open') return;
+  const mine=shopperOf(curList)===user.id;
+  const prev={shopping_now_by:curList.shopping_now_by,shopping_now_at:curList.shopping_now_at};
+  Object.assign(curList, mine?{shopping_now_by:null,shopping_now_at:null}:{shopping_now_by:user.id,shopping_now_at:new Date().toISOString()});
+  seenShop[curList.id]=curList.shopping_now_at;
+  paintExtras(); keepAwake(wantAwake());
+  if(!mine){ toast(CS.t('atStoreOn')); try{ navigator.vibrate && navigator.vibrate(15); }catch(e){} }
+  const {error}=await sb.rpc('set_shopping_now',{p_list_id:curList.id,p_on:!mine});
+  if(error){ Object.assign(curList,prev); paintExtras(); toast(CS.authErr(error)); }
+}
+const seenShop={}; // list id → the shopping_now_at already announced, so other list updates don't re-toast
+function onListRowUpdate(row){
+  const who=shopperOf(row);
+  if(who && who!==user.id && seenShop[row.id]!==row.shopping_now_at){
+    toast(CS.t('atStoreNotify').replace('{n}',nameOf(who)).replace('{l}',row.name));
+    try{ navigator.vibrate && navigator.vibrate([15,80,15]); }catch(e){}
+  }
+  seenShop[row.id]=row.shopping_now_at||null;
+  if(curList && curList.id===row.id) paintExtras();
+}
+
+// --- the strip above the notepad: at-the-store, shop mode, holiday, usual items, store order note ---
+function paintExtras(){
+  const box=$('list-extras'); if(!box) return;
+  applyPaper();
+  document.body.classList.toggle('shop-mode',shopMode && screen==='main');
+  if(!curList || listStatus!=='open'){ box.hidden=true; box.innerHTML=''; paintSticker(null); return; }
+  const t=CS.t, who=shopperOf(curList), mine=who===user.id;
+  let html=`<div class="ex-row">
+    <button type="button" class="chip-btn${mine?' on':''}" id="ex-store">${esc(mine?t('atStoreMine'):t('atStoreBtn'))}</button>
+    <button type="button" class="chip-btn${shopMode?' on':''}" id="ex-shopmode" aria-pressed="${shopMode}">${esc(t('shopModeBtn'))}</button>
+  </div>`;
+  if(who && !mine) html+=`<p class="ex-note store">${esc(t('atStoreOther').replace('{n}',nameOf(who)).replace('{ago}',CS.timeAgo(curList.shopping_now_at)))}</p>`;
+  const hol=upcomingHoliday();
+  if(hol){
+    const onList=new Set(items.filter(i=>i.status!=='checked').map(i=>normText(i.text)));
+    const left=hol.items.filter(x=>!onList.has(normText(x))).slice(0,6);
+    const when=hol.days===0?t('holToday'):hol.days===1?t('holTomorrow'):t('holInDays').replace('{n}',hol.days);
+    html+=`<div class="ex-card hol"><p><span aria-hidden="true">${hol.emo}</span> <b>${esc(t('hol_'+hol.k))}</b> ${esc(when)}</p>${left.length?`<div class="sugg">${left.map(x=>`<button type="button" class="chip" data-sugg="${esc(x)}">+ ${esc(x)}</button>`).join('')}</div>`:''}</div>`;
+  }
+  const usual=usualSuggestions();
+  if(usual.length) html+=`<div class="ex-card usual"><p>${esc(t('usualH'))}</p><div class="sugg">${usual.map(s=>`<button type="button" class="chip" data-sugg="${esc(s.text)}">+ ${esc(s.text)} <small>${esc(t('usualDays').replace('{n}',s.days))}</small></button>`).join('')}</div></div>`;
+  if(learnedOrder && CS.viewMode()!=='flat') html+=`<p class="ex-note">${esc(t('storeOrderNote'))}</p>`;
+  box.innerHTML=html; box.hidden=false;
+  $('ex-store').onclick=toggleAtStore;
+  $('ex-shopmode').onclick=()=>setShopMode(!shopMode);
+  box.querySelectorAll('[data-sugg]').forEach(b=>b.onclick=()=>{ if(addTextItem(b.dataset.sugg,'')){ if(online) flushQueue(); toast(CS.t(canEdit()?'itemAdded':'itemRequested')); } b.remove(); });
+  paintSticker(hol);
+}
+function paintSticker(hol){
+  const pad=document.querySelector('.note-main .pad'); if(!pad) return;
+  let st=pad.querySelector('.hol-sticker');
+  if(!hol){ if(st) st.remove(); return; }
+  if(!st){ st=document.createElement('span'); st.className='hol-sticker'; st.setAttribute('aria-hidden','true'); pad.appendChild(st); }
+  st.textContent=hol.emo;
+}
+let extrasTimer=null;
+function paintExtrasSoon(){ clearTimeout(extrasTimer); extrasTimer=setTimeout(paintExtras,120); }
+async function refreshExtras(){ paintExtras(); await loadHistory(); if(screen==='main'){ paintExtras(); paintItems(); } }
+// leaving the list lets the screen sleep again and drops the big print
+const _setScreen=window.CS.setScreen;
+window.CS.setScreen=n=>{ _setScreen(n); document.body.classList.toggle('shop-mode',shopMode && n==='main'); keepAwake(n==='main' && wantAwake()); };
 
 /* ---------- boot ---------- */
 /* "last seen in the app" for the admin page — the server only counts a new "open" every 30 min */

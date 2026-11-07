@@ -3,6 +3,9 @@ package il.cartsync.app;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
+import android.view.WindowManager;
+import java.util.ArrayList;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -30,6 +33,21 @@ public class MainActivity extends AppCompatActivity {
     // <input type="file"> in the page (e.g. uploading a screenshot of a Bit QR code): a plain WebView
     // ignores it unless the app opens Android's picker and hands the chosen file back
     private ValueCallback<Uri[]> fileCallback;
+    // adding items by voice: Android's own speech screen (no microphone permission needed here),
+    // the words go back to the page as window.onVoiceResult(text) — null when cancelled
+    private final ActivityResultLauncher<Intent> voicePicker = registerForActivityResult(
+        new ActivityResultContracts.StartActivityForResult(),
+        new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult r) {
+                String text = null;
+                if (r.getResultCode() == RESULT_OK && r.getData() != null) {
+                    ArrayList<String> all = r.getData().getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    if (all != null && !all.isEmpty()) text = all.get(0);
+                }
+                js("window.onVoiceResult&&window.onVoiceResult(" + (text == null ? "null" : JSONObject.quote(text)) + ")");
+            }
+        });
     private final ActivityResultLauncher<Intent> filePicker = registerForActivityResult(
         new ActivityResultContracts.StartActivityForResult(),
         new ActivityResultCallback<ActivityResult>() {
@@ -187,6 +205,27 @@ public class MainActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 public void run() {
                     try { startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url))); } catch (Exception e) { }
+                }
+            });
+        }
+        @JavascriptInterface public void startVoice(final String lang) {
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    Intent i = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                    i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                    i.putExtra(RecognizerIntent.EXTRA_LANGUAGE, lang == null || lang.isEmpty() ? "he-IL" : lang);
+                    i.putExtra(RecognizerIntent.EXTRA_PROMPT, "he-IL".equals(lang) ? "מה להוסיף?" : "What to add?");
+                    try { voicePicker.launch(i); }
+                    catch (Exception e) { js("window.onVoiceResult&&window.onVoiceResult(null)"); }
+                }
+            });
+        }
+        // shop mode / "I'm at the store": the screen stays on while the list is open
+        @JavascriptInterface public void keepScreenOn(final boolean on) {
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    if (on) getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    else getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 }
             });
         }

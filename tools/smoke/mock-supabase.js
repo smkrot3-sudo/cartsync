@@ -37,7 +37,25 @@ const DB={
   it('i20','l2','חלות','holiday','🍞','active','u1',{qty:'2'}),
   it('i21','l2','יין','alcohol','🍷','active','u2'),
   it('i22','l2','נרות','holiday','🕯️','active','u1'),
-  it('i30','l3','חלב','dairy','🥛','checked','u1')],
+  it('i30','l3','חלב','dairy','🥛','checked','u1'),
+  it('i41','l3','עגבניות','produce','🍅','checked','u2',{checked_at:new Date(now-7*864e5+0*4*6e4).toISOString()}),
+  it('i42','l3','בננות','produce','🍌','checked','u2',{checked_at:new Date(now-7*864e5+1*4*6e4).toISOString()}),
+  it('i43','l3','לחם מלא','bakery','🍞','checked','u2',{checked_at:new Date(now-7*864e5+2*4*6e4).toISOString()}),
+  it('i44','l3','חלב','dairy','🥛','checked','u2',{checked_at:new Date(now-7*864e5+3*4*6e4).toISOString()}),
+  it('i45','l3','ביצים','eggs','🥚','checked','u2',{checked_at:new Date(now-7*864e5+4*4*6e4).toISOString()}),
+  it('i46','l3','נייר טואלט','paper','🧻','checked','u2',{checked_at:new Date(now-7*864e5+5*4*6e4).toISOString()}),
+  it('i47','l4','עגבניות','produce','🍅','checked','u2',{checked_at:new Date(now-14*864e5+0*4*6e4).toISOString()}),
+  it('i48','l4','בננות','produce','🍌','checked','u2',{checked_at:new Date(now-14*864e5+1*4*6e4).toISOString()}),
+  it('i49','l4','לחם מלא','bakery','🍞','checked','u2',{checked_at:new Date(now-14*864e5+2*4*6e4).toISOString()}),
+  it('i50','l4','חלב','dairy','🥛','checked','u2',{checked_at:new Date(now-14*864e5+3*4*6e4).toISOString()}),
+  it('i51','l4','ביצים','eggs','🥚','checked','u2',{checked_at:new Date(now-14*864e5+4*4*6e4).toISOString()}),
+  it('i52','l4','נייר טואלט','paper','🧻','checked','u2',{checked_at:new Date(now-14*864e5+5*4*6e4).toISOString()}),
+  it('i53','l5','עגבניות','produce','🍅','checked','u2',{checked_at:new Date(now-19*864e5+0*4*6e4).toISOString()}),
+  it('i54','l5','בננות','produce','🍌','checked','u2',{checked_at:new Date(now-19*864e5+1*4*6e4).toISOString()}),
+  it('i55','l5','לחם מלא','bakery','🍞','checked','u2',{checked_at:new Date(now-19*864e5+2*4*6e4).toISOString()}),
+  it('i56','l5','חלב','dairy','🥛','checked','u2',{checked_at:new Date(now-19*864e5+3*4*6e4).toISOString()}),
+  it('i57','l5','ביצים','eggs','🥚','checked','u2',{checked_at:new Date(now-19*864e5+4*4*6e4).toISOString()}),
+  it('i58','l5','נייר טואלט','paper','🧻','checked','u2',{checked_at:new Date(now-19*864e5+5*4*6e4).toISOString()}),],
  trip_payments:[{list_id:'l3',household_id:'h1',user_id:'u2',amount:162.1,created_at:d(6)}],
  household_invites:[{code:'ABC123',household_id:'h1',role:'editor',expires_at:new Date(now+5*864e5).toISOString(),created_at:d(2)}],
  list_activity:[
@@ -73,6 +91,7 @@ const rpc=async(n,a)=>{
  if(n==='is_admin') return {data:ME==='u1',error:null};
  if(n==='set_main_list'){DB.households.find(h=>h.id===a.p_household).main_list_id=a.p_list_id;return {data:null,error:null}}
  if(n==='create_shopping_list'){const id='l'+Date.now();DB.shopping_lists.push({id,household_id:a.p_household,name:a.p_name,status:'open',created_at:new Date().toISOString()});return {data:id,error:null}}
+ if(n==='set_shopping_now'){const l=DB.shopping_lists.find(x=>x.id===a.p_list_id); if(l){l.shopping_now_by=a.p_on?ME:null;l.shopping_now_at=a.p_on?new Date().toISOString():null;} return {data:null,error:null}}
  return {data:null,error:null};
 };
 const presence={u2:[{list:'l1'}]};
