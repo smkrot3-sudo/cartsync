@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The APK handed out from the website updates itself (Google Play does not allow this, so the
+     "play" flavor leaves both of these out and lets the store do the updating). -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <application>
+        <receiver android:name=".Updater" android:exported="false" />
+    </application>
+</manifest>

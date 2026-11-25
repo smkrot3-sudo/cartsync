@@ -4,16 +4,28 @@ plugins {
 
 android {
     namespace "il.cartsync.app"
-    compileSdk 34
+    compileSdk 36
 
     defaultConfig {
         applicationId "il.cartsync.app"
         minSdk 24
-        targetSdk 34
+        targetSdk 36
         // CI overrides this with -PappVersionCode=<run number> so it never needs to commit a bump
         // back to this file (which would just retrigger the workflow that pushed it).
         versionCode project.hasProperty("appVersionCode") ? (project.appVersionCode as Integer) : 1
-        versionName "0.1.0"
+        versionName "1.0.0"
+    }
+
+    buildFeatures { buildConfig true }
+
+    // Two builds of the same app:
+    //  direct - the APK on the website, updates itself from app-version.json (as before)
+    //  play   - the Google Play build (AAB): no self-updating and no install permission, Play updates it
+    // Same applicationId, so a phone has one or the other.
+    flavorDimensions "store"
+    productFlavors {
+        direct { dimension "store"; buildConfigField "String", "STORE", '"direct"' }
+        play { dimension "store"; buildConfigField "String", "STORE", '"play"' }
     }
 
     // A stable signing identity so every build updates in place instead of conflicting with the
@@ -46,6 +58,7 @@ android {
 dependencies {
     implementation "androidx.appcompat:appcompat:1.7.0"
     implementation "androidx.activity:activity:1.9.2"
+    implementation "androidx.core:core:1.13.1"
 }
 
 // kotlin-stdlib-jdk7/jdk8 are folded into kotlin-stdlib since Kotlin 1.8 — an old transitive
