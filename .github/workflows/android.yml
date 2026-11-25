@@ -20,6 +20,8 @@ jobs:
           java-version: "17"
 
       - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.13" # what Android Gradle Plugin 8.11 needs
 
       - name: Accept Android SDK licenses
         # ubuntu-latest runners ship a pre-installed SDK; Gradle/AGP auto-downloads any
@@ -29,13 +31,13 @@ jobs:
       - name: Restore signing keystore
         run: echo "${{ secrets.ANDROID_KEYSTORE_B64 }}" | base64 -d > "$RUNNER_TEMP/cartsync.jks"
 
-      - name: Build debug APK
+      - name: Build the website APK (direct) and the Google Play bundle (play)
         # the run number is a free, ever-increasing versionCode — no need to commit a bump
         # back to build.gradle (which would just retrigger this same workflow). Signed with the
         # stable keystore (not Gradle's own ephemeral debug key) so every build updates in place.
         working-directory: android
         run: |
-          gradle assembleDebug --no-daemon \
+          gradle assembleDirectDebug bundlePlayRelease --no-daemon \
             -PappVersionCode=${{ github.run_number }} \
             -PandroidKeystore="$RUNNER_TEMP/cartsync.jks" \
             -PandroidKeystorePassword="${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
@@ -45,13 +47,20 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: cartsync-debug-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: android/app/build/outputs/apk/direct/debug/app-direct-debug.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cartsync-google-play-aab
+          path: android/app/build/outputs/bundle/playRelease/app-play-release.aab
 
       - name: Publish APK + update metadata on the live site
         run: |
           set -e
           mkdir -p docs/apk
-          cp android/app/build/outputs/apk/debug/app-debug.apk docs/apk/cartsync-debug.apk
+          cp android/app/build/outputs/apk/direct/debug/app-direct-debug.apk docs/apk/cartsync-debug.apk
+          # the file to upload in Google Play Console (Play re-signs it with the Play app signing key)
+          cp android/app/build/outputs/bundle/playRelease/app-play-release.aab docs/apk/cartsync-play.aab
           VNAME=$(grep -oP 'versionName "\K[^"]+' android/app/build.gradle)
           python3 - "${{ github.run_number }}" "$VNAME" <<'PY'
           import json, sys, os
@@ -75,7 +84,7 @@ jobs:
           set -e
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/apk/cartsync-debug.apk docs/app-version.json
+          git add docs/apk/cartsync-debug.apk docs/apk/cartsync-play.aab docs/app-version.json
           git diff --cached --quiet || git commit -m "ci: publish Android build ${{ github.run_number }}"
           # the web-version workflow pushes a build-stamp commit on the same push, so master has
           # usually moved on by the time the APK is ready — rebase onto it instead of failing

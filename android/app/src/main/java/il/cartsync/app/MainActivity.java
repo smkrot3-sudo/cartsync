@@ -22,12 +22,23 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.activity.EdgeToEdge;
+import androidx.core.graphics.ColorUtils;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
+import android.content.res.Configuration;
+import android.graphics.Color;
+import android.widget.LinearLayout;
 import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
     private static final String SITE = "https://smkrot3-sudo.github.io/cartsync/";
     private static final long STALE_AFTER_MS = 45 * 1000; // reload if the app sat in the background longer than this
     private WebView webView;
+    private LinearLayout root;
+    private View topStrip, bottomStrip; // fill the status bar / navigation bar (and keyboard) areas around the page
     private long pausedAt = 0;
     private String pendingAuth = null; // window.onAndroidAuth(...) call waiting for the page to be ready
     // <input type="file"> in the page (e.g. uploading a screenshot of a Bit QR code): a plain WebView
@@ -62,9 +73,33 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Android 15+ always draws apps edge to edge (behind the status bar, navigation bar and keyboard).
+        // The page itself stays in the space between them: the two strips take the bars' height and
+        // the keyboard's, and are painted in the page's own colors (window.CartApp.setBars).
+        EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
         webView = new WebView(this);
-        setContentView(webView);
+        root = new LinearLayout(this);
+        root.setOrientation(LinearLayout.VERTICAL);
+        topStrip = new View(this);
+        bottomStrip = new View(this);
+        root.addView(topStrip, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0));
+        root.addView(webView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f));
+        root.addView(bottomStrip, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0));
+        setContentView(root);
+        boolean night = (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+        paintBars(night ? 0xFF24533A : 0xFFC3DFC9, night ? 0xFF0E1511 : 0xFFF6F8F5); // the page's header/background until it says otherwise
+        ViewCompat.setOnApplyWindowInsetsListener(root, new androidx.core.view.OnApplyWindowInsetsListener() {
+            @Override
+            public WindowInsetsCompat onApplyWindowInsets(View v, WindowInsetsCompat insets) {
+                Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+                Insets ime = insets.getInsets(WindowInsetsCompat.Type.ime());
+                v.setPadding(bars.left, 0, bars.right, 0);
+                setHeight(topStrip, bars.top);
+                setHeight(bottomStrip, Math.max(bars.bottom, ime.bottom));
+                return WindowInsetsCompat.CONSUMED;
+            }
+        });
         // the WebView must hold Android focus for the keyboard to deliver keystrokes to a page field;
         // without it the keyboard can open over an input yet typing goes nowhere
         webView.setFocusable(true);
@@ -183,6 +218,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private static void setHeight(View v, int h) {
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) v.getLayoutParams();
+        if (lp.height != h) { lp.height = h; v.setLayoutParams(lp); }
+    }
+
+    private void paintBars(int top, int bottom) {
+        topStrip.setBackgroundColor(top);
+        bottomStrip.setBackgroundColor(bottom);
+        root.setBackgroundColor(bottom);
+        WindowInsetsControllerCompat c = new WindowInsetsControllerCompat(getWindow(), root);
+        c.setAppearanceLightStatusBars(ColorUtils.calculateLuminance(top) > 0.5);     // dark icons on a light header
+        c.setAppearanceLightNavigationBars(ColorUtils.calculateLuminance(bottom) > 0.5);
+    }
+
     private void js(final String code) {
         runOnUiThread(new Runnable() { public void run() { if (webView != null) webView.evaluateJavascript(code, null); } });
     }
@@ -194,6 +243,16 @@ public class MainActivity extends AppCompatActivity {
         }
         @JavascriptInterface public String versionName() {
             try { return getPackageManager().getPackageInfo(getPackageName(), 0).versionName; } catch (Exception e) { return ""; }
+        }
+        /** "play" for the Google Play build, "direct" for the APK from the website */
+        @JavascriptInterface public String store() { return BuildConfig.STORE; }
+        /** the page's header color and background color (#rrggbb), for the strips behind the system bars */
+        @JavascriptInterface public void setBars(final String top, final String bottom) {
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    try { paintBars(Color.parseColor(top), Color.parseColor(bottom)); } catch (Exception e) { }
+                }
+            });
         }
         @JavascriptInterface public void installUpdate(String url) {
             Updater.install(MainActivity.this, url, new Updater.Progress() {
