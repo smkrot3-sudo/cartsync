@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>מחיקת חשבון · קניות ביחד</title>
+<link rel="icon" href="icons/icon-192.png">
+<style>
+:root{--bg:#F6F8F5;--surface:#fff;--fg:#1C2A21;--muted:#66756B;--line:#DFE7DD;--accent:#1F6B3F;--danger:#C62D45}
+@media (prefers-color-scheme:dark){:root{--bg:#0E1511;--surface:#17211B;--fg:#E5EEE7;--muted:#90A096;--line:#27362D;--accent:#5CC383;--danger:#F28A96}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+main{max-width:520px;margin:0 auto;padding:24px 16px 48px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin:0 0 16px;display:flex;flex-direction:column;gap:12px}
+h1{font-size:1.5rem;margin:8px 0 12px}p{margin:0}.muted{color:var(--muted);font-size:.92rem}
+input{font:inherit;border:2px solid var(--line);background:var(--bg);color:var(--fg);border-radius:12px;padding:10px 12px;width:100%}
+button{font:inherit;font-weight:700;border:0;border-radius:999px;padding:12px 18px;cursor:pointer;background:var(--accent);color:#fff}
+button.ghost{background:transparent;color:var(--accent);border:2px solid var(--line)}
+button.danger{background:var(--danger)}button:disabled{opacity:.5;cursor:default}
+.msg{padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--danger) 14%,transparent)}
+.ok{background:color-mix(in srgb,var(--accent) 16%,transparent)}
+a{color:var(--accent)}[hidden]{display:none!important}
+</style></head>
+<body><main>
+<h1>🗑️ מחיקת חשבון ב"קניות ביחד"</h1>
+
+<div class="card">
+  <p>בדף הזה אפשר למחוק את החשבון שלך ואת הנתונים שלך, גם בלי האפליקציה. אפשר לעשות את זה גם מתוך האפליקציה: הגדרות ← מחיקת חשבון.</p>
+  <p class="muted"><b>מה נמחק:</b> החשבון, האימייל, השם, ההגדרות והחברות בכל משקי הבית. משק בית שאין בו אף אחד אחר נמחק עם כל הרשימות, המוצרים וההיסטוריה שלו.<br>
+  <b>מה נשאר:</b> במשק בית משותף, רשימות ומוצרים שהוספת נשארים לשאר החברים, בלי הפרטים שלך. אם היית המנהל היחיד, החבר הוותיק ביותר הופך למנהל.<br>
+  המחיקה מיידית ולא ניתנת לביטול. פרטים נוספים ב<a href="privacy.html">מדיניות הפרטיות</a>.</p>
+</div>
+
+<div class="card" id="login">
+  <p><b>שלב 1: התחברות</b> לחשבון שרוצים למחוק</p>
+  <button id="google">התחברות עם Google</button>
+  <p class="muted" style="text-align:center">או עם אימייל וסיסמה</p>
+  <input id="email" type="email" placeholder="אימייל" autocomplete="email" dir="ltr">
+  <input id="pass" type="password" placeholder="סיסמה" autocomplete="current-password" dir="ltr">
+  <button class="ghost" id="signin">כניסה</button>
+  <p class="msg" id="login-msg" hidden></p>
+</div>
+
+<div class="card" id="confirm" hidden>
+  <p><b>שלב 2: אישור</b></p>
+  <p>מחוברים בתור <b id="who" dir="ltr"></b></p>
+  <p>כדי לאשר, כתבו כאן: <b>מחיקה</b></p>
+  <input id="word" autocomplete="off">
+  <button class="danger" id="go" disabled>למחוק את החשבון לצמיתות</button>
+  <button class="ghost" id="out">זה לא החשבון הנכון, להתנתק</button>
+  <p class="msg" id="del-msg" hidden></p>
+</div>
+
+<div class="card ok" id="done" hidden>
+  <p><b>החשבון נמחק.</b> תודה שהשתמשת בקניות ביחד 💚</p>
+</div>
+</main>
+<script src="vendor/supabase.js"></script>
+<script>
+const SB_URL='https://pzrzwilkloksfxsvcwji.supabase.co';
+const SB_KEY='sb_publishable_kTKMU6nUUWtGAgb-SJvYyQ_QweS_o60';
+const sb=supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,detectSessionInUrl:true,storageKey:'cartsync-delete-auth'}});
+const $=id=>document.getElementById(id);
+function show(msgEl,text){ $(msgEl).textContent=text; $(msgEl).hidden=!text; }
+function paint(session){
+  const u=session&&session.user;
+  $('login').hidden=!!u; $('confirm').hidden=!u;
+  if(u) $('who').textContent=u.email||'';
+}
+sb.auth.getSession().then(({data})=>paint(data.session));
+sb.auth.onAuthStateChange((_e,session)=>{ if($('done').hidden) paint(session); });
+$('google').onclick=async()=>{
+  const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname}});
+  if(error) show('login-msg','ההתחברות לא הצליחה: '+error.message);
+};
+$('signin').onclick=async()=>{
+  show('login-msg','');
+  const {error}=await sb.auth.signInWithPassword({email:$('email').value.trim(),password:$('pass').value});
+  if(error) show('login-msg','האימייל או הסיסמה לא נכונים');
+};
+$('word').oninput=()=>{ $('go').disabled=$('word').value.trim()!=='מחיקה'; };
+$('out').onclick=()=>sb.auth.signOut();
+$('go').onclick=async()=>{
+  $('go').disabled=true; show('del-msg','');
+  const {error}=await sb.rpc('delete_my_account');
+  if(error){ $('go').disabled=false; show('del-msg','המחיקה לא הצליחה. נסו שוב בעוד רגע.'); return; }
+  await sb.auth.signOut().catch(()=>{});
+  $('login').hidden=true; $('confirm').hidden=true; $('done').hidden=false;
+};
+</script>
+</body></html>

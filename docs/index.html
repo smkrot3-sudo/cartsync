@@ -970,7 +970,7 @@ he: {
   dupWarning:'"{n}" כבר ברשימה.', dupAddAnyway:'להוסיף בכל זאת',
   manageMembers:'👥 ניהול חברי משק הבית', membersTitle:'חברי משק הבית',
   membersCountOne:'חבר אחד', membersCount:'{n} חברים',
-  settingsGroupHousehold:'משק הבית', listCount:'סה״כ: {n} פריטים ({d} נאספו לעגלה)', adminPage:'ניהול (רק למנהל)', settingsGroupPersonal:'אישי', settingsGroupApp:'אפליקציה',
+  settingsGroupHousehold:'משק הבית', listCount:'סה״כ: {n} פריטים ({d} נאספו לעגלה)', adminPage:'ניהול (רק למנהל)', privacyPolicy:'מדיניות פרטיות', deleteAccountBody:'החשבון שלך יימחק לצמיתות: הפרטים, ההגדרות והחברות בכל משקי הבית. משק בית שאין בו אף אחד אחר יימחק עם כל הרשימות שלו. במשק בית משותף, הרשימות נשארות לשאר החברים, ואם היית המנהל היחיד, החבר הוותיק ביותר יהפוך למנהל. אי אפשר לבטל את זה.', deleteAccountType:'כדי לאשר, כתבו כאן: מחיקה', deleteAccountWord:'מחיקה', deleteAccountGo:'למחוק את החשבון לצמיתות', deleteAccountDone:'החשבון נמחק. תודה שהשתמשת בקניות ביחד 💚', deleteAccountFailed:'המחיקה לא הצליחה. נסו שוב בעוד רגע.', settingsGroupPersonal:'אישי', settingsGroupApp:'אפליקציה',
   removeConfirm:'להסיר את {n} ממשק הבית?', leaveConfirm:'לצאת ממשק הבית?',
   removeTitle:'הסרה ממשק הבית', leaveTitle:'יציאה ממשק הבית', removeAction:'להסיר', leaveAction:'לצאת',
   leaveHousehold:'יציאה ממשק הבית', memberRemoved:'✅ ההסרה בוצעה', youLeft:'👋 יצאת ממשק הבית',
@@ -1094,7 +1094,7 @@ en: {
   dupWarning:'"{n}" is already on the list.', dupAddAnyway:'Add anyway',
   manageMembers:'👥 Manage household members', membersTitle:'Household members',
   membersCountOne:'1 member', membersCount:'{n} members',
-  settingsGroupHousehold:'Household', listCount:'Total: {n} items ({d} in the cart)', adminPage:'Admin (owner only)', settingsGroupPersonal:'Personal', settingsGroupApp:'App',
+  settingsGroupHousehold:'Household', listCount:'Total: {n} items ({d} in the cart)', adminPage:'Admin (owner only)', privacyPolicy:'Privacy policy', deleteAccountBody:'Your account will be deleted for good: your details, settings and membership in every household. A household with nobody else in it is deleted with all its lists. In a shared household the lists stay for the other members, and if you were its only owner, the longest-standing member becomes the owner. This cannot be undone.', deleteAccountType:'To confirm, type: DELETE', deleteAccountWord:'DELETE', deleteAccountGo:'Delete my account for good', deleteAccountDone:'Your account was deleted. Thanks for using CartSync 💚', deleteAccountFailed:'Deleting did not work. Please try again in a moment.', settingsGroupPersonal:'Personal', settingsGroupApp:'App',
   removeConfirm:'Remove {n} from the household?', leaveConfirm:'Leave this household?',
   removeTitle:'Remove member', leaveTitle:'Leave household', removeAction:'Remove', leaveAction:'Leave',
   leaveHousehold:'Leave household', memberRemoved:'✅ Removed from the household', youLeft:'👋 You left the household',
@@ -1675,6 +1675,18 @@ function confirmSheet(opts){
 }
 
 /* ---------- screens ---------- */
+/* Android app: paint the strips behind the status bar / navigation bar in the page's own header and background colors */
+function syncBars(){
+  if(!window.CartApp || !window.CartApp.setBars) return;
+  const hex=c=>{ const m=/rgba?\(([^)]+)\)/.exec(c||''); if(!m) return null; const p=m[1].split(/[\s,\/]+/).filter(Boolean).map(Number); if(p.length>3&&p[3]===0) return null; return '#'+p.slice(0,3).map(x=>Math.round(x).toString(16).padStart(2,'0')).join(''); };
+  const bottom=hex(getComputedStyle(document.body).backgroundColor)||hex(getComputedStyle(document.documentElement).backgroundColor)||'#f6f8f5';
+  const tb=$('topbar');
+  const top=(tb && !tb.hidden && hex(getComputedStyle(tb).backgroundColor))||bottom;
+  try{ window.CartApp.setBars(top,bottom); }catch(e){}
+}
+new MutationObserver(()=>requestAnimationFrame(syncBars)).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+new MutationObserver(()=>requestAnimationFrame(syncBars)).observe(document.body,{attributes:true,attributeFilter:['data-screen','class']});
+try{ matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>requestAnimationFrame(syncBars)); }catch(e){}
 function setScreen(name){
   $('splash').hidden = true;
   ['auth','onboard','houses','home','lists','household','main'].forEach(s=>{ $('view-'+s).hidden = s!==name; });
@@ -1684,6 +1696,7 @@ function setScreen(name){
   $('topbar').hidden = name==='auth'||name==='onboard';
   document.querySelectorAll('#tabbar [data-tab]').forEach(b=>{ if(b.dataset.tab===name) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); });
   window.scrollTo(0,0);
+  requestAnimationFrame(syncBars);
 }
 
 /* ---------- i18n paint ---------- */
@@ -2524,6 +2537,8 @@ function openAccountSheet(){
       <button class="btn ghost" id="acct-sync">🔄 ${esc(t('syncNow'))}</button>
       ${isAdmin?`<button class="btn ghost" id="acct-admin">🛠️ ${esc(t('adminPage'))}</button>`:''}
       <button class="btn ghost" id="acct-signout">👋 ${esc(t('signOut'))}</button>
+      <button class="btn ghost" id="acct-privacy">🔒 ${esc(t('privacyPolicy'))}</button>
+      <button class="btn ghost" id="acct-delete" style="color:var(--danger)">🗑️ ${esc(t('deleteAccount'))}</button>
       <p class="sub" style="text-align:center;font-size:.8rem">${esc($('version-label').textContent)}</p>
     </div>`);
   if($('acct-admin')) $('acct-admin').onclick=()=>{ location.href='admin.html'; };
@@ -2536,6 +2551,30 @@ function openAccountSheet(){
   $('acct-guide').onclick=()=>openGuideSheet();
   $('acct-sync').onclick=async()=>{ await flushQueue({resync:true}); await refreshHousehold(); toast('🔄'); };
   $('acct-signout').onclick=async()=>{ await sb.auth.signOut(); closeSheet(); };
+  $('acct-privacy').onclick=()=>{ const u=(window.CS_SITE||'./')+'privacy.html'; if(window.CartApp&&window.CartApp.openExternal){ try{ window.CartApp.openExternal(u); return; }catch(e){} } window.open(u,'_blank'); };
+  $('acct-delete').onclick=openDeleteAccountSheet;
+}
+
+/* ---------- delete my account (Google Play requires it in the app; the same thing is on docs/delete-account.html) ---------- */
+function openDeleteAccountSheet(){
+  const t=CS.t;
+  openSheet(sheetHead(t('deleteAccount'))+`<div class="card">
+      <p class="sub">${esc(t('deleteAccountBody'))}</p>
+      <p style="margin:4px 0 -4px">${esc(t('deleteAccountType'))}</p>
+      <input id="del-word" autocomplete="off" aria-label="${esc(t('deleteAccountType'))}">
+      <button class="btn wide danger" id="del-go" disabled>${esc(t('deleteAccountGo'))}</button>
+      <button class="btn ghost wide" data-act="sheet-close">${esc(t('cancel'))}</button>
+    </div>`);
+  const word=$('del-word'), go=$('del-go');
+  word.oninput=()=>{ go.disabled = word.value.trim().toLowerCase()!==t('deleteAccountWord').toLowerCase(); };
+  go.onclick=async()=>{
+    go.disabled=true; go.textContent='⏳';
+    const {error}=await sb.rpc('delete_my_account');
+    if(error){ go.disabled=false; go.textContent=t('deleteAccountGo'); toast(t('deleteAccountFailed')); return; }
+    try{ Object.keys(localStorage).filter(k=>k===CACHE_KEY||k.startsWith('cs-queue-')||k.startsWith('cs-last-')).forEach(k=>localStorage.removeItem(k)); }catch(e){} // nothing of theirs left on the phone
+    await sb.auth.signOut().catch(()=>{});
+    closeSheet(); toast(t('deleteAccountDone'));
+  };
 }
 function renderAccount(){ if(user && household) paintTop(); }
 
@@ -4415,7 +4454,8 @@ async function check(){
     if(!r.ok) return;
     const v=await r.json();
     let apkUpdate=false;
-    if(inApp && v.android){
+    let store='direct'; try{ if(window.CartApp.store) store=window.CartApp.store(); }catch(e){}
+    if(inApp && v.android && store!=='play'){
       let current=0; try{ current=window.CartApp.versionCode(); }catch(e){}
       if(v.android.versionCode>current){
         apkUpdate=true;
